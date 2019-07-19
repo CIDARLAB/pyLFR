@@ -3,32 +3,42 @@ from antlr4 import *
 from antlr.lfrXLexer import lfrXLexer
 from antlr.lfrXParser import lfrXParser
 from lfrCompiler import LFRCompiler
+from netlistgenerator.devicegenerator import DeviceGenerator
 
 import argparse
 
 
-parser = argparse.ArgumentParser()
+def main():
+    parser = argparse.ArgumentParser()
 
-parser.add_argument('input', help="this is the file thats used as the input ")
+    parser.add_argument('input', help="this is the file thats used as the input ")
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-print(args.input)
+    print(args.input)
 
-finput = FileStream(args.input)
+    finput = FileStream(args.input)
 
-lexer = lfrXLexer(finput)
+    lexer = lfrXLexer(finput)
 
-stream = CommonTokenStream(lexer)
+    stream = CommonTokenStream(lexer)
 
-parser = lfrXParser(stream)
+    parser = lfrXParser(stream)
 
-tree = parser.skeleton()
+    tree = parser.skeleton()
 
-walker = ParseTreeWalker()
+    walker = ParseTreeWalker()
 
-listener = LFRCompiler()
+    listener = LFRCompiler()
 
-walker.walk(listener, tree)
+    walker.walk(listener, tree)
+
+    # Now Process the Modules Generated
+    devicegenerator = DeviceGenerator(listener.currentModule.name, listener.currentModule)
+    devicegenerator.generatenetlist()
+
+
+if __name__ == "__main__":
+    main()
 
 

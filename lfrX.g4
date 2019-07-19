@@ -44,9 +44,7 @@ reactorstat : 'reactor' ID ;
 fluidstat : 'fluid' ID ;
 
 assignstat
-    :   'assign' variables '=' number  ';'
-    |   'assign' variables '=' variables ';'
-    |   'assign' variables '=' expression ';'
+    :   'assign' lhs '=' (number | variables | expression)  ';'
     ;
 
 
@@ -57,6 +55,8 @@ expression
     ;
 
 variables: ID; //TODO: Add the concatenated variables too
+
+lhs : ID;
 
 ioassignstat
     :   explicitIOBlock ';'

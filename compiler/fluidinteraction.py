@@ -15,7 +15,15 @@ class FluidInteraction(object):
         self.interactionType = interactiontype
         if fluid1 == fluid2:
             raise Exception("Cannot create interaction between the same fluids")
-        self.id = fluid1.id + "_" + fluid2.id
+        if fluid1.id < fluid2.id:
+            self.id = fluid1.id + "_" + fluid2.id
+            self.fluid1 = fluid1
+            self.fluid2 = fluid2
+        else:
+            self.id = fluid2.id + "_" + fluid1.id
+            self.fluid1 = fluid2
+            self.fluid2 = fluid1
+
         self.customInteraction = custominteraction
 
 

@@ -32,7 +32,7 @@ class LFRCompiler(lfrXListener):
         #  First check the type of the explicit io block
         decltype = ctx.start.text
         mode = None
-        if decltype == 'finput' :
+        if decltype == 'finput':
             mode = IOType.FLOW_INPUT
         elif decltype == 'foutput':
             mode = IOType.FLOW_OUTPUT
@@ -56,39 +56,46 @@ class LFRCompiler(lfrXListener):
         # print(technologystring)
         self.operatormap[ctx.operator.getText()] = technologystring
 
-    def exitVariables(self, ctx:lfrXParser.VariablesContext):
-        self.lhs = ctx.ID().getText()
-
     def exitAssignstat(self, ctx:lfrXParser.AssignstatContext):
-        #Right now, only the single assignment is available so just work with that
-        #Check to see if LHS is temp variable or an io
-        ret = self.currentModule.getio(self.lhs)
-        if (ret is None) and (self.lhs not in self.currentModule.intermediates):
+        # Right now, only the single assignment is available so just work with that
+        # Check to see if LHS is temp variable or an io
+        ret = self.currentModule.getfluid(ctx.lhs().getText())
+        if ret is None:
             raise Exception("Could not assign because we could not map lhs to any known variable")
         elif ret is not None:
-            print("LHS", ret)
+            print("LHS: ", ret)
+
             rvariable = self.expressionvariablestack.pop()
-            lvariable = self.expressionvariablestack.pop()
-            op = self.expressionoperatorstack.pop()
-            #Check if the operator is overridden
-            if op in self.operatormap.keys():
-                #Now the Fluid Interaction is overriden
-                overridden_interaction = self.operatormap[op]
-                f1 = self.currentModule.getfluid(rvariable)
-                f2 = self.currentModule.getfluid(lvariable)
-                self.currentModule.addfluidcustominteraction(f2, f1, overridden_interaction)
+            while len(self.expressionoperatorstack) > 0:
+                lvariable = self.expressionvariablestack.pop()
+                op = self.expressionoperatorstack.pop()
+                # Check if the operator is overridden
+                if op in self.operatormap.keys():
+                    # Now the Fluid Interaction is overriden
+                    overridden_interaction = self.operatormap[op]
+                    f1 = self.currentModule.getfluid(rvariable)
+                    f2 = self.currentModule.getfluid(lvariable)
+                    interaction = self.currentModule.addfluidcustominteraction(f2, f1, overridden_interaction)
+                    # Create an edge from the interaction to the output
+                    self.currentModule.addinteractionoutput(ret, interaction)
+                else:
+                    # TODO Figure out how we want to parse the expression, do we want to it here or internally
+                    pass
+                rvariable = lvariable
 
-        #Final thing to do: clear the operator override
+
+
+        # Final thing to do: clear the operator override
         self.__clearoperatormap()
-        self.currentModule.printgraph()
-
 
     def exitExpression(self, ctx:lfrXParser.ExpressionContext):
         # print(ctx.variables())
         # print(ctx.binary_operator())
-        #For now just store all the variables and operators and add them from reverse
+        # For now just store all the variables and operators and add them from reverse
         variables = [v.getText() for v in ctx.variables()]
         operators = [v.getText() for v in ctx.binary_operator()]
+
+        # TODO - Split the expression where there are overridden operators
         self.expressionoperatorstack = operators
         self.expressionvariablestack = variables
 
@@ -107,7 +114,4 @@ class LFRCompiler(lfrXListener):
 
     def __clearoperatormap(self):
         self.operatormap.clear()
-
-
-
 

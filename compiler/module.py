@@ -31,9 +31,10 @@ class Module(object):
     def addfluidcustominteraction(self, fluid1: Fluid, fluid2: Fluid, interaction: str):
         finteraction = FluidInteraction(fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS, interaction)
         self.G.addfluidinteraction(fluid1, fluid2, finteraction)
+        return finteraction
 
-    def printgraph(self):
-        print(self.G)
+    def addinteractionoutput(self, output: Fluid, interaction: FluidInteraction):
+        self.G.attachinteractionoutput(output, interaction)
 
     def __str__(self):
         ret = "Name : " + self.name + "\n"

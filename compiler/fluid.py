@@ -3,7 +3,7 @@ class Fluid(object):
         self.id = id
 
     def __str__(self):
-        return id
+        return self.id
 
     def __eq__(self, other):
         return self.id == other.id
