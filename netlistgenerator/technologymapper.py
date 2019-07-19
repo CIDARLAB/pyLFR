@@ -34,8 +34,8 @@ def mapTechnologies(graph: FluidInteractionGraph):
                     print("Added entry :", interaction)
                     PASS1_DICT[output] = [interaction]
 
-        for key in PASS1_DICT.keys():
-            nodes = PASS1_DICT[key]
+        for interaction in PASS1_DICT.keys():
+            nodes = PASS1_DICT[interaction]
 
             if len(nodes) > 1:
                 graph.mergeinteractions(nodes)
@@ -51,7 +51,7 @@ def mapTechnologies(graph: FluidInteractionGraph):
     print("PASS1 Reduced Graph:", graph.G.edges())
     #print(graph.fluidinteractions)
 
-    # TODO Step 2-
+    # Step 2-
     #   The second pass we construct dictionary <interactions, set(inputs)> and then we
     #   basically merge all the interactions with duplicating inputs
     #
@@ -76,3 +76,32 @@ def mapTechnologies(graph: FluidInteractionGraph):
 
 
     print("PASS 2 DICTIONARY: ", PASS2_DICT)
+
+    #   Now that the dictionary has been built, the fluidic interactions with the 
+    #   same sets of inputs need to merged. To do that that, create anoter dictionary 
+    #   that will have the sets as keys
+
+    MERGE_DICT = dict()
+
+    for interaction in PASS2_DICT.keys():
+        inputset = frozenset(PASS2_DICT[interaction])
+        if inputset in MERGE_DICT.keys():
+            MERGE_DICT[inputset].append(interaction)
+        else:
+            foo = []
+            foo.append(interaction)
+            MERGE_DICT[inputset] = foo
+    
+    # print("MERGE_DICT: ", MERGE_DICT)
+
+    # Now to merge each of these list of fluid interactions
+
+    for key in MERGE_DICT.keys():
+        interactions = MERGE_DICT[key]
+        if len(interactions)>1:
+            graph.mergeinteractions(interactions)
+
+    
+    print("PASS2 Reduced Graph:", graph.G.edges())
+
+            
