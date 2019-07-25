@@ -1,5 +1,6 @@
 from .fluidinteractiongraph import FluidInteractionGraph
 from .fluid import Fluid
+from .moduleio import ModuleIO
 from .fluidinteraction import FluidInteraction, InteractionType
 
 
@@ -16,13 +17,17 @@ class Module(object):
         f = Fluid(io.name)
         self.G.addfluidnode(f)
 
-    def getio(self, name):
-        return self.io[name]
+    def getio(self, name: str)-> ModuleIO:
+        if name in self.io:
+            return self.io[name]
+        else:
+            return None
 
     def addintermediate(self, intermeidate):
         #TODO: Make the fluid interaction graph
         self.intermediates.append(intermeidate)
         f = Fluid(intermeidate)
+        #TODO: Create an example with intermediates
         self.G.add_node(f)
 
     def getfluid(self, name: str):

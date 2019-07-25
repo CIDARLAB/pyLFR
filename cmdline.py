@@ -33,10 +33,11 @@ def main():
 
     walker.walk(listener, tree)
 
-    # Now Process the Modules Generated
-    devicegenerator = DeviceGenerator(listener.currentModule.name, listener.currentModule)
-    devicegenerator.generatenetlist()
-
+    # Check if the module compilation was successful
+    if listener.success:
+        # Now Process the Modules Generated
+        devicegenerator = DeviceGenerator(listener.currentModule.name, listener.currentModule)
+        devicegenerator.generatenetlist()        
 
 if __name__ == "__main__":
     main()

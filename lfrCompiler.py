@@ -2,6 +2,7 @@ from antlr.lfrXListener import lfrXListener
 from antlr.lfrXParser import lfrXParser
 from compiler.module import Module
 from compiler.moduleio import ModuleIO, IOType
+from compiler.lfrerror import ErrorType, LFRError
 
 
 class LFRCompiler(lfrXListener):
@@ -14,9 +15,11 @@ class LFRCompiler(lfrXListener):
         self.lhs = None
         self.rhs = None
         self.operatormap = dict()
-        self.expressionoperatorstack = None
+        self.expressionoperatorstack = []
         self.expressionvariablestack = None
         self.technologyOverride = None
+        self.compilingErrors = []
+        self.success = False
 
     def enterModuledefinition(self, ctx:lfrXParser.ModuledefinitionContext):
         m = Module(ctx.ID().getText())
@@ -43,8 +46,7 @@ class LFRCompiler(lfrXListener):
             name = ID.getText()
             io = self.currentModule.getio(name)
             if io is None:
-                io = ModuleIO(name, mode)
-                self.currentModule.addio(io)
+                self.compilingErrors.append(LFRError(ErrorType.MODULE_IO_NOT_FOUND, " i/o:{0} not declared in module".format(name)))
             else:
                 io.type = mode
 
@@ -100,6 +102,12 @@ class LFRCompiler(lfrXListener):
         self.expressionvariablestack = variables
 
     def exitSkeleton(self, ctx:lfrXParser.SkeletonContext):
+        if len(self.compilingErrors) > 0:
+            print("There were errors in the compilation process:")
+            for error in self.compilingErrors:
+                print(error)
+        else:
+            self.success = True
         print(self.currentModule)
 
     def __validatevariable(self, variable):

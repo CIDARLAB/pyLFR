@@ -11,7 +11,7 @@ class FluidInteractionGraph(object):
         self.fluids = dict()
         self.fluidinteractions = dict()
 
-    def addfluidnode(self, fluid: Fluid):
+    def addfluidnode(self, fluid: Fluid) -> None:
         self.fluids[fluid.id] = fluid
         self.G.add_node(fluid.id)
 
@@ -21,7 +21,7 @@ class FluidInteractionGraph(object):
         else:
             return None
 
-    def addfluidinteraction(self, fluid: Fluid, fluid2: Fluid, interaction: FluidInteraction):
+    def addfluidinteraction(self, fluid: Fluid, fluid2: Fluid, interaction: FluidInteraction) -> None:
         if fluid.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " + fluid.id + " is not in the fluid interaction graph")
         if fluid2.id not in self.fluids.keys():
@@ -35,19 +35,19 @@ class FluidInteractionGraph(object):
             self.G.add_edge(fluid.id, interaction.id)
             self.G.add_edge(fluid2.id, interaction.id)
 
-    def attachinteractionoutput(self, output: Fluid, interaction: FluidInteraction):
+    def attachinteractionoutput(self, output: Fluid, interaction: FluidInteraction) -> None:
         if output.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " + output.id + " is not in the fluid interaction graph")
         else:
             self.G.add_edge(interaction.id, output.id)
 
-    def getinputnodes(self, interaction):
+    def getinputnodes(self, interaction: str):
         edges = self.G.in_edges(interaction)
         ret = [u for (u, v) in edges]
         # print("TEST3", ret)
         return ret
 
-    def mergeinteractions(self, interactions: [str]):
+    def mergeinteractions(self, interactions: [str])-> None:
         keep = interactions[0]
         print("Merging interactions:", keep)
         print("All the interactions:", interactions)
