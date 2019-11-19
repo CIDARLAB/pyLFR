@@ -5,69 +5,108 @@ skeleton: moduledefinition body 'endmodule';
 moduledefinition: 'module' ID ('(' ioblock ')')? ';';
 
 body
-    :   (statements)+
-    ;
+   :   ( statements | distributionBlock ) +
+   ;
 
 ioblock
-    :    ID (',' ID)*
-    |    explicitIOBlock ( ',' explicitIOBlock)?
-    ;
+   :    ID (',' ID)*
+   |    explicitIOBlock ( ',' explicitIOBlock)?
+   ;
 
 explicitIOBlock
-    :   'finput' ID (',' ID)*
-    |   'foutput' ID (',' ID)*
-    |   'control' ID (',' ID)*
-    ;
+   :   'finput' vector? ID (',' ID)*
+   |   'foutput' vector? ID (',' ID)*
+   |   'control' vector? ID (',' ID)*
+   ;
+
+distributionBlock
+   :  'distribute@' '(' signallist ')' 'begin' distributionBody 'end'
+   ;
+
+distributionBody
+//TODO: modify the distribute block to be more precise
+   :  (distributionassignstat)*
+   |  caseBlock
+   ;
+
+caseBlock
+   :  'case' '(' lhs ')' casestat 'endcase'
+   ;
+
+casestat
+   :  distributionassignstat
+   ;
+
+distributionassignstat
+   :  lhs '=' (number | variables | expression) ';'
+   //TODO: Have a switch->case block
+   ;
+
+signallist : ID (',' ID)* ;
 
 statements
-    :   statement
+   :   statement
 //    |   (blocks)+ //Uncomment this once we are making the distribute and always blocks
-    |   technologydirectives
-    ;
+   |   technologydirectives
+   ;
 
 statement
-    :   ioassignstat  //This needs ot be replaced by any number different kinds of statements that will
-    |   assignstat
-    |   tempvariablesstat
-    ;
+   :   ioassignstat  //This needs ot be replaced by any number different kinds of statements that will
+   |   assignstat
+   |   tempvariablesstat
+   ;
 
 tempvariablesstat
-    :   fluidstat
-    |   reactorstat
-    |   nodestat
-    ;
+   :   fluidstat
+   |   reactorstat
+   |   nodestat
+   |   storagestat
+   |   numvarstat
+   ;
 
-nodestat : 'node' ID ;
+nodestat : 'node' ID (',' ID)* ;
 
-reactorstat : 'reactor' ID ;
+reactorstat : 'reactor' ID (',' ID)* ;
 
-fluidstat : 'fluid' ID ;
+fluidstat : 'fluid' vector? ID (',' ID)* ';' ;
+
+storagestat : 'storage' vector? ID (',' ID)* ';';
+
+numvarstat : 'number' ID '=' number (',' ID '=' number)* ';';
 
 assignstat
-    :   'assign' lhs '=' (number | variables | expression)  ';'
-    ;
+   :   'assign' lhs '=' (number | variables | expression)  ';'
+   ;
 
 
 //TODO: Look up how the grammar is given for Verilog. This will have be to correct for actually solving the logic things
 expression
-    :   variables (binary_operator (variables))+
-    |   unary_operator (variables)
-    ;
+   :   (variables | number) (binary_operator (variables | number))+
+   |   unary_operator (variables)
+   ;
 
-variables: ID; //TODO: Add the concatenated variables too
+vector
+   :   '[' start=Decimal_number ':' end=Decimal_number  ']'
+   ;
 
-lhs : ID;
+variables
+   : ID vector?
+   |  '{' ID (',' ID)* '}' vector?
+   ;
+
+lhs : variables vector? ;
 
 ioassignstat
-    :   explicitIOBlock ';'
-    ;
+   :   explicitIOBlock ';'
+   ;
 
-technologydirectives:   '#' directive  (('|' | '&') directive)*;
+technologydirectives
+   :   '#' directive  (('|' | '&') directive)* ;
 
 directive
-    :   performancedirective
-    |   technologymappingdirective
-    ;
+   :   performancedirective
+   |   technologymappingdirective
+   ;
 
 technologymappingdirective : 'MAP' ('\'' ID+ '\'' | '"' ID+ '\'') operator=binary_operator ;
 
@@ -75,10 +114,9 @@ performancedirective : ID   '='  number unit? ;
 
 unit: ID;
 
-
 ID
-    :   ('a'..'z' | 'A'..'Z'|'_')('a'..'z' | 'A'..'Z'|'0'..'9'|'_')*
-    ;
+   :   ('a'..'z' | 'A'..'Z'|'_')('a'..'z' | 'A'..'Z'|'0'..'9'|'_')*
+   ;
 
 WS : [ \t\r\n]+ -> skip ;
 
@@ -91,8 +129,6 @@ One_line_comment
 Block_comment
    : '/*' .*? '*/' -> channel (HIDDEN)
    ;
-
-
 
 // Operators - Taken from Verilog2001
 unary_operator
