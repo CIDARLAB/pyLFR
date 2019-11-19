@@ -28,7 +28,8 @@ class FluidInteractionGraph(object):
             raise Exception("Cannot add interaction because " + fluid2.id + " is not in the fluid interaction graph")
 
         if interaction.id in self.fluidinteractions.keys():
-            raise Exception("Cannot add interaction because " + interaction.id + " is already present")
+            # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
+            print("Warning: {0} is already present in the fluid interaction graph".format(interaction.id) )
         else:
             self.fluidinteractions[interaction.id] = interaction
             self.G.add_node(interaction.id)
@@ -72,3 +73,7 @@ class FluidInteractionGraph(object):
 
     def __str__(self):
         return self.G.edges.__str__()
+
+
+    def generate_dot_file(self, filename: str) -> None:
+        nx.nx_agraph.to_agraph(self.G).write(filename)

@@ -21,17 +21,17 @@ class LFRCompiler(lfrXListener):
         self.compilingErrors = []
         self.success = False
 
-    def enterModuledefinition(self, ctx:lfrXParser.ModuledefinitionContext):
+    def enterModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
         m = Module(ctx.ID().getText())
         self.modules.append(m)
         self.currentModule = m
 
-    def exitIoblock(self, ctx:lfrXParser.IoblockContext):
+    def exitIoblock(self, ctx: lfrXParser.IoblockContext):
         for ID in ctx.ID():
             io = ModuleIO(ID.getText())
             self.currentModule.addio(io)
 
-    def exitExplicitIOBlock(self, ctx:lfrXParser.ExplicitIOBlockContext):
+    def exitExplicitIOBlock(self, ctx: lfrXParser.ExplicitIOBlockContext):
         #  First check the type of the explicit io block
         decltype = ctx.start.text
         mode = None
@@ -50,7 +50,7 @@ class LFRCompiler(lfrXListener):
             else:
                 io.type = mode
 
-    def exitTechnologymappingdirective(self, ctx:lfrXParser.TechnologymappingdirectiveContext):
+    def exitTechnologymappingdirective(self, ctx: lfrXParser.TechnologymappingdirectiveContext):
         # print("Operator", ctx.operator.getText())
         technologystring = ""
         for ID in ctx.ID():
@@ -58,7 +58,7 @@ class LFRCompiler(lfrXListener):
         # print(technologystring)
         self.operatormap[ctx.operator.getText()] = technologystring
 
-    def exitAssignstat(self, ctx:lfrXParser.AssignstatContext):
+    def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):
         # Right now, only the single assignment is available so just work with that
         # Check to see if LHS is temp variable or an io
         ret = self.currentModule.getfluid(ctx.lhs().getText())
@@ -90,7 +90,7 @@ class LFRCompiler(lfrXListener):
         # Final thing to do: clear the operator override
         self.__clearoperatormap()
 
-    def exitExpression(self, ctx:lfrXParser.ExpressionContext):
+    def exitExpression(self, ctx: lfrXParser.ExpressionContext):
         # print(ctx.variables())
         # print(ctx.binary_operator())
         # For now just store all the variables and operators and add them from reverse
@@ -101,7 +101,7 @@ class LFRCompiler(lfrXListener):
         self.expressionoperatorstack = operators
         self.expressionvariablestack = variables
 
-    def exitSkeleton(self, ctx:lfrXParser.SkeletonContext):
+    def exitSkeleton(self, ctx: lfrXParser.SkeletonContext):
         if len(self.compilingErrors) > 0:
             print("There were errors in the compilation process:")
             for error in self.compilingErrors:

@@ -128,3 +128,7 @@ antlr/
 # ANTLR
 
 .antlr/
+
+# Generated Files
+*.ps
+*.dot

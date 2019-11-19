@@ -1,4 +1,5 @@
 from .technologymapper import mapTechnologies
+from networkx import nx
 
 class DeviceGenerator(object):
 
@@ -11,3 +12,4 @@ class DeviceGenerator(object):
         interactiongraph = self.devicemodule.G
         mapTechnologies(interactiongraph)
 
+        interactiongraph.generate_dot_file(self.devicename + '.dot')
