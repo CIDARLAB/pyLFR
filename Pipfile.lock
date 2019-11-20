@@ -1,18 +1,18 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "42a6c270ee54b29700b7f61dbf7cc6d7c59733495b953b4bd8675352da11c6cc"
+            "sha256": "d9dcb14068a3efffd595621c06326eb38c8a86aa0b2a0c35cd843defb52bf77c"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
-            "implementation_version": "3.6.3",
+            "implementation_version": "3.6.8",
             "os_name": "posix",
             "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
-            "platform_release": "18.5.0",
+            "platform_release": "18.7.0",
             "platform_system": "Darwin",
-            "platform_version": "Darwin Kernel Version 18.5.0: Mon Mar 11 20:40:32 PDT 2019; root:xnu-4903.251.3~3/RELEASE_X86_64",
-            "python_full_version": "3.6.3",
+            "platform_version": "Darwin Kernel Version 18.7.0: Sat Oct 12 00:02:19 PDT 2019; root:xnu-4903.278.12~1/RELEASE_X86_64",
+            "python_full_version": "3.6.8",
             "python_version": "3.6",
             "sys_platform": "darwin"
         },
@@ -44,16 +44,24 @@
         },
         "decorator": {
             "hashes": [
-                "sha256:f069f3a01830ca754ba5258fde2278454a0b5b79e0d7f5c13b3b97e57d4acff6",
-                "sha256:86156361c50488b84a3f148056ea716ca587df2f0de1d34750d35c21312725de"
+                "sha256:5d19b92a3c8f7f101c8dd86afd86b0f061a8ce4540ab8cd401fa2542756bce6d",
+                "sha256:54c38050039232e1db4ad7375cfce6748d7b41c29e95a081c8a6d2c30364a2ce"
             ],
-            "version": "==4.4.0"
+            "version": "==4.4.1"
+        },
+        "graphviz": {
+            "hashes": [
+                "sha256:241fb099e32b8e8c2acca747211c8237e40c0b89f24b1622860075d59f4c4b25",
+                "sha256:60acbeee346e8c14555821eab57dbf68a169e6c10bce40e83c1bf44f63a62a01"
+            ],
+            "version": "==0.13.2"
         },
         "networkx": {
             "hashes": [
-                "sha256:8311ddef63cf5c5c5e7c1d0212dd141d9a1fe3f474915281b73597ed5f1d4e3d"
+                "sha256:cdfbf698749a5014bf2ed9db4a07a5295df1d3a53bf80bf3cbd61edf9df05fa1",
+                "sha256:f8f4ff0b6f96e4f9b16af6b84622597b5334bf9cae8cf9b2e42e7985d5c95c64"
             ],
-            "version": "==2.3"
+            "version": "==2.4"
         }
     },
     "develop": {}

@@ -10,6 +10,7 @@ name = "pypi"
 "antlr4-python3-runtime" = "*"
 argparse = "*"
 networkx = "*"
+graphviz = "*"
 
 
 [dev-packages]

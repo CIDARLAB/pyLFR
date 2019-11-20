@@ -9,15 +9,19 @@ body
    ;
 
 ioblock
-   :    ID (',' ID)*
+   :    vectorvar (',' vectorvar)*
    |    explicitIOBlock ( ',' explicitIOBlock)?
    ;
 
+vectorvar : ID vector? ;
+
 explicitIOBlock
-   :   'finput' vector? ID (',' ID)*
-   |   'foutput' vector? ID (',' ID)*
-   |   'control' vector? ID (',' ID)*
+   :   'finput' declvar (','declvar)*
+   |   'foutput' declvar (',' declvar)*
+   |   'control' declvar (','declvar)*
    ;
+
+declvar : vector? ID ;
 
 distributionBlock
    :  'distribute@' '(' signallist ')' 'begin' distributionBody 'end'
@@ -42,7 +46,7 @@ distributionassignstat
    //TODO: Have a switch->case block
    ;
 
-signallist : ID (',' ID)* ;
+signallist : ID vector? (',' ID vector?)* ;
 
 statements
    :   statement
@@ -57,7 +61,7 @@ statement
    ;
 
 tempvariablesstat
-   :   fluidstat
+   :   fluiddeclstat
    |   reactorstat
    |   nodestat
    |   storagestat
@@ -68,7 +72,7 @@ nodestat : 'node' ID (',' ID)* ;
 
 reactorstat : 'reactor' ID (',' ID)* ;
 
-fluidstat : 'fluid' vector? ID (',' ID)* ';' ;
+fluiddeclstat : 'fluid' declvar (',' declvar)* ';' ;
 
 storagestat : 'storage' vector? ID (',' ID)* ';';
 
@@ -90,11 +94,13 @@ vector
    ;
 
 variables
-   : ID vector?
-   |  '{' ID (',' ID)* '}' vector?
+   : vectorvar
+   | concatenation
    ;
 
-lhs : variables vector? ;
+concatenation : '{' vectorvar (',' vectorvar)* '}' vector? ;
+
+lhs : variables;
 
 ioassignstat
    :   explicitIOBlock ';'

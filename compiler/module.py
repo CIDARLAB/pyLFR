@@ -12,12 +12,12 @@ class Module(object):
         self.G = FluidInteractionGraph()
         self.fluids = dict()
 
-    def addio(self, io):
+    def addio(self, io : ModuleIO):
         self.io[io.name] = io
         f = Fluid(io.name)
         self.G.addfluidnode(f)
 
-    def getio(self, name: str)-> ModuleIO:
+    def getio(self, name: str) -> ModuleIO:
         if name in self.io:
             return self.io[name]
         else:
@@ -30,10 +30,16 @@ class Module(object):
         #TODO: Create an example with intermediates
         self.G.add_node(f)
 
+    def addfluid(self, fluid: Fluid):
+        self.G.addfluidnode(fluid)
+
     def getfluid(self, name: str):
         return self.G.getfluid(name)
 
-    def addfluidcustominteraction(self, fluid1: Fluid, fluid2: Fluid, interaction: str):
+    def addfluidconnection(self, fluid1id: str, fluid2id: str) -> None:
+        self.G.addfluidconnection(fluid1id, fluid2id)
+
+    def addfluidcustominteraction(self, fluid1: Fluid, fluid2: Fluid, interaction: str) -> FluidInteraction:
         finteraction = FluidInteraction(fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS, interaction)
         self.G.addfluidinteraction(fluid1, fluid2, finteraction)
         return finteraction

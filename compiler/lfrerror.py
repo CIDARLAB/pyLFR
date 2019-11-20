@@ -1,7 +1,12 @@
 from enum import Enum
 
+
 class ErrorType(Enum):
+    COMPILER_NOT_IMPLEMENTED = 0
     MODULE_IO_NOT_FOUND = 10
+    VECTOR_SIZE_MISMATCH = 20
+    VARIABLE_NOT_RECOGNIZED = 30
+
 
 class LFRError:
     def __init__(self, errortype: ErrorType, message: str):

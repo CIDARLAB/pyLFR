@@ -1,5 +1,5 @@
 class Fluid(object):
-    def __init__(self, id):
+    def __init__(self, id: str):
         self.id = id
 
     def __str__(self):

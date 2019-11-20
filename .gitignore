@@ -132,3 +132,5 @@ antlr/
 # Generated Files
 *.ps
 *.dot
+
+test/
