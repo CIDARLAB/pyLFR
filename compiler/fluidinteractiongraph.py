@@ -80,8 +80,4 @@ class FluidInteractionGraph(object):
         # print("TEST2", self.G.edges())
 
     def __str__(self):
-        return self.G.edges.__str__()
-
-
-    def generate_dot_file(self, filename: str) -> None:
-        nx.nx_agraph.to_agraph(self.G).write(filename)
+        return self.G.edges.__str__()        
