@@ -41,7 +41,7 @@ def mapTechnologies(graph: FluidInteractionGraph):
                 graph.mergeinteractions(nodes)
                 repeat = True
                 break
-        
+
         if repeat:
             continue
 
@@ -49,7 +49,7 @@ def mapTechnologies(graph: FluidInteractionGraph):
 
     print("Finished the STEP 1 of operator merging")
     print("PASS1 Reduced Graph:", graph.G.edges())
-    #print(graph.fluidinteractions)
+    # print(graph.fluidinteractions)
 
     # Step 2-
     #   The second pass we construct dictionary <interactions, set(inputs)> and then we
@@ -60,7 +60,7 @@ def mapTechnologies(graph: FluidInteractionGraph):
     for interaction in list(graph.fluidinteractions):
         # print("Interaction:", interaction)
 
-        # This comprehension generates the list inputs 
+        # This comprehension generates the list inputs
         neighbors = [i[0] for i in list(graph.G.in_edges(interaction))]
         # print("neighbours:", neighbors)
         for neighbor in neighbors:
@@ -74,11 +74,10 @@ def mapTechnologies(graph: FluidInteractionGraph):
                 foo.add(neighbor)
                 PASS2_DICT[interaction] = foo
 
-
     print("PASS 2 DICTIONARY: ", PASS2_DICT)
 
-    #   Now that the dictionary has been built, the fluidic interactions with the 
-    #   same sets of inputs need to merged. To do that that, create anoter dictionary 
+    #   Now that the dictionary has been built, the fluidic interactions with the
+    #   same sets of inputs need to merged. To do that that, create anoter dictionary
     #   that will have the sets as keys
 
     MERGE_DICT = dict()
@@ -91,17 +90,14 @@ def mapTechnologies(graph: FluidInteractionGraph):
             foo = []
             foo.append(interaction)
             MERGE_DICT[inputset] = foo
-    
+
     # print("MERGE_DICT: ", MERGE_DICT)
 
     # Now to merge each of these list of fluid interactions
 
     for key in MERGE_DICT.keys():
         interactions = MERGE_DICT[key]
-        if len(interactions)>1:
+        if len(interactions) > 1:
             graph.mergeinteractions(interactions)
 
-    
     print("PASS2 Reduced Graph:", graph.G.edges())
-
-            

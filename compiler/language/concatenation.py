@@ -12,7 +12,7 @@ class Concatenation:
         offset = 0
         for vrange in self.ranges:
             if key < len(vrange) + offset:
-                vrange[key - offset]
+                return vrange[key - offset]
             else:
                 offset = offset + len(vrange)
 

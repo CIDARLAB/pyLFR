@@ -14,4 +14,3 @@ class ModuleIO:
 
     def __str__(self):
         return "Name: {0.name}, Type : {0.type}".format(self)
-

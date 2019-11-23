@@ -15,8 +15,10 @@ import parameters
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('input', help="This is the file thats used as the input ")
-    parser.add_argument('--outpath', type=str, default="out/", help="This is the output directory")
+    parser.add_argument(
+        'input', help="This is the file thats used as the input ")
+    parser.add_argument('--outpath', type=str, default="out/",
+                        help="This is the output directory")
 
     args = parser.parse_args()
     print("output dir:", args.outpath)
@@ -49,7 +51,8 @@ def main():
     # Check if the module compilation was successful
     if listener.success:
         # Now Process the Modules Generated
-        devicegenerator = DeviceGenerator(listener.currentModule.name, listener.currentModule)
+        devicegenerator = DeviceGenerator(
+            listener.currentModule.name, listener.currentModule)
         devicegenerator.generatenetlist()
 
 

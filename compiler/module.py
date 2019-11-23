@@ -12,7 +12,7 @@ class Module(object):
         self.G = FluidInteractionGraph()
         self.fluids = dict()
 
-    def addio(self, io : ModuleIO):
+    def addio(self, io: ModuleIO):
         self.io[io.name] = io
         f = Fluid(io.name)
         self.G.addfluidnode(f)
@@ -24,10 +24,10 @@ class Module(object):
             return None
 
     def addintermediate(self, intermeidate):
-        #TODO: Make the fluid interaction graph
+        # TODO: Make the fluid interaction graph
         self.intermediates.append(intermeidate)
         f = Fluid(intermeidate)
-        #TODO: Create an example with intermediates
+        # TODO: Create an example with intermediates
         self.G.add_node(f)
 
     def addfluid(self, fluid: Fluid):
@@ -40,7 +40,8 @@ class Module(object):
         self.G.addfluidconnection(fluid1id, fluid2id)
 
     def addfluidcustominteraction(self, fluid1: Fluid, fluid2: Fluid, interaction: str) -> FluidInteraction:
-        finteraction = FluidInteraction(fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS, interaction)
+        finteraction = FluidInteraction(
+            fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS, interaction)
         self.G.addfluidinteraction(fluid1, fluid2, finteraction)
         return finteraction
 
@@ -53,8 +54,3 @@ class Module(object):
             ret += self.io[key].__str__()
             ret += "\n"
         return ret
-
-
-
-
-

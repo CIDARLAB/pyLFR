@@ -222,16 +222,13 @@ class LFRCompiler(lfrXListener):
 
         self.assignmode = False
 
-
-    def enterExpression(self, ctx:lfrXParser.ExpressionContext):
+    def enterExpression(self, ctx: lfrXParser.ExpressionContext):
         self.expressionvariablestack = []
         self.expressionoperatorstack = []
 
-
-    def exitExpression(self, ctx:lfrXParser.ExpressionContext):
+    def exitExpression(self, ctx: lfrXParser.ExpressionContext):
         self.expressionvariablestack = None
         self.expressionoperatorstack = None
-
 
         # for vector in ctx.vector():
         #     print(vector)
@@ -325,4 +322,3 @@ class LFRCompiler(lfrXListener):
         v = Vector(name, objecttype, startindex, endindex)
         self.vectors[name] = v
         return v
-

@@ -15,4 +15,3 @@ class LFRError:
 
     def __str__(self):
         return "Error Type: {0.errortype}, Message: {0.message}".format(self)
-
