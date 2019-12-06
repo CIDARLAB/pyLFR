@@ -3,15 +3,16 @@ from .fluid import Fluid
 
 
 class InteractionType(Enum):
-    TECHNOLOGY_PROCESS = 1
-    MIX = 2
-    SEPARATE = 3
-    DISTRIBUTE = 4,
-    CONTROL = 5
-
-
+    TECHNOLOGY_PROCESS = 1      # Mapped operators
+    MIX = 2                     # + 
+    SIEVE = 3                   # -
+    METER = 4                   # %
+    DILUTE = 5                  # *
+    DIVIDE = 6                  # /
+    
 class FluidInteraction(object):
-    def __init__(self, fluid1: Fluid, fluid2: Fluid, interactiontype: InteractionType, custominteraction=None):
+    # TODO: WE need to rehaul this system
+    def __init__(self, fluid1: Fluid = None, fluid2: Fluid = None, interactiontype: InteractionType = None, custominteraction=None):
         self.interactionType = interactiontype
         if fluid1 == fluid2:
             raise Exception(
@@ -26,3 +27,17 @@ class FluidInteraction(object):
             self.fluid2 = fluid1
 
         self.customInteraction = custominteraction
+
+    @staticmethod
+    def getID(fluid1 : Fluid = None, fluid2: Fluid = None, operator: str = '') -> str:
+        id = None
+
+        if fluid2 is not None:
+            if fluid1.id < fluid2.id:
+                id = fluid1.id + "_" + operator + "_" + fluid2.id
+            else:
+                id = fluid2.id + "_" + operator + "_" + fluid1.id
+        else:
+            id = fluid1.id + "_" + operator
+
+        return id

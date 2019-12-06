@@ -15,8 +15,18 @@ graphviz = "*"
 
 [dev-packages]
 
+"autopep8" = "*"
+black = "*"
+pylint = "*"
+cached-property = "*"
+rope = "*"
 
 
 [requires]
 
 python_version = "3.6"
+
+
+[pipenv]
+
+allow_prereleases = true

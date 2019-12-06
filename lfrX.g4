@@ -62,31 +62,33 @@ statement
 
 tempvariablesstat
    :   fluiddeclstat
-   |   reactorstat
-   |   nodestat
    |   storagestat
    |   numvarstat
    ;
 
-nodestat : 'node' ID (',' ID)* ;
-
-reactorstat : 'reactor' ID (',' ID)* ;
-
 fluiddeclstat : 'fluid' declvar (',' declvar)* ';' ;
 
-storagestat : 'storage' vector? ID (',' ID)* ';';
+storagestat : 'storage' declvar (',' declvar)* ';';
 
 numvarstat : 'number' ID '=' number (',' ID '=' number)* ';';
 
 assignstat
-   :   'assign' lhs '=' (number | variables | expression)  ';'
+   :   'assign' lhs '='  (bracketexpression | expression ) ';'
    ;
 
 
 //TODO: Look up how the grammar is given for Verilog. This will have be to correct for actually solving the logic things
+bracketexpression
+    :   unary_operator? '(' expression ')'
+    ;
+
 expression
-   :   (variables | number) (binary_operator (variables | number))+
-   |   unary_operator (variables)
+   :   (bracketexpression | expressionterm ) (binary_operator (bracketexpression | expressionterm ))*
+   ;
+
+expressionterm
+   :    unary_operator? variables
+   |    number
    ;
 
 vector
@@ -120,9 +122,7 @@ performancedirective : ID   '='  number unit? ;
 
 unit: ID;
 
-ID
-   :   ('a'..'z' | 'A'..'Z'|'_')('a'..'z' | 'A'..'Z'|'0'..'9'|'_')*
-   ;
+ID  :   ('a'..'z' | 'A'..'Z'|'_')('a'..'z' | 'A'..'Z'|'0'..'9'|'_')* ;
 
 WS : [ \t\r\n]+ -> skip ;
 

@@ -9,3 +9,6 @@ class VectorRange:
 
     def __len__(self):
         return abs(self.startindex - self.endindex + 1)
+
+    def __str__(self):     
+        return "< VectorRange : {0} [{1} : {2}]>".format(self.vector.id, self.startindex, self.endindex)
