@@ -9,44 +9,68 @@ class Module(object):
         self.name = name
         self.io = dict()
         self.intermediates = []
-        self.G = FluidInteractionGraph()
+        self.FIG = FluidInteractionGraph()
         self.fluids = dict()
 
-    def addio(self, io: ModuleIO):
-        self.io[io.name] = io
-        f = Fluid(io.name)
-        self.G.addfluidnode(f)
+    def add_io(self, io: ModuleIO):
+        self.io[io.id] = io
+        f = Fluid(io.id)
+        self.FIG.addfluidnode(f)
 
-    def getio(self, name: str) -> ModuleIO:
+    def get_io(self, name: str) -> ModuleIO:
         if name in self.io:
             return self.io[name]
         else:
-            return None
+            raise Exception("ModuleIO:{0} not found !".format(name))
 
-    def addintermediate(self, intermeidate):
-        # TODO: Make the fluid interaction graph
-        self.intermediates.append(intermeidate)
-        f = Fluid(intermeidate)
-        # TODO: Create an example with intermediates
-        self.G.add_node(f)
+    # def addintermediate(self, intermeidate):
+    #     # TODO: Make the fluid interaction graph
+    #     self.intermediates.append(intermeidate)
+    #     f = Fluid(intermeidate)
+    #     # TODO: Create an example with intermediates
+    #     self.G.add_node(f)
 
-    def addfluid(self, fluid: Fluid):
-        self.G.addfluidnode(fluid)
+    def add_fluid(self, fluid: Fluid):
+        self.FIG.addfluidnode(fluid)
 
-    def getfluid(self, name: str):
-        return self.G.getfluid(name)
+    def get_fluid(self, name: str):
+        return self.FIG.getfluid(name)
 
-    def addfluidconnection(self, fluid1id: str, fluid2id: str) -> None:
-        self.G.addfluidconnection(fluid1id, fluid2id)
+    def add_fluid_connection(self, fluid1id: str, fluid2id: str) -> None:
+        self.FIG.add_fluid_connection(fluid1id, fluid2id)
 
-    def addfluidcustominteraction(self, fluid1: Fluid, fluid2: Fluid, interaction: str) -> FluidInteraction:
+    def add_fluid_custominteraction(self, fluid1: Fluid, fluid2: Fluid, interaction: str) -> FluidInteraction:
         finteraction = FluidInteraction(
             fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS, interaction)
-        self.G.addfluidinteraction(fluid1, fluid2, finteraction)
+        self.FIG.add_fluid_interaction(fluid1, fluid2, finteraction)
         return finteraction
 
-    def addinteractionoutput(self, output: Fluid, interaction: FluidInteraction):
-        self.G.attachinteractionoutput(output, interaction)
+    def add_fluid_fluid_interaction(self, fluid1: Fluid, fluid2: Fluid, interaaction_type: InteractionType) -> FluidInteraction:
+        
+        fluid_interaction = FluidInteraction(fluid1, fluid2, interaaction_type)
+
+        self.FIG.add_fluid_interaction(fluid1, fluid2, fluid_interaction)
+
+        return fluid_interaction
+
+    def add_fluid_finteraction_interaction(self, fluid1: Fluid, finteraction: FluidInteraction, interaction_type: InteractionType):
+        #TODO: Create new factory method for creating this kind of fluid interaction
+        new_fluid_interaction = FluidInteraction(fluid1, finteraction, interaction_type)
+
+        self.FIG.add_fluid_finteraction_interaction(fluid1, finteraction, new_fluid_interaction)
+
+        return new_fluid_interaction
+
+    def add_interaction_output(self, output: Fluid, interaction: FluidInteraction):
+        self.FIG.attach_interaction_output(output, interaction)
+
+    def add_fluid_numeric_interaction(self, fluid1: Fluid, number, interaction: InteractionType)-> FluidInteraction:
+        finteraction = FluidInteraction(fluid1 = fluid1, interactiontype=interaction)
+        finteraction.interaction_data['value'] = number
+
+        self.FIG.add_singlefluid_interaction(fluid1, finteraction)
+
+        return finteraction
 
     def __str__(self):
         ret = "Name : " + self.name + "\n"

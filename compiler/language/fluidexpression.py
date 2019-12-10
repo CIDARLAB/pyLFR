@@ -1,35 +1,48 @@
 # The operator order has to be correct in the array, if any of the things are off,
 # other things will go off
+from compiler.fluidinteraction import InteractionType, FluidInteraction
 from compiler.language.utils import is_number
 from compiler.fluid import Fluid
 from compiler.language.vectorrange import VectorRange
+from compiler.language.vector import Vector
 
 
 OPERATOR_ORDER = [['*', '/'], ['%'], ['+', '-']]
 NUMERIC_OPERATOR_ORDER = [['/', '*'], ['%'], ['+', '-']]
 
+
 class FluidExpression:
 
-    def __init__(self) -> None:
+    def __init__(self, module) -> None:
+        self.currentmodule = module
         self.operatororder = OPERATOR_ORDER
         self.numericoperatororder = NUMERIC_OPERATOR_ORDER
 
-    def processexpression(self, termlist, operatorlist, fig):
+    def process_expression(self, termlist, operatorlist):
 
+        # In ste1, we go over and complete all the numeric operations in the precedence of 
+        # numeric operation order. It is possible that there are no numeric operations going 
+        # on in the expression. In that case we have the option to go to the next step. It 
+        # is also possible there are purely numeric operations and hence we only delete terms 
+        # if the numeric operation happens. In the second scenario, logic dictates that every 
+        # find will require us to delete the operator and the term.
+
+        
         # First go over the numeric operator order
         for operatorset in self.numericoperatororder:
             # For each set we start the processing the individual thing
             for operator in operatorset:
                 # search for operators in the operatorlist
-                # indices = [i for i, x in enumerate(operatorlist) if x == operator]
-                index = None
-                try:
-                    index = operatorlist.index(operator)
-                except ValueError:
-                    index = -1
+                indices = [i for i, x in enumerate(operatorlist) if x is operator]
+                # index = None
+                # try:
+                #     index = operatorlist.index(operator)
+                # except ValueError:
+                #     index = -1
 
                 # Now go over all these indices
-                while index >= 0:
+                while len(indices) > 0:
+                    index = indices.pop(0)
                     operand1 = termlist[index]
                     operand2 = termlist[index+1]
                     operation = operatorlist[index]
@@ -37,18 +50,16 @@ class FluidExpression:
 
                     if is_number(operand1) and is_number(operand2):
                         # If both the terms are numbers then actually do the operation
-                        result = FluidExpression.evaluateNumericValues(
+                        result = FluidExpression.evaluate_numeric_operator(
                             operand1, operand2, operator)
 
-                    # Remove the operator
-                    del operatorlist[index]
-                    # Put the result back in there
-                    termlist[index:index+2] = [result]
+                        # Remove the operator
+                        del operatorlist[index]
+                        # Put the result back in there
+                        termlist[index:index+2] = [result]
+                        # Update the indices
+                        indices = [i for i, x in enumerate(operatorlist) if x is operator]
 
-                    try:
-                        index = operatorlist.index(operator)
-                    except ValueError:
-                        index = -1
 
         # Second go over the fluidic operator order
         for operatorset in self.operatororder:
@@ -75,15 +86,22 @@ class FluidExpression:
                     elif is_number(operand1):
                         print("Performing the operation: \n Operator - {2} \n Number - {0} \n Fluid - {1}".format(
                             operand1, operand2, operator))
+                        result = self.evaluate_fluid_numeric_operator(
+                            operand2, operand1, operator)
                     elif is_number(operand2):
                         print("Performing the operation: \n Operator - {2} \n Number - {1} \n Fluid - {0}".format(
                             operand1, operand2, operator))
+                        result = self.evaluate_fluid_numeric_operator(
+                            operand1, operand2, operator)
                     else:
                         # Perform the fig operation
                         print("Performing operation: {0} {1} {2}".format(
                             operand1, operation, operand2))
-                        result = VectorRange(Fluid("TEST"), 0, 5)
+                        result = self.evalute_fluid_fluid_operator(
+                            operand1, operand2, operator)
 
+                    # Delete the operator from the list
+                    del operatorlist[index]
                     # Put the result back in there
                     termlist[index:index+2] = [result]
 
@@ -92,11 +110,83 @@ class FluidExpression:
                     except ValueError:
                         index = -1
         
-        return termlist
+        # At the end of the expression, there should only be 1 expression left
+        return termlist[0]
 
+    def evalute_fluid_fluid_operator(self, operand1, operand2, operator):
+        operand1_element = operand1[0]
+        operand2_element = operand2[0]
+        interactiontype = None
+        result = None
+        if operator is '*':
+            raise Exception(
+                "Unsuppored operator on two fluid values: {0}".format(operator))
+        elif operator is '/':
+            raise Exception(
+                "Unsuppored operator on two fluid values: {0}".format(operator))
+        elif operator is '%':
+            raise Exception(
+                "Unsuppored operator on two fluid values: {0}".format(operator))
+        elif operator is '+':
+            pass
+            # TODO: We need to return the operation node here that is generated by operating on the
+            # two different operators
+            interactiontype = InteractionType.MIX
+        elif operator is '-':
+            pass
+            # TODO: In case of substraction, we need to return the operand1 back again,
+            # since the subtracted node becomes an output, of whats given to the fluid
+            interactiontype = InteractionType.SIEVE
+        else:
+            raise Exception(
+                "Unsuppored operator on two fluid values: {0}".format(operator))
+
+        # TODO: Check if the operation here is between two different fluids or a fluid and an fluidinteraction
+        if isinstance(operand1_element, FluidInteraction) and isinstance(operand2_element, FluidInteraction):
+            result = self.currentmodule.add_finteraction_finteraction_interaction(operand1_element, operand2_element, interactiontype)
+        elif isinstance(operand1_element, FluidInteraction):
+            result = self.currentmodule.add_fluid_finteraction_interaction(operand2_element, operand1_element, interactiontype)
+        elif isinstance(operand2_element, FluidInteraction):
+            result = self.currentmodule.add_fluid_finteraction_interaction(operand1_element, operand2_element, interactiontype)
+        else:
+            result = self.currentmodule.add_fluid_fluid_interaction(operand1_element, operand2_element, interactiontype)
+
+
+        return result
+
+    def evaluate_fluid_numeric_operator(self, operand_fluidic, operand_numeric, operator):
+
+        fluid = operand_fluidic[0]
+        interactions = []
+        for fluid in operand_fluidic:        
+            interaction = None
+            if operator is '*':
+                #TODO: Create interaction/operation node(s) on the FIG
+                interaction = self.currentmodule.add_fluid_numeric_interaction(fluid, operand_numeric, InteractionType.DILUTE)
+            elif operator is '/':
+                #TODO: Create interaction/operation node(s) on the FIG
+                interaction = self.currentmodule.add_fluid_numeric_interaction(fluid, operand_numeric, InteractionType.DIVIDE)
+            elif operator is '%':
+                #TODO: Create interaction/operation node(s) on the FIG
+                interaction = self.currentmodule.add_fluid_numeric_interaction(fluid, operand_numeric, InteractionType.METER)
+            elif operator is '+':
+                raise Exception(
+                    "Unsuppored operator on 1:fluidic 2:numeric values: {0}".format(operator))
+            elif operator is '-':
+                raise Exception(
+                    "Unsuppored operator on 1:fluidic 2:numeric values: {0}".format(operator))
+            else:
+                raise Exception(
+                    "Unsuppored operator on 1:fluidic 2:numeric values: {0}".format(operator))
+
+            interactions.append(interaction)
+        
+        v = Vector.create_from_list_things("interaction_" + operand_fluidic.id, interactions)
+        result = v.get_range()
+        return result
 
     @staticmethod
-    def evaluateNumericValues(operand1, operand2, operator):
+    def evaluate_numeric_operator(operand1, operand2, operator):
         result = None
         if operator is '*':
             result = operand1 * operand2
@@ -109,7 +199,7 @@ class FluidExpression:
         elif operator is '-':
             result = operand1 - operand2
         else:
-            raise Exception("Unsuppored operator on two numeric values: {0}".format(operator))
+            raise Exception(
+                "Unsuppored operator on two numeric values: {0}".format(operator))
 
         return result
-

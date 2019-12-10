@@ -4,7 +4,7 @@ PASS1_DICT = dict()
 PASS2_DICT = dict()
 
 
-def mapTechnologies(graph: FluidInteractionGraph):
+def map_technologies(graph: FluidInteractionGraph):
     print("Running the direct technology mapper:")
     print(graph.G.edges())
     # Iterate through all the custom mapping interactions
@@ -38,7 +38,7 @@ def mapTechnologies(graph: FluidInteractionGraph):
             nodes = PASS1_DICT[interaction]
 
             if len(nodes) > 1:
-                graph.mergeinteractions(nodes)
+                graph.merge_interactions(nodes)
                 repeat = True
                 break
 
@@ -98,6 +98,6 @@ def mapTechnologies(graph: FluidInteractionGraph):
     for key in MERGE_DICT.keys():
         interactions = MERGE_DICT[key]
         if len(interactions) > 1:
-            graph.mergeinteractions(interactions)
+            graph.merge_interactions(interactions)
 
     print("PASS2 Reduced Graph:", graph.G.edges())

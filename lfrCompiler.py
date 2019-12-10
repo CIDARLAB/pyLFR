@@ -1,10 +1,10 @@
-from compiler.language.fluidexpression import FluidExpression
 from enum import Enum
 
 from antlr.lfrXListener import lfrXListener
 from antlr.lfrXParser import lfrXParser
 from compiler.fluid import Fluid
 from compiler.language.concatenation import Concatenation
+from compiler.language.fluidexpression import FluidExpression
 from compiler.language.vector import Vector
 from compiler.language.vectorrange import VectorRange
 from compiler.lfrerror import ErrorType, LFRError
@@ -28,7 +28,7 @@ class LFRCompiler(lfrXListener):
 
         print("Initialized the lfrcompiler")
         self.modules = []
-        self.currentModule = None
+        self.currentModule: Module
         self.lhs = None
         self.rhs = None
         self.operatormap = dict()
@@ -80,7 +80,7 @@ class LFRCompiler(lfrXListener):
             self.vectors[name] = v
 
             for item in v.get_items():
-                self.currentModule.addio(item)
+                self.currentModule.add_io(item)
 
     def exitExplicitIOBlock(self, ctx: lfrXParser.ExplicitIOBlockContext):
         #  First check the type of the explicit io block
@@ -127,7 +127,7 @@ class LFRCompiler(lfrXListener):
 
                     # Add the declared IO as the module's IO
                     for item in vec.get_items():
-                        self.currentModule.addio(item)
+                        self.currentModule.add_io(item)
 
                     # Go through each of the ios and modify the type
                     for io in vec.get_items():
@@ -151,7 +151,7 @@ class LFRCompiler(lfrXListener):
             v = self.__createVector(name, Fluid, startindex, endindex)
 
             for item in v.get_items():
-                self.currentModule.addfluid(item)
+                self.currentModule.add_fluid(item)
 
             # Now that the declaration is done, we are going to save it
             self.vectors[name] = v
@@ -285,12 +285,12 @@ class LFRCompiler(lfrXListener):
         self.__revertMode()
 
         #TODO: Pull all the operators and expression terms
-        stackslice = self.stack[-len(self.binaryoperatorsstack):]
+        stackslice = self.stack[-(len(self.binaryoperatorsstack)+1):]
         del self.stack[-(len(self.binaryoperatorsstack)+1):]
 
-        fluidexpression = FluidExpression()
+        fluidexpression = FluidExpression(self.currentModule)
         #TODO: Figure out how to pass the FIG after this
-        result = fluidexpression.processexpression(stackslice, self.binaryoperatorsstack, None)
+        result = fluidexpression.process_expression(stackslice, self.binaryoperatorsstack)
         self.stack.append(result)
 
     def enterBracketexpression(self, ctx: lfrXParser.BracketexpressionContext):
@@ -300,15 +300,15 @@ class LFRCompiler(lfrXListener):
     def exitBracketexpression(self, ctx: lfrXParser.BracketexpressionContext):
         self.__revertMode()
 
-        #TODO: Perform the unary operation if present
+        # Perform the unary operation if present
         if ctx.unary_operator() is not None:
 
             operator = ctx.unary_operator().getText()
 
             term = self.stack.pop()
 
+            # TODO: Write how one should be doing the unary operation
             print("Performing the unary operation on the single term")
-            
             self.stack.append(result)
 
 
@@ -548,7 +548,7 @@ class LFRCompiler(lfrXListener):
         if variable in self.currentModule.intermediates:
             return True
         else:
-            ret = self.currentModule.getio(variable)
+            ret = self.currentModule.get_io(variable)
             if ret is not None:
                 return True
 

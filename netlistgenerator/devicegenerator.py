@@ -1,4 +1,4 @@
-from .technologymapper import mapTechnologies
+from .technologymapper import map_technologies
 from networkx import nx
 import utils
 
@@ -9,9 +9,9 @@ class DeviceGenerator(object):
         self.devicename = name
         self.devicemodule = module
 
-    def generatenetlist(self):
+    def generate_netlist(self):
         # Process the direct technology mapping
-        interactiongraph = self.devicemodule.G
-        mapTechnologies(interactiongraph)
+        interactiongraph = self.devicemodule.FIG
+        map_technologies(interactiongraph)
 
         utils.printgraph(interactiongraph.G, self.devicename + '.dot')

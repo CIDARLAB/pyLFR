@@ -21,7 +21,7 @@ class FluidInteractionGraph(object):
         else:
             return None
 
-    def addfluidconnection(self, fluid1id: str, fluid2id: str) -> None:
+    def add_fluid_connection(self, fluid1id: str, fluid2id: str) -> None:
         if fluid1id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " +
                             fluid1id + " is not in the fluid interaction graph")
@@ -31,7 +31,7 @@ class FluidInteractionGraph(object):
 
         self.G.add_edge(fluid1id, fluid2id)
 
-    def addfluidinteraction(self, fluid: Fluid, fluid2: Fluid, interaction: FluidInteraction) -> None:
+    def add_fluid_interaction(self, fluid: Fluid, fluid2: Fluid, interaction: FluidInteraction) -> None:
         if fluid.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " +
                             fluid.id + " is not in the fluid interaction graph")
@@ -49,20 +49,56 @@ class FluidInteractionGraph(object):
             self.G.add_edge(fluid.id, interaction.id)
             self.G.add_edge(fluid2.id, interaction.id)
 
-    def attachinteractionoutput(self, output: Fluid, interaction: FluidInteraction) -> None:
+    def attach_interaction_output(self, output: Fluid, interaction: FluidInteraction) -> None:
         if output.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " +
                             output.id + " is not in the fluid interaction graph")
         else:
             self.G.add_edge(interaction.id, output.id)
 
-    def getinputnodes(self, interaction: str):
+    def add_singlefluid_interaction(self, fluid1: Fluid, interaction: FluidInteraction) -> None:
+        if fluid1.id not in self.fluids.keys():
+            raise Exception("Cannot add interaction because " +
+                            fluid1.id + " is not in the fluid interaction graph")
+        
+        if interaction.id in self.fluidinteractions.keys():
+            # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
+            print("Warning: {0} is already present in the fluid interaction graph".format(
+                interaction.id))
+        else:
+            self.fluidinteractions[interaction.id] = interaction
+            self.G.add_node(interaction.id)
+            self.G.add_edge(fluid1.id, interaction.id)
+
+
+    def add_fluid_finteraction_interaction(self, fluid1: Fluid, finteraction: FluidInteraction, newinteraction: FluidInteraction):
+        if fluid1.id not in self.fluids.keys():
+            raise Exception("Cannot add interaction because " +
+                            fluid1.id + " is not in the fluid interaction graph")
+
+        if finteraction.id not in self.fluidinteractions.keys():
+            # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
+            print("Warning: {0} is already present in the fluid interaction graph".format(
+                finteraction.id))
+
+        if newinteraction.id in self.fluidinteractions.keys():
+            # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
+            print("Warning: {0} is already present in the fluid interaction graph".format(
+                newinteraction.id))
+        else:
+            self.fluidinteractions[newinteraction.id] = newinteraction
+            self.G.add_node(newinteraction.id)
+            self.G.add_edge(fluid1.id, newinteraction.id)
+            self.G.add_edge(finteraction.id, newinteraction.id)
+        
+
+    def get_input_nodes(self, interaction: str):
         edges = self.G.in_edges(interaction)
         ret = [u for (u, v) in edges]
         # print("TEST3", ret)
         return ret
 
-    def mergeinteractions(self, interactions: [str]) -> None:
+    def merge_interactions(self, interactions) -> None:
         keep = interactions[0]
         print("Merging interactions:", keep)
         print("All the interactions:", interactions)
@@ -71,7 +107,7 @@ class FluidInteractionGraph(object):
         for interaction in interactions[1:]:
 
             # Add the incoming input nodes of the fluid interactions to a list
-            fluid_inputs = self.getinputnodes(interaction)
+            fluid_inputs = self.get_input_nodes(interaction)
             # print("Removing:", interaction)
             self.G.remove_node(interaction)
 

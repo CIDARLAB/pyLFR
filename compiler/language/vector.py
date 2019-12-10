@@ -2,19 +2,20 @@ from compiler.language.vectorrange import VectorRange
 
 
 class Vector:
-    def __init__(self, id: str, type, startindex: int, endindex: int):
+    def __init__(self, id: str, vectortype = None, startindex: int = 0, endindex: int = 0):
         self.id = id
         self.startindex = startindex
         self.endindex = endindex
         self.vectormap = None
         self.vec = []
 
-        # If its a singular item avoid the indexing
-        if len(self) is 1:
-            self.vec.append(type(self.id))
-        else:
-            for i in range(len(self)):
-                self.vec.append(type(self.id + "_" + str(i)))
+        if vectortype is not None:
+            # If its a singular item avoid the indexing
+            if len(self) is 1:
+                self.vec.append(vectortype(self.id))
+            else:
+                for i in range(len(self)):
+                    self.vec.append(vectortype(self.id + "_" + str(i)))
 
     def __len__(self):
         return abs(self.startindex - self.endindex)+1
@@ -33,3 +34,11 @@ class Vector:
         if key > len(self.vec) - 1:
             raise IndexError()
         return self.vec[key]
+
+    @classmethod
+    def create_from_list_things(cls, id: str, list_of_things):
+        ret = cls(id)
+        ret.vec = list_of_things
+        ret.startindex = 0
+        ret.endindex = len(list_of_things) - 1
+        return ret

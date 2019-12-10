@@ -4,6 +4,13 @@ class VectorRange:
         self.startindex = startindex
         self.endindex = endindex
 
+    # def get_id(self) -> str:
+    #     return self.vector.id
+
+    @property
+    def id(self):
+        return self.vector.id
+
     def __getitem__(self, key: int):
         return self.vector[self.startindex + key]
 

@@ -10,7 +10,7 @@ class IOType(Enum):
 class ModuleIO:
     def __init__(self, name, iotype=None):
         self.type = iotype
-        self.name = name
+        self.id = name
 
     def __str__(self):
-        return "Name: {0.name}, Type : {0.type}".format(self)
+        return "Name: {0.id}, Type : {0.type}".format(self)

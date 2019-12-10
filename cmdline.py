@@ -53,7 +53,7 @@ def main():
         # Now Process the Modules Generated
         devicegenerator = DeviceGenerator(
             listener.currentModule.name, listener.currentModule)
-        devicegenerator.generatenetlist()
+        devicegenerator.generate_netlist()
 
 
 if __name__ == "__main__":
