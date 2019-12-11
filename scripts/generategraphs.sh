@@ -7,5 +7,5 @@ for f in ../out/*.dot;
 
 do 
 	echo "Running File $f";
-    dot -T ps $f -o $f.ps
-done
+    dot -Tpng $f -o $f.png
+done 

@@ -36,8 +36,8 @@ class Module(object):
     def get_fluid(self, name: str):
         return self.FIG.getfluid(name)
 
-    def add_fluid_connection(self, fluid1id: str, fluid2id: str) -> None:
-        self.FIG.add_fluid_connection(fluid1id, fluid2id)
+    def add_fluid_connection(self, item1id: str, item2id: str) -> None:
+        self.FIG.add_fluid_connection(item1id, item2id)
 
     def add_fluid_custominteraction(self, fluid1: Fluid, fluid2: Fluid, interaction: str) -> FluidInteraction:
         finteraction = FluidInteraction(

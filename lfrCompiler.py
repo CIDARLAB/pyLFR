@@ -21,6 +21,11 @@ class ListenerMode(Enum):
     FLUID_ASSIGN_STAT_MODE = 5
     DISTRIBUTE_ASSIGN_STAT_MODE = 6
 
+class VariableTypes(Enum):
+    FLUID = 0
+    NUMBER = 1
+    STORAGE = 3
+    SIGNAL = 4
 
 class LFRCompiler(lfrXListener):
 
@@ -311,9 +316,44 @@ class LFRCompiler(lfrXListener):
             print("Performing the unary operation on the single term")
             self.stack.append(result)
 
+    
+    def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):
+        rhs = self.stack.pop()
+        lhs = self.stack.pop()
+        
+        # TODO: Finish the entire vector implementatinon (?)
+        if len(lhs) == len(rhs):
+            print("LHS, RHS sizes are equal")
+            # Make 1-1 connections
+            for source, target in zip(rhs, lhs):
+                print(source, target)
+                if isinstance(source, ModuleIO):
+                    sourceid = source.name
+                else:
+                    sourceid = source.id
 
+                if isinstance(target, ModuleIO):
+                    targetid = target.id
+                else:
+                    targetid = target.id
 
+                self.currentModule.add_fluid_connection(sourceid, targetid)
 
+        elif len(lhs) != len(rhs):
+            print("LHS not equal to RHS")
+            for source in rhs:
+                if isinstance(source, ModuleIO):
+                    sourceid = source.name
+                else:
+                    sourceid = source.id
+
+                for target in lhs:
+                    if isinstance(target, ModuleIO):
+                        targetid = target.name
+                    else:
+                        targetid = target.id
+
+                    self.currentModule.add_fluid_connection(sourceid, targetid)
 
 
 

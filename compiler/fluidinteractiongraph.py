@@ -21,15 +21,15 @@ class FluidInteractionGraph(object):
         else:
             return None
 
-    def add_fluid_connection(self, fluid1id: str, fluid2id: str) -> None:
-        if fluid1id not in self.fluids.keys():
+    def add_fluid_connection(self, item1id: str, item2id: str) -> None:
+        if item1id not in self.fluids.keys() and item1id not in self.fluidinteractions.keys():
             raise Exception("Cannot add interaction because " +
-                            fluid1id + " is not in the fluid interaction graph")
-        if fluid2id not in self.fluids.keys():
+                            item1id + " is not in the fluid interaction graph")
+        if item2id not in self.fluids.keys() and item2id not in self.fluidinteractions.keys():
             raise Exception("Cannot add interaction because " +
-                            fluid2id + " is not in the fluid interaction graph")
+                            item2id + " is not in the fluid interaction graph")
 
-        self.G.add_edge(fluid1id, fluid2id)
+        self.G.add_edge(item1id, item2id)
 
     def add_fluid_interaction(self, fluid: Fluid, fluid2: Fluid, interaction: FluidInteraction) -> None:
         if fluid.id not in self.fluids.keys():
