@@ -2,7 +2,7 @@ from compiler.language.vectorrange import VectorRange
 
 
 class Concatenation:
-    def __init__(self, ranges: [VectorRange] = None):
+    def __init__(self, ranges = None):
         self.ranges = []
         if ranges is not None:
             self.ranges = ranges

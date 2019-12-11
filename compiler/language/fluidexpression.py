@@ -86,18 +86,18 @@ class FluidExpression:
                     elif is_number(operand1):
                         print("Performing the operation: \n Operator - {2} \n Number - {0} \n Fluid - {1}".format(
                             operand1, operand2, operator))
-                        result = self.evaluate_fluid_numeric_operator(
+                        result = self.__evaluate_fluid_numeric_operator(
                             operand2, operand1, operator)
                     elif is_number(operand2):
                         print("Performing the operation: \n Operator - {2} \n Number - {1} \n Fluid - {0}".format(
                             operand1, operand2, operator))
-                        result = self.evaluate_fluid_numeric_operator(
+                        result = self.__evaluate_fluid_numeric_operator(
                             operand1, operand2, operator)
                     else:
                         # Perform the fig operation
                         print("Performing operation: {0} {1} {2}".format(
                             operand1, operation, operand2))
-                        result = self.evalute_fluid_fluid_operator(
+                        result = self.__evalute_fluid_fluid_operator(
                             operand1, operand2, operator)
 
                     # Delete the operator from the list
@@ -113,7 +113,7 @@ class FluidExpression:
         # At the end of the expression, there should only be 1 expression left
         return termlist[0]
 
-    def evalute_fluid_fluid_operator(self, operand1, operand2, operator):
+    def __evalute_fluid_fluid_operator(self, operand1, operand2, operator):
         if len(operand1) is not len(operand2):
             raise Exception("Operand {0} and Operand {2} are of different Dimensions")
         operand1_element = None
@@ -160,7 +160,7 @@ class FluidExpression:
 
         return result
 
-    def evaluate_fluid_numeric_operator(self, operand_fluidic, operand_numeric, operator):
+    def __evaluate_fluid_numeric_operator(self, operand_fluidic, operand_numeric, operator):
 
         fluid = operand_fluidic[0]
         interactions = []

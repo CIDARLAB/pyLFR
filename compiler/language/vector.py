@@ -25,7 +25,7 @@ class Vector:
 
     def get_range(self, startindex:int = None, endindex:int = None) -> VectorRange:
         start = 0 if startindex is None else self.startindex
-        end = 1 if endindex is None else self.endindex
+        end = 0 if endindex is None else self.endindex
         ret = VectorRange(self, start, end)
 
         return ret
