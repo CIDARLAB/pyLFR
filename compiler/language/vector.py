@@ -6,7 +6,6 @@ class Vector:
         self.id = id
         self.startindex = startindex
         self.endindex = endindex
-        self.vectormap = None
         self.vec = []
 
         if vectortype is not None:
@@ -24,8 +23,8 @@ class Vector:
         return self.vec
 
     def get_range(self, startindex:int = None, endindex:int = None) -> VectorRange:
-        start = 0 if startindex is None else self.startindex
-        end = 0 if endindex is None else self.endindex
+        start = startindex if startindex is not None else self.startindex
+        end = endindex if endindex is not None else self.endindex
         ret = VectorRange(self, start, end)
 
         return ret

@@ -7,5 +7,5 @@ for f in $1/*.lfr;
 
 do 
 	echo "Running File $f";
-    python /Users/krishna/CIDAR/pyLFR/cmdline.py --outpath ../out/ $f
-done 
+    python ../cmdline.py --outpath ../out/ $f
+done  

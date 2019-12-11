@@ -175,6 +175,8 @@ class LFRCompiler(lfrXListener):
 
         if name in self.vectors:
             v = self.vectors[name]
+            startindex = v.startindex
+            endindex = v.endindex
         else:
             raise Exception(
                 "Trying to parse vector var and we couldn't find the vector in itself")
@@ -312,8 +314,6 @@ class LFRCompiler(lfrXListener):
             term = self.stack.pop()
             fluidexpession = FluidExpression(self.currentModule)
             result = fluidexpession.process_unary_operation(term, operator)
-            # TODO: Write how one should be doing the unary operation
-            print("Performing the unary operation on the single term")
             self.stack.append(result)
 
     

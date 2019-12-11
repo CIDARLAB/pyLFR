@@ -1,8 +1,16 @@
 class VectorRange:
     def __init__(self, vector, startindex: int, endindex: int):
         self.vector = vector
-        self.startindex = startindex
-        self.endindex = endindex
+        if startindex is None:
+            self.startindex = 0
+        else:    
+            self.startindex = startindex
+
+        if endindex is None:
+            self.endindex = len(self.vector) - 1
+        else:
+            self.endindex = endindex
+        
 
     # def get_id(self) -> str:
     #     return self.vector.id
