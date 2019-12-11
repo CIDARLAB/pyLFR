@@ -56,7 +56,7 @@ class LFRCompiler(lfrXListener):
         # This might be the new expression stack
         self.stack = []
         self.statestack = []
-        self.binaryoperatorsstack = []
+        self.binaryoperatorsstack = [[]]
 
     def enterModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
         m = Module(ctx.ID().getText())
@@ -282,31 +282,31 @@ class LFRCompiler(lfrXListener):
     
     def enterBinary_operator(self, ctx: lfrXParser.Binary_operatorContext):
         op = ctx.getText()
-        self.binaryoperatorsstack.append(op)
+        self.binaryoperatorsstack[-1].append(op)
 
     def enterExpression(self, ctx: lfrXParser.ExpressionContext):
         self.__updateMode(ListenerMode.EXPRESS_PARSING_MODE)
-        self.binaryoperatorstack = []
+        self.binaryoperatorsstack.append([])
     
     def exitExpression(self, ctx: lfrXParser.ExpressionContext):
         self.__revertMode()
 
         #TODO: Pull all the operators and expression terms
-        stackslice = self.stack[-(len(self.binaryoperatorsstack)+1):]
-        del self.stack[-(len(self.binaryoperatorsstack)+1):]
+        stackslice = self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
+        del self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
 
         fluidexpression = FluidExpression(self.currentModule)
         #TODO: Figure out how to pass the FIG after this
-        result = fluidexpression.process_expression(stackslice, self.binaryoperatorsstack)
+        result = fluidexpression.process_expression(stackslice, self.binaryoperatorsstack[-1])
         self.stack.append(result)
+        
+        self.binaryoperatorsstack.pop()
 
     def enterBracketexpression(self, ctx: lfrXParser.BracketexpressionContext):
         self.__updateMode(ListenerMode.EXPRESS_PARSING_MODE)
-        self.binaryoperatorstack = []
 
     def exitBracketexpression(self, ctx: lfrXParser.BracketexpressionContext):
         self.__revertMode()
-
         # Perform the unary operation if present
         if ctx.unary_operator() is not None:
 
