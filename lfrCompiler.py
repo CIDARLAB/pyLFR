@@ -309,9 +309,9 @@ class LFRCompiler(lfrXListener):
         if ctx.unary_operator() is not None:
 
             operator = ctx.unary_operator().getText()
-
             term = self.stack.pop()
-
+            fluidexpession = FluidExpression(self.currentModule)
+            result = fluidexpession.process_unary_operation(term, operator)
             # TODO: Write how one should be doing the unary operation
             print("Performing the unary operation on the single term")
             self.stack.append(result)

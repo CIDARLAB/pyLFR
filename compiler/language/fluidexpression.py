@@ -113,6 +113,21 @@ class FluidExpression:
         # At the end of the expression, there should only be 1 expression left
         return termlist[0]
 
+    def process_unary_operation(self, term, operator):
+        result = []
+        interaction = None
+        for element in term:
+            if isinstance(element, FluidInteraction):
+                interaction = self.currentmodule.add_finteraction_custom_interaction(element, operator, InteractionType.TECHNOLOGY_PROCESS)
+            else:
+                interaction = self.currentmodule.add_fluid_custom_interaction(element, operator, InteractionType.TECHNOLOGY_PROCESS)
+            
+            result.append(interaction)
+        
+        v = Vector.create_from_list_things(operator, result)
+        ret = v.get_range()
+        return ret
+
     def __evalute_fluid_fluid_operator(self, operand1, operand2, operator):
         if len(operand1) is not len(operand2):
             raise Exception("Operand {0} and Operand {2} are of different Dimensions")
@@ -120,6 +135,7 @@ class FluidExpression:
         operand2_element = None
         interactiontype = None
         result = []
+        vecname = operand1.id + "_" + operand2.id
 
         for operand1_element, operand2_element in zip(operand1, operand2):
 
@@ -157,8 +173,10 @@ class FluidExpression:
                 result_element = self.currentmodule.add_fluid_fluid_interaction(operand1_element, operand2_element, interactiontype)
 
             result.append(result_element)
+        
+        v = Vector.create_from_list_things(vecname, result)
+        return v.get_range()
 
-        return result
 
     def __evaluate_fluid_numeric_operator(self, operand_fluidic, operand_numeric, operator):
 

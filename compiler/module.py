@@ -39,6 +39,21 @@ class Module(object):
     def add_fluid_connection(self, item1id: str, item2id: str) -> None:
         self.FIG.add_fluid_connection(item1id, item2id)
 
+
+    def add_fluid_custom_interaction(self, item: Fluid, operator: str, interaction_type: InteractionType )-> FluidInteraction:
+        #Check if the item exists
+        finteraction = FluidInteraction(item, interactiontype=interaction_type, custominteraction= operator)
+        self.FIG.add_singlefluid_interaction(item, finteraction)
+        return finteraction
+
+
+    def add_finteraction_custom_interaction(self, item: FluidInteraction, operator: str, interaction_type: InteractionType )-> FluidInteraction:
+        #Check if the item exists
+        #TODO: create finteraction factory method and FluidInteraction
+        finteraction = FluidInteraction(fluid1=item, interactiontype=interaction_type, custominteraction= operator)
+        self.FIG.add_singleinteraction_interaction(item, finteraction)
+        return finteraction
+
     def add_fluid_custominteraction(self, fluid1: Fluid, fluid2: Fluid, interaction: str) -> FluidInteraction:
         finteraction = FluidInteraction(
             fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS, interaction)

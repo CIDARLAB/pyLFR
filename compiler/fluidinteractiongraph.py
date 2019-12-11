@@ -71,6 +71,21 @@ class FluidInteractionGraph(object):
             self.G.add_edge(fluid1.id, interaction.id)
 
 
+    def add_singleinteraction_interaction(self, finteraction: FluidInteraction, interaction: FluidInteraction) -> None:
+        if finteraction.id not in self.fluidinteractions.keys():
+            raise Exception("Cannot add interaction because " +
+                            finteraction.id + " is not in the fluid interaction graph")
+        
+        if interaction.id in self.fluidinteractions.keys():
+            # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
+            print("Warning: {0} is already present in the fluid interaction graph".format(
+                interaction.id))
+        else:
+            self.fluidinteractions[interaction.id] = interaction
+            self.G.add_node(interaction.id)
+            self.G.add_edge(finteraction.id, interaction.id)
+
+
     def add_fluid_finteraction_interaction(self, fluid1: Fluid, finteraction: FluidInteraction, newinteraction: FluidInteraction):
         if fluid1.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " +
