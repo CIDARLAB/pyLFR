@@ -98,10 +98,11 @@ class LFRCompiler(lfrXListener):
         elif decltype == 'control':
             mode = IOType.CONTROL
 
-        startindex = 0
-        endindex = 0
 
         for declvar in ctx.declvar():
+            startindex = 0
+            endindex = 0
+
             if declvar.vector() is not None:
                 # Parse all the info regarding the vector
                 # print("Parsing Vector:", declvar.vector().getText())
@@ -186,24 +187,25 @@ class LFRCompiler(lfrXListener):
         self.stack.append(vrange)
 
     def exitConcatenation(self, ctx: lfrXParser.ConcatenationContext):
+
+        item_in_concatenation = len(ctx.vectorvar())
+        #slice the items out of the stack
+        stackslice = self.stack[-(item_in_concatenation):]
+        del self.stack[-(item_in_concatenation):]
+
+        c = Concatenation(stackslice)
+        
+        #TODO: Here the selector will determine the start and endindex for the vector range
+        startindex = 0
+        endindex = len(c) - 1
         if ctx.vector() is not None:
             self.compilingErrors.append(
                 LFRError(ErrorType.COMPILER_NOT_IMPLEMENTED,
                          "Selecting range from compiler has not been implemented, ignoring range for concatenation on line {0} column{1}".format(
                              ctx.start.getLine(), ctx.start.getCharPositionInLine())))
 
-        ranges = []
-        for vv in ctx.vectorvar():
-            name = vv.ID().getText()
-            vec = self.vectors[name]
-            startindex = int(vv.vector().start.text)
-            endindex = int(vv.vector().end.text)
-            vrange = vec.get_range(startindex, endindex)
-            ranges.append(vrange)
-
-        c = Concatenation(ranges)
-
-        self.stack.append(c)
+        v = c.get_range(startindex, endindex)
+        self.stack.append(v)
 
     def enterNumber(self, ctx: lfrXParser.NumberContext):
         if self.listermode is ListenerMode.VARIABLE_DECLARATION_MODE:
