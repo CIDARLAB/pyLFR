@@ -22,6 +22,9 @@ class VectorRange:
     def __getitem__(self, key: int):
         return self.vector[self.startindex + key]
 
+    def __iter__(self):
+        return iter(self.vector)
+
     def __len__(self):
         return abs(self.startindex - self.endindex )+ 1
 

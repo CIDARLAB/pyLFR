@@ -137,8 +137,12 @@ class FluidExpression:
         result = []
         vecname = operand1.id + "_" + operand2.id
 
-        for operand1_element, operand2_element in zip(operand1, operand2):
-
+        #TODO: Find out why the zip give a None item at the end
+        # for operand1_element, operand2_element in zip(operand1, operand2):
+        for i in range(len(operand1)):
+            operand1_element = operand1[i]
+            operand2_element = operand2[i]
+            
             if operator is '*':
                 raise Exception(
                     "Unsuppored operator on two fluid values: {0}".format(operator))

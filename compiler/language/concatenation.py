@@ -20,6 +20,12 @@ class Concatenation:
             else:
                 offset = offset + len(vrange)
 
+    def __iter__(self):
+        vec = []
+        for r in self.ranges:
+            vec.extend(r)
+        return iter(vec)
+
     def __len__(self):
         size = 0
         for vrange in self.ranges:
