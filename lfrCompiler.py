@@ -1,3 +1,4 @@
+from compiler.language.utils import is_number
 from enum import Enum
 
 from antlr.lfrXListener import lfrXListener
@@ -48,10 +49,7 @@ class LFRCompiler(lfrXListener):
         self.lastlistenermode: ListenerMode = ListenerMode.NONE
         self.EXPLICIT_MODULE_DECLARATION = None
 
-        # Temp Store
-        self.currentVectorVars = []
-        self.currentconcatenations = []
-        self.currentexpressionterms = []
+        self.typeMap = dict()
 
         # This might be the new expression stack
         self.stack = []
@@ -83,6 +81,7 @@ class LFRCompiler(lfrXListener):
             v = self.__createVector(name, ModuleIO, startindex, endindex)
 
             self.vectors[name] = v
+            self.typeMap[name] = VariableTypes.FLUID
 
             for item in v.get_items():
                 self.currentModule.add_io(item)
@@ -130,6 +129,7 @@ class LFRCompiler(lfrXListener):
                     vec = self.__createVector(
                         name, ModuleIO, startindex, endindex)
                     self.vectors[name] = vec
+                    self.typeMap[name] = VariableTypes.FLUID
 
                     # Add the declared IO as the module's IO
                     for item in vec.get_items():
@@ -161,6 +161,7 @@ class LFRCompiler(lfrXListener):
 
             # Now that the declaration is done, we are going to save it
             self.vectors[name] = v
+            self.typeMap[name] = VariableTypes.FLUID
 
     def exitFluiddeclstat(self, ctx: lfrXParser.FluiddeclstatContext):
         self.__revertMode()
@@ -258,6 +259,7 @@ class LFRCompiler(lfrXListener):
                 n = float(number.Real_number().getText())
 
             self.vectors[varname] = n
+            self.typeMap[varname] = VariableTypes.NUMBER
 
     def exitNumvarstat(self, ctx):
         self.__revertMode()
@@ -276,6 +278,8 @@ class LFRCompiler(lfrXListener):
                 
                 #Attaching the output fluid/operator node vectors
                 self.vectors[output.vector.id] = output
+                self.typeMap[output.vector.id] = VariableTypes.FLUID
+
                 self.stack.append(output)
 
             elif ctx.number() is not None:
@@ -323,7 +327,16 @@ class LFRCompiler(lfrXListener):
         rhs = self.stack.pop()
         lhs = self.stack.pop()
         
-        # TODO: Finish the entire vector implementatinon (?)
+        #Check if both the LHS and RHS are numbers
+        if is_number(lhs) is True or is_number(rhs) is True:
+            if is_number(lhs) is not True and is_number(rhs) is True:
+                raise Exception("Cannot assign Fluid to Number Variable")
+            elif is_number(lhs) is True and is_number(rhs) is not True:
+                raise Exception("Cannot assign Number to Fluid Variable")
+            else:
+                self.vectors[lhs] = rhs
+
+        #Perform the vector assignments
         if len(lhs) == len(rhs):
             print("LHS, RHS sizes are equal")
             # Make 1-1 connections
@@ -343,6 +356,12 @@ class LFRCompiler(lfrXListener):
                     targetid = target.id
                     self.currentModule.add_fluid_connection(sourceid, targetid)
 
+
+    def exitLiteralassignstat(self, ctx: lfrXParser.LiteralassignstatContext):
+        rhs = self.stack.pop()
+        lhs = ctx.ID().getText()
+        #TODO: Check all error conditions and if the right kinds of variables are being assigned here
+        self.vectors[lhs] = rhs
 
     # def exitTechnologymappingdirective(self, ctx: lfrXParser.TechnologymappingdirectiveContext):
     #     # print("Operator", ctx.operator.getText())
@@ -379,6 +398,8 @@ class LFRCompiler(lfrXListener):
     def __createVector(self, name: str, objecttype, startindex: int, endindex: int) -> Vector:
         v = Vector(name, objecttype, startindex, endindex)
         self.vectors[name] = v
+        self.typeMap[name] = VariableTypes.FLUID
+
         return v
 
     def __performUnaryOperation(self, operator: str, operand: VectorRange):      

@@ -58,6 +58,7 @@ statement
    :   ioassignstat  //This needs ot be replaced by any number different kinds of statements that will
    |   assignstat
    |   tempvariablesstat
+   |    literalassignstat
    ;
 
 tempvariablesstat
@@ -76,6 +77,9 @@ assignstat
    :   'assign' lhs '='  (bracketexpression | expression ) ';'
    ;
 
+literalassignstat
+    :   ID '=' (bracketexpression | expression) ';'
+    ;
 
 //TODO: Look up how the grammar is given for Verilog. This will have be to correct for actually solving the logic things
 bracketexpression

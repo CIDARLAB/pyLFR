@@ -10,10 +10,6 @@ class VectorRange:
             self.endindex = len(self.vector) - 1
         else:
             self.endindex = endindex
-        
-
-    # def get_id(self) -> str:
-    #     return self.vector.id
 
     @property
     def id(self):
