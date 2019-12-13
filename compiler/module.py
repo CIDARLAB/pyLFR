@@ -61,10 +61,13 @@ class Module(object):
         return finteraction
 
     def add_fluid_fluid_interaction(self, fluid1: Fluid, fluid2: Fluid, interaaction_type: InteractionType) -> FluidInteraction:
-        
-        fluid_interaction = FluidInteraction(fluid1, fluid2, interaaction_type)
-
-        self.FIG.add_fluid_interaction(fluid1, fluid2, fluid_interaction)
+        fluid_interaction = None
+        if interaaction_type is InteractionType.SIEVE:
+            fluid_interaction = FluidInteraction(fluid1=fluid1, interactiontype=interaaction_type)
+            self.FIG.add_singlefluid_interaction_with_output(fluid1, fluid_interaction, fluid2)
+        else:
+            fluid_interaction = FluidInteraction(fluid1, fluid2, interaaction_type)
+            self.FIG.add_fluid_interaction(fluid1, fluid2, fluid_interaction)
 
         return fluid_interaction
 
