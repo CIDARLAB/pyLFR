@@ -12,7 +12,7 @@ class Module(object):
         self.intermediates = []
         self.FIG = FluidInteractionGraph()
         self.fluids = dict()
-        self.mappings = []
+        self.mappings: [ExplicitMapping] = []
 
     def add_io(self, io: ModuleIO):
         self.io[io.id] = io

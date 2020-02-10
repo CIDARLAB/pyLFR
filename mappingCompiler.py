@@ -23,12 +23,11 @@ class MappingCompiler(LFRCompiler):
         self.mappingOperator = ''
         self.mappingDictionary = dict()
 
-
     def enterTechnologymappingdirective(self, ctx):
-        #Clearing the mapping operator
+        # Clearing the mapping operator
         self.mappingOperator = ''
         self.currentMappingDictionary = dict()
-        #Checking if the mapping is an operator or assign mapping
+        # Checking if the mapping is an operator or assign mapping
         if ctx.mappingoperator().getText() is '':
             self.mappingMode = TechnologyMappingMODE.ASSIGN_MAPPING
             print('Need to map for an assign statement and not an operator')
@@ -40,8 +39,7 @@ class MappingCompiler(LFRCompiler):
             self.currentMappingTechnology = technology
             self.mappingDictionary[operator] = technology
 
-    def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):        
-
+    def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):
 
         if self.mappingMode is TechnologyMappingMODE.OPERATOR_MAPPING:
             # We need to do call super implementation first so that we can pull the correct vectorranges
@@ -55,30 +53,32 @@ class MappingCompiler(LFRCompiler):
                 rhsvectors = []
                 expression_term = ctx.expression().children[0]
                 if expression_term.unary_operator():
-                    #Check if the operator is correct
+                    # Check if the operator is correct
                     if expression_term.unary_operator().getText() != self.mappingOperator:
                         return
-                    #Search for the items
+                    # Search for the items
                     for variable in ctx.lhs().variables().children:
                         lhs.append(variable.ID().getText())
-                    
+
                     for vector in lhs:
                         lhsvectors.append(self.vectors[vector])
 
                     for variable in expression_term.variables().children:
                         rhs.append(variable.ID().getText())
-                    
+
                     for vector in rhs:
                         rhsvectors.append(self.vectors[vector])
 
-                    startlist = [fluid.id for item in rhsvectors for  fluid in item.vec]
-                    endlist = [fluid.id for item in lhsvectors for  fluid in item.vec]
+                    startlist = [
+                        fluid.id for item in rhsvectors for fluid in item.vec]
+                    endlist = [
+                        fluid.id for item in lhsvectors for fluid in item.vec]
 
                     if len(startlist) == len(endlist):
                         for start, end in zip(startlist, endlist):
                             mapping = ExplicitMapping()
-                            mapping.startlist = start
-                            mapping.endlist = end
+                            mapping.startlist.append(start)
+                            mapping.endlist.append(end)
                             mapping.technology = self.currentMappingTechnology
                             self.currentModule.add_mapping(mapping)
                     else:
@@ -86,9 +86,9 @@ class MappingCompiler(LFRCompiler):
                             for start in startlist:
                                 for end in endlist:
                                     mapping = ExplicitMapping()
-                                    mapping.startlist = start
-                                    mapping.endlist = end
-                                    mapping.technology = self.currentMappingTechnology
+                                    mapping.startlist.append(start)
+                                    mapping.endlist.append(end)
+                                    mapping.technology = self.currentMappingTechnology                      
                                     self.currentModule.add_mapping(mapping)
                         else:
                             mapping = ExplicitMapping()
@@ -98,16 +98,17 @@ class MappingCompiler(LFRCompiler):
                             self.currentModule.add_mapping(mapping)
 
                 else:
-                    print("Cannot map in scerio where there are no unary operators found or the operator is not a unary operator")
+                    print(
+                        "Cannot map in scerio where there are no unary operators found or the operator is not a unary operator")
             else:
-                #TODO: We need to over ride the expression evaulation to effectively map all the things 
-                # going on there, however its not going to be easy because we might not know what the exact 
+                # TODO: We need to over ride the expression evaulation to effectively map all the things
+                # going on there, however its not going to be easy because we might not know what the exact
                 # graph might turn out to be. Perhaps the start end schema and traversals might do the job
                 print("Cannot map in scenario where there are more than 1 expression terms that need to get" +
-                    "mapped, we currently have no strategy for biary operators")
+                      "mapped, we currently have no strategy for biary operators")
 
         elif self.mappingMode is TechnologyMappingMODE.ASSIGN_MAPPING:
-            #TODO: When its assign mapping, we can ignore all the interactions and just make the connections between both the vector ranges
+            # TODO: When its assign mapping, we can ignore all the interactions and just make the connections between both the vector ranges
             lhs = self.stack[-2]
             rhs = self.stack[-1]
 
@@ -124,10 +125,5 @@ class MappingCompiler(LFRCompiler):
             super().exitAssignstat(ctx)
 
         else:
-            #TODO: This just means that nothign happens
+            # TODO: This just means that nothign happens
             pass
-
-        
-        
-
-        

@@ -17,18 +17,6 @@ class MINTDevice(Device):
         connection = MINTConnection(name, technology, params, source, sinks)
         self.connections.append(connection)
 
-    def __generate_component_statements(self) -> str:
-        for component in self.components:
-            print(component)
-        
-        return "TEST COMPONENT"
-
-    def __generate_connection_statements(self) -> str:
-        for connection in self.connections:
-            print(connection)
-        
-        return "TEST CONNECTION"
-
     def toMINT(self):
 
         componenttext = "\n".join([item.toMINT() for item in self.components])
