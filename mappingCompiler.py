@@ -126,4 +126,5 @@ class MappingCompiler(LFRCompiler):
 
         else:
             # TODO: This just means that nothign happens
+            super().exitAssignstat(ctx)
             pass
