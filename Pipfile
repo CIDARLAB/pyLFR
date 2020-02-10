@@ -11,6 +11,7 @@ name = "pypi"
 argparse = "*"
 networkx = "*"
 graphviz = "*"
+pyinstaller = "*"
 
 
 [dev-packages]

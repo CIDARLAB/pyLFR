@@ -6,6 +6,7 @@ from antlr4 import *
 from antlr.lfrXLexer import lfrXLexer
 from antlr.lfrXParser import lfrXParser
 from lfrCompiler import LFRCompiler
+from mappingCompiler import MappingCompiler
 from netlistgenerator.devicegenerator import DeviceGenerator
 
 import argparse
@@ -23,6 +24,11 @@ def main():
     args = parser.parse_args()
     print("output dir:", args.outpath)
     print(args.input)
+
+    extension = Path(args.input).suffix
+    if extension != '.lfr' :
+        print("Unrecognized file Extension")
+        exit()
 
     abspath = os.path.abspath(args.outpath)
     parameters.OUTPUT_DIR = abspath
@@ -44,15 +50,19 @@ def main():
 
     walker = ParseTreeWalker()
 
-    listener = LFRCompiler()
+    # listener = LFRCompiler()
 
-    walker.walk(listener, tree)
+    # walker.walk(listener, tree)
+
+    mapping_listener = MappingCompiler()
+
+    walker.walk(mapping_listener, tree)
 
     # Check if the module compilation was successful
-    if listener.success:
+    if mapping_listener.success:
         # Now Process the Modules Generated
         devicegenerator = DeviceGenerator(
-            listener.currentModule.name, listener.currentModule)
+            mapping_listener.currentModule.name, mapping_listener.currentModule)
         devicegenerator.generate_netlist()
 
 

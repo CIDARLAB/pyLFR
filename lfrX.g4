@@ -120,7 +120,14 @@ directive
    |   technologymappingdirective
    ;
 
-technologymappingdirective : 'MAP' ('\'' ID+ '\'' | '"' ID+ '\'') operator=binary_operator ;
+technologymappingdirective
+    :   'MAP' ('\'' ID '\'' | '"' ID '"')  (('\'' mappingoperator '\'' | '"' mappingoperator '"') | assignmode='assign')
+    ;
+
+mappingoperator
+    :   binary_operator
+    |   unary_operator
+    ;
 
 performancedirective : ID   '='  number unit? ;
 

@@ -1,3 +1,4 @@
+from netlistgenerator.explicitmapping import ExplicitMapping
 from .fluidinteractiongraph import FluidInteractionGraph
 from .fluid import Fluid
 from .moduleio import ModuleIO
@@ -11,6 +12,7 @@ class Module(object):
         self.intermediates = []
         self.FIG = FluidInteractionGraph()
         self.fluids = dict()
+        self.mappings = []
 
     def add_io(self, io: ModuleIO):
         self.io[io.id] = io
@@ -89,6 +91,9 @@ class Module(object):
         self.FIG.add_singlefluid_interaction(fluid1, finteraction)
 
         return finteraction
+
+    def add_mapping(self, mapping: ExplicitMapping):
+        self.mappings.append(mapping)
 
     def __str__(self):
         ret = "Name : " + self.name + "\n"

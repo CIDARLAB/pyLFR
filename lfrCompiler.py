@@ -405,7 +405,10 @@ class LFRCompiler(lfrXListener):
     def __performUnaryOperation(self, operator: str, operand: VectorRange):      
         print("Performing unary operation - Operator: {0} \n Operand: {1}".format(operator, operand))
         # TODO: Return the vector range result of unary operator
-        return operand
+        fluidexpression = FluidExpression(self.currentModule)
+        result = fluidexpression.process_unary_operation(operand, operator)
+
+        return result
 
     def __updateMode(self, newmode):
         self.statestack.append(self.listermode)
