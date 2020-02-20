@@ -42,7 +42,7 @@ casestat
    ;
 
 distributionassignstat
-   :  lhs '=' (number | variables | expression) ';'
+   :  lhs '<=' (number | variables | expression) '*' logiccondition ';'
    //TODO: Have a switch->case block
    ;
 
@@ -67,7 +67,7 @@ tempvariablesstat
    |   numvarstat
    ;
 
-fluiddeclstat : 'fluid' declvar (',' declvar)* ';' ;
+fluiddeclstat : 'flow' declvar (',' declvar)* ';' ;
 
 storagestat : 'storage' declvar (',' declvar)* ';';
 
@@ -95,6 +95,10 @@ expressionterm
    |    number
    ;
 
+logiccondition
+    :   (bracketexpression | expressionterm ) (binary_operator (bracketexpression | expressionterm ))*
+    ;
+
 vector
    :   '[' start=Decimal_number ':' end=Decimal_number  ']'
    ;
@@ -113,15 +117,21 @@ ioassignstat
    ;
 
 technologydirectives
-   :   '#' directive  (('|' | '&') directive)* ;
+   :    directive  (('|' | '&') directive)*
+   ;
 
 directive
-   :   performancedirective
-   |   technologymappingdirective
+   :    performancedirective
+   |    technologymappingdirective
+   |    materialmappingdirective
    ;
 
 technologymappingdirective
-    :   'MAP' ('\'' ID '\'' | '"' ID '"')  (('\'' mappingoperator '\'' | '"' mappingoperator '"') | assignmode='assign')
+    :   '#MAP'  ID   mappingoperator | assignmode='assign'
+    ;
+
+materialmappingdirective
+    :   '#MATERIAL' ID  materialtype=ID
     ;
 
 mappingoperator

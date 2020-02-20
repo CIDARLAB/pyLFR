@@ -180,8 +180,7 @@ class LFRCompiler(lfrXListener):
             startindex = v.startindex
             endindex = v.endindex
         else:
-            raise Exception(
-                "Trying to parse vector var and we couldn't find the vector in itself")
+            raise Exception("Trying to parse vector variable {} and we couldn't find the vector in itself: Line - {}".format(name, ctx.getStart().getLine()))
 
         vrange = VectorRange(v, startindex, endindex)
 
