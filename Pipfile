@@ -12,6 +12,8 @@ argparse = "*"
 networkx = "*"
 graphviz = "*"
 pyinstaller = "*"
+"z3-solver" = "*"
+pygraphviz = "*"
 
 
 [dev-packages]
