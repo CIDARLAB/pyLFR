@@ -3,7 +3,7 @@ from .fluid import Fluid
 
 
 class InteractionType(Enum):
-    TECHNOLOGY_PROCESS = 1      # Mapped operators
+    TECHNOLOGY_PROCESS = 1      # Explicit Mapped operators
     MIX = 2                     # + 
     SIEVE = 3                   # -
     METER = 4                   # %

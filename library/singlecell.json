@@ -1,0 +1,71 @@
+{
+    "name":"dropx",
+    "device-fluidic-operation-data":{
+        "pressure":{
+            "max":"10000"
+        }
+    },
+    "opertors":[
+        {
+            "MIX":[
+                {
+                    "mint":"DROPLET PICO INJECTOR",
+                    "inputs":[1,2],
+                    "outputs":[3],
+                    "default-netlist": null
+                }
+            ],
+            "SEIVE":[
+                {
+                    "mint":"DROPLET SORTER",
+                    "inputs":[1],
+                    "outputs":[2,3],
+                    "default-netlist": null
+                }
+            ],
+            "METER":[
+                {
+                    "mint":"DROPLET GENERATOR",
+                    "inputs":[1],
+                    "outputs":[3],
+                    "default-netlist":"dropletgenerator.mint"
+                }
+            ],
+            "DILUTE":[
+                {
+                    "mint":"DROPLET MERGER JUNCTION",
+                    "inputs":[1, 2],
+                    "outputs":[3],
+                    "default-netlist":null
+                },
+                {
+                    "mint":"DROPLET MERGER CHANNEL",
+                    "inputs":[1],
+                    "outputs":[2],
+                    "default-netlist":null
+                }
+
+            ],
+            "DIVIDE":[
+                {
+                    "mint":"DROPLET SPLITTER"
+                }
+            ],
+            "TECHNOLOGY_PROCESS":[
+                {
+                    "mint":"DROPLET CAPACITANCE SENSOR"
+                },
+                {
+                    "mint":"DROPLET FLUORESCENCE SENSOR"
+                },
+                {
+                    "mint":"DROPLET LUMINESCENCE SENSOR"
+                }
+            ]
+
+        }
+    ],
+    "network":[
+
+    ]
+}
