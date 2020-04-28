@@ -4,3 +4,6 @@
 [submodule "test"]
 	path = test
 	url = https://github.com/CIDARLAB/LFR-TestCases.git
+[submodule "DAFD"]
+	path = DAFD
+	url = https://github.com/rkrishnasanka/DAFD.git
