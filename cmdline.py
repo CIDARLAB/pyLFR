@@ -8,7 +8,7 @@ from antlr.lfrXParser import lfrXParser
 from lfrCompiler import LFRCompiler
 from mappingCompiler import MappingCompiler
 from netlistgenerator.devicegenerator import DeviceGenerator
-
+from netlistgenerator.mappinglibrary import MappingLibrary
 import argparse
 import parameters
 import glob
@@ -20,10 +20,8 @@ def load_libraries():
     for filename in glob.glob("*.json"):
         file = open(filename, 'r')
         lib_object = json.loads(file.read())
-        library[lib_object['name']] = lib_object
-    
+        library[lib_object['name']] = MappingLibrary(lib_object)
     return library
-        
 
 
 def main():
