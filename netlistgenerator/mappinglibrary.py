@@ -1,3 +1,5 @@
+from types import prepare_class
+from compiler.fluidinteraction import InteractionType
 from mint.mintdevice import MINTDevice
 
 class Primitive:
@@ -7,6 +9,18 @@ class Primitive:
         self.__outputs = jsondict['outputs']
         self.defaultnetlist = MINTDevice("default")
         #TODO - Parse the default netlist and generate the netlist to copy into the implement
+
+    @property
+    def mint(self):
+        return self.__mint
+
+    @property
+    def inputs(self):
+        return self.__inputs
+
+    @property
+    def outputs(self):
+        return self.__outputs
 
 
 class MappingLibrary:
@@ -39,4 +53,17 @@ class MappingLibrary:
                 else:
                     self.__technology_process_operators.append(primitive)
                 
-
+    def get_operators(self, interaction_type: InteractionType) ->[Primitive] :
+        if interaction_type is InteractionType.MIX:
+            return self.__mix_operators
+        elif interaction_type is InteractionType.SIEVE:
+            return self.__seive_operators
+        elif interaction_type is InteractionType.DILUTE:
+            return self.__dilute_operators
+        elif interaction_type is InteractionType.METER:
+            return self.__meter_operators
+        elif interaction_type is InteractionType.DIVIDE:
+            return self.__divide_operators
+        else:
+            return self.__technology_process_operators
+        

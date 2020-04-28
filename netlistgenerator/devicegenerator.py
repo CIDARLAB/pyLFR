@@ -9,16 +9,16 @@ import utils
 class NameGenerator(object):
     def __init__(self) -> None:
         self.dictionary = dict()
-
+       
     def generate_name(self, technology_string: str) -> str:
         if technology_string in self.dictionary.keys():
             #Increment the number in dictionary and return the name
             ret = self.dictionary[technology_string] + 1
             self.dictionary[technology_string] = ret
-            return '{}_{}'.format(technology_string, ret).lower()
+            return '{}_{}'.format(technology_string, ret).lower().replace(' ', "_")
         else:
             self.dictionary[technology_string] = 1
-            return '{}_{}'.format(technology_string, 1).lower()
+            return '{}_{}'.format(technology_string, 1).lower().replace(' ', "_")
 
 
 class DeviceGenerator(object):
@@ -27,7 +27,11 @@ class DeviceGenerator(object):
         self.devicename = name
         self.devicemodule = module
         self.namegenerator = NameGenerator()
-        self.__library = library
+        self.library = library
+        self.__temp_component_list = []
+        self.blacklist_map = dict()
+        self.primitive_map = dict()
+
 
     def generate_dummy_netlist(self):
         # Process the direct technology mapping
@@ -103,7 +107,7 @@ class DeviceGenerator(object):
         utils.printgraph(fig.G, self.devicename + '.dot')
 
         mapping_blacklist = []
-        blacklist_map = dict()
+        
         port_list = []
         device = MINTDevice(self.devicemodule.name)
 
@@ -122,15 +126,15 @@ class DeviceGenerator(object):
             start = mapping.startlist[0]
             end = mapping.endlist[0]
             new_component_name = self.namegenerator.generate_name(mapping.technology)
-            device.addComponent(new_component_name, mapping.technology, {"numberOfBends": "5", "bendSpacing":"2000", "bendLength": "2000", "channelWidth": "400", "height":"400"})
+            device.addComponent(new_component_name, mapping.technology, {})
             mapping_blacklist.extend(mapping.startlist)
             mapping_blacklist.extend(mapping.endlist)
             # Set this mapping such that, all the items in the blacklist have an alternatethingy
             for item in mapping.startlist:
-                blacklist_map[item] = new_component_name
+                self.blacklist_map[item] = new_component_name
             
             for item in mapping.endlist:
-                blacklist_map[item] = new_component_name
+                self.blacklist_map[item] = new_component_name
             
             #Check the traversal and find all the paths that are broken
             for path in nx.all_simple_paths(self.devicemodule.FIG.G, source=start, target=end):
@@ -141,7 +145,7 @@ class DeviceGenerator(object):
         for interaction in fig.fluidinteractions.keys():
             fluidic_interaction = fig.fluidinteractions[interaction]
             print("Interaction:{} Type{}".format(fluidic_interaction, type(fluidic_interaction))) 
-            fluidic_mapping = FluidicMapping(fluidic_interaction, self.__library)
+            fluidic_mapping = FluidicMapping(fluidic_interaction, self)
             #Map this to a component and generate a bit of the netlist
             fluidic_mapping.map(device, fig)
             #Add it to blacklist to ensure that nodes dont get generated
@@ -159,12 +163,19 @@ class DeviceGenerator(object):
                 #Create the arc
                 channel_start = arc[0]
                 channel_end = arc[1]
+                channel_start_target = None
+                channel_end_target = None
                 if arc[0] in mapping_blacklist:
                     # get the mapping item connected to arc[0] and use it instead
-                    channel_start = blacklist_map[arc[0]]
+                    channel_start = self.blacklist_map[arc[0]]
+                    if arc[0] in self.primitive_map:
+                        channel_start_target = self.primitive_map[arc[0]].outputs.pop()
                 if arc[1] in mapping_blacklist:
-                    channel_end = blacklist_map[arc[1]]
-                device.addConnection(self.namegenerator.generate_name("channel"), "CHANNEL", {"channelWidth":"400", "height":"400"}, MINTTarget(channel_start), [MINTTarget(channel_end)])
+                    channel_end = self.blacklist_map[arc[1]]
+                    if arc[1] in self.primitive_map: 
+                        channel_end_target = self.primitive_map[arc[1]].inputs.pop()
+                connection_name = self.namegenerator.generate_name("channel")
+                device.addConnection(connection_name, "CHANNEL", {"channelWidth":"400", "height":"400"}, MINTTarget(channel_start, str(channel_start_target)), [MINTTarget(channel_end, str(channel_end_target))])
                 i += 1 
         
         #4 generate the MINT file from the pyparchmint device
