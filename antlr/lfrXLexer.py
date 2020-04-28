@@ -1,4 +1,4 @@
-# Generated from /Users/krishna/CIDAR/pyLFR/lfrX.g4 by ANTLR 4.7.2
+# Generated from /Users/krishna/Documents/GitHub/pyLFR/lfrX.g4 by ANTLR 4.7.2
 from antlr4 import *
 from io import StringIO
 from typing.io import TextIO

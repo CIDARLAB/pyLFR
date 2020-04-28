@@ -11,15 +11,27 @@ from netlistgenerator.devicegenerator import DeviceGenerator
 
 import argparse
 import parameters
+import glob
+import json
+
+def load_libraries():
+    library = dict()
+    os.chdir(parameters.LFR_DIR)
+    for filename in glob.glob("*.json"):
+        file = open(filename, 'r')
+        lib_object = json.loads(file.read())
+        library[lib_object['name']] = lib_object
+    
+    return library
+        
 
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        'input', help="This is the file thats used as the input ")
-    parser.add_argument('--outpath', type=str, default="out/",
-                        help="This is the output directory")
+    parser.add_argument('input', help="This is the file thats used as the input ")
+    parser.add_argument('--outpath', type=str, default="out/", help="This is the output directory")
+    parser.add_argument('--library', type=str, default="dropx", help="This is the mapping library you need to use")
 
     args = parser.parse_args()
     print("output dir:", args.outpath)
@@ -38,6 +50,13 @@ def main():
         path = Path(parameters.OUTPUT_DIR)
         path.mkdir(parents=True)
 
+    library_name = args.library
+    libraries = load_libraries()
+    if library_name not in libraries.keys():
+        raise Exception("Could not find mapping library")
+    
+    library = libraries[library_name]
+    
     finput = FileStream(args.input)
 
     lexer = lfrXLexer(finput)
@@ -61,9 +80,8 @@ def main():
     # Check if the module compilation was successful
     if mapping_listener.success:
         # Now Process the Modules Generated
-        devicegenerator = DeviceGenerator(
-            mapping_listener.currentModule.name, mapping_listener.currentModule)
-        devicegenerator.generate_netlist()
+        devicegenerator = DeviceGenerator(mapping_listener.currentModule.name, mapping_listener.currentModule, library)
+        devicegenerator.generate_fluidic_netlist()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,90 @@
+{
+    "name":"dropx",
+    "device-fluidic-operation-data":{
+        "pressure":{
+            "max":"10000"
+        }
+    },
+    "io":{
+        "mint":"PORT"
+    },
+    "operators":
+        {
+            "MIX":[
+                {
+                    "mint":"PICO INJECTOR",
+                    "inputs":[1,2],
+                    "outputs":[3],
+                    "default-netlist": null
+                }
+            ],
+            "SEIVE":[
+                {
+                    "mint":"DROPLET ELECTROPHORESIS SORTER",
+                    "inputs":[1],
+                    "outputs":[2,3],
+                    "default-netlist": null
+                }
+            ],
+            "METER":[
+                {
+                    "mint":"DROPLET GENERATOR",
+                    "inputs":[1],
+                    "outputs":[3],
+                    "default-netlist":"dropletgenerator.mint"
+                }
+            ],
+            "DILUTE":[
+                {
+                    "mint":"DROPLET ELECTROPHORESIS MERGER",
+                    "inputs":[1],
+                    "outputs":[2],
+                    "default-netlist":null
+                },
+                {
+                    "mint":"DROPLET MERGER JUNCTION",
+                    "inputs":[1, 2],
+                    "outputs":[3],
+                    "default-netlist":null
+                },
+                {
+                    "mint":"DROPLET MERGER CHANNEL",
+                    "inputs":[1],
+                    "outputs":[2],
+                    "default-netlist":null
+                }
+            ],
+            "DIVIDE":[
+                {
+                    "mint":"DROPLET SPLITTER",
+                    "inputs":[1],
+                    "outputs":[2, 3],
+                    "default-netlist":null
+                }
+            ],
+            "TECHNOLOGY_PROCESS":[
+                {
+                    "mint":"DROPLET CAPACITANCE SENSOR",
+                    "inputs":[1],
+                    "outputs":[2],
+                    "default-netlist":null
+                },
+                {
+                    "mint":"DROPLET FLUORESCENCE SENSOR",
+                    "inputs":[1],
+                    "outputs":[2],
+                    "default-netlist":null
+                },
+                {
+                    "mint":"DROPLET LUMINESCENCE SENSOR",
+                    "inputs":[1],
+                    "outputs":[2],
+                    "default-netlist":null
+                }
+            ]
+
+        },
+    "network":[
+
+    ]
+}
