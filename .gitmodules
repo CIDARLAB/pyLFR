@@ -7,3 +7,6 @@
 [submodule "DAFD"]
 	path = DAFD
 	url = https://github.com/rkrishnasanka/DAFD.git
+[submodule "mint"]
+	path = mint
+	url = https://github.com/CIDARLAB/pyMINT.git
