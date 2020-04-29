@@ -1,4 +1,5 @@
 from types import prepare_class
+from typing import List
 from compiler.fluidinteraction import InteractionType
 from mint.mintdevice import MINTDevice
 
@@ -53,7 +54,7 @@ class MappingLibrary:
                 else:
                     self.__technology_process_operators.append(primitive)
                 
-    def get_operators(self, interaction_type: InteractionType) ->[Primitive] :
+    def get_operators(self, interaction_type: InteractionType) ->List[Primitive] :
         if interaction_type is InteractionType.MIX:
             return self.__mix_operators
         elif interaction_type is InteractionType.SIEVE:
