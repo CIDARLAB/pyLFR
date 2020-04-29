@@ -1,3 +1,4 @@
+from mint.mintlayer import MINTLayer, MINTLayerType
 from mint.minttarget import MINTTarget
 from mint.mintdevice import MINTDevice
 from .technologymapper import map_technologies
@@ -111,10 +112,12 @@ class DeviceGenerator(object):
         port_list = []
         device = MINTDevice(self.devicemodule.name)
 
+        device.addLayer('0',0, MINTLayerType.FLOW)
+
         #1 map all the i/o to PORT
         for key in self.devicemodule.io.keys():
             io = self.devicemodule.io[key]
-            device.addComponent(io.id, "PORT", { "portRadius": "2000"})
+            device.addComponent(io.id, "PORT", { "portRadius": "2000"}, '0')
             port_list.append(io.id)
         
         
@@ -126,7 +129,7 @@ class DeviceGenerator(object):
             start = mapping.startlist[0]
             end = mapping.endlist[0]
             new_component_name = self.namegenerator.generate_name(mapping.technology)
-            device.addComponent(new_component_name, mapping.technology, {})
+            device.addComponent(new_component_name, mapping.technology, {}, '0')
             mapping_blacklist.extend(mapping.startlist)
             mapping_blacklist.extend(mapping.endlist)
             # Set this mapping such that, all the items in the blacklist have an alternatethingy
@@ -154,7 +157,7 @@ class DeviceGenerator(object):
         # 2.3 Create a node for each of the the other fluid notes that are not in eith of the start or end lists
         for node in self.devicemodule.FIG.G.nodes:
             if node not in mapping_blacklist and node not in port_list:
-                device.addComponent(node, "NODE", {})
+                device.addComponent(node, "NODE", {}, '0')
 
         i = 1
         # 3 generate all the channels for every connecting arc in the fig (except for the ones between the start and end lists)
@@ -169,13 +172,13 @@ class DeviceGenerator(object):
                     # get the mapping item connected to arc[0] and use it instead
                     channel_start = self.blacklist_map[arc[0]]
                     if arc[0] in self.primitive_map:
-                        channel_start_target = self.primitive_map[arc[0]].outputs.pop()
+                        channel_start_target = str(self.primitive_map[arc[0]].outputs.pop())
                 if arc[1] in mapping_blacklist:
                     channel_end = self.blacklist_map[arc[1]]
                     if arc[1] in self.primitive_map: 
-                        channel_end_target = self.primitive_map[arc[1]].inputs.pop()
+                        channel_end_target = str(self.primitive_map[arc[1]].inputs.pop())
                 connection_name = self.namegenerator.generate_name("channel")
-                device.addConnection(connection_name, "CHANNEL", {"channelWidth":"400", "height":"400"}, MINTTarget(channel_start, str(channel_start_target)), [MINTTarget(channel_end, str(channel_end_target))])
+                device.addConnection(connection_name, "CHANNEL", {"channelWidth":"400", "height":"400"}, MINTTarget(channel_start, channel_start_target), [MINTTarget(channel_end, (channel_end_target))], '0')
                 i += 1 
         
         #4 generate the MINT file from the pyparchmint device

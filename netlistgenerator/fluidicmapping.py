@@ -37,7 +37,7 @@ class FluidicMapping(object):
         
         #Add the component first into the netlist
         name = self.__name_generator.generate_name(primitive.mint)
-        netlist.addComponent(name, primitive.mint, {})
+        netlist.addComponent(name, primitive.mint, {}, '0')
         self.__blacklist_map[interaction_id] = name
         self.__primitive_map[interaction_id] = primitive
         #TODO: Stitch together the default netlist
