@@ -3,6 +3,12 @@
     "device-fluidic-operation-data":{
         "pressure":{
             "max":"10000"
+        },
+        "flow-rate":{
+            "start-point":"100",
+            "min":"1",
+            "max":"1000",
+            "unit":"micro-litre-per-hour"
         }
     },
     "io":{
