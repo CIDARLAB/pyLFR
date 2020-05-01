@@ -3,6 +3,7 @@ from mint.minttarget import MINTTarget
 from mint.mintdevice import MINTDevice
 from .technologymapper import map_technologies
 from .fluidicmapping import FluidicMapping
+from .netlistsizor import NetlistSizor
 from networkx import nx
 import utils
 
@@ -184,6 +185,12 @@ class DeviceGenerator(object):
         
         self.device = device
 
+    def size_netlist(self):
+        sizer = NetlistSizor(self)
+
+        sizer.size_netlist()
+
+    
     def print_netlist(self):
         #4 generate the MINT file from the pyparchmint device
         minttext = self.device.toMINT()

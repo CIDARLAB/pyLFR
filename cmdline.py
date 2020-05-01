@@ -9,7 +9,6 @@ from lfrCompiler import LFRCompiler
 from mappingCompiler import MappingCompiler
 from netlistgenerator.devicegenerator import DeviceGenerator
 from netlistgenerator.mappinglibrary import MappingLibrary
-from sizing.netlistsizor import NetlistSizor
 import argparse
 import parameters
 import glob
@@ -81,10 +80,7 @@ def main():
         # Now Process the Modules Generated
         devicegenerator = DeviceGenerator(mapping_listener.currentModule.name, mapping_listener.currentModule, library)
         devicegenerator.generate_fluidic_netlist()
-        
-        sizer = NetlistSizor(devicegenerator.device, mapping_listener.currentModule.FIG)
-
-        sizer.size_netlist()
+        devicegenerator.size_netlist()
         
 
 
