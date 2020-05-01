@@ -81,6 +81,11 @@ def main():
         # Now Process the Modules Generated
         devicegenerator = DeviceGenerator(mapping_listener.currentModule.name, mapping_listener.currentModule, library)
         devicegenerator.generate_fluidic_netlist()
+        
+        sizer = NetlistSizor(devicegenerator.device, mapping_listener.currentModule.FIG)
+
+        sizer.size_netlist()
+        
 
 
 if __name__ == "__main__":

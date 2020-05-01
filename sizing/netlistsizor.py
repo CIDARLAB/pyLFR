@@ -1,9 +1,10 @@
 from .dafd import DAFDSizingAdapter, PerformanceConstraint, FunctionalConstraint, GeometryConstraint 
+from mint.mintdevice import MINTDevice
 from compiler.fluidinteractiongraph import FluidInteractionGraph
 
 class NetlistSizor:
 
-    def __init__(self, netlist, fig:FluidInteractionGraph):
+    def __init__(self, netlist: MINTDevice, fig:FluidInteractionGraph):
         super().__init__()
         self.device = netlist
         self.fig = fig
@@ -18,7 +19,9 @@ class NetlistSizor:
         print("Sizing the Fluidic Operations...")
         #1.1: First go through each of the operators to size them for functionality
         for interaction in self.fig.get_interactions():
+            print("Interaction Type: ", interaction.interactionType)
             print("Interaction Data: ", interaction.interaction_data)
+            
         
         #dummy dafd call
         droplet_adapter.size_performance_constraints(None)
