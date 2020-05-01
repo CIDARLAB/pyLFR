@@ -15,12 +15,17 @@ class FluidInteraction(object):
     def __init__(self, fluid1: Fluid = None, fluid2: Fluid = None, interactiontype: InteractionType = None, custominteraction=None):
         self.interactionType = interactiontype
         self.interaction_data = dict()
+        self.fluids = []
+        self.fluids.append(fluid1)
 
         #Single fluid interaction case
         if fluid2 is None:
             self.id = "interaction_" + fluid1.id
             self.fluid1 = fluid1
+            
         else:
+            self.fluids.append(fluid2)
+    
             if fluid1 == fluid2:
                 raise Exception(
                     "Cannot create interaction between the same fluids")

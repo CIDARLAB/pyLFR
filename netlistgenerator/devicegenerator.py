@@ -32,6 +32,7 @@ class DeviceGenerator(object):
         self.__temp_component_list = []
         self.blacklist_map = dict()
         self.primitive_map = dict()
+        self.device = None
 
 
     def generate_dummy_netlist(self):
@@ -181,8 +182,11 @@ class DeviceGenerator(object):
                 device.addConnection(connection_name, "CHANNEL", {"channelWidth":"400", "height":"400"}, MINTTarget(channel_start, channel_start_target), [MINTTarget(channel_end, channel_end_target)], '0')
                 i += 1 
         
+        self.device = device
+
+    def print_netlist(self):
         #4 generate the MINT file from the pyparchmint device
-        minttext = device.toMINT()
-        mint_file = open(utils.get_ouput_path(self.devicemodule.name + ".mint"), "wt")
+        minttext = self.device.toMINT()
+        mint_file = open(utils.get_ouput_path("unsized_netlist_"+self.devicemodule.name + ".mint"), "wt")
         mint_file.write(minttext)
         mint_file.close()

@@ -1,7 +1,7 @@
 from networkx import nx
 from .fluid import Fluid
 from .fluidinteraction import FluidInteraction
-
+from typing import List
 
 # TODO - Make this subclass nx.multigraph at a later point
 class FluidInteractionGraph(object):
@@ -153,6 +153,9 @@ class FluidInteractionGraph(object):
             del self.fluidinteractions[interaction]
 
         # print("TEST2", self.G.edges())
+
+    def get_interactions(self)->List[FluidInteraction]:
+        return [self.fluidinteractions[key] for key in self.fluidinteractions.keys()]
 
     def __str__(self):
         return self.G.edges.__str__()
