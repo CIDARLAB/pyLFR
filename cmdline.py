@@ -1,11 +1,8 @@
-import sys
 import os
 from pathlib import Path
-import time
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
 from antlr.lfrXLexer import lfrXLexer
 from antlr.lfrXParser import lfrXParser
-from lfrCompiler import LFRCompiler
 from mappingCompiler import MappingCompiler
 from netlistgenerator.devicegenerator import DeviceGenerator
 from netlistgenerator.mappinglibrary import MappingLibrary
@@ -81,6 +78,8 @@ def main():
         devicegenerator = DeviceGenerator(mapping_listener.currentModule.name, mapping_listener.currentModule, library)
         devicegenerator.generate_fluidic_netlist()
         devicegenerator.size_netlist()
+
+        devicegenerator.print_netlist()
         
 
 

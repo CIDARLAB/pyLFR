@@ -1,7 +1,8 @@
+from DAFD.DAFD_CMD import constraints
 from mint.mintcomponent import MINTComponent
 from pyparchmint.component import Component
 from mint.mintdevice import MINTDevice
-from typing import List
+from typing import List, Optional
 from DAFD.bin.DAFD_Interface import DAFD_Interface
 
 
@@ -38,7 +39,6 @@ class Constraint:
         return self.__max_value
 
 
-
 class PerformanceConstraint(Constraint):
 
     def __init__(self) -> None:
@@ -60,17 +60,17 @@ class MaterialConstraint(Constraint):
         super().__init__()
 
 class ConstraintList:
-    def __init__(self):
+    def __init__(self, component:MINTComponent):
         super().__init__()
         self.__constraints:List[Constraint] = []
-        self.__component:MINTComponent = None
+        self.__component:Optional[MINTComponent] = component
     
     def add_constraint(self, constraint: Constraint) -> None:
         constraint = FunctionalConstraint()
         self.__constraints.append(constraint)
 
     @property
-    def component(self) -> MINTComponent:
+    def component(self) -> Optional[MINTComponent]:
         return self.__component
 
     def __len__(self):
@@ -97,7 +97,7 @@ class DAFDSizingAdapter:
                 if constraint.key == 'volume':
                     #r≈0.62035V1/3
                     volume = constraint.get_target_value()
-                    targets_dict['droplet_size'] =  pow(volume,1/3) * 0.62035 * 2
+                    targets_dict['droplet_size'] = float(volume)**0.33 * 0.62035 * 2
             elif isinstance(constraint, PerformanceConstraint):
                 if constraint.key == 'generation_rate':
                     generate_rate = constraint.get_target_value()
@@ -106,15 +106,35 @@ class DAFDSizingAdapter:
                 raise Exception("Error: Geometry constraint not defined")
         
         results = self.solver.runInterp(targets_dict, constriants_dict)
+        component = constriants.component
+        if component is None:
+            raise Exception("No component attached to the constraints")
+
+        orifice_size = results['orifice_size']
+        aspect_ratio = results['aspect_ratio']
+        capillary_number = results['capillary_number']
+        expansion_ratio = results['expansion_ratio']
+        flow_rate_ratio = results['flow_rate_ratio']
+        normalized_oil_inlet = results['normalized_oil_inlet']
+        normalized_orifice_length = results['normalized_orifice_length']
+        normalized_water_inlet = results['normalized_water_inlet']
+    
+        component.params.setParam("orificeSize", round(orifice_size))
+        component.params.setParam("orificeLength", round(orifice_size*normalized_orifice_length))
+        component.params.setParam("oilInputWidth", round(orifice_size*normalized_oil_inlet))
+        component.params.setParam("waterInputWidth", round(orifice_size*normalized_water_inlet))
+        component.params.setParam("outputWidth", round(orifice_size*expansion_ratio))
+        component.params.setParam("outputLength", 5000)
+        component.params.setParam("height", round(orifice_size/aspect_ratio))
         
-        #TODO: Figure out how to propagate the results to the rest of the design
+        #TODO: Figure out how to propagate the results to the rest of the design. Additionally we need to set all the operation considtions
         pass
         
         
 
-    def size_component(self, technology:str, constriants: List[PerformanceConstraint]) -> None:
-        if technology == "DROPLET GENERATOR":
+    def size_component(self, constriants: ConstraintList) -> None:
+        if constriants.component.entity == "DROPLET GENERATOR":
             self.size_droplet_generator(constriants)
         else:
-            print("Error: {} is not supported".format(technology))
+            print("Error: {} is not supported".format(constriants.component.entity))
 

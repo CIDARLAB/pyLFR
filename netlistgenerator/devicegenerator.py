@@ -1,9 +1,12 @@
+from .mappinglibrary import MappingLibrary
 from mint.mintlayer import MINTLayer, MINTLayerType
 from mint.minttarget import MINTTarget
 from mint.mintdevice import MINTDevice
 from .technologymapper import map_technologies
 from .fluidicmapping import FluidicMapping
 from .netlistsizor import NetlistSizor
+from compiler.module import Module
+from .explicitmapping import ExplicitMapping
 from networkx import nx
 import utils
 
@@ -25,7 +28,7 @@ class NameGenerator(object):
 
 class DeviceGenerator(object):
 
-    def __init__(self, name, module, library):
+    def __init__(self, name:str, module:Module, library:MappingLibrary):
         self.devicename = name
         self.devicemodule = module
         self.namegenerator = NameGenerator()
@@ -113,6 +116,7 @@ class DeviceGenerator(object):
         
         port_list = []
         device = MINTDevice(self.devicemodule.name)
+        self.device = device
 
         device.addLayer('0',0, MINTLayerType.FLOW)
 
@@ -181,9 +185,8 @@ class DeviceGenerator(object):
                         channel_end_target = str(self.primitive_map[arc[1]].inputs.pop())
                 connection_name = self.namegenerator.generate_name("channel")
                 device.addConnection(connection_name, "CHANNEL", {"channelWidth":"400", "height":"400"}, MINTTarget(channel_start, channel_start_target), [MINTTarget(channel_end, channel_end_target)], '0')
-                i += 1 
+                i += 1
         
-        self.device = device
 
     def size_netlist(self):
         sizer = NetlistSizor(self)
@@ -194,6 +197,6 @@ class DeviceGenerator(object):
     def print_netlist(self):
         #4 generate the MINT file from the pyparchmint device
         minttext = self.device.toMINT()
-        mint_file = open(utils.get_ouput_path("unsized_netlist_"+self.devicemodule.name + ".mint"), "wt")
+        mint_file = open(utils.get_ouput_path(self.devicemodule.name + ".mint"), "wt")
         mint_file.write(minttext)
         mint_file.close()

@@ -1,11 +1,14 @@
+from mint.minttarget import MINTTarget
+from mint.mintcomponent import MINTComponent
 from .mappinglibrary import MappingLibrary, Primitive
 from compiler.fluidinteraction import FluidInteraction
 from compiler.fluidinteractiongraph import FluidInteractionGraph
 from mint.mintdevice import MINTDevice
+from typing import Optional
 
 class FluidicMapping(object):
 
-    def __init__(self, finteraction: FluidInteraction, device_generator = None) -> None:
+    def __init__(self, finteraction: FluidInteraction, device_generator) -> None:
         if device_generator is None:
             raise Exception("Need to provide a default library")
         self.__library: MappingLibrary = device_generator.library
@@ -24,6 +27,31 @@ class FluidicMapping(object):
         primitive = self.__library.get_operators(finteraction.interactionType)[0]
         return primitive
 
+    def rewrite_target(self, old_target:MINTTarget, newtarget:str):
+        return MINTTarget(newtarget, old_target.port)
+
+    def stitch_component(self, component: MINTComponent, netlist:MINTDevice, default_netlist: MINTDevice):
+        default_component = default_netlist.getComponent('default_component')
+        new_old_component_map = dict()
+        new_old_component_map['default_component'] = component.ID
+        #Add all the components from 
+        for component in default_netlist.getComponents():
+            #Skip the default component
+            if component == default_component:
+                continue
+            else:
+                name = self.__name_generator.generate_name(component.entity)
+                new_old_component_map[component.ID] = name
+                netlist.addComponent(name, component.entity, component.params.data, '0')
+        
+        #Add connections from
+        for connection in default_netlist.getConnections():
+            name = self.__name_generator.generate_name(connection.entity)
+            source_target = self.rewrite_target(connection.source, new_old_component_map[connection.source.component])
+            sink_targets = [self.rewrite_target(t, new_old_component_map[t.component]) for t in connection.sinks]
+            netlist.addConnection(name, connection.entity, connection.params.data, source_target, sink_targets, '0')
+
+
     def map(self, netlist:MINTDevice, fig:FluidInteractionGraph):
         #TODO: map the operator  
         interaction_id = self.__finteraction.id
@@ -37,11 +65,15 @@ class FluidicMapping(object):
         
         #Add the component first into the netlist
         name = self.__name_generator.generate_name(primitive.mint)
-        netlist.addComponent(name, primitive.mint, {}, '0')
+        component = netlist.addComponent(name, primitive.mint, {}, '0')
         self.__blacklist_map[interaction_id] = name
         self.__primitive_map[interaction_id] = primitive
-        #TODO: Stitch together the default netlist
-
+        
+        #Stitch together the default netlist if it exists
+        default_netlist = primitive.default_netlist
+        if default_netlist is not None:
+            print("Stitching component: {}".format(primitive.mint))
+            self.stitch_component(component, netlist, default_netlist)
         #Create arcs to it's neighbours ?
         # inputs = fig.get_input_nodes(interaction_id)
         # for _input in inputs :

@@ -37,7 +37,7 @@
                     "mint":"DROPLET GENERATOR",
                     "inputs":[1],
                     "outputs":[3],
-                    "default-netlist":"dropletgenerator.mint"
+                    "default-netlist":"default-netlists/dropletgenerator.mint"
                 }
             ],
             "DILUTE":[

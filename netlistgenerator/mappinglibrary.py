@@ -1,14 +1,20 @@
-from types import prepare_class
-from typing import List
+from mint.mintcomponent import MINTComponent
+from typing import List, Optional
 from compiler.fluidinteraction import InteractionType
 from mint.mintdevice import MINTDevice
+from mint.antlr.mintLexer import mintLexer
+from mint.antlr.mintParser import mintParser
+from mint.mintcompiler import MINTCompiler
+from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
+from os import path
+import parameters
 
 class Primitive:
     def __init__(self, jsondict) -> None:
         self.__mint = jsondict['mint']
         self.__inputs = jsondict['inputs']
         self.__outputs = jsondict['outputs']
-        self.defaultnetlist = MINTDevice("default")
+        self.__default_netlist_location = jsondict['default-netlist']
         #TODO - Parse the default netlist and generate the netlist to copy into the implement
 
     @property
@@ -22,6 +28,45 @@ class Primitive:
     @property
     def outputs(self):
         return self.__outputs
+
+    @property
+    def default_netlist_location(self):
+        return self.__default_netlist_location
+
+    @property
+    def default_netlist(self) -> Optional[MINTDevice]:
+
+        if self.__default_netlist_location == None or self.__default_netlist_location == 'None':
+            return None
+
+        
+        
+        default_mint_file = path.abspath(self.__default_netlist_location)
+        
+        if not path.exists(default_mint_file):
+            raise Exception("Default netlist file does not exist")
+
+        path.exists(default_mint_file)
+
+        finput = FileStream(default_mint_file)
+
+        lexer = mintLexer(finput)
+
+        stream = CommonTokenStream(lexer)
+
+        parser = mintParser(stream)
+
+        tree = parser.netlist()
+
+        walker = ParseTreeWalker()
+
+        listener = MINTCompiler()
+
+        walker.walk(listener, tree)
+
+        #Return the default library
+        return listener.current_device
+
 
 
 class MappingLibrary:

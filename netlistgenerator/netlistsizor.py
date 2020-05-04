@@ -1,3 +1,4 @@
+from ast import copy_location
 from .dafd import DAFDSizingAdapter, PerformanceConstraint, FunctionalConstraint, GeometryConstraint, ConstraintList 
 from mint.mintdevice import MINTDevice
 from compiler.fluidinteractiongraph import FluidInteractionGraph
@@ -21,15 +22,16 @@ class NetlistSizor:
         #Generate the functional constriants
         print("Sizing the Fluidic Operations...")
         #1.1: First go through each of the operators to size them for functionality
-        constraint_list = ConstraintList()
         for interaction in self.fig.get_interactions():
+            component = self.device.getComponent(self.blacklist_map[interaction.id]) 
+            constraint_list = ConstraintList(component)
             print("Interaction Type: ", interaction.interactionType)
             print("Interaction Data: ", interaction.interaction_data)
-            component = self.device.getComponent(self.blacklist_map[interaction.id]) 
             volume_constraint = FunctionalConstraint()
             volume_constraint.add_target_value('volume', interaction.interaction_data['value'])
+            constraint_list.add_constraint(volume_constraint)
             #dummy dafd call
-            droplet_adapter.size_component(component.entity, constraint_list)
+            droplet_adapter.size_component(constraint_list)
         
         #1.2: Size the Connections/Channels
 
