@@ -80,8 +80,7 @@ def main():
         devicegenerator.size_netlist()
 
         devicegenerator.print_netlist()
-        
-
+        devicegenerator.serialize_netlist()
 
 if __name__ == "__main__":
     main()

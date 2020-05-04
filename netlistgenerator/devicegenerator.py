@@ -9,6 +9,7 @@ from compiler.module import Module
 from .explicitmapping import ExplicitMapping
 from networkx import nx
 import utils
+import json
 
 
 class NameGenerator(object):
@@ -194,6 +195,14 @@ class DeviceGenerator(object):
         sizer.size_netlist()
 
     
+    def serialize_netlist(self):
+        #4 generate the MINT file from the pyparchmint device
+        json_data = self.device.toParchMintV1()
+        json_string = json.dumps(json_data)
+        json_file = open(utils.get_ouput_path(self.devicemodule.name + ".json"), "wt")
+        json_file.write(json_string)
+        json_file.close()
+
     def print_netlist(self):
         #4 generate the MINT file from the pyparchmint device
         minttext = self.device.toMINT()
