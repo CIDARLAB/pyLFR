@@ -133,7 +133,7 @@ class DAFDSizingAdapter:
         
 
     def size_component(self, constriants: ConstraintList) -> None:
-        if constriants.component.entity == "DROPLET GENERATOR":
+        if constriants.component.entity.replace(" ", "")  == "NOZZLE DROPLET GENERATOR".replace(" ", "") :
             self.size_droplet_generator(constriants)
         else:
             print("Error: {} is not supported".format(constriants.component.entity))
