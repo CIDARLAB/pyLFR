@@ -1,3 +1,4 @@
+from compiler.constraints.performanceconstraint import PerformanceConstraintData
 from compiler.language.utils import is_number
 from enum import Enum
 
@@ -21,6 +22,13 @@ class ListenerMode(Enum):
     EXPRESS_PARSING_MODE = 4
     FLUID_ASSIGN_STAT_MODE = 5
     DISTRIBUTE_ASSIGN_STAT_MODE = 6
+
+class ConstriantBoundType(Enum):
+    EQUALS = 0
+    LESS_THAN = 1
+    GREATER_THAN = 2
+    LESS_THAN_EQUALS = 3
+    GREATER_THAN_EQUALS = 4
 
 class VariableTypes(Enum):
     FLUID = 0
@@ -50,6 +58,9 @@ class LFRCompiler(lfrXListener):
         self.EXPLICIT_MODULE_DECLARATION = None
 
         self.typeMap = dict()
+
+        # Performance Constraints
+        self.current_performance_constraints = []
 
         # This might be the new expression stack
         self.stack = []
@@ -300,12 +311,14 @@ class LFRCompiler(lfrXListener):
         stackslice = self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
         del self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
 
-        fluidexpression = FluidExpression(self.currentModule)
+        fluidexpression = FluidExpression(self.currentModule, self.current_performance_constraints)
         #TODO: Figure out how to pass the FIG after this
         result = fluidexpression.process_expression(stackslice, self.binaryoperatorsstack[-1])
         self.stack.append(result)
         
         self.binaryoperatorsstack.pop()
+
+        self.current_performance_constraints.clear()
 
     def enterBracketexpression(self, ctx: lfrXParser.BracketexpressionContext):
         self.__updateMode(ListenerMode.EXPRESS_PARSING_MODE)
@@ -371,6 +384,39 @@ class LFRCompiler(lfrXListener):
     #     self.operatormap[ctx.operator.getText()] = technologystring
     #
     #
+
+    def exitPerformancedirective(self, ctx: lfrXParser.PerformancedirectiveContext):
+        param_name = ctx.constraint().ID().getText()
+        operator = ""
+        if ctx.constraint().binary_operator() is not None:
+            operator = ctx.constraint().binary_operator().getText()
+        elif ctx.constraint().unary_operator():
+            operator = ctx.constraint().unary_operator().getText()
+        else:
+            raise Exception("Operator missing for performance constraint")
+
+        constraint_bound_text = ctx.constraint().operator.text
+        if constraint_bound_text == "=":
+            constraint_bound = ConstriantBoundType.EQUALS
+        elif constraint_bound_text == "<=":
+            constraint_bound = ConstriantBoundType.LESS_THAN_EQUALS
+        elif constraint_bound_text == ">=":
+            constraint_bound = ConstriantBoundType.GREATER_THAN_EQUALS
+        elif constraint_bound_text == "<":
+            constraint_bound = ConstriantBoundType.LESS_THAN
+        else:
+            constraint_bound = ConstriantBoundType.GREATER_THAN
+        
+        param_value = ctx.constraint().number().getText()
+        unit = ctx.constraint().unit().getText()
+
+        constraint_data = PerformanceConstraintData(operator)
+        constraint_data[param_name] = param_value
+        constraint_data['unit'] = unit
+        constraint_data['bound'] = constraint_bound
+
+        self.current_performance_constraints.append(constraint_data)
+
 
     def exitSkeleton(self, ctx: lfrXParser.SkeletonContext):
         if len(self.compilingErrors) > 0:

@@ -139,7 +139,17 @@ mappingoperator
     |   unary_operator
     ;
 
-performancedirective : ID   '='  number unit? ;
+performancedirective 
+   :  '#CONSTRAIN' constraint
+   ;
+
+constraint
+   : '\'' (binary_operator|unary_operator) '\'' ID operator='=' number unit?
+   | '\'' (binary_operator|unary_operator) '\'' ID operator='>' number unit?
+   | '\'' (binary_operator|unary_operator) '\'' ID operator='<' number unit?
+   | '\'' (binary_operator|unary_operator) '\'' ID operator='>=' number unit?
+   | '\'' (binary_operator|unary_operator) '\'' ID operator='<=' number unit?
+   ;
 
 unit: ID;
 

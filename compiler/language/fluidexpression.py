@@ -13,10 +13,11 @@ NUMERIC_OPERATOR_ORDER = [['/', '*'], ['%'], ['+', '-']]
 
 class FluidExpression:
 
-    def __init__(self, module) -> None:
+    def __init__(self, module, performance_constraints) -> None:
         self.currentmodule = module
         self.operatororder = OPERATOR_ORDER
         self.numericoperatororder = NUMERIC_OPERATOR_ORDER
+        self.__performance_constraints = performance_constraints
 
     def process_expression(self, termlist, operatorlist):
 
@@ -207,6 +208,12 @@ class FluidExpression:
                 raise Exception(
                     "Unsuppored operator on 1:fluidic 2:numeric values: {0}".format(operator))
 
+            #TODO: add the required performance data to the interaction
+            for constraint_data in self.__performance_constraints:
+                if constraint_data.operator == operator:
+                    for key in constraint_data.keys():
+                        interaction.interaction_data[key] = constraint_data[key]
+                    
             interactions.append(interaction)
         
         v = Vector.create_from_list_things("interaction_" + operand_fluidic.id, interactions)

@@ -1,4 +1,4 @@
-# Generated from /Users/krishna/Documents/GitHub/pyLFR/lfrX.g4 by ANTLR 4.7.2
+# Generated from /Users/krishna/Documents/GitHub/pyLFR/lfrX.g4 by ANTLR 4.8
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .lfrXParser import lfrXParser
@@ -332,6 +332,15 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#constraint.
+    def enterConstraint(self, ctx:lfrXParser.ConstraintContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#constraint.
+    def exitConstraint(self, ctx:lfrXParser.ConstraintContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#unit.
     def enterUnit(self, ctx:lfrXParser.UnitContext):
         pass
@@ -386,3 +395,5 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+
+del lfrXParser

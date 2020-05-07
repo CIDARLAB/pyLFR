@@ -1,4 +1,3 @@
-from DAFD.DAFD_CMD import constraints
 from mint.mintcomponent import MINTComponent
 from pyparchmint.component import Component
 from mint.mintdevice import MINTDevice
