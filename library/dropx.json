@@ -19,14 +19,26 @@
             "MIX":[
                 {
                     "mint":"PICO INJECTOR",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1,2],
                     "outputs":[3],
                     "default-netlist": null
+                },
+                {
+                    "mint":"DROPLET ELECTROPHORESIS MERGER",
+                    "component-type": "primitive",
+                    "is-storage": "false",
+                    "inputs":[1, 2],
+                    "outputs":[3],
+                    "default-netlist":null
                 }
             ],
             "SEIVE":[
                 {
                     "mint":"DROPLET ELECTROPHORESIS SORTER",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2,3],
                     "default-netlist": null
@@ -35,26 +47,53 @@
             "METER":[
                 {
                     "mint":"NOZZLE DROPLET GENERATOR",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[3],
-                    "default-netlist":"default-netlists/dropletgenerator.mint"
+                    "default-netlist":"default-netlists/dropletgenerator.mint",
+                    "dafd":{
+                        "inputs":{
+                            "functional":[
+                                "droplet_size",
+                                "generation_rate"
+                            ],
+                        "outputs":[
+                            "orifice_size",
+                            "aspect_ratio",
+                            "capillary_number",
+                            "expansion_ratio",
+                            "flow_rate_ratio",
+                            "normalized_oil_inlet",
+                            "normalized_orifice_length",
+                            "normalized_water_inlet"
+                        ]
+                                                    
+                        }
+                    }
                 }
             ],
             "DILUTE":[
                 {
                     "mint":"DROPLET ELECTROPHORESIS MERGER",
-                    "inputs":[1],
-                    "outputs":[2],
+                    "component-type": "primitive",
+                    "is-storage": "false",
+                    "inputs":[1, 2],
+                    "outputs":[3],
                     "default-netlist":null
                 },
                 {
                     "mint":"DROPLET MERGER JUNCTION",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1, 2],
                     "outputs":[3],
                     "default-netlist":null
                 },
                 {
                     "mint":"DROPLET MERGER CHANNEL",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2],
                     "default-netlist":null
@@ -63,6 +102,8 @@
             "DIVIDE":[
                 {
                     "mint":"DROPLET SPLITTER",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2, 3],
                     "default-netlist":null
@@ -71,18 +112,24 @@
             "TECHNOLOGY_PROCESS":[
                 {
                     "mint":"DROPLET CAPACITANCE SENSOR",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2],
                     "default-netlist":null
                 },
                 {
                     "mint":"DROPLET FLUORESCENCE SENSOR",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2],
                     "default-netlist":null
                 },
                 {
                     "mint":"DROPLET LUMINESCENCE SENSOR",
+                    "component-type": "primitive",
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2],
                     "default-netlist":null

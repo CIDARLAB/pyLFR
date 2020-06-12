@@ -1,4 +1,5 @@
 from ast import copy_location
+from compiler.fluidinteraction import InteractionType
 from .dafd import DAFDSizingAdapter, PerformanceConstraint, FunctionalConstraint, GeometryConstraint, ConstraintList 
 from mint.mintdevice import MINTDevice
 from compiler.fluidinteractiongraph import FluidInteractionGraph
@@ -27,12 +28,28 @@ class NetlistSizor:
             constraint_list = ConstraintList(component)
             print("Interaction Type: ", interaction.interactionType)
             print("Interaction Data: ", interaction.interaction_data)
-            volume_constraint = FunctionalConstraint()
-            volume_constraint.add_target_value('volume', interaction.interaction_data['value'])
-            constraint_list.add_constraint(volume_constraint)
-            #dummy dafd call
-            droplet_adapter.size_component(constraint_list)
+            
+            #TODO: Check for each of the different interaction types
+            if interaction.interactionType is InteractionType.METER:
+                volume_constraint = FunctionalConstraint()
+                volume_constraint.add_target_value('volume', interaction.interaction_data['value'])
+                constraint_list.add_constraint(volume_constraint)
+                #dummy dafd call
+                droplet_adapter.size_component(constraint_list)
         
+            if interaction.interactionType is InteractionType.DIVIDE:
+                #TODO: Implement DropX divide sizing
+                print("Need to implement the sizing for the DILUTE interaction")
+                pass
+
+            if interaction.interactionType is InteractionType.MIX:
+                print("Need to implement the sizing for the MIX interaction")
+                pass
+
+            if interaction.interactionType is InteractionType.DILUTE:
+                print("Need to implement the sizing for the DILUTE interaction")
+                pass
+
         #1.2: Size the Connections/Channels
 
         #1.3: Iteratively do something ?
