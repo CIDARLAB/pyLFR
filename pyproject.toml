@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "pyLFR"
+version = "0.1.0"
+description = ""
+authors = ["Radhakrishna Sanka <rkrishnasanka@gmail.com>"]
+license = "BSD-3-Clause"
+
+[tool.poetry.dependencies]
+python = "3.8"
+networkx = "^2.5"
+argparse = "^1.4.0"
+parchmint = {path = "../pyparchmint"}
+mint = {path = "../pymint"}
+dafd = {path = "../DAFD"}
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0a5"]
+build-backend = "poetry.core.masonry.api"

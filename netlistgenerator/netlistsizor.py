@@ -1,6 +1,6 @@
 from ast import copy_location
 from compiler.fluidinteraction import InteractionType
-from .dafd import DAFDSizingAdapter, PerformanceConstraint, FunctionalConstraint, GeometryConstraint, ConstraintList 
+from .dafdadapter import DAFDSizingAdapter, PerformanceConstraint, FunctionalConstraint, GeometryConstraint, ConstraintList 
 from mint.mintdevice import MINTDevice
 from compiler.fluidinteractiongraph import FluidInteractionGraph
 

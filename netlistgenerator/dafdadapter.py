@@ -2,7 +2,7 @@ from mint.mintcomponent import MINTComponent
 from pyparchmint.component import Component
 from mint.mintdevice import MINTDevice
 from typing import List, Optional
-from DAFD.bin.DAFD_Interface import DAFD_Interface
+from dafd import DAFD_Interface
 
 
 class Constraint:
