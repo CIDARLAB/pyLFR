@@ -423,6 +423,14 @@ pyasn1 = ">=0.4.6,<0.5.0"
 
 [[package]]
 category = "main"
+description = "Python interface to Graphviz"
+name = "pygraphviz"
+optional = false
+python-versions = ">=3.6"
+version = "1.6"
+
+[[package]]
+category = "main"
 description = "Python parsing module"
 name = "pyparsing"
 optional = false
@@ -673,7 +681,7 @@ python-versions = "*"
 version = "1.12.1"
 
 [metadata]
-content-hash = "880ea6eb1465844a9aa0b48d81f05c0e2eaefdde1253a4e7646cdc396ab6ac95"
+content-hash = "86d22de0939e160b85a8ed4c9c4831c50aea655e0c727f9179c96f9891d494f1"
 lock-version = "1.1"
 python-versions = "3.8"
 
@@ -1011,6 +1019,9 @@ pyasn1-modules = [
     {file = "pyasn1_modules-0.2.8-py3.5.egg", hash = "sha256:426edb7a5e8879f1ec54a1864f16b882c2837bfd06eee62f2c982315ee2473ed"},
     {file = "pyasn1_modules-0.2.8-py3.6.egg", hash = "sha256:cbac4bc38d117f2a49aeedec4407d23e8866ea4ac27ff2cf7fb3e5b570df19e0"},
     {file = "pyasn1_modules-0.2.8-py3.7.egg", hash = "sha256:c29a5e5cc7a3f05926aff34e097e84f8589cd790ce0ed41b67aed6857b26aafd"},
+]
+pygraphviz = [
+    {file = "pygraphviz-1.6.zip", hash = "sha256:411ae84a5bc313e3e1523a1cace59159f512336318a510573b47f824edef8860"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},

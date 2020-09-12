@@ -35,7 +35,7 @@ class FluidicMapping(object):
         new_old_component_map = dict()
         new_old_component_map['default_component'] = component.ID
         #Add all the components from 
-        for component in default_netlist.getComponents():
+        for component in default_netlist.get_components():
             #Skip the default component
             if component == default_component:
                 continue
@@ -45,7 +45,7 @@ class FluidicMapping(object):
                 netlist.addComponent(name, component.entity, component.params.data, '0')
         
         #Add connections from
-        for connection in default_netlist.getConnections():
+        for connection in default_netlist.get_connections():
             name = self.__name_generator.generate_name(connection.entity)
             source_target = self.rewrite_target(connection.source, new_old_component_map[connection.source.component])
             sink_targets = [self.rewrite_target(t, new_old_component_map[t.component]) for t in connection.sinks]

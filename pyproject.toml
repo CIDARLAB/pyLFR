@@ -12,6 +12,8 @@ argparse = "^1.4.0"
 parchmint = {path = "../pyparchmint"}
 mint = {path = "../pymint"}
 dafd = {path = "../DAFD"}
+antlr4-python3-runtime = "^4.8"
+pygraphviz = "^1.6"
 
 [tool.poetry.dev-dependencies]
 

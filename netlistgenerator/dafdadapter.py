@@ -1,9 +1,7 @@
 from mint.mintcomponent import MINTComponent
-from pyparchmint.component import Component
 from mint.mintdevice import MINTDevice
 from typing import List, Optional
 from dafd import DAFD_Interface
-
 
 class Constraint:
     def __init__(self) -> None:
