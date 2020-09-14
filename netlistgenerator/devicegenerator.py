@@ -197,7 +197,7 @@ class DeviceGenerator(object):
     
     def serialize_netlist(self):
         #4 generate the MINT file from the pyparchmint device
-        json_data = self.device.toParchMintV1()
+        json_data = self.device.to_parchmint_v1()
         json_string = json.dumps(json_data)
         json_file = open(utils.get_ouput_path(self.devicemodule.name + ".json"), "wt")
         json_file.write(json_string)

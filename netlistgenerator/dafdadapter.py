@@ -116,13 +116,13 @@ class DAFDSizingAdapter:
         normalized_orifice_length = results['normalized_orifice_length']
         normalized_water_inlet = results['normalized_water_inlet']
     
-        component.params.setParam("orificeSize", round(orifice_size))
-        component.params.setParam("orificeLength", round(orifice_size*normalized_orifice_length))
-        component.params.setParam("oilInputWidth", round(orifice_size*normalized_oil_inlet))
-        component.params.setParam("waterInputWidth", round(orifice_size*normalized_water_inlet))
-        component.params.setParam("outputWidth", round(orifice_size*expansion_ratio))
-        component.params.setParam("outputLength", 5000)
-        component.params.setParam("height", round(orifice_size/aspect_ratio))
+        component.params.set_param("orificeSize", round(orifice_size))
+        component.params.set_param("orificeLength", round(orifice_size*normalized_orifice_length))
+        component.params.set_param("oilInputWidth", round(orifice_size*normalized_oil_inlet))
+        component.params.set_param("waterInputWidth", round(orifice_size*normalized_water_inlet))
+        component.params.set_param("outputWidth", round(orifice_size*expansion_ratio))
+        component.params.set_param("outputLength", 5000)
+        component.params.set_param("height", round(orifice_size/aspect_ratio))
         
         #TODO: Figure out how to propagate the results to the rest of the design. Additionally we need to set all the operation considtions
         pass
