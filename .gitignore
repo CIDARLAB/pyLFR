@@ -134,5 +134,4 @@ antlr/
 
 .idea/
 .antlr/
-.vscode/settings.json
 Verilog2001.g4
