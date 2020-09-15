@@ -3,6 +3,7 @@ from mint.mintdevice import MINTDevice
 from typing import List, Optional
 from dafd import DAFD_Interface
 
+
 class Constraint:
     def __init__(self) -> None:
         self.__constraint_key = None
@@ -41,20 +42,24 @@ class PerformanceConstraint(Constraint):
     def __init__(self) -> None:
         super().__init__()
 
+
 class GeometryConstraint(Constraint):
 
     def __init__(self) -> None:
         super().__init__()
 
+
 class FunctionalConstraint(Constraint):
-    
+
     def __init__(self) -> None:
         super().__init__()
+
 
 class MaterialConstraint(Constraint):
 
     def __init__(self):
         super().__init__()
+
 
 class ConstraintList:
     def __init__(self, component:MINTComponent):
@@ -78,6 +83,7 @@ class ConstraintList:
             raise IndexError()
         return self.__constraints[key]
 
+
 class DAFDSizingAdapter:
 
     def __init__(self, device: MINTDevice) -> None:
@@ -85,7 +91,7 @@ class DAFDSizingAdapter:
         self.solver = DAFD_Interface()
 
     def size_droplet_generator(self, constriants: ConstraintList) -> None:
-        #TODO: Check the type of the component and pull info from DAFD Interface
+        # TODO: Check the type of the component and pull info from DAFD Interface
         targets_dict = dict()
         constriants_dict = dict()
 
@@ -101,7 +107,7 @@ class DAFDSizingAdapter:
                     targets_dict['generation_rate'] = generate_rate
             elif isinstance(constraint, GeometryConstraint):
                 raise Exception("Error: Geometry constraint not defined")
-        
+       
         results = self.solver.runInterp(targets_dict, constriants_dict)
         component = constriants.component
         if component is None:
@@ -124,9 +130,8 @@ class DAFDSizingAdapter:
         component.params.set_param("outputLength", 5000)
         component.params.set_param("height", round(orifice_size/aspect_ratio))
         
-        #TODO: Figure out how to propagate the results to the rest of the design. Additionally we need to set all the operation considtions
+        # TODO: Figure out how to propagate the results to the rest of the design. Additionally we need to set all the operation considtions
         pass
-        
         
 
     def size_component(self, constriants: ConstraintList) -> None:

@@ -7,7 +7,7 @@ from mint.antlr.mintParser import mintParser
 from mint.mintcompiler import MINTCompiler
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
 from os import path
-import parameters
+
 
 class Primitive:
     def __init__(self, jsondict) -> None:
@@ -15,7 +15,7 @@ class Primitive:
         self.__inputs = jsondict['inputs']
         self.__outputs = jsondict['outputs']
         self.__default_netlist_location = jsondict['default-netlist']
-        #TODO - Parse the default netlist and generate the netlist to copy into the implement
+        # TODO - Parse the default netlist and generate the netlist to copy into the implement
 
     @property
     def mint(self):
@@ -36,13 +36,11 @@ class Primitive:
     @property
     def default_netlist(self) -> Optional[MINTDevice]:
 
-        if self.__default_netlist_location == None or self.__default_netlist_location == 'None':
+        if self.__default_netlist_location is None or self.__default_netlist_location == 'None':
             return None
 
-        
-        
         default_mint_file = path.abspath(self.__default_netlist_location)
-        
+
         if not path.exists(default_mint_file):
             raise Exception("Default netlist file does not exist")
 

@@ -6,6 +6,7 @@ from compiler.fluidinteractiongraph import FluidInteractionGraph
 from mint.mintdevice import MINTDevice
 from typing import Optional
 
+
 class FluidicMapping(object):
 
     def __init__(self, finteraction: FluidInteraction, device_generator) -> None:
@@ -16,21 +17,21 @@ class FluidicMapping(object):
         self.__finteraction = finteraction
         self.__blacklist_map = device_generator.blacklist_map
         self.__primitive_map = device_generator.primitive_map
-        
+
         self.technology: str = ''
         self.params = dict()
 
-    def get_technology(self, finteraction:FluidInteraction) -> Primitive:
-        #TODO: Insert algorithm to figure which component would be the best fit for this scenario
+    def get_technology(self, finteraction: FluidInteraction) -> Primitive:
+        # TODO: Insert algorithm to figure which component would be the best fit for this scenario
 
-        #Naive approach, pick the first component in the mapping library
+        # Naive approach, pick the first component in the mapping library
         primitive = self.__library.get_operators(finteraction.interactionType)[0]
         return primitive
 
-    def rewrite_target(self, old_target:MINTTarget, newtarget:str):
+    def rewrite_target(self, old_target: MINTTarget, newtarget: str):
         return MINTTarget(newtarget, old_target.port)
 
-    def stitch_component(self, component: MINTComponent, netlist:MINTDevice, default_netlist: MINTDevice):
+    def stitch_component(self, component: MINTComponent, netlist: MINTDevice, default_netlist: MINTDevice):
         default_component = default_netlist.getComponent('default_component')
         new_old_component_map = dict()
         new_old_component_map['default_component'] = component.ID

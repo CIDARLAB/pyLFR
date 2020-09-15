@@ -74,18 +74,36 @@ class Module(object):
         return fluid_interaction
 
     def add_fluid_finteraction_interaction(self, fluid1: Fluid, finteraction: FluidInteraction, interaction_type: InteractionType):
-        #TODO: Create new factory method for creating this kind of fluid interaction
+        # TODO: Create new factory method for creating this kind of fluid interaction
         new_fluid_interaction = FluidInteraction(fluid1, finteraction, interaction_type)
 
         self.FIG.add_fluid_finteraction_interaction(fluid1, finteraction, new_fluid_interaction)
 
         return new_fluid_interaction
 
+    def add_finteraction_finteraction_interaction(self, f_interaction1: FluidInteraction, f_interaction2: FluidInteraction, interaction_type: InteractionType) -> FluidInteraction:
+        # TODO - Revisit this to fix the fluid data mappings
+        output_fluid_1 = f_interaction1.get_output_fluid()
+        output_fluid_2 = f_interaction2.get_output_fluid()
+
+        if self.FIG.contains_fluid(output_fluid_1) is False:
+            self.FIG.addfluidnode(output_fluid_1)
+
+        if self.FIG.contains_fluid(output_fluid_2) is False:
+            self.FIG.addfluidnode(output_fluid_2)
+
+        new_fluid_interaction = FluidInteraction(output_fluid_1, output_fluid_2, interaction_type)
+
+        self.FIG.attach_two_interactions(f_interaction1, new_fluid_interaction)
+        self.FIG.attach_two_interactions(f_interaction2, new_fluid_interaction)
+
+        return new_fluid_interaction
+
     def add_interaction_output(self, output: Fluid, interaction: FluidInteraction):
         self.FIG.attach_interaction_output(output, interaction)
 
-    def add_fluid_numeric_interaction(self, fluid1: Fluid, number, interaction: InteractionType)-> FluidInteraction:
-        finteraction = FluidInteraction(fluid1 = fluid1, interactiontype=interaction)
+    def add_fluid_numeric_interaction(self, fluid1: Fluid, number, interaction: InteractionType) -> FluidInteraction:
+        finteraction = FluidInteraction(fluid1=fluid1, interactiontype=interaction)
         finteraction.interaction_data['value'] = number
 
         self.FIG.add_singlefluid_interaction(fluid1, finteraction)

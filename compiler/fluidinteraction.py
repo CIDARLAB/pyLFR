@@ -1,5 +1,6 @@
 from enum import Enum
 from .fluid import Fluid
+from typing import Optional
 
 
 class InteractionType(Enum):
@@ -9,7 +10,8 @@ class InteractionType(Enum):
     METER = 4                   # %
     DILUTE = 5                  # *
     DIVIDE = 6                  # /
-    
+
+
 class FluidInteraction(object):
     # TODO: WE need to rehaul this system
     def __init__(self, fluid1: Fluid = None, fluid2: Fluid = None, interactiontype: InteractionType = None, custominteraction=None):
@@ -17,8 +19,9 @@ class FluidInteraction(object):
         self.interaction_data = dict()
         self.fluids = []
         self.fluids.append(fluid1)
+        self._output_fluid: Optional[Fluid] = None
 
-        #Single fluid interaction case
+        # Single fluid interaction case
         if fluid2 is None:
             self.id = "interaction_" + fluid1.id
             self.fluid1 = fluid1
@@ -40,8 +43,15 @@ class FluidInteraction(object):
 
         self.customInteraction = custominteraction
 
+    def get_output_fluid(self):
+        if self._output_fluid is None:
+            print("Warning: Interaction has no comupted output fluid, hence we are sending this later")
+            return Fluid("output_" + self.id)
+        else:
+            return self._output_fluid
+
     @staticmethod
-    def get_id(fluid1 : Fluid = None, fluid2: Fluid = None, operator: str = '') -> str:
+    def get_id(fluid1: Fluid = None, fluid2: Fluid = None, operator: str = '') -> str:
         id = None
 
         if fluid2 is not None:

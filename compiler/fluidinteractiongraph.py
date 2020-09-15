@@ -1,7 +1,8 @@
 from networkx import nx
 from .fluid import Fluid
-from .fluidinteraction import FluidInteraction
+from .fluidinteraction import FluidInteraction, InteractionType
 from typing import List
+
 
 # TODO - Make this subclass nx.multigraph at a later point
 class FluidInteractionGraph(object):
@@ -60,7 +61,7 @@ class FluidInteractionGraph(object):
         if fluid1.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " +
                             fluid1.id + " is not in the fluid interaction graph")
-        
+
         if interaction.id in self.fluidinteractions.keys():
             # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
             print("Warning: {0} is already present in the fluid interaction graph".format(
@@ -103,7 +104,6 @@ class FluidInteractionGraph(object):
             self.G.add_node(interaction.id)
             self.G.add_edge(finteraction.id, interaction.id)
 
-
     def add_fluid_finteraction_interaction(self, fluid1: Fluid, finteraction: FluidInteraction, newinteraction: FluidInteraction):
         if fluid1.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " +
@@ -123,7 +123,28 @@ class FluidInteractionGraph(object):
             self.G.add_node(newinteraction.id)
             self.G.add_edge(fluid1.id, newinteraction.id)
             self.G.add_edge(finteraction.id, newinteraction.id)
-        
+
+    def attach_two_interactions(self, finteraction1: FluidInteraction, finteraction2: FluidInteraction):
+        if finteraction1.id in self.fluidinteractions.keys():
+            # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
+            print("Warning: {0} is already present in the fluid interaction graph".format(
+                finteraction1.id))
+        else:
+            self.fluidinteractions[finteraction1.id] = finteraction1
+            self.G.add_node(finteraction1.id)
+
+        if finteraction2.id in self.fluidinteractions.keys():
+            # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
+            print("Warning: {0} is already present in the fluid interaction graph".format(
+                finteraction2.id))
+        else:
+            self.fluidinteractions[finteraction2.id] = finteraction2
+            self.G.add_node(finteraction2.id)
+
+        self.G.add_edge(finteraction1.id, finteraction2.id)
+
+    def contains_fluid(self, fluid_object: Fluid) -> bool:
+        return fluid_object.id in self.fluids.keys()
 
     def get_input_nodes(self, interaction: str):
         edges = self.G.in_edges(interaction)

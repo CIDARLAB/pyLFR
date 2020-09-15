@@ -106,7 +106,6 @@ class DeviceGenerator(object):
         mint_file.write(minttext)
         mint_file.close()
 
-
     def generate_fluidic_netlist(self):
         # Process the direct technology mapping
         fig = self.devicemodule.FIG
@@ -185,18 +184,16 @@ class DeviceGenerator(object):
                     if arc[1] in self.primitive_map: 
                         channel_end_target = str(self.primitive_map[arc[1]].inputs.pop())
                 connection_name = self.namegenerator.generate_name("channel")
-                device.addConnection(connection_name, "CHANNEL", {"channelWidth":"400", "height":"400"}, MINTTarget(channel_start, channel_start_target), [MINTTarget(channel_end, channel_end_target)], '0')
+                device.addConnection(connection_name, "CHANNEL", {"channelWidth": "400", "height": "400"}, MINTTarget(channel_start, channel_start_target), [MINTTarget(channel_end, channel_end_target)], '0')
                 i += 1
-        
 
     def size_netlist(self):
         sizer = NetlistSizor(self)
 
         sizer.size_netlist()
 
-    
     def serialize_netlist(self):
-        #4 generate the MINT file from the pyparchmint device
+        # 4 generate the MINT file from the pyparchmint device
         json_data = self.device.to_parchmint_v1()
         json_string = json.dumps(json_data)
         json_file = open(utils.get_ouput_path(self.devicemodule.name + ".json"), "wt")
@@ -204,7 +201,7 @@ class DeviceGenerator(object):
         json_file.close()
 
     def print_netlist(self):
-        #4 generate the MINT file from the pyparchmint device
+        # 4 generate the MINT file from the pyparchmint device
         minttext = self.device.toMINT()
         mint_file = open(utils.get_ouput_path(self.devicemodule.name + ".mint"), "wt")
         mint_file.write(minttext)
