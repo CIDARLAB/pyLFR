@@ -2,7 +2,7 @@ from compiler.language.vectorrange import VectorRange
 
 
 class Vector:
-    def __init__(self, id: str, vectortype = None, startindex: int = 0, endindex: int = 0):
+    def __init__(self, id: str, vectortype=None, startindex: int = 0, endindex: int = 0):
         self.id = id
         self.startindex = startindex
         self.endindex = endindex
@@ -10,7 +10,7 @@ class Vector:
 
         if vectortype is not None:
             # If its a singular item avoid the indexing
-            if len(self) is 1:
+            if len(self) == 1:
                 self.vec.append(vectortype(self.id))
             else:
                 for i in range(len(self)):
@@ -22,7 +22,7 @@ class Vector:
     def get_items(self) -> []:
         return self.vec
 
-    def get_range(self, startindex:int = None, endindex:int = None) -> VectorRange:
+    def get_range(self, startindex: int = None, endindex: int = None) -> VectorRange:
         start = startindex if startindex is not None else self.startindex
         end = endindex if endindex is not None else self.endindex
         ret = VectorRange(self, start, end)

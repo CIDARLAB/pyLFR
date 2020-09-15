@@ -23,6 +23,7 @@ class ListenerMode(Enum):
     FLUID_ASSIGN_STAT_MODE = 5
     DISTRIBUTE_ASSIGN_STAT_MODE = 6
 
+
 class ConstriantBoundType(Enum):
     EQUALS = 0
     LESS_THAN = 1
@@ -30,11 +31,13 @@ class ConstriantBoundType(Enum):
     LESS_THAN_EQUALS = 3
     GREATER_THAN_EQUALS = 4
 
+
 class VariableTypes(Enum):
     FLUID = 0
     NUMBER = 1
     STORAGE = 3
     SIGNAL = 4
+
 
 class LFRCompiler(lfrXListener):
 
@@ -107,7 +110,6 @@ class LFRCompiler(lfrXListener):
             mode = IOType.FLOW_OUTPUT
         elif decltype == 'control':
             mode = IOType.CONTROL
-
 
         for declvar in ctx.declvar():
             startindex = 0
@@ -200,13 +202,14 @@ class LFRCompiler(lfrXListener):
     def exitConcatenation(self, ctx: lfrXParser.ConcatenationContext):
 
         item_in_concatenation = len(ctx.vectorvar())
-        #slice the items out of the stack
+        # slice the items out of the stack
         stackslice = self.stack[-(item_in_concatenation):]
         del self.stack[-(item_in_concatenation):]
 
         c = Concatenation(stackslice)
-        
-        #TODO: Here the selector will determine the start and endindex for the vector range
+
+        # TODO: Here the selector will determine the start and endindex for the vector 
+        # range
         startindex = 0
         endindex = len(c) - 1
         if ctx.vector() is not None:
@@ -225,7 +228,8 @@ class LFRCompiler(lfrXListener):
         n = None
         # check to see what kind of a number it is to parse it correctly
 
-        # TODO: Figure out to do the parsing for the binary, hex and octal numbers. Need to cleave the header for this
+        # TODO: Figure out to do the parsing for the binary, hex and octal
+        # numbers. Need to cleave the header for this
 
         if ctx.Decimal_number() is not None:
             n = int(ctx.Decimal_number().getText())
@@ -277,7 +281,7 @@ class LFRCompiler(lfrXListener):
     def exitExpressionterm(self, ctx: lfrXParser.ExpressiontermContext):
         # Check if this has a unary operator (we have to process this)
         if ctx.unary_operator() is not None:
-            # Since we have the unary operator, we need to pop the last item 
+            # Since we have the unary operator, we need to pop the last item
             # and perform the operation
 
             operator = ctx.unary_operator().getText()
@@ -285,8 +289,8 @@ class LFRCompiler(lfrXListener):
             if ctx.variables().vectorvar() is not None:
                 lastitem = self.stack.pop()
                 output = self.__performUnaryOperation(operator, lastitem)
-                
-                #Attaching the output fluid/operator node vectors
+
+                # Attaching the output fluid/operator node vectors
                 self.vectors[output.vector.id] = output
                 self.typeMap[output.vector.id] = VariableTypes.FLUID
 
@@ -295,7 +299,7 @@ class LFRCompiler(lfrXListener):
             elif ctx.number() is not None:
                 # TODO: Figure out how one needs to process the number with a unary operator
                 raise Exception("Implement method to evaluate number with unary operator")
-    
+
     def enterBinary_operator(self, ctx: lfrXParser.Binary_operatorContext):
         op = ctx.getText()
         self.binaryoperatorsstack[-1].append(op)
@@ -303,19 +307,19 @@ class LFRCompiler(lfrXListener):
     def enterExpression(self, ctx: lfrXParser.ExpressionContext):
         self.__updateMode(ListenerMode.EXPRESS_PARSING_MODE)
         self.binaryoperatorsstack.append([])
-    
+
     def exitExpression(self, ctx: lfrXParser.ExpressionContext):
         self.__revertMode()
 
-        #TODO: Pull all the operators and expression terms
+        # TODO: Pull all the operators and expression terms
         stackslice = self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
         del self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
 
         fluidexpression = FluidExpression(self.currentModule, self.current_performance_constraints)
-        #TODO: Figure out how to pass the FIG after this
+        # TODO: Figure out how to pass the FIG after this
         result = fluidexpression.process_expression(stackslice, self.binaryoperatorsstack[-1])
         self.stack.append(result)
-        
+
         self.binaryoperatorsstack.pop()
 
         self.current_performance_constraints.clear()
@@ -334,12 +338,11 @@ class LFRCompiler(lfrXListener):
             result = fluidexpession.process_unary_operation(term, operator)
             self.stack.append(result)
 
-    
     def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):
         rhs = self.stack.pop()
         lhs = self.stack.pop()
-        
-        #Check if both the LHS and RHS are numbers
+
+        # Check if both the LHS and RHS are numbers
         if is_number(lhs) is True or is_number(rhs) is True:
             if is_number(lhs) is not True and is_number(rhs) is True:
                 raise Exception("Cannot assign Fluid to Number Variable")
@@ -348,7 +351,7 @@ class LFRCompiler(lfrXListener):
             else:
                 self.vectors[lhs] = rhs
 
-        #Perform the vector assignments
+        # Perform the vector assignments
         if len(lhs) == len(rhs):
             print("LHS, RHS sizes are equal")
             # Make 1-1 connections
@@ -368,11 +371,10 @@ class LFRCompiler(lfrXListener):
                     targetid = target.id
                     self.currentModule.add_fluid_connection(sourceid, targetid)
 
-
     def exitLiteralassignstat(self, ctx: lfrXParser.LiteralassignstatContext):
         rhs = self.stack.pop()
         lhs = ctx.ID().getText()
-        #TODO: Check all error conditions and if the right kinds of variables are being assigned here
+        # TODO: Check all error conditions and if the right kinds of variables are being assigned here
         self.vectors[lhs] = rhs
 
     # def exitTechnologymappingdirective(self, ctx: lfrXParser.TechnologymappingdirectiveContext):
