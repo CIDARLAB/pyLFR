@@ -1,4 +1,4 @@
-# Generated from /Users/krishna/Documents/GitHub/pyLFR/lfrX.g4 by ANTLR 4.8
+# Generated from /Volumes/krishna/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -11,216 +11,218 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3D")
-        buf.write("\u01c8\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3E")
+        buf.write("\u01ca\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31")
         buf.write("\t\31\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36")
         buf.write("\4\37\t\37\4 \t \4!\t!\4\"\t\"\4#\t#\4$\t$\4%\t%\4&\t")
-        buf.write("&\4\'\t\'\4(\t(\4)\t)\4*\t*\4+\t+\4,\t,\3\2\3\2\3\2\3")
-        buf.write("\2\3\3\3\3\3\3\3\3\3\3\3\3\5\3c\n\3\3\3\3\3\3\4\3\4\6")
-        buf.write("\4i\n\4\r\4\16\4j\3\5\3\5\3\5\7\5p\n\5\f\5\16\5s\13\5")
-        buf.write("\3\5\3\5\3\5\5\5x\n\5\5\5z\n\5\3\6\3\6\5\6~\n\6\3\7\3")
-        buf.write("\7\3\7\3\7\7\7\u0084\n\7\f\7\16\7\u0087\13\7\3\7\3\7\3")
-        buf.write("\7\3\7\7\7\u008d\n\7\f\7\16\7\u0090\13\7\3\7\3\7\3\7\3")
-        buf.write("\7\7\7\u0096\n\7\f\7\16\7\u0099\13\7\5\7\u009b\n\7\3\b")
-        buf.write("\5\b\u009e\n\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t")
-        buf.write("\3\n\7\n\u00ab\n\n\f\n\16\n\u00ae\13\n\3\n\5\n\u00b1\n")
-        buf.write("\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\f\3\f\3\r\3\r")
-        buf.write("\3\r\3\r\3\r\5\r\u00c1\n\r\3\r\3\r\3\r\3\r\3\16\3\16\5")
-        buf.write("\16\u00c9\n\16\3\16\3\16\3\16\5\16\u00ce\n\16\7\16\u00d0")
-        buf.write("\n\16\f\16\16\16\u00d3\13\16\3\17\3\17\5\17\u00d7\n\17")
-        buf.write("\3\20\3\20\3\20\3\20\5\20\u00dd\n\20\3\21\3\21\3\21\5")
-        buf.write("\21\u00e2\n\21\3\22\3\22\3\22\3\22\7\22\u00e8\n\22\f\22")
-        buf.write("\16\22\u00eb\13\22\3\22\3\22\3\23\3\23\3\23\3\23\7\23")
-        buf.write("\u00f3\n\23\f\23\16\23\u00f6\13\23\3\23\3\23\3\24\3\24")
-        buf.write("\3\24\3\24\3\24\3\24\3\24\3\24\7\24\u0102\n\24\f\24\16")
-        buf.write("\24\u0105\13\24\3\24\3\24\3\25\3\25\3\25\3\25\3\25\5\25")
-        buf.write("\u010e\n\25\3\25\3\25\3\26\3\26\3\26\3\26\5\26\u0116\n")
-        buf.write("\26\3\26\3\26\3\27\5\27\u011b\n\27\3\27\3\27\3\27\3\27")
-        buf.write("\3\30\3\30\5\30\u0123\n\30\3\30\3\30\3\30\5\30\u0128\n")
-        buf.write("\30\7\30\u012a\n\30\f\30\16\30\u012d\13\30\3\31\5\31\u0130")
-        buf.write("\n\31\3\31\3\31\5\31\u0134\n\31\3\32\3\32\5\32\u0138\n")
-        buf.write("\32\3\32\3\32\3\32\5\32\u013d\n\32\7\32\u013f\n\32\f\32")
-        buf.write("\16\32\u0142\13\32\3\33\3\33\3\33\3\33\3\33\3\33\3\34")
-        buf.write("\3\34\5\34\u014c\n\34\3\35\3\35\3\35\3\35\7\35\u0152\n")
-        buf.write("\35\f\35\16\35\u0155\13\35\3\35\3\35\5\35\u0159\n\35\3")
-        buf.write("\36\3\36\3\37\3\37\3\37\3 \3 \3 \7 \u0163\n \f \16 \u0166")
-        buf.write("\13 \3!\3!\3!\5!\u016b\n!\3\"\3\"\3\"\3\"\5\"\u0171\n")
-        buf.write("\"\3#\3#\3#\3#\3$\3$\5$\u0179\n$\3%\3%\3%\3&\3&\3&\5&")
-        buf.write("\u0181\n&\3&\3&\3&\3&\3&\5&\u0188\n&\3&\3&\3&\5&\u018d")
-        buf.write("\n&\3&\3&\3&\3&\3&\5&\u0194\n&\3&\3&\3&\5&\u0199\n&\3")
-        buf.write("&\3&\3&\3&\3&\5&\u01a0\n&\3&\3&\3&\5&\u01a5\n&\3&\3&\3")
-        buf.write("&\3&\3&\5&\u01ac\n&\3&\3&\3&\5&\u01b1\n&\3&\3&\3&\3&\3")
-        buf.write("&\5&\u01b8\n&\5&\u01ba\n&\3\'\3\'\3(\3(\3)\3)\3*\3*\3")
-        buf.write("+\3+\3,\3,\3,\2\2-\2\4\6\b\n\f\16\20\22\24\26\30\32\34")
-        buf.write("\36 \"$&(*,.\60\62\64\668:<>@BDFHJLNPRTV\2\b\3\2\35\36")
-        buf.write("\4\2\35\36&.\6\2\21\22\35\36#\',;\4\2\35\36(.\6\2\35\36")
-        buf.write(",.\61\62\65\66\3\2@D\2\u01da\2X\3\2\2\2\4\\\3\2\2\2\6")
-        buf.write("h\3\2\2\2\by\3\2\2\2\n{\3\2\2\2\f\u009a\3\2\2\2\16\u009d")
-        buf.write("\3\2\2\2\20\u00a1\3\2\2\2\22\u00b0\3\2\2\2\24\u00b2\3")
-        buf.write("\2\2\2\26\u00b9\3\2\2\2\30\u00bb\3\2\2\2\32\u00c6\3\2")
-        buf.write("\2\2\34\u00d6\3\2\2\2\36\u00dc\3\2\2\2 \u00e1\3\2\2\2")
-        buf.write("\"\u00e3\3\2\2\2$\u00ee\3\2\2\2&\u00f9\3\2\2\2(\u0108")
-        buf.write("\3\2\2\2*\u0111\3\2\2\2,\u011a\3\2\2\2.\u0122\3\2\2\2")
-        buf.write("\60\u0133\3\2\2\2\62\u0137\3\2\2\2\64\u0143\3\2\2\2\66")
-        buf.write("\u014b\3\2\2\28\u014d\3\2\2\2:\u015a\3\2\2\2<\u015c\3")
-        buf.write("\2\2\2>\u015f\3\2\2\2@\u016a\3\2\2\2B\u0170\3\2\2\2D\u0172")
-        buf.write("\3\2\2\2F\u0178\3\2\2\2H\u017a\3\2\2\2J\u01b9\3\2\2\2")
-        buf.write("L\u01bb\3\2\2\2N\u01bd\3\2\2\2P\u01bf\3\2\2\2R\u01c1\3")
-        buf.write("\2\2\2T\u01c3\3\2\2\2V\u01c5\3\2\2\2XY\5\4\3\2YZ\5\6\4")
-        buf.write("\2Z[\7\3\2\2[\3\3\2\2\2\\]\7\4\2\2]b\7<\2\2^_\7\5\2\2")
-        buf.write("_`\5\b\5\2`a\7\6\2\2ac\3\2\2\2b^\3\2\2\2bc\3\2\2\2cd\3")
-        buf.write("\2\2\2de\7\7\2\2e\5\3\2\2\2fi\5\34\17\2gi\5\20\t\2hf\3")
-        buf.write("\2\2\2hg\3\2\2\2ij\3\2\2\2jh\3\2\2\2jk\3\2\2\2k\7\3\2")
-        buf.write("\2\2lq\5\n\6\2mn\7\b\2\2np\5\n\6\2om\3\2\2\2ps\3\2\2\2")
-        buf.write("qo\3\2\2\2qr\3\2\2\2rz\3\2\2\2sq\3\2\2\2tw\5\f\7\2uv\7")
-        buf.write("\b\2\2vx\5\f\7\2wu\3\2\2\2wx\3\2\2\2xz\3\2\2\2yl\3\2\2")
-        buf.write("\2yt\3\2\2\2z\t\3\2\2\2{}\7<\2\2|~\5\64\33\2}|\3\2\2\2")
-        buf.write("}~\3\2\2\2~\13\3\2\2\2\177\u0080\7\t\2\2\u0080\u0085\5")
-        buf.write("\16\b\2\u0081\u0082\7\b\2\2\u0082\u0084\5\16\b\2\u0083")
-        buf.write("\u0081\3\2\2\2\u0084\u0087\3\2\2\2\u0085\u0083\3\2\2\2")
-        buf.write("\u0085\u0086\3\2\2\2\u0086\u009b\3\2\2\2\u0087\u0085\3")
-        buf.write("\2\2\2\u0088\u0089\7\n\2\2\u0089\u008e\5\16\b\2\u008a")
-        buf.write("\u008b\7\b\2\2\u008b\u008d\5\16\b\2\u008c\u008a\3\2\2")
-        buf.write("\2\u008d\u0090\3\2\2\2\u008e\u008c\3\2\2\2\u008e\u008f")
-        buf.write("\3\2\2\2\u008f\u009b\3\2\2\2\u0090\u008e\3\2\2\2\u0091")
-        buf.write("\u0092\7\13\2\2\u0092\u0097\5\16\b\2\u0093\u0094\7\b\2")
-        buf.write("\2\u0094\u0096\5\16\b\2\u0095\u0093\3\2\2\2\u0096\u0099")
-        buf.write("\3\2\2\2\u0097\u0095\3\2\2\2\u0097\u0098\3\2\2\2\u0098")
-        buf.write("\u009b\3\2\2\2\u0099\u0097\3\2\2\2\u009a\177\3\2\2\2\u009a")
-        buf.write("\u0088\3\2\2\2\u009a\u0091\3\2\2\2\u009b\r\3\2\2\2\u009c")
-        buf.write("\u009e\5\64\33\2\u009d\u009c\3\2\2\2\u009d\u009e\3\2\2")
-        buf.write("\2\u009e\u009f\3\2\2\2\u009f\u00a0\7<\2\2\u00a0\17\3\2")
-        buf.write("\2\2\u00a1\u00a2\7\f\2\2\u00a2\u00a3\7\5\2\2\u00a3\u00a4")
-        buf.write("\5\32\16\2\u00a4\u00a5\7\6\2\2\u00a5\u00a6\7\r\2\2\u00a6")
-        buf.write("\u00a7\5\22\n\2\u00a7\u00a8\7\16\2\2\u00a8\21\3\2\2\2")
-        buf.write("\u00a9\u00ab\5\30\r\2\u00aa\u00a9\3\2\2\2\u00ab\u00ae")
-        buf.write("\3\2\2\2\u00ac\u00aa\3\2\2\2\u00ac\u00ad\3\2\2\2\u00ad")
-        buf.write("\u00b1\3\2\2\2\u00ae\u00ac\3\2\2\2\u00af\u00b1\5\24\13")
-        buf.write("\2\u00b0\u00ac\3\2\2\2\u00b0\u00af\3\2\2\2\u00b1\23\3")
-        buf.write("\2\2\2\u00b2\u00b3\7\17\2\2\u00b3\u00b4\7\5\2\2\u00b4")
-        buf.write("\u00b5\5:\36\2\u00b5\u00b6\7\6\2\2\u00b6\u00b7\5\26\f")
-        buf.write("\2\u00b7\u00b8\7\20\2\2\u00b8\25\3\2\2\2\u00b9\u00ba\5")
-        buf.write("\30\r\2\u00ba\27\3\2\2\2\u00bb\u00bc\5:\36\2\u00bc\u00c0")
-        buf.write("\7\21\2\2\u00bd\u00c1\5V,\2\u00be\u00c1\5\66\34\2\u00bf")
-        buf.write("\u00c1\5.\30\2\u00c0\u00bd\3\2\2\2\u00c0\u00be\3\2\2\2")
-        buf.write("\u00c0\u00bf\3\2\2\2\u00c1\u00c2\3\2\2\2\u00c2\u00c3\7")
-        buf.write("\22\2\2\u00c3\u00c4\5\62\32\2\u00c4\u00c5\7\7\2\2\u00c5")
-        buf.write("\31\3\2\2\2\u00c6\u00c8\7<\2\2\u00c7\u00c9\5\64\33\2\u00c8")
-        buf.write("\u00c7\3\2\2\2\u00c8\u00c9\3\2\2\2\u00c9\u00d1\3\2\2\2")
-        buf.write("\u00ca\u00cb\7\b\2\2\u00cb\u00cd\7<\2\2\u00cc\u00ce\5")
-        buf.write("\64\33\2\u00cd\u00cc\3\2\2\2\u00cd\u00ce\3\2\2\2\u00ce")
-        buf.write("\u00d0\3\2\2\2\u00cf\u00ca\3\2\2\2\u00d0\u00d3\3\2\2\2")
-        buf.write("\u00d1\u00cf\3\2\2\2\u00d1\u00d2\3\2\2\2\u00d2\33\3\2")
-        buf.write("\2\2\u00d3\u00d1\3\2\2\2\u00d4\u00d7\5\36\20\2\u00d5\u00d7")
-        buf.write("\5> \2\u00d6\u00d4\3\2\2\2\u00d6\u00d5\3\2\2\2\u00d7\35")
-        buf.write("\3\2\2\2\u00d8\u00dd\5<\37\2\u00d9\u00dd\5(\25\2\u00da")
-        buf.write("\u00dd\5 \21\2\u00db\u00dd\5*\26\2\u00dc\u00d8\3\2\2\2")
-        buf.write("\u00dc\u00d9\3\2\2\2\u00dc\u00da\3\2\2\2\u00dc\u00db\3")
-        buf.write("\2\2\2\u00dd\37\3\2\2\2\u00de\u00e2\5\"\22\2\u00df\u00e2")
-        buf.write("\5$\23\2\u00e0\u00e2\5&\24\2\u00e1\u00de\3\2\2\2\u00e1")
-        buf.write("\u00df\3\2\2\2\u00e1\u00e0\3\2\2\2\u00e2!\3\2\2\2\u00e3")
-        buf.write("\u00e4\7\23\2\2\u00e4\u00e9\5\16\b\2\u00e5\u00e6\7\b\2")
-        buf.write("\2\u00e6\u00e8\5\16\b\2\u00e7\u00e5\3\2\2\2\u00e8\u00eb")
-        buf.write("\3\2\2\2\u00e9\u00e7\3\2\2\2\u00e9\u00ea\3\2\2\2\u00ea")
-        buf.write("\u00ec\3\2\2\2\u00eb\u00e9\3\2\2\2\u00ec\u00ed\7\7\2\2")
-        buf.write("\u00ed#\3\2\2\2\u00ee\u00ef\7\24\2\2\u00ef\u00f4\5\16")
-        buf.write("\b\2\u00f0\u00f1\7\b\2\2\u00f1\u00f3\5\16\b\2\u00f2\u00f0")
-        buf.write("\3\2\2\2\u00f3\u00f6\3\2\2\2\u00f4\u00f2\3\2\2\2\u00f4")
-        buf.write("\u00f5\3\2\2\2\u00f5\u00f7\3\2\2\2\u00f6\u00f4\3\2\2\2")
-        buf.write("\u00f7\u00f8\7\7\2\2\u00f8%\3\2\2\2\u00f9\u00fa\7\25\2")
-        buf.write("\2\u00fa\u00fb\7<\2\2\u00fb\u00fc\7\26\2\2\u00fc\u0103")
-        buf.write("\5V,\2\u00fd\u00fe\7\b\2\2\u00fe\u00ff\7<\2\2\u00ff\u0100")
-        buf.write("\7\26\2\2\u0100\u0102\5V,\2\u0101\u00fd\3\2\2\2\u0102")
-        buf.write("\u0105\3\2\2\2\u0103\u0101\3\2\2\2\u0103\u0104\3\2\2\2")
-        buf.write("\u0104\u0106\3\2\2\2\u0105\u0103\3\2\2\2\u0106\u0107\7")
-        buf.write("\7\2\2\u0107\'\3\2\2\2\u0108\u0109\7\27\2\2\u0109\u010a")
-        buf.write("\5:\36\2\u010a\u010d\7\26\2\2\u010b\u010e\5,\27\2\u010c")
-        buf.write("\u010e\5.\30\2\u010d\u010b\3\2\2\2\u010d\u010c\3\2\2\2")
-        buf.write("\u010e\u010f\3\2\2\2\u010f\u0110\7\7\2\2\u0110)\3\2\2")
-        buf.write("\2\u0111\u0112\7<\2\2\u0112\u0115\7\26\2\2\u0113\u0116")
-        buf.write("\5,\27\2\u0114\u0116\5.\30\2\u0115\u0113\3\2\2\2\u0115")
-        buf.write("\u0114\3\2\2\2\u0116\u0117\3\2\2\2\u0117\u0118\7\7\2\2")
-        buf.write("\u0118+\3\2\2\2\u0119\u011b\5N(\2\u011a\u0119\3\2\2\2")
-        buf.write("\u011a\u011b\3\2\2\2\u011b\u011c\3\2\2\2\u011c\u011d\7")
-        buf.write("\5\2\2\u011d\u011e\5.\30\2\u011e\u011f\7\6\2\2\u011f-")
-        buf.write("\3\2\2\2\u0120\u0123\5,\27\2\u0121\u0123\5\60\31\2\u0122")
-        buf.write("\u0120\3\2\2\2\u0122\u0121\3\2\2\2\u0123\u012b\3\2\2\2")
-        buf.write("\u0124\u0127\5P)\2\u0125\u0128\5,\27\2\u0126\u0128\5\60")
-        buf.write("\31\2\u0127\u0125\3\2\2\2\u0127\u0126\3\2\2\2\u0128\u012a")
-        buf.write("\3\2\2\2\u0129\u0124\3\2\2\2\u012a\u012d\3\2\2\2\u012b")
-        buf.write("\u0129\3\2\2\2\u012b\u012c\3\2\2\2\u012c/\3\2\2\2\u012d")
-        buf.write("\u012b\3\2\2\2\u012e\u0130\5N(\2\u012f\u012e\3\2\2\2\u012f")
-        buf.write("\u0130\3\2\2\2\u0130\u0131\3\2\2\2\u0131\u0134\5\66\34")
-        buf.write("\2\u0132\u0134\5V,\2\u0133\u012f\3\2\2\2\u0133\u0132\3")
-        buf.write("\2\2\2\u0134\61\3\2\2\2\u0135\u0138\5,\27\2\u0136\u0138")
-        buf.write("\5\60\31\2\u0137\u0135\3\2\2\2\u0137\u0136\3\2\2\2\u0138")
-        buf.write("\u0140\3\2\2\2\u0139\u013c\5P)\2\u013a\u013d\5,\27\2\u013b")
-        buf.write("\u013d\5\60\31\2\u013c\u013a\3\2\2\2\u013c\u013b\3\2\2")
-        buf.write("\2\u013d\u013f\3\2\2\2\u013e\u0139\3\2\2\2\u013f\u0142")
-        buf.write("\3\2\2\2\u0140\u013e\3\2\2\2\u0140\u0141\3\2\2\2\u0141")
-        buf.write("\63\3\2\2\2\u0142\u0140\3\2\2\2\u0143\u0144\7\30\2\2\u0144")
-        buf.write("\u0145\7A\2\2\u0145\u0146\7\31\2\2\u0146\u0147\7A\2\2")
-        buf.write("\u0147\u0148\7\32\2\2\u0148\65\3\2\2\2\u0149\u014c\5\n")
-        buf.write("\6\2\u014a\u014c\58\35\2\u014b\u0149\3\2\2\2\u014b\u014a")
-        buf.write("\3\2\2\2\u014c\67\3\2\2\2\u014d\u014e\7\33\2\2\u014e\u0153")
-        buf.write("\5\n\6\2\u014f\u0150\7\b\2\2\u0150\u0152\5\n\6\2\u0151")
-        buf.write("\u014f\3\2\2\2\u0152\u0155\3\2\2\2\u0153\u0151\3\2\2\2")
-        buf.write("\u0153\u0154\3\2\2\2\u0154\u0156\3\2\2\2\u0155\u0153\3")
-        buf.write("\2\2\2\u0156\u0158\7\34\2\2\u0157\u0159\5\64\33\2\u0158")
-        buf.write("\u0157\3\2\2\2\u0158\u0159\3\2\2\2\u01599\3\2\2\2\u015a")
-        buf.write("\u015b\5\66\34\2\u015b;\3\2\2\2\u015c\u015d\5\f\7\2\u015d")
-        buf.write("\u015e\7\7\2\2\u015e=\3\2\2\2\u015f\u0164\5@!\2\u0160")
-        buf.write("\u0161\t\2\2\2\u0161\u0163\5@!\2\u0162\u0160\3\2\2\2\u0163")
-        buf.write("\u0166\3\2\2\2\u0164\u0162\3\2\2\2\u0164\u0165\3\2\2\2")
-        buf.write("\u0165?\3\2\2\2\u0166\u0164\3\2\2\2\u0167\u016b\5H%\2")
-        buf.write("\u0168\u016b\5B\"\2\u0169\u016b\5D#\2\u016a\u0167\3\2")
-        buf.write("\2\2\u016a\u0168\3\2\2\2\u016a\u0169\3\2\2\2\u016bA\3")
-        buf.write("\2\2\2\u016c\u016d\7\37\2\2\u016d\u016e\7<\2\2\u016e\u0171")
-        buf.write("\5F$\2\u016f\u0171\7\27\2\2\u0170\u016c\3\2\2\2\u0170")
-        buf.write("\u016f\3\2\2\2\u0171C\3\2\2\2\u0172\u0173\7 \2\2\u0173")
-        buf.write("\u0174\7<\2\2\u0174\u0175\7<\2\2\u0175E\3\2\2\2\u0176")
-        buf.write("\u0179\5P)\2\u0177\u0179\5N(\2\u0178\u0176\3\2\2\2\u0178")
-        buf.write("\u0177\3\2\2\2\u0179G\3\2\2\2\u017a\u017b\7!\2\2\u017b")
-        buf.write("\u017c\5J&\2\u017cI\3\2\2\2\u017d\u0180\7\"\2\2\u017e")
-        buf.write("\u0181\5P)\2\u017f\u0181\5N(\2\u0180\u017e\3\2\2\2\u0180")
-        buf.write("\u017f\3\2\2\2\u0181\u0182\3\2\2\2\u0182\u0183\7\"\2\2")
-        buf.write("\u0183\u0184\7<\2\2\u0184\u0185\7\26\2\2\u0185\u0187\5")
-        buf.write("V,\2\u0186\u0188\5L\'\2\u0187\u0186\3\2\2\2\u0187\u0188")
-        buf.write("\3\2\2\2\u0188\u01ba\3\2\2\2\u0189\u018c\7\"\2\2\u018a")
-        buf.write("\u018d\5P)\2\u018b\u018d\5N(\2\u018c\u018a\3\2\2\2\u018c")
-        buf.write("\u018b\3\2\2\2\u018d\u018e\3\2\2\2\u018e\u018f\7\"\2\2")
-        buf.write("\u018f\u0190\7<\2\2\u0190\u0191\7#\2\2\u0191\u0193\5V")
-        buf.write(",\2\u0192\u0194\5L\'\2\u0193\u0192\3\2\2\2\u0193\u0194")
-        buf.write("\3\2\2\2\u0194\u01ba\3\2\2\2\u0195\u0198\7\"\2\2\u0196")
-        buf.write("\u0199\5P)\2\u0197\u0199\5N(\2\u0198\u0196\3\2\2\2\u0198")
-        buf.write("\u0197\3\2\2\2\u0199\u019a\3\2\2\2\u019a\u019b\7\"\2\2")
-        buf.write("\u019b\u019c\7<\2\2\u019c\u019d\7$\2\2\u019d\u019f\5V")
-        buf.write(",\2\u019e\u01a0\5L\'\2\u019f\u019e\3\2\2\2\u019f\u01a0")
-        buf.write("\3\2\2\2\u01a0\u01ba\3\2\2\2\u01a1\u01a4\7\"\2\2\u01a2")
-        buf.write("\u01a5\5P)\2\u01a3\u01a5\5N(\2\u01a4\u01a2\3\2\2\2\u01a4")
-        buf.write("\u01a3\3\2\2\2\u01a5\u01a6\3\2\2\2\u01a6\u01a7\7\"\2\2")
-        buf.write("\u01a7\u01a8\7<\2\2\u01a8\u01a9\7%\2\2\u01a9\u01ab\5V")
-        buf.write(",\2\u01aa\u01ac\5L\'\2\u01ab\u01aa\3\2\2\2\u01ab\u01ac")
-        buf.write("\3\2\2\2\u01ac\u01ba\3\2\2\2\u01ad\u01b0\7\"\2\2\u01ae")
-        buf.write("\u01b1\5P)\2\u01af\u01b1\5N(\2\u01b0\u01ae\3\2\2\2\u01b0")
-        buf.write("\u01af\3\2\2\2\u01b1\u01b2\3\2\2\2\u01b2\u01b3\7\"\2\2")
-        buf.write("\u01b3\u01b4\7<\2\2\u01b4\u01b5\7\21\2\2\u01b5\u01b7\5")
-        buf.write("V,\2\u01b6\u01b8\5L\'\2\u01b7\u01b6\3\2\2\2\u01b7\u01b8")
-        buf.write("\3\2\2\2\u01b8\u01ba\3\2\2\2\u01b9\u017d\3\2\2\2\u01b9")
-        buf.write("\u0189\3\2\2\2\u01b9\u0195\3\2\2\2\u01b9\u01a1\3\2\2\2")
-        buf.write("\u01b9\u01ad\3\2\2\2\u01baK\3\2\2\2\u01bb\u01bc\7<\2\2")
-        buf.write("\u01bcM\3\2\2\2\u01bd\u01be\t\3\2\2\u01beO\3\2\2\2\u01bf")
-        buf.write("\u01c0\t\4\2\2\u01c0Q\3\2\2\2\u01c1\u01c2\t\5\2\2\u01c2")
-        buf.write("S\3\2\2\2\u01c3\u01c4\t\6\2\2\u01c4U\3\2\2\2\u01c5\u01c6")
-        buf.write("\t\7\2\2\u01c6W\3\2\2\2\67bhjqwy}\u0085\u008e\u0097\u009a")
-        buf.write("\u009d\u00ac\u00b0\u00c0\u00c8\u00cd\u00d1\u00d6\u00dc")
-        buf.write("\u00e1\u00e9\u00f4\u0103\u010d\u0115\u011a\u0122\u0127")
-        buf.write("\u012b\u012f\u0133\u0137\u013c\u0140\u014b\u0153\u0158")
-        buf.write("\u0164\u016a\u0170\u0178\u0180\u0187\u018c\u0193\u0198")
-        buf.write("\u019f\u01a4\u01ab\u01b0\u01b7\u01b9")
+        buf.write("&\4\'\t\'\4(\t(\4)\t)\4*\t*\4+\t+\4,\t,\4-\t-\3\2\3\2")
+        buf.write("\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\5\3e\n\3\3\3\3\3\3\4")
+        buf.write("\3\4\6\4k\n\4\r\4\16\4l\3\5\3\5\3\5\7\5r\n\5\f\5\16\5")
+        buf.write("u\13\5\3\5\3\5\3\5\5\5z\n\5\5\5|\n\5\3\6\3\6\5\6\u0080")
+        buf.write("\n\6\3\7\3\7\3\7\3\7\7\7\u0086\n\7\f\7\16\7\u0089\13\7")
+        buf.write("\3\7\3\7\3\7\3\7\7\7\u008f\n\7\f\7\16\7\u0092\13\7\3\7")
+        buf.write("\3\7\3\7\3\7\7\7\u0098\n\7\f\7\16\7\u009b\13\7\5\7\u009d")
+        buf.write("\n\7\3\b\5\b\u00a0\n\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t")
+        buf.write("\3\t\3\t\3\n\7\n\u00ad\n\n\f\n\16\n\u00b0\13\n\3\n\5\n")
+        buf.write("\u00b3\n\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\f\3\f")
+        buf.write("\3\r\3\r\3\r\3\r\3\r\5\r\u00c3\n\r\3\r\3\r\3\r\3\r\3\16")
+        buf.write("\3\16\5\16\u00cb\n\16\3\16\3\16\3\16\5\16\u00d0\n\16\7")
+        buf.write("\16\u00d2\n\16\f\16\16\16\u00d5\13\16\3\17\3\17\3\17\3")
+        buf.write("\17\5\17\u00db\n\17\3\20\3\20\3\20\3\20\5\20\u00e1\n\20")
+        buf.write("\3\21\3\21\3\21\3\21\5\21\u00e7\n\21\3\22\3\22\3\22\3")
+        buf.write("\22\7\22\u00ed\n\22\f\22\16\22\u00f0\13\22\3\23\3\23\3")
+        buf.write("\23\3\23\7\23\u00f6\n\23\f\23\16\23\u00f9\13\23\3\24\3")
+        buf.write("\24\3\24\3\24\7\24\u00ff\n\24\f\24\16\24\u0102\13\24\3")
+        buf.write("\25\3\25\3\25\3\26\3\26\3\26\3\26\3\26\5\26\u010c\n\26")
+        buf.write("\3\27\3\27\3\27\3\27\5\27\u0112\n\27\3\30\5\30\u0115\n")
+        buf.write("\30\3\30\3\30\3\30\3\30\3\31\3\31\5\31\u011d\n\31\3\31")
+        buf.write("\3\31\3\31\5\31\u0122\n\31\7\31\u0124\n\31\f\31\16\31")
+        buf.write("\u0127\13\31\3\32\5\32\u012a\n\32\3\32\3\32\5\32\u012e")
+        buf.write("\n\32\3\33\3\33\5\33\u0132\n\33\3\33\3\33\3\33\5\33\u0137")
+        buf.write("\n\33\7\33\u0139\n\33\f\33\16\33\u013c\13\33\3\34\3\34")
+        buf.write("\3\34\3\34\3\34\3\34\3\35\3\35\5\35\u0146\n\35\3\36\3")
+        buf.write("\36\3\36\3\36\7\36\u014c\n\36\f\36\16\36\u014f\13\36\3")
+        buf.write("\36\3\36\5\36\u0153\n\36\3\37\3\37\3 \3 \3!\3!\3!\7!\u015c")
+        buf.write("\n!\f!\16!\u015f\13!\3\"\3\"\3\"\5\"\u0164\n\"\3#\3#\3")
+        buf.write("#\6#\u0169\n#\r#\16#\u016a\3#\3#\3#\3#\5#\u0171\n#\3#")
+        buf.write("\3#\3$\3$\3$\3$\3%\3%\5%\u017b\n%\3&\3&\3&\3\'\3\'\3\'")
+        buf.write("\5\'\u0183\n\'\3\'\3\'\3\'\3\'\3\'\5\'\u018a\n\'\3\'\3")
+        buf.write("\'\3\'\5\'\u018f\n\'\3\'\3\'\3\'\3\'\3\'\5\'\u0196\n\'")
+        buf.write("\3\'\3\'\3\'\5\'\u019b\n\'\3\'\3\'\3\'\3\'\3\'\5\'\u01a2")
+        buf.write("\n\'\3\'\3\'\3\'\5\'\u01a7\n\'\3\'\3\'\3\'\3\'\3\'\5\'")
+        buf.write("\u01ae\n\'\3\'\3\'\3\'\5\'\u01b3\n\'\3\'\3\'\3\'\3\'\3")
+        buf.write("\'\5\'\u01ba\n\'\5\'\u01bc\n\'\3(\3(\3)\3)\3*\3*\3+\3")
+        buf.write("+\3,\3,\3-\3-\3-\2\2.\2\4\6\b\n\f\16\20\22\24\26\30\32")
+        buf.write("\34\36 \"$&(*,.\60\62\64\668:<>@BDFHJLNPRTVX\2\t\3\2\36")
+        buf.write("\37\4\2\25\25\27\27\4\2\36\37\'/\6\2\21\22\36\37$(-<\4")
+        buf.write("\2\36\37)/\6\2\36\37-/\62\63\66\67\3\2AE\2\u01dd\2Z\3")
+        buf.write("\2\2\2\4^\3\2\2\2\6j\3\2\2\2\b{\3\2\2\2\n}\3\2\2\2\f\u009c")
+        buf.write("\3\2\2\2\16\u009f\3\2\2\2\20\u00a3\3\2\2\2\22\u00b2\3")
+        buf.write("\2\2\2\24\u00b4\3\2\2\2\26\u00bb\3\2\2\2\30\u00bd\3\2")
+        buf.write("\2\2\32\u00c8\3\2\2\2\34\u00da\3\2\2\2\36\u00e0\3\2\2")
+        buf.write("\2 \u00e6\3\2\2\2\"\u00e8\3\2\2\2$\u00f1\3\2\2\2&\u00fa")
+        buf.write("\3\2\2\2(\u0103\3\2\2\2*\u0106\3\2\2\2,\u010d\3\2\2\2")
+        buf.write(".\u0114\3\2\2\2\60\u011c\3\2\2\2\62\u012d\3\2\2\2\64\u0131")
+        buf.write("\3\2\2\2\66\u013d\3\2\2\28\u0145\3\2\2\2:\u0147\3\2\2")
+        buf.write("\2<\u0154\3\2\2\2>\u0156\3\2\2\2@\u0158\3\2\2\2B\u0163")
+        buf.write("\3\2\2\2D\u0165\3\2\2\2F\u0174\3\2\2\2H\u017a\3\2\2\2")
+        buf.write("J\u017c\3\2\2\2L\u01bb\3\2\2\2N\u01bd\3\2\2\2P\u01bf\3")
+        buf.write("\2\2\2R\u01c1\3\2\2\2T\u01c3\3\2\2\2V\u01c5\3\2\2\2X\u01c7")
+        buf.write("\3\2\2\2Z[\5\4\3\2[\\\5\6\4\2\\]\7\3\2\2]\3\3\2\2\2^_")
+        buf.write("\7\4\2\2_d\7=\2\2`a\7\5\2\2ab\5\b\5\2bc\7\6\2\2ce\3\2")
+        buf.write("\2\2d`\3\2\2\2de\3\2\2\2ef\3\2\2\2fg\7\7\2\2g\5\3\2\2")
+        buf.write("\2hk\5\34\17\2ik\5\20\t\2jh\3\2\2\2ji\3\2\2\2kl\3\2\2")
+        buf.write("\2lj\3\2\2\2lm\3\2\2\2m\7\3\2\2\2ns\5\n\6\2op\7\b\2\2")
+        buf.write("pr\5\n\6\2qo\3\2\2\2ru\3\2\2\2sq\3\2\2\2st\3\2\2\2t|\3")
+        buf.write("\2\2\2us\3\2\2\2vy\5\f\7\2wx\7\b\2\2xz\5\f\7\2yw\3\2\2")
+        buf.write("\2yz\3\2\2\2z|\3\2\2\2{n\3\2\2\2{v\3\2\2\2|\t\3\2\2\2")
+        buf.write("}\177\7=\2\2~\u0080\5\66\34\2\177~\3\2\2\2\177\u0080\3")
+        buf.write("\2\2\2\u0080\13\3\2\2\2\u0081\u0082\7\t\2\2\u0082\u0087")
+        buf.write("\5\16\b\2\u0083\u0084\7\b\2\2\u0084\u0086\5\16\b\2\u0085")
+        buf.write("\u0083\3\2\2\2\u0086\u0089\3\2\2\2\u0087\u0085\3\2\2\2")
+        buf.write("\u0087\u0088\3\2\2\2\u0088\u009d\3\2\2\2\u0089\u0087\3")
+        buf.write("\2\2\2\u008a\u008b\7\n\2\2\u008b\u0090\5\16\b\2\u008c")
+        buf.write("\u008d\7\b\2\2\u008d\u008f\5\16\b\2\u008e\u008c\3\2\2")
+        buf.write("\2\u008f\u0092\3\2\2\2\u0090\u008e\3\2\2\2\u0090\u0091")
+        buf.write("\3\2\2\2\u0091\u009d\3\2\2\2\u0092\u0090\3\2\2\2\u0093")
+        buf.write("\u0094\7\13\2\2\u0094\u0099\5\16\b\2\u0095\u0096\7\b\2")
+        buf.write("\2\u0096\u0098\5\16\b\2\u0097\u0095\3\2\2\2\u0098\u009b")
+        buf.write("\3\2\2\2\u0099\u0097\3\2\2\2\u0099\u009a\3\2\2\2\u009a")
+        buf.write("\u009d\3\2\2\2\u009b\u0099\3\2\2\2\u009c\u0081\3\2\2\2")
+        buf.write("\u009c\u008a\3\2\2\2\u009c\u0093\3\2\2\2\u009d\r\3\2\2")
+        buf.write("\2\u009e\u00a0\5\66\34\2\u009f\u009e\3\2\2\2\u009f\u00a0")
+        buf.write("\3\2\2\2\u00a0\u00a1\3\2\2\2\u00a1\u00a2\7=\2\2\u00a2")
+        buf.write("\17\3\2\2\2\u00a3\u00a4\7\f\2\2\u00a4\u00a5\7\5\2\2\u00a5")
+        buf.write("\u00a6\5\32\16\2\u00a6\u00a7\7\6\2\2\u00a7\u00a8\7\r\2")
+        buf.write("\2\u00a8\u00a9\5\22\n\2\u00a9\u00aa\7\16\2\2\u00aa\21")
+        buf.write("\3\2\2\2\u00ab\u00ad\5\30\r\2\u00ac\u00ab\3\2\2\2\u00ad")
+        buf.write("\u00b0\3\2\2\2\u00ae\u00ac\3\2\2\2\u00ae\u00af\3\2\2\2")
+        buf.write("\u00af\u00b3\3\2\2\2\u00b0\u00ae\3\2\2\2\u00b1\u00b3\5")
+        buf.write("\24\13\2\u00b2\u00ae\3\2\2\2\u00b2\u00b1\3\2\2\2\u00b3")
+        buf.write("\23\3\2\2\2\u00b4\u00b5\7\17\2\2\u00b5\u00b6\7\5\2\2\u00b6")
+        buf.write("\u00b7\5<\37\2\u00b7\u00b8\7\6\2\2\u00b8\u00b9\5\26\f")
+        buf.write("\2\u00b9\u00ba\7\20\2\2\u00ba\25\3\2\2\2\u00bb\u00bc\5")
+        buf.write("\30\r\2\u00bc\27\3\2\2\2\u00bd\u00be\5<\37\2\u00be\u00c2")
+        buf.write("\7\21\2\2\u00bf\u00c3\5X-\2\u00c0\u00c3\58\35\2\u00c1")
+        buf.write("\u00c3\5\60\31\2\u00c2\u00bf\3\2\2\2\u00c2\u00c0\3\2\2")
+        buf.write("\2\u00c2\u00c1\3\2\2\2\u00c3\u00c4\3\2\2\2\u00c4\u00c5")
+        buf.write("\7\22\2\2\u00c5\u00c6\5\64\33\2\u00c6\u00c7\7\7\2\2\u00c7")
+        buf.write("\31\3\2\2\2\u00c8\u00ca\7=\2\2\u00c9\u00cb\5\66\34\2\u00ca")
+        buf.write("\u00c9\3\2\2\2\u00ca\u00cb\3\2\2\2\u00cb\u00d3\3\2\2\2")
+        buf.write("\u00cc\u00cd\7\b\2\2\u00cd\u00cf\7=\2\2\u00ce\u00d0\5")
+        buf.write("\66\34\2\u00cf\u00ce\3\2\2\2\u00cf\u00d0\3\2\2\2\u00d0")
+        buf.write("\u00d2\3\2\2\2\u00d1\u00cc\3\2\2\2\u00d2\u00d5\3\2\2\2")
+        buf.write("\u00d3\u00d1\3\2\2\2\u00d3\u00d4\3\2\2\2\u00d4\33\3\2")
+        buf.write("\2\2\u00d5\u00d3\3\2\2\2\u00d6\u00d7\5\36\20\2\u00d7\u00d8")
+        buf.write("\7\7\2\2\u00d8\u00db\3\2\2\2\u00d9\u00db\5@!\2\u00da\u00d6")
+        buf.write("\3\2\2\2\u00da\u00d9\3\2\2\2\u00db\35\3\2\2\2\u00dc\u00e1")
+        buf.write("\5> \2\u00dd\u00e1\5*\26\2\u00de\u00e1\5 \21\2\u00df\u00e1")
+        buf.write("\5,\27\2\u00e0\u00dc\3\2\2\2\u00e0\u00dd\3\2\2\2\u00e0")
+        buf.write("\u00de\3\2\2\2\u00e0\u00df\3\2\2\2\u00e1\37\3\2\2\2\u00e2")
+        buf.write("\u00e7\5$\23\2\u00e3\u00e7\5&\24\2\u00e4\u00e7\5(\25\2")
+        buf.write("\u00e5\u00e7\5\"\22\2\u00e6\u00e2\3\2\2\2\u00e6\u00e3")
+        buf.write("\3\2\2\2\u00e6\u00e4\3\2\2\2\u00e6\u00e5\3\2\2\2\u00e7")
+        buf.write("!\3\2\2\2\u00e8\u00e9\7\23\2\2\u00e9\u00ee\5\16\b\2\u00ea")
+        buf.write("\u00eb\7\b\2\2\u00eb\u00ed\5\16\b\2\u00ec\u00ea\3\2\2")
+        buf.write("\2\u00ed\u00f0\3\2\2\2\u00ee\u00ec\3\2\2\2\u00ee\u00ef")
+        buf.write("\3\2\2\2\u00ef#\3\2\2\2\u00f0\u00ee\3\2\2\2\u00f1\u00f2")
+        buf.write("\7\24\2\2\u00f2\u00f7\5\16\b\2\u00f3\u00f4\7\b\2\2\u00f4")
+        buf.write("\u00f6\5\16\b\2\u00f5\u00f3\3\2\2\2\u00f6\u00f9\3\2\2")
+        buf.write("\2\u00f7\u00f5\3\2\2\2\u00f7\u00f8\3\2\2\2\u00f8%\3\2")
+        buf.write("\2\2\u00f9\u00f7\3\2\2\2\u00fa\u00fb\7\25\2\2\u00fb\u0100")
+        buf.write("\5\16\b\2\u00fc\u00fd\7\b\2\2\u00fd\u00ff\5\16\b\2\u00fe")
+        buf.write("\u00fc\3\2\2\2\u00ff\u0102\3\2\2\2\u0100\u00fe\3\2\2\2")
+        buf.write("\u0100\u0101\3\2\2\2\u0101\'\3\2\2\2\u0102\u0100\3\2\2")
+        buf.write("\2\u0103\u0104\7\26\2\2\u0104\u0105\5,\27\2\u0105)\3\2")
+        buf.write("\2\2\u0106\u0107\7\27\2\2\u0107\u0108\5<\37\2\u0108\u010b")
+        buf.write("\7\30\2\2\u0109\u010c\5.\30\2\u010a\u010c\5\60\31\2\u010b")
+        buf.write("\u0109\3\2\2\2\u010b\u010a\3\2\2\2\u010c+\3\2\2\2\u010d")
+        buf.write("\u010e\7=\2\2\u010e\u0111\7\30\2\2\u010f\u0112\5.\30\2")
+        buf.write("\u0110\u0112\5\60\31\2\u0111\u010f\3\2\2\2\u0111\u0110")
+        buf.write("\3\2\2\2\u0112-\3\2\2\2\u0113\u0115\5P)\2\u0114\u0113")
+        buf.write("\3\2\2\2\u0114\u0115\3\2\2\2\u0115\u0116\3\2\2\2\u0116")
+        buf.write("\u0117\7\5\2\2\u0117\u0118\5\60\31\2\u0118\u0119\7\6\2")
+        buf.write("\2\u0119/\3\2\2\2\u011a\u011d\5.\30\2\u011b\u011d\5\62")
+        buf.write("\32\2\u011c\u011a\3\2\2\2\u011c\u011b\3\2\2\2\u011d\u0125")
+        buf.write("\3\2\2\2\u011e\u0121\5R*\2\u011f\u0122\5.\30\2\u0120\u0122")
+        buf.write("\5\62\32\2\u0121\u011f\3\2\2\2\u0121\u0120\3\2\2\2\u0122")
+        buf.write("\u0124\3\2\2\2\u0123\u011e\3\2\2\2\u0124\u0127\3\2\2\2")
+        buf.write("\u0125\u0123\3\2\2\2\u0125\u0126\3\2\2\2\u0126\61\3\2")
+        buf.write("\2\2\u0127\u0125\3\2\2\2\u0128\u012a\5P)\2\u0129\u0128")
+        buf.write("\3\2\2\2\u0129\u012a\3\2\2\2\u012a\u012b\3\2\2\2\u012b")
+        buf.write("\u012e\58\35\2\u012c\u012e\5X-\2\u012d\u0129\3\2\2\2\u012d")
+        buf.write("\u012c\3\2\2\2\u012e\63\3\2\2\2\u012f\u0132\5.\30\2\u0130")
+        buf.write("\u0132\5\62\32\2\u0131\u012f\3\2\2\2\u0131\u0130\3\2\2")
+        buf.write("\2\u0132\u013a\3\2\2\2\u0133\u0136\5R*\2\u0134\u0137\5")
+        buf.write(".\30\2\u0135\u0137\5\62\32\2\u0136\u0134\3\2\2\2\u0136")
+        buf.write("\u0135\3\2\2\2\u0137\u0139\3\2\2\2\u0138\u0133\3\2\2\2")
+        buf.write("\u0139\u013c\3\2\2\2\u013a\u0138\3\2\2\2\u013a\u013b\3")
+        buf.write("\2\2\2\u013b\65\3\2\2\2\u013c\u013a\3\2\2\2\u013d\u013e")
+        buf.write("\7\31\2\2\u013e\u013f\7B\2\2\u013f\u0140\7\32\2\2\u0140")
+        buf.write("\u0141\7B\2\2\u0141\u0142\7\33\2\2\u0142\67\3\2\2\2\u0143")
+        buf.write("\u0146\5\n\6\2\u0144\u0146\5:\36\2\u0145\u0143\3\2\2\2")
+        buf.write("\u0145\u0144\3\2\2\2\u01469\3\2\2\2\u0147\u0148\7\34\2")
+        buf.write("\2\u0148\u014d\5\n\6\2\u0149\u014a\7\b\2\2\u014a\u014c")
+        buf.write("\5\n\6\2\u014b\u0149\3\2\2\2\u014c\u014f\3\2\2\2\u014d")
+        buf.write("\u014b\3\2\2\2\u014d\u014e\3\2\2\2\u014e\u0150\3\2\2\2")
+        buf.write("\u014f\u014d\3\2\2\2\u0150\u0152\7\35\2\2\u0151\u0153")
+        buf.write("\5\66\34\2\u0152\u0151\3\2\2\2\u0152\u0153\3\2\2\2\u0153")
+        buf.write(";\3\2\2\2\u0154\u0155\58\35\2\u0155=\3\2\2\2\u0156\u0157")
+        buf.write("\5\f\7\2\u0157?\3\2\2\2\u0158\u015d\5B\"\2\u0159\u015a")
+        buf.write("\t\2\2\2\u015a\u015c\5B\"\2\u015b\u0159\3\2\2\2\u015c")
+        buf.write("\u015f\3\2\2\2\u015d\u015b\3\2\2\2\u015d\u015e\3\2\2\2")
+        buf.write("\u015eA\3\2\2\2\u015f\u015d\3\2\2\2\u0160\u0164\5J&\2")
+        buf.write("\u0161\u0164\5D#\2\u0162\u0164\5F$\2\u0163\u0160\3\2\2")
+        buf.write("\2\u0163\u0161\3\2\2\2\u0163\u0162\3\2\2\2\u0164C\3\2")
+        buf.write("\2\2\u0165\u0166\7 \2\2\u0166\u0168\7!\2\2\u0167\u0169")
+        buf.write("\7=\2\2\u0168\u0167\3\2\2\2\u0169\u016a\3\2\2\2\u016a")
+        buf.write("\u0168\3\2\2\2\u016a\u016b\3\2\2\2\u016b\u016c\3\2\2\2")
+        buf.write("\u016c\u016d\7!\2\2\u016d\u0170\7!\2\2\u016e\u0171\5H")
+        buf.write("%\2\u016f\u0171\t\3\2\2\u0170\u016e\3\2\2\2\u0170\u016f")
+        buf.write("\3\2\2\2\u0171\u0172\3\2\2\2\u0172\u0173\7!\2\2\u0173")
+        buf.write("E\3\2\2\2\u0174\u0175\7\"\2\2\u0175\u0176\7=\2\2\u0176")
+        buf.write("\u0177\7=\2\2\u0177G\3\2\2\2\u0178\u017b\5R*\2\u0179\u017b")
+        buf.write("\5P)\2\u017a\u0178\3\2\2\2\u017a\u0179\3\2\2\2\u017bI")
+        buf.write("\3\2\2\2\u017c\u017d\7#\2\2\u017d\u017e\5L\'\2\u017eK")
+        buf.write("\3\2\2\2\u017f\u0182\7!\2\2\u0180\u0183\5R*\2\u0181\u0183")
+        buf.write("\5P)\2\u0182\u0180\3\2\2\2\u0182\u0181\3\2\2\2\u0183\u0184")
+        buf.write("\3\2\2\2\u0184\u0185\7!\2\2\u0185\u0186\7=\2\2\u0186\u0187")
+        buf.write("\7\30\2\2\u0187\u0189\5X-\2\u0188\u018a\5N(\2\u0189\u0188")
+        buf.write("\3\2\2\2\u0189\u018a\3\2\2\2\u018a\u01bc\3\2\2\2\u018b")
+        buf.write("\u018e\7!\2\2\u018c\u018f\5R*\2\u018d\u018f\5P)\2\u018e")
+        buf.write("\u018c\3\2\2\2\u018e\u018d\3\2\2\2\u018f\u0190\3\2\2\2")
+        buf.write("\u0190\u0191\7!\2\2\u0191\u0192\7=\2\2\u0192\u0193\7$")
+        buf.write("\2\2\u0193\u0195\5X-\2\u0194\u0196\5N(\2\u0195\u0194\3")
+        buf.write("\2\2\2\u0195\u0196\3\2\2\2\u0196\u01bc\3\2\2\2\u0197\u019a")
+        buf.write("\7!\2\2\u0198\u019b\5R*\2\u0199\u019b\5P)\2\u019a\u0198")
+        buf.write("\3\2\2\2\u019a\u0199\3\2\2\2\u019b\u019c\3\2\2\2\u019c")
+        buf.write("\u019d\7!\2\2\u019d\u019e\7=\2\2\u019e\u019f\7%\2\2\u019f")
+        buf.write("\u01a1\5X-\2\u01a0\u01a2\5N(\2\u01a1\u01a0\3\2\2\2\u01a1")
+        buf.write("\u01a2\3\2\2\2\u01a2\u01bc\3\2\2\2\u01a3\u01a6\7!\2\2")
+        buf.write("\u01a4\u01a7\5R*\2\u01a5\u01a7\5P)\2\u01a6\u01a4\3\2\2")
+        buf.write("\2\u01a6\u01a5\3\2\2\2\u01a7\u01a8\3\2\2\2\u01a8\u01a9")
+        buf.write("\7!\2\2\u01a9\u01aa\7=\2\2\u01aa\u01ab\7&\2\2\u01ab\u01ad")
+        buf.write("\5X-\2\u01ac\u01ae\5N(\2\u01ad\u01ac\3\2\2\2\u01ad\u01ae")
+        buf.write("\3\2\2\2\u01ae\u01bc\3\2\2\2\u01af\u01b2\7!\2\2\u01b0")
+        buf.write("\u01b3\5R*\2\u01b1\u01b3\5P)\2\u01b2\u01b0\3\2\2\2\u01b2")
+        buf.write("\u01b1\3\2\2\2\u01b3\u01b4\3\2\2\2\u01b4\u01b5\7!\2\2")
+        buf.write("\u01b5\u01b6\7=\2\2\u01b6\u01b7\7\21\2\2\u01b7\u01b9\5")
+        buf.write("X-\2\u01b8\u01ba\5N(\2\u01b9\u01b8\3\2\2\2\u01b9\u01ba")
+        buf.write("\3\2\2\2\u01ba\u01bc\3\2\2\2\u01bb\u017f\3\2\2\2\u01bb")
+        buf.write("\u018b\3\2\2\2\u01bb\u0197\3\2\2\2\u01bb\u01a3\3\2\2\2")
+        buf.write("\u01bb\u01af\3\2\2\2\u01bcM\3\2\2\2\u01bd\u01be\7=\2\2")
+        buf.write("\u01beO\3\2\2\2\u01bf\u01c0\t\4\2\2\u01c0Q\3\2\2\2\u01c1")
+        buf.write("\u01c2\t\5\2\2\u01c2S\3\2\2\2\u01c3\u01c4\t\6\2\2\u01c4")
+        buf.write("U\3\2\2\2\u01c5\u01c6\t\7\2\2\u01c6W\3\2\2\2\u01c7\u01c8")
+        buf.write("\t\b\2\2\u01c8Y\3\2\2\28djlsy{\177\u0087\u0090\u0099\u009c")
+        buf.write("\u009f\u00ae\u00b2\u00c2\u00ca\u00cf\u00d3\u00da\u00e0")
+        buf.write("\u00e6\u00ee\u00f7\u0100\u010b\u0111\u0114\u011c\u0121")
+        buf.write("\u0125\u0129\u012d\u0131\u0136\u013a\u0145\u014d\u0152")
+        buf.write("\u015d\u0163\u016a\u0170\u017a\u0182\u0189\u018e\u0195")
+        buf.write("\u019a\u01a1\u01a6\u01ad\u01b2\u01b9\u01bb")
         return buf.getvalue()
 
 
@@ -237,9 +239,9 @@ class lfrXParser ( Parser ):
     literalNames = [ "<INVALID>", "'endmodule'", "'module'", "'('", "')'", 
                      "';'", "','", "'finput'", "'foutput'", "'control'", 
                      "'distribute@'", "'begin'", "'end'", "'case'", "'endcase'", 
-                     "'<='", "'*'", "'flow'", "'storage'", "'number'", "'='", 
-                     "'assign'", "'['", "':'", "']'", "'{'", "'}'", "'|'", 
-                     "'&'", "'#MAP'", "'#MATERIAL'", "'#CONSTRAIN'", "'''", 
+                     "'<='", "'*'", "'signal'", "'flow'", "'storage'", "'number'", 
+                     "'assign'", "'='", "'['", "':'", "']'", "'{'", "'}'", 
+                     "'|'", "'&'", "'#MAP'", "'''", "'#MATERIAL'", "'#CONSTRAIN'", 
                      "'>'", "'<'", "'>='", "'+'", "'-'", "'!'", "'~'", "'~&'", 
                      "'~|'", "'^'", "'~^'", "'^~'", "'/'", "'%'", "'=='", 
                      "'!='", "'==='", "'!=='", "'&&'", "'||'", "'**'", "'>>'", 
@@ -259,9 +261,10 @@ class lfrXParser ( Parser ):
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "ID", "WS", "One_line_comment", 
-                      "Block_comment", "Real_number", "Decimal_number", 
-                      "Binary_number", "Octal_number", "Hex_number" ]
+                      "<INVALID>", "<INVALID>", "<INVALID>", "ID", "WS", 
+                      "One_line_comment", "Block_comment", "Real_number", 
+                      "Decimal_number", "Binary_number", "Octal_number", 
+                      "Hex_number" ]
 
     RULE_skeleton = 0
     RULE_moduledefinition = 1
@@ -279,43 +282,44 @@ class lfrXParser ( Parser ):
     RULE_statements = 13
     RULE_statement = 14
     RULE_tempvariablesstat = 15
-    RULE_fluiddeclstat = 16
-    RULE_storagestat = 17
-    RULE_numvarstat = 18
-    RULE_assignstat = 19
-    RULE_literalassignstat = 20
-    RULE_bracketexpression = 21
-    RULE_expression = 22
-    RULE_expressionterm = 23
-    RULE_logiccondition = 24
-    RULE_vector = 25
-    RULE_variables = 26
-    RULE_concatenation = 27
-    RULE_lhs = 28
-    RULE_ioassignstat = 29
-    RULE_technologydirectives = 30
-    RULE_directive = 31
-    RULE_technologymappingdirective = 32
-    RULE_materialmappingdirective = 33
-    RULE_mappingoperator = 34
-    RULE_performancedirective = 35
-    RULE_constraint = 36
-    RULE_unit = 37
-    RULE_unary_operator = 38
-    RULE_binary_operator = 39
-    RULE_unary_module_path_operator = 40
-    RULE_binary_module_path_operator = 41
-    RULE_number = 42
+    RULE_signalvarstat = 16
+    RULE_fluiddeclstat = 17
+    RULE_storagestat = 18
+    RULE_numvarstat = 19
+    RULE_assignstat = 20
+    RULE_literalassignstat = 21
+    RULE_bracketexpression = 22
+    RULE_expression = 23
+    RULE_expressionterm = 24
+    RULE_logiccondition = 25
+    RULE_vector = 26
+    RULE_variables = 27
+    RULE_concatenation = 28
+    RULE_lhs = 29
+    RULE_ioassignstat = 30
+    RULE_technologydirectives = 31
+    RULE_directive = 32
+    RULE_technologymappingdirective = 33
+    RULE_materialmappingdirective = 34
+    RULE_mappingoperator = 35
+    RULE_performancedirective = 36
+    RULE_constraint = 37
+    RULE_unit = 38
+    RULE_unary_operator = 39
+    RULE_binary_operator = 40
+    RULE_unary_module_path_operator = 41
+    RULE_binary_module_path_operator = 42
+    RULE_number = 43
 
     ruleNames =  [ "skeleton", "moduledefinition", "body", "ioblock", "vectorvar", 
                    "explicitIOBlock", "declvar", "distributionBlock", "distributionBody", 
                    "caseBlock", "casestat", "distributionassignstat", "signallist", 
-                   "statements", "statement", "tempvariablesstat", "fluiddeclstat", 
-                   "storagestat", "numvarstat", "assignstat", "literalassignstat", 
-                   "bracketexpression", "expression", "expressionterm", 
-                   "logiccondition", "vector", "variables", "concatenation", 
-                   "lhs", "ioassignstat", "technologydirectives", "directive", 
-                   "technologymappingdirective", "materialmappingdirective", 
+                   "statements", "statement", "tempvariablesstat", "signalvarstat", 
+                   "fluiddeclstat", "storagestat", "numvarstat", "assignstat", 
+                   "literalassignstat", "bracketexpression", "expression", 
+                   "expressionterm", "logiccondition", "vector", "variables", 
+                   "concatenation", "lhs", "ioassignstat", "technologydirectives", 
+                   "directive", "technologymappingdirective", "materialmappingdirective", 
                    "mappingoperator", "performancedirective", "constraint", 
                    "unit", "unary_operator", "binary_operator", "unary_module_path_operator", 
                    "binary_module_path_operator", "number" ]
@@ -378,15 +382,16 @@ class lfrXParser ( Parser ):
     T__54=55
     T__55=56
     T__56=57
-    ID=58
-    WS=59
-    One_line_comment=60
-    Block_comment=61
-    Real_number=62
-    Decimal_number=63
-    Binary_number=64
-    Octal_number=65
-    Hex_number=66
+    T__57=58
+    ID=59
+    WS=60
+    One_line_comment=61
+    Block_comment=62
+    Real_number=63
+    Decimal_number=64
+    Binary_number=65
+    Octal_number=66
+    Hex_number=67
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -437,11 +442,11 @@ class lfrXParser ( Parser ):
         self.enterRule(localctx, 0, self.RULE_skeleton)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 86
-            self.moduledefinition()
-            self.state = 87
-            self.body()
             self.state = 88
+            self.moduledefinition()
+            self.state = 89
+            self.body()
+            self.state = 90
             self.match(lfrXParser.T__0)
         except RecognitionException as re:
             localctx.exception = re
@@ -492,23 +497,23 @@ class lfrXParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 90
+            self.state = 92
             self.match(lfrXParser.T__1)
-            self.state = 91
+            self.state = 93
             self.match(lfrXParser.ID)
-            self.state = 96
+            self.state = 98
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==lfrXParser.T__2:
-                self.state = 92
-                self.match(lfrXParser.T__2)
-                self.state = 93
-                self.ioblock()
                 self.state = 94
+                self.match(lfrXParser.T__2)
+                self.state = 95
+                self.ioblock()
+                self.state = 96
                 self.match(lfrXParser.T__3)
 
 
-            self.state = 98
+            self.state = 100
             self.match(lfrXParser.T__4)
         except RecognitionException as re:
             localctx.exception = re
@@ -566,28 +571,28 @@ class lfrXParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 102 
+            self.state = 104 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 102
+                self.state = 104
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
-                if token in [lfrXParser.T__6, lfrXParser.T__7, lfrXParser.T__8, lfrXParser.T__16, lfrXParser.T__17, lfrXParser.T__18, lfrXParser.T__20, lfrXParser.T__28, lfrXParser.T__29, lfrXParser.T__30, lfrXParser.ID]:
-                    self.state = 100
+                if token in [lfrXParser.T__6, lfrXParser.T__7, lfrXParser.T__8, lfrXParser.T__16, lfrXParser.T__17, lfrXParser.T__18, lfrXParser.T__19, lfrXParser.T__20, lfrXParser.T__29, lfrXParser.T__31, lfrXParser.T__32, lfrXParser.ID]:
+                    self.state = 102
                     self.statements()
                     pass
                 elif token in [lfrXParser.T__9]:
-                    self.state = 101
+                    self.state = 103
                     self.distributionBlock()
                     pass
                 else:
                     raise NoViableAltException(self)
 
-                self.state = 104 
+                self.state = 106 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__6) | (1 << lfrXParser.T__7) | (1 << lfrXParser.T__8) | (1 << lfrXParser.T__9) | (1 << lfrXParser.T__16) | (1 << lfrXParser.T__17) | (1 << lfrXParser.T__18) | (1 << lfrXParser.T__20) | (1 << lfrXParser.T__28) | (1 << lfrXParser.T__29) | (1 << lfrXParser.T__30) | (1 << lfrXParser.ID))) != 0)):
+                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__6) | (1 << lfrXParser.T__7) | (1 << lfrXParser.T__8) | (1 << lfrXParser.T__9) | (1 << lfrXParser.T__16) | (1 << lfrXParser.T__17) | (1 << lfrXParser.T__18) | (1 << lfrXParser.T__19) | (1 << lfrXParser.T__20) | (1 << lfrXParser.T__29) | (1 << lfrXParser.T__31) | (1 << lfrXParser.T__32) | (1 << lfrXParser.ID))) != 0)):
                     break
 
         except RecognitionException as re:
@@ -645,37 +650,37 @@ class lfrXParser ( Parser ):
         self.enterRule(localctx, 6, self.RULE_ioblock)
         self._la = 0 # Token type
         try:
-            self.state = 119
+            self.state = 121
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [lfrXParser.ID]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 106
+                self.state = 108
                 self.vectorvar()
-                self.state = 111
+                self.state = 113
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while _la==lfrXParser.T__5:
-                    self.state = 107
+                    self.state = 109
                     self.match(lfrXParser.T__5)
-                    self.state = 108
+                    self.state = 110
                     self.vectorvar()
-                    self.state = 113
+                    self.state = 115
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
                 pass
             elif token in [lfrXParser.T__6, lfrXParser.T__7, lfrXParser.T__8]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 114
+                self.state = 116
                 self.explicitIOBlock()
-                self.state = 117
+                self.state = 119
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==lfrXParser.T__5:
-                    self.state = 115
+                    self.state = 117
                     self.match(lfrXParser.T__5)
-                    self.state = 116
+                    self.state = 118
                     self.explicitIOBlock()
 
 
@@ -732,13 +737,13 @@ class lfrXParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 121
-            self.match(lfrXParser.ID)
             self.state = 123
+            self.match(lfrXParser.ID)
+            self.state = 125
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==lfrXParser.T__21:
-                self.state = 122
+            if _la==lfrXParser.T__22:
+                self.state = 124
                 self.vector()
 
 
@@ -789,65 +794,65 @@ class lfrXParser ( Parser ):
         localctx = lfrXParser.ExplicitIOBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 10, self.RULE_explicitIOBlock)
         try:
-            self.state = 152
+            self.state = 154
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [lfrXParser.T__6]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 125
+                self.state = 127
                 self.match(lfrXParser.T__6)
-                self.state = 126
+                self.state = 128
                 self.declvar()
-                self.state = 131
+                self.state = 133
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,7,self._ctx)
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
-                        self.state = 127
+                        self.state = 129
                         self.match(lfrXParser.T__5)
-                        self.state = 128
+                        self.state = 130
                         self.declvar() 
-                    self.state = 133
+                    self.state = 135
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,7,self._ctx)
 
                 pass
             elif token in [lfrXParser.T__7]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 134
+                self.state = 136
                 self.match(lfrXParser.T__7)
-                self.state = 135
+                self.state = 137
                 self.declvar()
-                self.state = 140
+                self.state = 142
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,8,self._ctx)
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
-                        self.state = 136
+                        self.state = 138
                         self.match(lfrXParser.T__5)
-                        self.state = 137
+                        self.state = 139
                         self.declvar() 
-                    self.state = 142
+                    self.state = 144
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,8,self._ctx)
 
                 pass
             elif token in [lfrXParser.T__8]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 143
+                self.state = 145
                 self.match(lfrXParser.T__8)
-                self.state = 144
+                self.state = 146
                 self.declvar()
-                self.state = 149
+                self.state = 151
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,9,self._ctx)
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
-                        self.state = 145
+                        self.state = 147
                         self.match(lfrXParser.T__5)
-                        self.state = 146
+                        self.state = 148
                         self.declvar() 
-                    self.state = 151
+                    self.state = 153
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,9,self._ctx)
 
@@ -904,15 +909,15 @@ class lfrXParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 155
+            self.state = 157
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==lfrXParser.T__21:
-                self.state = 154
+            if _la==lfrXParser.T__22:
+                self.state = 156
                 self.vector()
 
 
-            self.state = 157
+            self.state = 159
             self.match(lfrXParser.ID)
         except RecognitionException as re:
             localctx.exception = re
@@ -963,19 +968,19 @@ class lfrXParser ( Parser ):
         self.enterRule(localctx, 14, self.RULE_distributionBlock)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 159
-            self.match(lfrXParser.T__9)
-            self.state = 160
-            self.match(lfrXParser.T__2)
             self.state = 161
-            self.signallist()
+            self.match(lfrXParser.T__9)
             self.state = 162
-            self.match(lfrXParser.T__3)
+            self.match(lfrXParser.T__2)
             self.state = 163
-            self.match(lfrXParser.T__10)
+            self.signallist()
             self.state = 164
-            self.distributionBody()
+            self.match(lfrXParser.T__3)
             self.state = 165
+            self.match(lfrXParser.T__10)
+            self.state = 166
+            self.distributionBody()
+            self.state = 167
             self.match(lfrXParser.T__11)
         except RecognitionException as re:
             localctx.exception = re
@@ -1029,25 +1034,25 @@ class lfrXParser ( Parser ):
         self.enterRule(localctx, 16, self.RULE_distributionBody)
         self._la = 0 # Token type
         try:
-            self.state = 174
+            self.state = 176
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [lfrXParser.T__11, lfrXParser.T__24, lfrXParser.ID]:
+            if token in [lfrXParser.T__11, lfrXParser.T__25, lfrXParser.ID]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 170
+                self.state = 172
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while _la==lfrXParser.T__24 or _la==lfrXParser.ID:
-                    self.state = 167
+                while _la==lfrXParser.T__25 or _la==lfrXParser.ID:
+                    self.state = 169
                     self.distributionassignstat()
-                    self.state = 172
+                    self.state = 174
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
                 pass
             elif token in [lfrXParser.T__12]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 173
+                self.state = 175
                 self.caseBlock()
                 pass
             else:
@@ -1102,17 +1107,17 @@ class lfrXParser ( Parser ):
         self.enterRule(localctx, 18, self.RULE_caseBlock)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 176
-            self.match(lfrXParser.T__12)
-            self.state = 177
-            self.match(lfrXParser.T__2)
             self.state = 178
-            self.lhs()
+            self.match(lfrXParser.T__12)
             self.state = 179
-            self.match(lfrXParser.T__3)
+            self.match(lfrXParser.T__2)
             self.state = 180
-            self.casestat()
+            self.lhs()
             self.state = 181
+            self.match(lfrXParser.T__3)
+            self.state = 182
+            self.casestat()
+            self.state = 183
             self.match(lfrXParser.T__13)
         except RecognitionException as re:
             localctx.exception = re
@@ -1159,7 +1164,7 @@ class lfrXParser ( Parser ):
         self.enterRule(localctx, 20, self.RULE_casestat)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 183
+            self.state = 185
             self.distributionassignstat()
         except RecognitionException as re:
             localctx.exception = re
@@ -1222,34 +1227,34 @@ class lfrXParser ( Parser ):
         self.enterRule(localctx, 22, self.RULE_distributionassignstat)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 185
+            self.state = 187
             self.lhs()
-            self.state = 186
+            self.state = 188
             self.match(lfrXParser.T__14)
-            self.state = 190
+            self.state = 192
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,14,self._ctx)
             if la_ == 1:
-                self.state = 187
+                self.state = 189
                 self.number()
                 pass
 
             elif la_ == 2:
-                self.state = 188
+                self.state = 190
                 self.variables()
                 pass
 
             elif la_ == 3:
-                self.state = 189
+                self.state = 191
                 self.expression()
                 pass
 
 
-            self.state = 192
-            self.match(lfrXParser.T__15)
-            self.state = 193
-            self.logiccondition()
             self.state = 194
+            self.match(lfrXParser.T__15)
+            self.state = 195
+            self.logiccondition()
+            self.state = 196
             self.match(lfrXParser.T__4)
         except RecognitionException as re:
             localctx.exception = re
@@ -1306,33 +1311,33 @@ class lfrXParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 196
-            self.match(lfrXParser.ID)
             self.state = 198
+            self.match(lfrXParser.ID)
+            self.state = 200
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==lfrXParser.T__21:
-                self.state = 197
+            if _la==lfrXParser.T__22:
+                self.state = 199
                 self.vector()
 
 
-            self.state = 207
+            self.state = 209
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==lfrXParser.T__5:
-                self.state = 200
+                self.state = 202
                 self.match(lfrXParser.T__5)
-                self.state = 201
-                self.match(lfrXParser.ID)
                 self.state = 203
+                self.match(lfrXParser.ID)
+                self.state = 205
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==lfrXParser.T__21:
-                    self.state = 202
+                if _la==lfrXParser.T__22:
+                    self.state = 204
                     self.vector()
 
 
-                self.state = 209
+                self.state = 211
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1384,21 +1389,23 @@ class lfrXParser ( Parser ):
         localctx = lfrXParser.StatementsContext(self, self._ctx, self.state)
         self.enterRule(localctx, 26, self.RULE_statements)
         try:
-            self.state = 212
+            self.state = 216
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,18,self._ctx)
-            if la_ == 1:
+            token = self._input.LA(1)
+            if token in [lfrXParser.T__6, lfrXParser.T__7, lfrXParser.T__8, lfrXParser.T__16, lfrXParser.T__17, lfrXParser.T__18, lfrXParser.T__19, lfrXParser.T__20, lfrXParser.ID]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 210
+                self.state = 212
                 self.statement()
+                self.state = 213
+                self.match(lfrXParser.T__4)
                 pass
-
-            elif la_ == 2:
+            elif token in [lfrXParser.T__29, lfrXParser.T__31, lfrXParser.T__32]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 211
+                self.state = 215
                 self.technologydirectives()
                 pass
-
+            else:
+                raise NoViableAltException(self)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1456,27 +1463,27 @@ class lfrXParser ( Parser ):
         localctx = lfrXParser.StatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 28, self.RULE_statement)
         try:
-            self.state = 218
+            self.state = 222
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [lfrXParser.T__6, lfrXParser.T__7, lfrXParser.T__8]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 214
+                self.state = 218
                 self.ioassignstat()
                 pass
             elif token in [lfrXParser.T__20]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 215
+                self.state = 219
                 self.assignstat()
                 pass
-            elif token in [lfrXParser.T__16, lfrXParser.T__17, lfrXParser.T__18]:
+            elif token in [lfrXParser.T__16, lfrXParser.T__17, lfrXParser.T__18, lfrXParser.T__19]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 216
+                self.state = 220
                 self.tempvariablesstat()
                 pass
             elif token in [lfrXParser.ID]:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 217
+                self.state = 221
                 self.literalassignstat()
                 pass
             else:
@@ -1509,6 +1516,10 @@ class lfrXParser ( Parser ):
             return self.getTypedRuleContext(lfrXParser.NumvarstatContext,0)
 
 
+        def signalvarstat(self):
+            return self.getTypedRuleContext(lfrXParser.SignalvarstatContext,0)
+
+
         def getRuleIndex(self):
             return lfrXParser.RULE_tempvariablesstat
 
@@ -1534,26 +1545,96 @@ class lfrXParser ( Parser ):
         localctx = lfrXParser.TempvariablesstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 30, self.RULE_tempvariablesstat)
         try:
-            self.state = 223
+            self.state = 228
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [lfrXParser.T__16]:
+            if token in [lfrXParser.T__17]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 220
+                self.state = 224
                 self.fluiddeclstat()
                 pass
-            elif token in [lfrXParser.T__17]:
+            elif token in [lfrXParser.T__18]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 221
+                self.state = 225
                 self.storagestat()
                 pass
-            elif token in [lfrXParser.T__18]:
+            elif token in [lfrXParser.T__19]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 222
+                self.state = 226
                 self.numvarstat()
+                pass
+            elif token in [lfrXParser.T__16]:
+                self.enterOuterAlt(localctx, 4)
+                self.state = 227
+                self.signalvarstat()
                 pass
             else:
                 raise NoViableAltException(self)
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class SignalvarstatContext(ParserRuleContext):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def declvar(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(lfrXParser.DeclvarContext)
+            else:
+                return self.getTypedRuleContext(lfrXParser.DeclvarContext,i)
+
+
+        def getRuleIndex(self):
+            return lfrXParser.RULE_signalvarstat
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterSignalvarstat" ):
+                listener.enterSignalvarstat(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitSignalvarstat" ):
+                listener.exitSignalvarstat(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSignalvarstat" ):
+                return visitor.visitSignalvarstat(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def signalvarstat(self):
+
+        localctx = lfrXParser.SignalvarstatContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 32, self.RULE_signalvarstat)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 230
+            self.match(lfrXParser.T__16)
+            self.state = 231
+            self.declvar()
+            self.state = 236
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            while _la==lfrXParser.T__5:
+                self.state = 232
+                self.match(lfrXParser.T__5)
+                self.state = 233
+                self.declvar()
+                self.state = 238
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1600,28 +1681,26 @@ class lfrXParser ( Parser ):
     def fluiddeclstat(self):
 
         localctx = lfrXParser.FluiddeclstatContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 32, self.RULE_fluiddeclstat)
+        self.enterRule(localctx, 34, self.RULE_fluiddeclstat)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 225
-            self.match(lfrXParser.T__16)
-            self.state = 226
+            self.state = 239
+            self.match(lfrXParser.T__17)
+            self.state = 240
             self.declvar()
-            self.state = 231
+            self.state = 245
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==lfrXParser.T__5:
-                self.state = 227
+                self.state = 241
                 self.match(lfrXParser.T__5)
-                self.state = 228
+                self.state = 242
                 self.declvar()
-                self.state = 233
+                self.state = 247
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 234
-            self.match(lfrXParser.T__4)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1667,28 +1746,26 @@ class lfrXParser ( Parser ):
     def storagestat(self):
 
         localctx = lfrXParser.StoragestatContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 34, self.RULE_storagestat)
+        self.enterRule(localctx, 36, self.RULE_storagestat)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 236
-            self.match(lfrXParser.T__17)
-            self.state = 237
+            self.state = 248
+            self.match(lfrXParser.T__18)
+            self.state = 249
             self.declvar()
-            self.state = 242
+            self.state = 254
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==lfrXParser.T__5:
-                self.state = 238
+                self.state = 250
                 self.match(lfrXParser.T__5)
-                self.state = 239
+                self.state = 251
                 self.declvar()
-                self.state = 244
+                self.state = 256
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 245
-            self.match(lfrXParser.T__4)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1704,17 +1781,8 @@ class lfrXParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def ID(self, i:int=None):
-            if i is None:
-                return self.getTokens(lfrXParser.ID)
-            else:
-                return self.getToken(lfrXParser.ID, i)
-
-        def number(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(lfrXParser.NumberContext)
-            else:
-                return self.getTypedRuleContext(lfrXParser.NumberContext,i)
+        def literalassignstat(self):
+            return self.getTypedRuleContext(lfrXParser.LiteralassignstatContext,0)
 
 
         def getRuleIndex(self):
@@ -1740,36 +1808,14 @@ class lfrXParser ( Parser ):
     def numvarstat(self):
 
         localctx = lfrXParser.NumvarstatContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 36, self.RULE_numvarstat)
-        self._la = 0 # Token type
+        self.enterRule(localctx, 38, self.RULE_numvarstat)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 247
-            self.match(lfrXParser.T__18)
-            self.state = 248
-            self.match(lfrXParser.ID)
-            self.state = 249
-            self.match(lfrXParser.T__19)
-            self.state = 250
-            self.number()
             self.state = 257
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            while _la==lfrXParser.T__5:
-                self.state = 251
-                self.match(lfrXParser.T__5)
-                self.state = 252
-                self.match(lfrXParser.ID)
-                self.state = 253
-                self.match(lfrXParser.T__19)
-                self.state = 254
-                self.number()
-                self.state = 259
-                self._errHandler.sync(self)
-                _la = self._input.LA(1)
+            self.match(lfrXParser.T__19)
 
-            self.state = 260
-            self.match(lfrXParser.T__4)
+            self.state = 258
+            self.literalassignstat()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1820,31 +1866,29 @@ class lfrXParser ( Parser ):
     def assignstat(self):
 
         localctx = lfrXParser.AssignstatContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 38, self.RULE_assignstat)
+        self.enterRule(localctx, 40, self.RULE_assignstat)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 262
+            self.state = 260
             self.match(lfrXParser.T__20)
-            self.state = 263
+            self.state = 261
             self.lhs()
-            self.state = 264
-            self.match(lfrXParser.T__19)
-            self.state = 267
+            self.state = 262
+            self.match(lfrXParser.T__21)
+            self.state = 265
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,24,self._ctx)
             if la_ == 1:
-                self.state = 265
+                self.state = 263
                 self.bracketexpression()
                 pass
 
             elif la_ == 2:
-                self.state = 266
+                self.state = 264
                 self.expression()
                 pass
 
 
-            self.state = 269
-            self.match(lfrXParser.T__4)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1894,29 +1938,27 @@ class lfrXParser ( Parser ):
     def literalassignstat(self):
 
         localctx = lfrXParser.LiteralassignstatContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 40, self.RULE_literalassignstat)
+        self.enterRule(localctx, 42, self.RULE_literalassignstat)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 271
+            self.state = 267
             self.match(lfrXParser.ID)
-            self.state = 272
-            self.match(lfrXParser.T__19)
-            self.state = 275
+            self.state = 268
+            self.match(lfrXParser.T__21)
+            self.state = 271
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,25,self._ctx)
             if la_ == 1:
-                self.state = 273
+                self.state = 269
                 self.bracketexpression()
                 pass
 
             elif la_ == 2:
-                self.state = 274
+                self.state = 270
                 self.expression()
                 pass
 
 
-            self.state = 277
-            self.match(lfrXParser.T__4)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1963,23 +2005,23 @@ class lfrXParser ( Parser ):
     def bracketexpression(self):
 
         localctx = lfrXParser.BracketexpressionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 42, self.RULE_bracketexpression)
+        self.enterRule(localctx, 44, self.RULE_bracketexpression)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 280
+            self.state = 274
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__26) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__35) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__38) | (1 << lfrXParser.T__39) | (1 << lfrXParser.T__40) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43))) != 0):
-                self.state = 279
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__27) | (1 << lfrXParser.T__28) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__38) | (1 << lfrXParser.T__39) | (1 << lfrXParser.T__40) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44))) != 0):
+                self.state = 273
                 self.unary_operator()
 
 
-            self.state = 282
+            self.state = 276
             self.match(lfrXParser.T__2)
-            self.state = 283
+            self.state = 277
             self.expression()
-            self.state = 284
+            self.state = 278
             self.match(lfrXParser.T__3)
         except RecognitionException as re:
             localctx.exception = re
@@ -2040,45 +2082,45 @@ class lfrXParser ( Parser ):
     def expression(self):
 
         localctx = lfrXParser.ExpressionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 44, self.RULE_expression)
+        self.enterRule(localctx, 46, self.RULE_expression)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 288
+            self.state = 282
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,27,self._ctx)
             if la_ == 1:
-                self.state = 286
+                self.state = 280
                 self.bracketexpression()
                 pass
 
             elif la_ == 2:
-                self.state = 287
+                self.state = 281
                 self.expressionterm()
                 pass
 
 
-            self.state = 297
+            self.state = 291
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,29,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 290
+                    self.state = 284
                     self.binary_operator()
-                    self.state = 293
+                    self.state = 287
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,28,self._ctx)
                     if la_ == 1:
-                        self.state = 291
+                        self.state = 285
                         self.bracketexpression()
                         pass
 
                     elif la_ == 2:
-                        self.state = 292
+                        self.state = 286
                         self.expressionterm()
                         pass
 
              
-                self.state = 299
+                self.state = 293
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,29,self._ctx)
 
@@ -2132,28 +2174,28 @@ class lfrXParser ( Parser ):
     def expressionterm(self):
 
         localctx = lfrXParser.ExpressiontermContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 46, self.RULE_expressionterm)
+        self.enterRule(localctx, 48, self.RULE_expressionterm)
         self._la = 0 # Token type
         try:
-            self.state = 305
+            self.state = 299
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [lfrXParser.T__24, lfrXParser.T__26, lfrXParser.T__27, lfrXParser.T__35, lfrXParser.T__36, lfrXParser.T__37, lfrXParser.T__38, lfrXParser.T__39, lfrXParser.T__40, lfrXParser.T__41, lfrXParser.T__42, lfrXParser.T__43, lfrXParser.ID]:
+            if token in [lfrXParser.T__25, lfrXParser.T__27, lfrXParser.T__28, lfrXParser.T__36, lfrXParser.T__37, lfrXParser.T__38, lfrXParser.T__39, lfrXParser.T__40, lfrXParser.T__41, lfrXParser.T__42, lfrXParser.T__43, lfrXParser.T__44, lfrXParser.ID]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 301
+                self.state = 295
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__26) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__35) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__38) | (1 << lfrXParser.T__39) | (1 << lfrXParser.T__40) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43))) != 0):
-                    self.state = 300
+                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__27) | (1 << lfrXParser.T__28) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__38) | (1 << lfrXParser.T__39) | (1 << lfrXParser.T__40) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44))) != 0):
+                    self.state = 294
                     self.unary_operator()
 
 
-                self.state = 303
+                self.state = 297
                 self.variables()
                 pass
             elif token in [lfrXParser.Real_number, lfrXParser.Decimal_number, lfrXParser.Binary_number, lfrXParser.Octal_number, lfrXParser.Hex_number]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 304
+                self.state = 298
                 self.number()
                 pass
             else:
@@ -2218,45 +2260,45 @@ class lfrXParser ( Parser ):
     def logiccondition(self):
 
         localctx = lfrXParser.LogicconditionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 48, self.RULE_logiccondition)
+        self.enterRule(localctx, 50, self.RULE_logiccondition)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 309
+            self.state = 303
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,32,self._ctx)
             if la_ == 1:
-                self.state = 307
+                self.state = 301
                 self.bracketexpression()
                 pass
 
             elif la_ == 2:
-                self.state = 308
+                self.state = 302
                 self.expressionterm()
                 pass
 
 
-            self.state = 318
+            self.state = 312
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__14) | (1 << lfrXParser.T__15) | (1 << lfrXParser.T__26) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__32) | (1 << lfrXParser.T__33) | (1 << lfrXParser.T__34) | (1 << lfrXParser.T__35) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44) | (1 << lfrXParser.T__45) | (1 << lfrXParser.T__46) | (1 << lfrXParser.T__47) | (1 << lfrXParser.T__48) | (1 << lfrXParser.T__49) | (1 << lfrXParser.T__50) | (1 << lfrXParser.T__51) | (1 << lfrXParser.T__52) | (1 << lfrXParser.T__53) | (1 << lfrXParser.T__54) | (1 << lfrXParser.T__55) | (1 << lfrXParser.T__56))) != 0):
-                self.state = 311
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__14) | (1 << lfrXParser.T__15) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__28) | (1 << lfrXParser.T__33) | (1 << lfrXParser.T__34) | (1 << lfrXParser.T__35) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44) | (1 << lfrXParser.T__45) | (1 << lfrXParser.T__46) | (1 << lfrXParser.T__47) | (1 << lfrXParser.T__48) | (1 << lfrXParser.T__49) | (1 << lfrXParser.T__50) | (1 << lfrXParser.T__51) | (1 << lfrXParser.T__52) | (1 << lfrXParser.T__53) | (1 << lfrXParser.T__54) | (1 << lfrXParser.T__55) | (1 << lfrXParser.T__56) | (1 << lfrXParser.T__57))) != 0):
+                self.state = 305
                 self.binary_operator()
-                self.state = 314
+                self.state = 308
                 self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,33,self._ctx)
                 if la_ == 1:
-                    self.state = 312
+                    self.state = 306
                     self.bracketexpression()
                     pass
 
                 elif la_ == 2:
-                    self.state = 313
+                    self.state = 307
                     self.expressionterm()
                     pass
 
 
-                self.state = 320
+                self.state = 314
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -2306,19 +2348,19 @@ class lfrXParser ( Parser ):
     def vector(self):
 
         localctx = lfrXParser.VectorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 50, self.RULE_vector)
+        self.enterRule(localctx, 52, self.RULE_vector)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 321
-            self.match(lfrXParser.T__21)
-            self.state = 322
-            localctx.start = self.match(lfrXParser.Decimal_number)
-            self.state = 323
+            self.state = 315
             self.match(lfrXParser.T__22)
-            self.state = 324
-            localctx.end = self.match(lfrXParser.Decimal_number)
-            self.state = 325
+            self.state = 316
+            localctx.start = self.match(lfrXParser.Decimal_number)
+            self.state = 317
             self.match(lfrXParser.T__23)
+            self.state = 318
+            localctx.end = self.match(lfrXParser.Decimal_number)
+            self.state = 319
+            self.match(lfrXParser.T__24)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -2365,19 +2407,19 @@ class lfrXParser ( Parser ):
     def variables(self):
 
         localctx = lfrXParser.VariablesContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 52, self.RULE_variables)
+        self.enterRule(localctx, 54, self.RULE_variables)
         try:
-            self.state = 329
+            self.state = 323
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [lfrXParser.ID]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 327
+                self.state = 321
                 self.vectorvar()
                 pass
-            elif token in [lfrXParser.T__24]:
+            elif token in [lfrXParser.T__25]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 328
+                self.state = 322
                 self.concatenation()
                 pass
             else:
@@ -2432,33 +2474,33 @@ class lfrXParser ( Parser ):
     def concatenation(self):
 
         localctx = lfrXParser.ConcatenationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 54, self.RULE_concatenation)
+        self.enterRule(localctx, 56, self.RULE_concatenation)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 331
-            self.match(lfrXParser.T__24)
-            self.state = 332
+            self.state = 325
+            self.match(lfrXParser.T__25)
+            self.state = 326
             self.vectorvar()
-            self.state = 337
+            self.state = 331
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while _la==lfrXParser.T__5:
-                self.state = 333
+                self.state = 327
                 self.match(lfrXParser.T__5)
-                self.state = 334
+                self.state = 328
                 self.vectorvar()
-                self.state = 339
+                self.state = 333
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
-            self.state = 340
-            self.match(lfrXParser.T__25)
-            self.state = 342
+            self.state = 334
+            self.match(lfrXParser.T__26)
+            self.state = 336
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==lfrXParser.T__21:
-                self.state = 341
+            if _la==lfrXParser.T__22:
+                self.state = 335
                 self.vector()
 
 
@@ -2504,10 +2546,10 @@ class lfrXParser ( Parser ):
     def lhs(self):
 
         localctx = lfrXParser.LhsContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 56, self.RULE_lhs)
+        self.enterRule(localctx, 58, self.RULE_lhs)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 344
+            self.state = 338
             self.variables()
         except RecognitionException as re:
             localctx.exception = re
@@ -2551,13 +2593,11 @@ class lfrXParser ( Parser ):
     def ioassignstat(self):
 
         localctx = lfrXParser.IoassignstatContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 58, self.RULE_ioassignstat)
+        self.enterRule(localctx, 60, self.RULE_ioassignstat)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 346
+            self.state = 340
             self.explicitIOBlock()
-            self.state = 347
-            self.match(lfrXParser.T__4)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -2603,26 +2643,26 @@ class lfrXParser ( Parser ):
     def technologydirectives(self):
 
         localctx = lfrXParser.TechnologydirectivesContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 60, self.RULE_technologydirectives)
+        self.enterRule(localctx, 62, self.RULE_technologydirectives)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 349
+            self.state = 342
             self.directive()
-            self.state = 354
+            self.state = 347
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==lfrXParser.T__26 or _la==lfrXParser.T__27:
-                self.state = 350
+            while _la==lfrXParser.T__27 or _la==lfrXParser.T__28:
+                self.state = 343
                 _la = self._input.LA(1)
-                if not(_la==lfrXParser.T__26 or _la==lfrXParser.T__27):
+                if not(_la==lfrXParser.T__27 or _la==lfrXParser.T__28):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 351
+                self.state = 344
                 self.directive()
-                self.state = 356
+                self.state = 349
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -2676,24 +2716,24 @@ class lfrXParser ( Parser ):
     def directive(self):
 
         localctx = lfrXParser.DirectiveContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 62, self.RULE_directive)
+        self.enterRule(localctx, 64, self.RULE_directive)
         try:
-            self.state = 360
+            self.state = 353
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [lfrXParser.T__30]:
+            if token in [lfrXParser.T__32]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 357
+                self.state = 350
                 self.performancedirective()
                 pass
-            elif token in [lfrXParser.T__20, lfrXParser.T__28]:
+            elif token in [lfrXParser.T__29]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 358
+                self.state = 351
                 self.technologymappingdirective()
                 pass
-            elif token in [lfrXParser.T__29]:
+            elif token in [lfrXParser.T__31]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 359
+                self.state = 352
                 self.materialmappingdirective()
                 pass
             else:
@@ -2715,12 +2755,15 @@ class lfrXParser ( Parser ):
             self.parser = parser
             self.assignmode = None # Token
 
-        def ID(self):
-            return self.getToken(lfrXParser.ID, 0)
-
         def mappingoperator(self):
             return self.getTypedRuleContext(lfrXParser.MappingoperatorContext,0)
 
+
+        def ID(self, i:int=None):
+            if i is None:
+                return self.getTokens(lfrXParser.ID)
+            else:
+                return self.getToken(lfrXParser.ID, i)
 
         def getRuleIndex(self):
             return lfrXParser.RULE_technologymappingdirective
@@ -2745,28 +2788,52 @@ class lfrXParser ( Parser ):
     def technologymappingdirective(self):
 
         localctx = lfrXParser.TechnologymappingdirectiveContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 64, self.RULE_technologymappingdirective)
+        self.enterRule(localctx, 66, self.RULE_technologymappingdirective)
+        self._la = 0 # Token type
         try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 355
+            self.match(lfrXParser.T__29)
+            self.state = 356
+            self.match(lfrXParser.T__30)
+            self.state = 358 
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            while True:
+                self.state = 357
+                self.match(lfrXParser.ID)
+                self.state = 360 
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if not (_la==lfrXParser.ID):
+                    break
+
+            self.state = 362
+            self.match(lfrXParser.T__30)
+            self.state = 363
+            self.match(lfrXParser.T__30)
             self.state = 366
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [lfrXParser.T__28]:
-                self.enterOuterAlt(localctx, 1)
-                self.state = 362
-                self.match(lfrXParser.T__28)
-                self.state = 363
-                self.match(lfrXParser.ID)
+            if token in [lfrXParser.T__14, lfrXParser.T__15, lfrXParser.T__27, lfrXParser.T__28, lfrXParser.T__33, lfrXParser.T__34, lfrXParser.T__35, lfrXParser.T__36, lfrXParser.T__37, lfrXParser.T__38, lfrXParser.T__39, lfrXParser.T__40, lfrXParser.T__41, lfrXParser.T__42, lfrXParser.T__43, lfrXParser.T__44, lfrXParser.T__45, lfrXParser.T__46, lfrXParser.T__47, lfrXParser.T__48, lfrXParser.T__49, lfrXParser.T__50, lfrXParser.T__51, lfrXParser.T__52, lfrXParser.T__53, lfrXParser.T__54, lfrXParser.T__55, lfrXParser.T__56, lfrXParser.T__57]:
                 self.state = 364
                 self.mappingoperator()
                 pass
-            elif token in [lfrXParser.T__20]:
-                self.enterOuterAlt(localctx, 2)
+            elif token in [lfrXParser.T__18, lfrXParser.T__20]:
                 self.state = 365
-                localctx.assignmode = self.match(lfrXParser.T__20)
+                localctx.assignmode = self._input.LT(1)
+                _la = self._input.LA(1)
+                if not(_la==lfrXParser.T__18 or _la==lfrXParser.T__20):
+                    localctx.assignmode = self._errHandler.recoverInline(self)
+                else:
+                    self._errHandler.reportMatch(self)
+                    self.consume()
                 pass
             else:
                 raise NoViableAltException(self)
 
+            self.state = 368
+            self.match(lfrXParser.T__30)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -2812,14 +2879,14 @@ class lfrXParser ( Parser ):
     def materialmappingdirective(self):
 
         localctx = lfrXParser.MaterialmappingdirectiveContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 66, self.RULE_materialmappingdirective)
+        self.enterRule(localctx, 68, self.RULE_materialmappingdirective)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 368
-            self.match(lfrXParser.T__29)
-            self.state = 369
-            self.match(lfrXParser.ID)
             self.state = 370
+            self.match(lfrXParser.T__31)
+            self.state = 371
+            self.match(lfrXParser.ID)
+            self.state = 372
             localctx.materialtype = self.match(lfrXParser.ID)
         except RecognitionException as re:
             localctx.exception = re
@@ -2867,20 +2934,20 @@ class lfrXParser ( Parser ):
     def mappingoperator(self):
 
         localctx = lfrXParser.MappingoperatorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 68, self.RULE_mappingoperator)
+        self.enterRule(localctx, 70, self.RULE_mappingoperator)
         try:
-            self.state = 374
+            self.state = 376
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,41,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,42,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 372
+                self.state = 374
                 self.binary_operator()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 373
+                self.state = 375
                 self.unary_operator()
                 pass
 
@@ -2927,12 +2994,12 @@ class lfrXParser ( Parser ):
     def performancedirective(self):
 
         localctx = lfrXParser.PerformancedirectiveContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 70, self.RULE_performancedirective)
+        self.enterRule(localctx, 72, self.RULE_performancedirective)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 376
-            self.match(lfrXParser.T__30)
-            self.state = 377
+            self.state = 378
+            self.match(lfrXParser.T__32)
+            self.state = 379
             self.constraint()
         except RecognitionException as re:
             localctx.exception = re
@@ -2992,42 +3059,42 @@ class lfrXParser ( Parser ):
     def constraint(self):
 
         localctx = lfrXParser.ConstraintContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 72, self.RULE_constraint)
+        self.enterRule(localctx, 74, self.RULE_constraint)
         try:
-            self.state = 439
+            self.state = 441
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,52,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,53,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 379
-                self.match(lfrXParser.T__31)
-                self.state = 382
+                self.state = 381
+                self.match(lfrXParser.T__30)
+                self.state = 384
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,42,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,43,self._ctx)
                 if la_ == 1:
-                    self.state = 380
+                    self.state = 382
                     self.binary_operator()
                     pass
 
                 elif la_ == 2:
-                    self.state = 381
+                    self.state = 383
                     self.unary_operator()
                     pass
 
 
-                self.state = 384
-                self.match(lfrXParser.T__31)
-                self.state = 385
-                self.match(lfrXParser.ID)
                 self.state = 386
-                localctx.operator = self.match(lfrXParser.T__19)
+                self.match(lfrXParser.T__30)
                 self.state = 387
-                self.number()
+                self.match(lfrXParser.ID)
+                self.state = 388
+                localctx.operator = self.match(lfrXParser.T__21)
                 self.state = 389
+                self.number()
+                self.state = 391
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,43,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,44,self._ctx)
                 if la_ == 1:
-                    self.state = 388
+                    self.state = 390
                     self.unit()
 
 
@@ -3035,35 +3102,35 @@ class lfrXParser ( Parser ):
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 391
-                self.match(lfrXParser.T__31)
-                self.state = 394
+                self.state = 393
+                self.match(lfrXParser.T__30)
+                self.state = 396
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,44,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,45,self._ctx)
                 if la_ == 1:
-                    self.state = 392
+                    self.state = 394
                     self.binary_operator()
                     pass
 
                 elif la_ == 2:
-                    self.state = 393
+                    self.state = 395
                     self.unary_operator()
                     pass
 
 
-                self.state = 396
-                self.match(lfrXParser.T__31)
-                self.state = 397
-                self.match(lfrXParser.ID)
                 self.state = 398
-                localctx.operator = self.match(lfrXParser.T__32)
+                self.match(lfrXParser.T__30)
                 self.state = 399
-                self.number()
+                self.match(lfrXParser.ID)
+                self.state = 400
+                localctx.operator = self.match(lfrXParser.T__33)
                 self.state = 401
+                self.number()
+                self.state = 403
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,45,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,46,self._ctx)
                 if la_ == 1:
-                    self.state = 400
+                    self.state = 402
                     self.unit()
 
 
@@ -3071,35 +3138,35 @@ class lfrXParser ( Parser ):
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 403
-                self.match(lfrXParser.T__31)
-                self.state = 406
+                self.state = 405
+                self.match(lfrXParser.T__30)
+                self.state = 408
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,46,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,47,self._ctx)
                 if la_ == 1:
-                    self.state = 404
+                    self.state = 406
                     self.binary_operator()
                     pass
 
                 elif la_ == 2:
-                    self.state = 405
+                    self.state = 407
                     self.unary_operator()
                     pass
 
 
-                self.state = 408
-                self.match(lfrXParser.T__31)
-                self.state = 409
-                self.match(lfrXParser.ID)
                 self.state = 410
-                localctx.operator = self.match(lfrXParser.T__33)
+                self.match(lfrXParser.T__30)
                 self.state = 411
-                self.number()
+                self.match(lfrXParser.ID)
+                self.state = 412
+                localctx.operator = self.match(lfrXParser.T__34)
                 self.state = 413
+                self.number()
+                self.state = 415
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,47,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,48,self._ctx)
                 if la_ == 1:
-                    self.state = 412
+                    self.state = 414
                     self.unit()
 
 
@@ -3107,35 +3174,35 @@ class lfrXParser ( Parser ):
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 415
-                self.match(lfrXParser.T__31)
-                self.state = 418
+                self.state = 417
+                self.match(lfrXParser.T__30)
+                self.state = 420
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,48,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,49,self._ctx)
                 if la_ == 1:
-                    self.state = 416
+                    self.state = 418
                     self.binary_operator()
                     pass
 
                 elif la_ == 2:
-                    self.state = 417
+                    self.state = 419
                     self.unary_operator()
                     pass
 
 
-                self.state = 420
-                self.match(lfrXParser.T__31)
-                self.state = 421
-                self.match(lfrXParser.ID)
                 self.state = 422
-                localctx.operator = self.match(lfrXParser.T__34)
+                self.match(lfrXParser.T__30)
                 self.state = 423
-                self.number()
+                self.match(lfrXParser.ID)
+                self.state = 424
+                localctx.operator = self.match(lfrXParser.T__35)
                 self.state = 425
+                self.number()
+                self.state = 427
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,49,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,50,self._ctx)
                 if la_ == 1:
-                    self.state = 424
+                    self.state = 426
                     self.unit()
 
 
@@ -3143,35 +3210,35 @@ class lfrXParser ( Parser ):
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 427
-                self.match(lfrXParser.T__31)
-                self.state = 430
+                self.state = 429
+                self.match(lfrXParser.T__30)
+                self.state = 432
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,50,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,51,self._ctx)
                 if la_ == 1:
-                    self.state = 428
+                    self.state = 430
                     self.binary_operator()
                     pass
 
                 elif la_ == 2:
-                    self.state = 429
+                    self.state = 431
                     self.unary_operator()
                     pass
 
 
-                self.state = 432
-                self.match(lfrXParser.T__31)
-                self.state = 433
-                self.match(lfrXParser.ID)
                 self.state = 434
-                localctx.operator = self.match(lfrXParser.T__14)
+                self.match(lfrXParser.T__30)
                 self.state = 435
-                self.number()
+                self.match(lfrXParser.ID)
+                self.state = 436
+                localctx.operator = self.match(lfrXParser.T__14)
                 self.state = 437
+                self.number()
+                self.state = 439
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,51,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,52,self._ctx)
                 if la_ == 1:
-                    self.state = 436
+                    self.state = 438
                     self.unit()
 
 
@@ -3219,10 +3286,10 @@ class lfrXParser ( Parser ):
     def unit(self):
 
         localctx = lfrXParser.UnitContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 74, self.RULE_unit)
+        self.enterRule(localctx, 76, self.RULE_unit)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 441
+            self.state = 443
             self.match(lfrXParser.ID)
         except RecognitionException as re:
             localctx.exception = re
@@ -3263,13 +3330,13 @@ class lfrXParser ( Parser ):
     def unary_operator(self):
 
         localctx = lfrXParser.Unary_operatorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 76, self.RULE_unary_operator)
+        self.enterRule(localctx, 78, self.RULE_unary_operator)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 443
+            self.state = 445
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__26) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__35) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__38) | (1 << lfrXParser.T__39) | (1 << lfrXParser.T__40) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__27) | (1 << lfrXParser.T__28) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__38) | (1 << lfrXParser.T__39) | (1 << lfrXParser.T__40) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -3313,13 +3380,13 @@ class lfrXParser ( Parser ):
     def binary_operator(self):
 
         localctx = lfrXParser.Binary_operatorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 78, self.RULE_binary_operator)
+        self.enterRule(localctx, 80, self.RULE_binary_operator)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 445
+            self.state = 447
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__14) | (1 << lfrXParser.T__15) | (1 << lfrXParser.T__26) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__32) | (1 << lfrXParser.T__33) | (1 << lfrXParser.T__34) | (1 << lfrXParser.T__35) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44) | (1 << lfrXParser.T__45) | (1 << lfrXParser.T__46) | (1 << lfrXParser.T__47) | (1 << lfrXParser.T__48) | (1 << lfrXParser.T__49) | (1 << lfrXParser.T__50) | (1 << lfrXParser.T__51) | (1 << lfrXParser.T__52) | (1 << lfrXParser.T__53) | (1 << lfrXParser.T__54) | (1 << lfrXParser.T__55) | (1 << lfrXParser.T__56))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__14) | (1 << lfrXParser.T__15) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__28) | (1 << lfrXParser.T__33) | (1 << lfrXParser.T__34) | (1 << lfrXParser.T__35) | (1 << lfrXParser.T__36) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44) | (1 << lfrXParser.T__45) | (1 << lfrXParser.T__46) | (1 << lfrXParser.T__47) | (1 << lfrXParser.T__48) | (1 << lfrXParser.T__49) | (1 << lfrXParser.T__50) | (1 << lfrXParser.T__51) | (1 << lfrXParser.T__52) | (1 << lfrXParser.T__53) | (1 << lfrXParser.T__54) | (1 << lfrXParser.T__55) | (1 << lfrXParser.T__56) | (1 << lfrXParser.T__57))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -3363,13 +3430,13 @@ class lfrXParser ( Parser ):
     def unary_module_path_operator(self):
 
         localctx = lfrXParser.Unary_module_path_operatorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 80, self.RULE_unary_module_path_operator)
+        self.enterRule(localctx, 82, self.RULE_unary_module_path_operator)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 447
+            self.state = 449
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__26) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__37) | (1 << lfrXParser.T__38) | (1 << lfrXParser.T__39) | (1 << lfrXParser.T__40) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__27) | (1 << lfrXParser.T__28) | (1 << lfrXParser.T__38) | (1 << lfrXParser.T__39) | (1 << lfrXParser.T__40) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -3413,13 +3480,13 @@ class lfrXParser ( Parser ):
     def binary_module_path_operator(self):
 
         localctx = lfrXParser.Binary_module_path_operatorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 82, self.RULE_binary_module_path_operator)
+        self.enterRule(localctx, 84, self.RULE_binary_module_path_operator)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 449
+            self.state = 451
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__26) | (1 << lfrXParser.T__27) | (1 << lfrXParser.T__41) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__46) | (1 << lfrXParser.T__47) | (1 << lfrXParser.T__50) | (1 << lfrXParser.T__51))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__27) | (1 << lfrXParser.T__28) | (1 << lfrXParser.T__42) | (1 << lfrXParser.T__43) | (1 << lfrXParser.T__44) | (1 << lfrXParser.T__47) | (1 << lfrXParser.T__48) | (1 << lfrXParser.T__51) | (1 << lfrXParser.T__52))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -3477,13 +3544,13 @@ class lfrXParser ( Parser ):
     def number(self):
 
         localctx = lfrXParser.NumberContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 84, self.RULE_number)
+        self.enterRule(localctx, 86, self.RULE_number)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 451
+            self.state = 453
             _la = self._input.LA(1)
-            if not(((((_la - 62)) & ~0x3f) == 0 and ((1 << (_la - 62)) & ((1 << (lfrXParser.Real_number - 62)) | (1 << (lfrXParser.Decimal_number - 62)) | (1 << (lfrXParser.Binary_number - 62)) | (1 << (lfrXParser.Octal_number - 62)) | (1 << (lfrXParser.Hex_number - 62)))) != 0)):
+            if not(((((_la - 63)) & ~0x3f) == 0 and ((1 << (_la - 63)) & ((1 << (lfrXParser.Real_number - 63)) | (1 << (lfrXParser.Decimal_number - 63)) | (1 << (lfrXParser.Binary_number - 63)) | (1 << (lfrXParser.Octal_number - 63)) | (1 << (lfrXParser.Hex_number - 63)))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)

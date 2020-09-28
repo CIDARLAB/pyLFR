@@ -49,7 +49,7 @@ distributionassignstat
 signallist : ID vector? (',' ID vector?)* ;
 
 statements
-   :   statement
+   :   statement ';'
 //    |   (blocks)+ //Uncomment this once we are making the distribute and always blocks
    |   technologydirectives
    ;
@@ -58,27 +58,30 @@ statement
    :   ioassignstat  //This needs ot be replaced by any number different kinds of statements that will
    |   assignstat
    |   tempvariablesstat
-   |    literalassignstat
+   |   literalassignstat
    ;
 
 tempvariablesstat
    :   fluiddeclstat
    |   storagestat
    |   numvarstat
+   |   signalvarstat
    ;
 
-fluiddeclstat : 'flow' declvar (',' declvar)* ';' ;
+signalvarstat: 'signal' declvar (',' declvar)* ;
 
-storagestat : 'storage' declvar (',' declvar)* ';';
+fluiddeclstat : 'flow' declvar (',' declvar)* ;
 
-numvarstat : 'number' ID '=' number (',' ID '=' number)* ';';
+storagestat : 'storage' declvar (',' declvar)* ;
+
+numvarstat : 'number' ( literalassignstat )  ;
 
 assignstat
-   :   'assign' lhs '='  (bracketexpression | expression ) ';'
+   :   'assign' lhs '='  ( bracketexpression | expression )
    ;
 
 literalassignstat
-    :   ID '=' (bracketexpression | expression) ';'
+    :   ID '=' (bracketexpression | expression)
     ;
 
 //TODO: Look up how the grammar is given for Verilog. This will have be to correct for actually solving the logic things
@@ -113,7 +116,7 @@ concatenation : '{' vectorvar (',' vectorvar)* '}' vector? ;
 lhs : variables;
 
 ioassignstat
-   :   explicitIOBlock ';'
+   :   explicitIOBlock
    ;
 
 technologydirectives
@@ -127,7 +130,7 @@ directive
    ;
 
 technologymappingdirective
-    :   '#MAP'  ID   mappingoperator | assignmode='assign'
+    :   '#MAP'  '\''ID+ '\'' '\''(mappingoperator | assignmode=('assign' | 'storage')) '\''
     ;
 
 materialmappingdirective
