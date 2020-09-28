@@ -1,8 +1,10 @@
+
 {
-    "name":"dropx",
+    "name":"mars",
     "device-fluidic-operation-data":{
         "pressure":{
-            "max":"10000"
+            "max":"10000",
+            "unit":"Pascals"
         },
         "flow-rate":{
             "start-point":"100",
@@ -18,65 +20,38 @@
         {
             "MIX":[
                 {
-                    "mint":"PICO INJECTOR",
+                    "mint":"MIXER",
                     "component-type": "primitive",
                     "is-storage": false,
-                    "inputs":[1,2],
-                    "outputs":[3],
+                    "inputs":[[1]],
+                    "outputs":[[2]],
                     "default-netlist": null
-                },
-                {
-                    "mint":"DROPLET ELECTROPHORESIS MERGER",
-                    "component-type": "primitive",
-                    "is-storage": false,
-                    "inputs":[1, 2],
-                    "outputs":[3],
-                    "default-netlist":null
                 }
             ],
             "SEIVE":[
                 {
-                    "mint":"DROPLET ELECTROPHORESIS SORTER",
+                    "mint":"MASS SEPARATOR",
                     "component-type": "primitive",
                     "is-storage": false,
-                    "inputs":[1],
-                    "outputs":[2,3],
+                    "inputs":[[1]],
+                    "outputs":[[3],[2, 4]],
                     "default-netlist": null
                 }
             ],
             "METER":[
                 {
-                    "mint":"NOZZLE DROPLET GENERATOR",
+                    "mint":"METER CHAMBER",
                     "component-type": "primitive",
-                    "is-storage": false,
-                    "inputs":[1],
-                    "outputs":[3],
-                    "default-netlist":"default-netlists/dropletgenerator.mint",
-                    "dafd":{
-                        "inputs":{
-                            "functional":[
-                                "droplet_size",
-                                "generation_rate"
-                            ],
-                        "outputs":[
-                            "orifice_size",
-                            "aspect_ratio",
-                            "capillary_number",
-                            "expansion_ratio",
-                            "flow_rate_ratio",
-                            "normalized_oil_inlet",
-                            "normalized_orifice_length",
-                            "normalized_water_inlet"
-                        ]
-                                                    
-                        }
-                    }
+                    "is-storage": true,
+                    "inputs":[[1]],
+                    "outputs":[[2]],
+                    "default-netlist": null
                 }
             ],
             "DILUTE":[
                 {
-                    "mint":"DROPLET ELECTROPHORESIS MERGER",
-                    "component-type": "primitive",
+                    "mint":"DILUTION TREE",
+                    "component-type": "procedural",
                     "is-storage": false,
                     "inputs":[1, 2],
                     "outputs":[3],
@@ -85,7 +60,7 @@
                 {
                     "mint":"DROPLET MERGER JUNCTION",
                     "component-type": "primitive",
-                    "is-storage": false,
+                    "is-storage": "false",
                     "inputs":[1, 2],
                     "outputs":[3],
                     "default-netlist":null
@@ -93,7 +68,7 @@
                 {
                     "mint":"DROPLET MERGER CHANNEL",
                     "component-type": "primitive",
-                    "is-storage": false,
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2],
                     "default-netlist":null
@@ -103,7 +78,7 @@
                 {
                     "mint":"DROPLET SPLITTER",
                     "component-type": "primitive",
-                    "is-storage": false,
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2, 3],
                     "default-netlist":null
@@ -113,7 +88,7 @@
                 {
                     "mint":"DROPLET CAPACITANCE SENSOR",
                     "component-type": "primitive",
-                    "is-storage": false,
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2],
                     "default-netlist":null
@@ -129,7 +104,7 @@
                 {
                     "mint":"DROPLET LUMINESCENCE SENSOR",
                     "component-type": "primitive",
-                    "is-storage": false,
+                    "is-storage": "false",
                     "inputs":[1],
                     "outputs":[2],
                     "default-netlist":null

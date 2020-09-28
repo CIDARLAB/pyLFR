@@ -1,4 +1,4 @@
-from compiler.fluid import Fluid
+from lfr.compiler.fluid import Fluid
 
 
 class Storage(Fluid):

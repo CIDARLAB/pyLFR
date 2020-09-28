@@ -70,7 +70,7 @@
             "name": "Debug - Customfile",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/cmdline.py",
+            "program": "${workspaceFolder}/lfr/cmdline.py",
             "args": [
                 "--outpath",
                 "./out/",

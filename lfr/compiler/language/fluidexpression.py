@@ -1,10 +1,10 @@
 # The operator order has to be correct in the array, if any of the things are off,
 # other things will go off
-from compiler.fluidinteraction import InteractionType, FluidInteraction
-from compiler.language.utils import is_number
-from compiler.fluid import Fluid
-from compiler.language.vectorrange import VectorRange
-from compiler.language.vector import Vector
+from lfr.compiler.fluidinteraction import InteractionType, FluidInteraction
+from lfr.compiler.language.utils import is_number
+from lfr.compiler.fluid import Fluid
+from lfr.compiler.language.vectorrange import VectorRange
+from lfr.compiler.language.vector import Vector
 
 
 OPERATOR_ORDER = [['*', '/'], ['%'], ['+', '-']]
@@ -131,7 +131,7 @@ class FluidExpression:
 
     def __evalute_fluid_fluid_operator(self, operand1, operand2, operator):
         if len(operand1) is not len(operand2):
-            raise Exception("Operand {0} and Operand {2} are of different Dimensions")
+            raise Exception("Operand {0} and Operand {1} are of different Dimensions".format(operand1, operand2))
         operand1_element = None
         operand2_element = None
         interactiontype = None
@@ -186,7 +186,7 @@ class FluidExpression:
 
         fluid = operand_fluidic[0]
         interactions = []
-        for fluid in operand_fluidic:        
+        for fluid in operand_fluidic:
             interaction = None
             if operator == '*':
                 # TODO: Create interaction/operation node(s) on the FIG

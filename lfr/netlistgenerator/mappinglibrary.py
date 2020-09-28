@@ -1,6 +1,6 @@
 from mint.mintcomponent import MINTComponent
 from typing import List, Optional
-from compiler.fluidinteraction import InteractionType
+from lfr.compiler.fluidinteraction import InteractionType
 from mint.mintdevice import MINTDevice
 from mint.antlr.mintLexer import mintLexer
 from mint.antlr.mintParser import mintParser

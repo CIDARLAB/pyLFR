@@ -37,7 +37,7 @@ class MappingCompiler(LFRCompiler):
         else:
             self.mappingMode = TechnologyMappingMODE.OPERATOR_MAPPING
             operator = ctx.mappingoperator().getText()
-            technology = ctx.ID().getText()
+            technology = ' '.join([id.getText() for id in ctx.ID()])
             self.mappingOperator = operator
             self.currentMappingTechnology = technology
             self.mappingDictionary[operator] = technology
@@ -45,7 +45,8 @@ class MappingCompiler(LFRCompiler):
     def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):
 
         if self.mappingMode is TechnologyMappingMODE.OPERATOR_MAPPING:
-            # We need to do call super implementation first so that we can pull the correct vectorranges
+            # We need to do call super implementation first so that we can pull the 
+            # correct vectorranges
             super().exitAssignstat(ctx)
 
             # Save the route from the start (rhs) to the end (lhs)

@@ -1,4 +1,4 @@
-from compiler.fluidinteractiongraph import FluidInteractionGraph
+from lfr.compiler.fluidinteractiongraph import FluidInteractionGraph
 
 PASS1_DICT = dict()
 PASS2_DICT = dict()

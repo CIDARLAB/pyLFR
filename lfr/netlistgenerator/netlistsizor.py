@@ -1,4 +1,4 @@
-from compiler.fluidinteraction import InteractionType
+from lfr.compiler.fluidinteraction import InteractionType
 
 
 class NetlistSizor:

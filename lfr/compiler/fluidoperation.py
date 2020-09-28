@@ -1,4 +1,4 @@
-from compiler.language.vectorrange import VectorRange
+from lfr.compiler.language.vectorrange import VectorRange
 
 
 class FluidOperation(object):

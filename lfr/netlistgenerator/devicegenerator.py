@@ -5,10 +5,10 @@ from mint.mintdevice import MINTDevice
 from .technologymapper import map_technologies
 from .fluidicmapping import FluidicMapping
 from .netlistsizor import NetlistSizor
-from compiler.module import Module
+from lfr.compiler.module import Module
 from .explicitmapping import ExplicitMapping
 from networkx import nx
-import utils
+import lfr.utils as utils
 import json
 
 

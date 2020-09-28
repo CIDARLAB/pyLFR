@@ -1,13 +1,13 @@
 import os
 from pathlib import Path
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
-from antlr.lfrXLexer import lfrXLexer
-from antlr.lfrXParser import lfrXParser
-from mappingCompiler import MappingCompiler
-from netlistgenerator.devicegenerator import DeviceGenerator
-from netlistgenerator.mappinglibrary import MappingLibrary
+from lfr.antlr.lfrXLexer import lfrXLexer
+from lfr.antlr.lfrXParser import lfrXParser
+from lfr.mappingCompiler import MappingCompiler
+from lfr.netlistgenerator.devicegenerator import DeviceGenerator
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 import argparse
-import parameters
+import lfr.parameters as parameters
 import glob
 import json
 

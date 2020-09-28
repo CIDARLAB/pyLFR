@@ -1,20 +1,20 @@
-from compiler.constraints.performanceconstraint import \
+from lfr.compiler.constraints.performanceconstraint import \
     PerformanceConstraintData
-from compiler.fluid import Fluid
-from compiler.language.concatenation import Concatenation
-from compiler.language.fluidexpression import FluidExpression
-from compiler.language.utils import is_number
-from compiler.language.vector import Vector
-from compiler.language.vectorrange import VectorRange
-from compiler.lfrerror import ErrorType, LFRError
-from compiler.module import Module
-from compiler.moduleio import IOType, ModuleIO
-from compiler.storage import Storage
-from compiler.signal import Signal
+from lfr.compiler.fluid import Fluid
+from lfr.compiler.language.concatenation import Concatenation
+from lfr.compiler.language.fluidexpression import FluidExpression
+from lfr.compiler.language.utils import is_number
+from lfr.compiler.language.vector import Vector
+from lfr.compiler.language.vectorrange import VectorRange
+from lfr.compiler.lfrerror import ErrorType, LFRError
+from lfr.compiler.module import Module
+from lfr.compiler.moduleio import IOType, ModuleIO
+from lfr.compiler.storage import Storage
+from lfr.compiler.signal import Signal
 from enum import Enum
 
-from antlr.lfrXListener import lfrXListener
-from antlr.lfrXParser import lfrXParser
+from lfr.antlr.lfrXListener import lfrXListener
+from lfr.antlr.lfrXParser import lfrXParser
 
 
 class ListenerMode(Enum):
@@ -457,7 +457,7 @@ class LFRCompiler(lfrXListener):
             constraint_bound = ConstriantBoundType.LESS_THAN
         else:
             constraint_bound = ConstriantBoundType.GREATER_THAN
-        
+
         param_value = ctx.constraint().number().getText()
         unit = ctx.constraint().unit().getText()
 
@@ -467,7 +467,6 @@ class LFRCompiler(lfrXListener):
         constraint_data['bound'] = constraint_bound
 
         self.current_performance_constraints.append(constraint_data)
-
 
     def exitSkeleton(self, ctx: lfrXParser.SkeletonContext):
         if len(self.compilingErrors) > 0:

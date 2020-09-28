@@ -1,8 +1,8 @@
 from mint.minttarget import MINTTarget
 from mint.mintcomponent import MINTComponent
 from .mappinglibrary import MappingLibrary, Primitive
-from compiler.fluidinteraction import FluidInteraction
-from compiler.fluidinteractiongraph import FluidInteractionGraph
+from lfr.compiler.fluidinteraction import FluidInteraction
+from lfr.compiler.fluidinteractiongraph import FluidInteractionGraph
 from mint.mintdevice import MINTDevice
 from typing import Optional
 
