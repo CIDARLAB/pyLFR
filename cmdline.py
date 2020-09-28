@@ -11,7 +11,8 @@ import parameters
 import glob
 import json
 
-def load_libraries():
+
+def load_libraries() -> dict:
     library = dict()
     os.chdir(parameters.LFR_DIR)
     for filename in glob.glob("*.json"):
@@ -49,9 +50,10 @@ def main():
     libraries = load_libraries()
     if library_name not in libraries.keys():
         raise Exception("Could not find mapping library")
-    
+
     library = libraries[library_name]
-    
+
+    # TODO: Modifiy this to translate relative path to absolute path in the future
     finput = FileStream(args.input)
 
     lexer = lfrXLexer(finput)

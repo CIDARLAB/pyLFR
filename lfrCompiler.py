@@ -1,17 +1,20 @@
-from compiler.constraints.performanceconstraint import PerformanceConstraintData
-from compiler.language.utils import is_number
-from enum import Enum
-
-from antlr.lfrXListener import lfrXListener
-from antlr.lfrXParser import lfrXParser
+from compiler.constraints.performanceconstraint import \
+    PerformanceConstraintData
 from compiler.fluid import Fluid
 from compiler.language.concatenation import Concatenation
 from compiler.language.fluidexpression import FluidExpression
+from compiler.language.utils import is_number
 from compiler.language.vector import Vector
 from compiler.language.vectorrange import VectorRange
 from compiler.lfrerror import ErrorType, LFRError
 from compiler.module import Module
 from compiler.moduleio import IOType, ModuleIO
+from compiler.storage import Storage
+from compiler.signal import Signal
+from enum import Enum
+
+from antlr.lfrXListener import lfrXListener
+from antlr.lfrXParser import lfrXParser
 
 
 class ListenerMode(Enum):
@@ -177,6 +180,52 @@ class LFRCompiler(lfrXListener):
             self.typeMap[name] = VariableTypes.FLUID
 
     def exitFluiddeclstat(self, ctx: lfrXParser.FluiddeclstatContext):
+        self.__revertMode()
+
+    def enterStoragestat(self, ctx: lfrXParser.StoragestatContext):
+        self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
+        for declvar in ctx.declvar():
+            name = declvar.ID().getText()
+            startindex = 0
+            endindex = 0
+
+            if declvar.vector() is not None:
+                startindex = int(declvar.vector().start.text)
+                endindex = int(declvar.vector().end.text)
+
+            v = self.__createVector(name, Storage, startindex, endindex)
+
+            for item in v.get_items():
+                self.currentModule.add_fluid(item)
+
+            # Now that the declaration is done, we are going to save it
+            self.vectors[name] = v
+            self.typeMap[name] = VariableTypes.STORAGE
+
+    def exitStoragestat(self, ctx: lfrXParser.StoragestatContext):
+        self.__revertMode()
+
+    def enterSignalvarstat(self, ctx: lfrXParser.SignalvarstatContext):
+        self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
+        for declvar in ctx.declvar():
+            name = declvar.ID().getText()
+            startindex = 0
+            endindex = 0
+
+            if declvar.vector() is not None:
+                startindex = int(declvar.vector().start.text)
+                endindex = int(declvar.vector().end.text)
+
+            v = self.__createVector(name, Signal, startindex, endindex)
+
+            for item in v.get_items():
+                self.currentModule.add_fluid(item)
+
+            # Now that the declaration is done, we are going to save it
+            self.vectors[name] = v
+            self.typeMap[name] = VariableTypes.SIGNAL
+
+    def exitSignalvarstat(self, ctx: lfrXParser.SignalvarstatContext):
         self.__revertMode()
 
     def exitVectorvar(self, ctx: lfrXParser.VectorvarContext):

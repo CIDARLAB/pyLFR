@@ -3,7 +3,6 @@
 from enum import Enum
 from netlistgenerator.explicitmapping import ExplicitMapping
 from lfrCompiler import LFRCompiler
-from compiler.module import Module
 from antlr.lfrXParser import lfrXParser
 
 
@@ -11,6 +10,7 @@ class TechnologyMappingMODE(Enum):
     NO_MAPPING = 0
     OPERATOR_MAPPING = 1
     ASSIGN_MAPPING = 2
+    STORAGE_MAPPING = 3
 
 
 class MappingCompiler(LFRCompiler):
@@ -28,9 +28,12 @@ class MappingCompiler(LFRCompiler):
         self.mappingOperator = ''
         self.currentMappingDictionary = dict()
         # Checking if the mapping is an operator or assign mapping
-        if ctx.mappingoperator().getText() is '':
-            self.mappingMode = TechnologyMappingMODE.ASSIGN_MAPPING
-            print('Need to map for an assign statement and not an operator')
+        if ctx.mappingoperator() is None:
+            print('Need to map for an assign/storage statement and not an operator')
+            if ctx.assignmode == 'assign':
+                self.mappingMode = TechnologyMappingMODE.ASSIGN_MAPPING
+            elif ctx.assignmode == 'storage':
+                self.mappingMode = TechnologyMappingMODE.STORAGE_MAPPING 
         else:
             self.mappingMode = TechnologyMappingMODE.OPERATOR_MAPPING
             operator = ctx.mappingoperator().getText()
@@ -88,7 +91,7 @@ class MappingCompiler(LFRCompiler):
                                     mapping = ExplicitMapping()
                                     mapping.startlist.append(start)
                                     mapping.endlist.append(end)
-                                    mapping.technology = self.currentMappingTechnology                      
+                                    mapping.technology = self.currentMappingTechnology
                                     self.currentModule.add_mapping(mapping)
                         else:
                             mapping = ExplicitMapping()

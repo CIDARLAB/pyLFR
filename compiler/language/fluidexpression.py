@@ -110,7 +110,7 @@ class FluidExpression:
                         index = operatorlist.index(operator)
                     except ValueError:
                         index = -1
-        
+
         # At the end of the expression, there should only be 1 expression left
         return termlist[0]
 
@@ -122,9 +122,9 @@ class FluidExpression:
                 interaction = self.currentmodule.add_finteraction_custom_interaction(element, operator, InteractionType.TECHNOLOGY_PROCESS)
             else:
                 interaction = self.currentmodule.add_fluid_custom_interaction(element, operator, InteractionType.TECHNOLOGY_PROCESS)
-            
+
             result.append(interaction)
-        
+
         v = Vector.create_from_list_things(operator, result)
         ret = v.get_range()
         return ret

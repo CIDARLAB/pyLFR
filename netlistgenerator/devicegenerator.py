@@ -15,10 +15,10 @@ import json
 class NameGenerator(object):
     def __init__(self) -> None:
         self.dictionary = dict()
-       
+
     def generate_name(self, technology_string: str) -> str:
         if technology_string in self.dictionary.keys():
-            #Increment the number in dictionary and return the name
+            # Increment the number in dictionary and return the name
             ret = self.dictionary[technology_string] + 1
             self.dictionary[technology_string] = ret
             return '{}_{}'.format(technology_string, ret).lower().replace(' ', "_")
@@ -29,7 +29,7 @@ class NameGenerator(object):
 
 class DeviceGenerator(object):
 
-    def __init__(self, name:str, module:Module, library:MappingLibrary):
+    def __init__(self, name: str, module: Module, library: MappingLibrary):
         self.devicename = name
         self.devicemodule = module
         self.namegenerator = NameGenerator()
@@ -39,11 +39,10 @@ class DeviceGenerator(object):
         self.primitive_map = dict()
         self.device = None
 
-
     def generate_dummy_netlist(self):
         # Process the direct technology mapping
         interactiongraph = self.devicemodule.FIG
-        
+
         utils.printgraph(interactiongraph.G, self.devicename + '.dot')
 
         mapping_blacklist = []
@@ -51,18 +50,17 @@ class DeviceGenerator(object):
         port_list = []
         device = MINTDevice(self.devicemodule.name)
 
-        #1 map all the i/o to PORT
+        # 1 map all the i/o to PORT
         for key in self.devicemodule.io.keys():
             io = self.devicemodule.io[key]
             device.addComponent(io.id, "PORT", { "portRadius": "2000"}, '0')
             port_list.append(io.id)
-        
-        
-        #2 map all the operators to their respective primitives
+
+        # 2 map all the operators to their respective primitives
         # 2.1 map all the 'assign' mappings to specific primitives
         # EDIT: 2.1 is a subcase because how we are storing all the mappings
         for mapping in self.devicemodule.mappings:
-            #TODO: Make this for all the elements. Also each mapping is 1 component
+            # TODO: Make this for all the elements. Also each mapping is 1 component
             start = mapping.startlist[0]
             end = mapping.endlist[0]
             new_component_name = self.namegenerator.generate_name(mapping.technology)

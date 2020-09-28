@@ -3,7 +3,7 @@ class VectorRange:
         self.vector = vector
         if startindex is None:
             self.startindex = 0
-        else:    
+        else:
             self.startindex = startindex
 
         if endindex is None:
@@ -22,7 +22,7 @@ class VectorRange:
         return iter(self.vector)
 
     def __len__(self):
-        return abs(self.startindex - self.endindex )+ 1
+        return abs(self.startindex - self.endindex) + 1
 
-    def __str__(self):     
+    def __str__(self):
         return "< VectorRange : {0} [{1} : {2}]>".format(self.vector.id, self.startindex, self.endindex)

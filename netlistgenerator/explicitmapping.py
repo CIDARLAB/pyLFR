@@ -1,5 +1,6 @@
 from typing import List
 
+
 class ExplicitMapping(object):
     
     def __init__(self):

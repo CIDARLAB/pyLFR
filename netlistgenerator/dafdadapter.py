@@ -62,11 +62,11 @@ class MaterialConstraint(Constraint):
 
 
 class ConstraintList:
-    def __init__(self, component:MINTComponent):
+    def __init__(self, component: MINTComponent):
         super().__init__()
-        self.__constraints:List[Constraint] = []
-        self.__component:Optional[MINTComponent] = component
-    
+        self.__constraints: List[Constraint] = []
+        self.__component: Optional[MINTComponent] = component
+
     def add_constraint(self, constraint: Constraint) -> None:
         constraint = FunctionalConstraint()
         self.__constraints.append(constraint)
@@ -107,7 +107,7 @@ class DAFDSizingAdapter:
                     targets_dict['generation_rate'] = generate_rate
             elif isinstance(constraint, GeometryConstraint):
                 raise Exception("Error: Geometry constraint not defined")
-       
+
         results = self.solver.runInterp(targets_dict, constriants_dict)
         component = constriants.component
         if component is None:
@@ -121,7 +121,7 @@ class DAFDSizingAdapter:
         normalized_oil_inlet = results['normalized_oil_inlet']
         normalized_orifice_length = results['normalized_orifice_length']
         normalized_water_inlet = results['normalized_water_inlet']
-    
+
         component.params.set_param("orificeSize", round(orifice_size))
         component.params.set_param("orificeLength", round(orifice_size*normalized_orifice_length))
         component.params.set_param("oilInputWidth", round(orifice_size*normalized_oil_inlet))
@@ -129,7 +129,7 @@ class DAFDSizingAdapter:
         component.params.set_param("outputWidth", round(orifice_size*expansion_ratio))
         component.params.set_param("outputLength", 5000)
         component.params.set_param("height", round(orifice_size/aspect_ratio))
-        
+
         # TODO: Figure out how to propagate the results to the rest of the design. Additionally we need to set all the operation considtions
         pass
         
