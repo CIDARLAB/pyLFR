@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
-from lfr.antlr.lfrXLexer import lfrXLexer
-from lfr.antlr.lfrXParser import lfrXParser
+from lfr.antlrgen.lfrXLexer import lfrXLexer
+from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.mappingCompiler import MappingCompiler
 from lfr.netlistgenerator.devicegenerator import DeviceGenerator
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary

@@ -1,5 +1,3 @@
-from lfr.compiler.constraints.performanceconstraint import \
-    PerformanceConstraintData
 from lfr.compiler.fluid import Fluid
 from lfr.compiler.language.concatenation import Concatenation
 from lfr.compiler.language.fluidexpression import FluidExpression
@@ -13,8 +11,8 @@ from lfr.compiler.storage import Storage
 from lfr.compiler.signal import Signal
 from enum import Enum
 
-from lfr.antlr.lfrXListener import lfrXListener
-from lfr.antlr.lfrXParser import lfrXParser
+from lfr.antlrgen.lfrXListener import lfrXListener
+from lfr.antlrgen.lfrXParser import lfrXParser
 
 
 class ListenerMode(Enum):
@@ -25,14 +23,6 @@ class ListenerMode(Enum):
     EXPRESS_PARSING_MODE = 4
     FLUID_ASSIGN_STAT_MODE = 5
     DISTRIBUTE_ASSIGN_STAT_MODE = 6
-
-
-class ConstriantBoundType(Enum):
-    EQUALS = 0
-    LESS_THAN = 1
-    GREATER_THAN = 2
-    LESS_THAN_EQUALS = 3
-    GREATER_THAN_EQUALS = 4
 
 
 class VariableTypes(Enum):
@@ -271,8 +261,8 @@ class LFRCompiler(lfrXListener):
         self.stack.append(v)
 
     def enterNumber(self, ctx: lfrXParser.NumberContext):
-        if self.listermode is ListenerMode.VARIABLE_DECLARATION_MODE:
-            return
+        # if self.listermode is ListenerMode.VARIABLE_DECLARATION_MODE:
+        #     return
 
         n = None
         # check to see what kind of a number it is to parse it correctly
@@ -300,29 +290,8 @@ class LFRCompiler(lfrXListener):
     def enterNumvarstat(self, ctx: lfrXParser.NumvarstatContext):
         self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
 
-        names = ctx.ID()
-        numbers = ctx.number()
-
-        for name, number in zip(names, numbers):
-            varname = name.getText()
-            n = None
-            if number.Decimal_number() is not None:
-                n = int(number.Decimal_number().getText())
-
-            elif number.Octal_number() is not None:
-                n = int(number.Octal_number().getText(), 8)
-
-            elif number.Hex_number() is not None:
-                n = int(number.Hex_number().getText(), 16)
-
-            elif number.Binary_number() is not None:
-                n = int(number.Binary_number().getText(), 2)
-
-            else:
-                n = float(number.Real_number().getText())
-
-            self.vectors[varname] = n
-            self.typeMap[varname] = VariableTypes.NUMBER
+        # Don't really need to do much here - If you need to go back in history 
+        # for this method implmentation - refer commit - bf24c90
 
     def exitNumvarstat(self, ctx):
         self.__revertMode()
@@ -426,47 +395,8 @@ class LFRCompiler(lfrXListener):
         # TODO: Check all error conditions and if the right kinds of variables are being assigned here
         self.vectors[lhs] = rhs
 
-    # def exitTechnologymappingdirective(self, ctx: lfrXParser.TechnologymappingdirectiveContext):
-    #     # print("Operator", ctx.operator.getText())
-    #     technologystring = ""
-    #     for ID in ctx.ID():
-    #         technologystring += ID.getText()
-    #     # print(technologystring)
-    #     self.operatormap[ctx.operator.getText()] = technologystring
-    #
-    #
-
-    def exitPerformancedirective(self, ctx: lfrXParser.PerformancedirectiveContext):
-        param_name = ctx.constraint().ID().getText()
-        operator = ""
-        if ctx.constraint().binary_operator() is not None:
-            operator = ctx.constraint().binary_operator().getText()
-        elif ctx.constraint().unary_operator():
-            operator = ctx.constraint().unary_operator().getText()
-        else:
-            raise Exception("Operator missing for performance constraint")
-
-        constraint_bound_text = ctx.constraint().operator.text
-        if constraint_bound_text == "=":
-            constraint_bound = ConstriantBoundType.EQUALS
-        elif constraint_bound_text == "<=":
-            constraint_bound = ConstriantBoundType.LESS_THAN_EQUALS
-        elif constraint_bound_text == ">=":
-            constraint_bound = ConstriantBoundType.GREATER_THAN_EQUALS
-        elif constraint_bound_text == "<":
-            constraint_bound = ConstriantBoundType.LESS_THAN
-        else:
-            constraint_bound = ConstriantBoundType.GREATER_THAN
-
-        param_value = ctx.constraint().number().getText()
-        unit = ctx.constraint().unit().getText()
-
-        constraint_data = PerformanceConstraintData(operator)
-        constraint_data[param_name] = param_value
-        constraint_data['unit'] = unit
-        constraint_data['bound'] = constraint_bound
-
-        self.current_performance_constraints.append(constraint_data)
+        if self.listermode is ListenerMode.VARIABLE_DECLARATION_MODE:
+            self.typeMap[lhs] = VariableTypes.NUMBER
 
     def exitSkeleton(self, ctx: lfrXParser.SkeletonContext):
         if len(self.compilingErrors) > 0:

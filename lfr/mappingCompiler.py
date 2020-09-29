@@ -1,9 +1,9 @@
-
-
+from lfr.compiler.constraints.performanceconstraint import \
+    PerformanceConstraintData
 from enum import Enum
-from netlistgenerator.explicitmapping import ExplicitMapping
-from lfrCompiler import LFRCompiler
-from antlr.lfrXParser import lfrXParser
+from lfr.netlistgenerator.explicitmapping import ExplicitMapping
+from lfr.lfrCompiler import LFRCompiler
+from lfr.antlrgen.lfrXParser import lfrXParser
 
 
 class TechnologyMappingMODE(Enum):
@@ -11,6 +11,14 @@ class TechnologyMappingMODE(Enum):
     OPERATOR_MAPPING = 1
     ASSIGN_MAPPING = 2
     STORAGE_MAPPING = 3
+
+
+class ConstriantBoundType(Enum):
+    EQUALS = 0
+    LESS_THAN = 1
+    GREATER_THAN = 2
+    LESS_THAN_EQUALS = 3
+    GREATER_THAN_EQUALS = 4
 
 
 class MappingCompiler(LFRCompiler):
@@ -132,3 +140,37 @@ class MappingCompiler(LFRCompiler):
             # TODO: This just means that nothign happens
             super().exitAssignstat(ctx)
             pass
+
+
+    def exitPerformancedirective(self, ctx: lfrXParser.PerformancedirectiveContext):
+        param_name = ctx.constraint().ID().getText()
+        operator = ""
+        if ctx.constraint().binary_operator() is not None:
+            operator = ctx.constraint().binary_operator().getText()
+        elif ctx.constraint().unary_operator():
+            operator = ctx.constraint().unary_operator().getText()
+        else:
+            raise Exception("Operator missing for performance constraint")
+
+        constraint_bound_text = ctx.constraint().operator.text
+        if constraint_bound_text == "=":
+            constraint_bound = ConstriantBoundType.EQUALS
+        elif constraint_bound_text == "<=":
+            constraint_bound = ConstriantBoundType.LESS_THAN_EQUALS
+        elif constraint_bound_text == ">=":
+            constraint_bound = ConstriantBoundType.GREATER_THAN_EQUALS
+        elif constraint_bound_text == "<":
+            constraint_bound = ConstriantBoundType.LESS_THAN
+        else:
+            constraint_bound = ConstriantBoundType.GREATER_THAN
+
+        param_value = ctx.constraint().number().getText()
+        unit = ctx.constraint().unit().getText()
+
+        constraint_data = PerformanceConstraintData(operator)
+        constraint_data[param_name] = param_value
+        constraint_data['unit'] = unit
+        constraint_data['bound'] = constraint_bound
+
+        self.current_performance_constraints.append(constraint_data)
+

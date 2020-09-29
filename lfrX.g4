@@ -74,7 +74,7 @@ fluiddeclstat : 'flow' declvar (',' declvar)* ;
 
 storagestat : 'storage' declvar (',' declvar)* ;
 
-numvarstat : 'number' ( literalassignstat )  ;
+numvarstat : 'number'  literalassignstat (',' literalassignstat)*  ;
 
 assignstat
    :   'assign' lhs '='  ( bracketexpression | expression )
