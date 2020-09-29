@@ -1,6 +1,6 @@
 from networkx import nx
 from .fluid import Fluid
-from .fluidinteraction import FluidInteraction, InteractionType
+from .fluidinteraction import FluidInteraction
 from typing import List
 
 
@@ -75,7 +75,7 @@ class FluidInteractionGraph(object):
         if fluid1.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " +
                             fluid1.id + " is not in the fluid interaction graph")
-        
+
         if fluid_output.id not in self.fluids.keys():
             raise Exception("Cannot add interaction because " +
                             fluid_output.id + " is not in the fluid interaction graph")
@@ -94,7 +94,7 @@ class FluidInteractionGraph(object):
         if finteraction.id not in self.fluidinteractions.keys():
             raise Exception("Cannot add interaction because " +
                             finteraction.id + " is not in the fluid interaction graph")
-        
+
         if interaction.id in self.fluidinteractions.keys():
             # raise Exception("Cannot add interaction because " + interaction.id + " is already present")
             print("Warning: {0} is already present in the fluid interaction graph".format(

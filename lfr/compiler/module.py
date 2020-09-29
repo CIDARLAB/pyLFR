@@ -1,4 +1,5 @@
-from netlistgenerator.explicitmapping import ExplicitMapping
+from typing import List
+from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from .fluidinteractiongraph import FluidInteractionGraph
 from .fluid import Fluid
 from .moduleio import ModuleIO
@@ -12,7 +13,7 @@ class Module(object):
         self.intermediates = []
         self.FIG = FluidInteractionGraph()
         self.fluids = dict()
-        self.mappings: [ExplicitMapping] = []
+        self.mappings: List[ExplicitMapping] = []
 
     def add_io(self, io: ModuleIO):
         self.io[io.id] = io
@@ -41,17 +42,15 @@ class Module(object):
     def add_fluid_connection(self, item1id: str, item2id: str) -> None:
         self.FIG.add_fluid_connection(item1id, item2id)
 
-
     def add_fluid_custom_interaction(self, item: Fluid, operator: str, interaction_type: InteractionType )-> FluidInteraction:
-        #Check if the item exists
+        # Check if the item exists
         finteraction = FluidInteraction(item, interactiontype=interaction_type, custominteraction= operator)
         self.FIG.add_singlefluid_interaction(item, finteraction)
         return finteraction
 
-
     def add_finteraction_custom_interaction(self, item: FluidInteraction, operator: str, interaction_type: InteractionType )-> FluidInteraction:
-        #Check if the item exists
-        #TODO: create finteraction factory method and FluidInteraction
+        # Check if the item exists
+        # TODO: create finteraction factory method and FluidInteraction
         finteraction = FluidInteraction(fluid1=item, interactiontype=interaction_type, custominteraction= operator)
         self.FIG.add_singleinteraction_interaction(item, finteraction)
         return finteraction
