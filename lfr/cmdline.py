@@ -10,11 +10,11 @@ import argparse
 import lfr.parameters as parameters
 import glob
 import json
-
+import lfr.utils as utils
 
 def load_libraries() -> dict:
     library = dict()
-    os.chdir(parameters.LFR_DIR)
+    os.chdir(parameters.LIB_DIR)
     for filename in glob.glob("*.json"):
         file = open(filename, 'r')
         lib_object = json.loads(file.read())
@@ -27,26 +27,29 @@ def main():
 
     parser.add_argument('input', help="This is the file thats used as the input ")
     parser.add_argument('--outpath', type=str, default="out/", help="This is the output directory")
-    parser.add_argument('--library', type=str, default="dropx", help="This is the mapping library you need to use")
-
+    parser.add_argument('--technology', type=str, default="dropx", help="This is the mapping library you need to use")
+    parser.add_argument('--library', type=str, default="./library", help="This sets the default library where the different technologies sit in")
     args = parser.parse_args()
     print("output dir:", args.outpath)
     print(args.input)
 
     extension = Path(args.input).suffix
-    if extension != '.lfr' :
+    if extension != '.lfr':
         print("Unrecognized file Extension")
         exit()
 
     abspath = os.path.abspath(args.outpath)
     parameters.OUTPUT_DIR = abspath
 
+    abspath = os.path.abspath(args.library)
+    parameters.LIB_DIR = abspath
+
     if os.path.isdir(abspath) is not True:
         print("Creating the output directory:")
         path = Path(parameters.OUTPUT_DIR)
         path.mkdir(parents=True)
 
-    library_name = args.library
+    library_name = args.technology
     libraries = load_libraries()
     if library_name not in libraries.keys():
         raise Exception("Could not find mapping library")
@@ -66,23 +69,24 @@ def main():
 
     walker = ParseTreeWalker()
 
-    # listener = LFRCompiler()
-
-    # walker.walk(listener, tree)
-
     mapping_listener = MappingCompiler()
 
     walker.walk(mapping_listener, tree)
+
+    interactiongraph = mapping_listener.currentModule.FIG
+
+    utils.printgraph(interactiongraph.G, mapping_listener.currentModule.name + ".dot")
 
     # Check if the module compilation was successful
     if mapping_listener.success:
         # Now Process the Modules Generated
         devicegenerator = DeviceGenerator(mapping_listener.currentModule.name, mapping_listener.currentModule, library)
-        devicegenerator.generate_fluidic_netlist()
-        # devicegenerator.size_netlist()
+        # devicegenerator.generate_fluidic_netlist()
+        # # devicegenerator.size_netlist()
 
-        devicegenerator.print_netlist()
-        devicegenerator.serialize_netlist()
+        # devicegenerator.print_netlist()
+        # devicegenerator.serialize_netlist()
+        pass
 
 
 if __name__ == "__main__":
