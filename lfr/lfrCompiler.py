@@ -441,3 +441,14 @@ class LFRCompiler(lfrXListener):
 
     def __revertMode(self):
         self.listermode = self.statestack.pop()
+
+    def print_variables(self):
+        for key in self.vectors.keys():
+            print('{0} - {1}'.format(key, self.vectors[key]))
+
+    def print_stack(self):
+        print('---Top of Stack---')
+        for item in self.stack:
+            print(item)
+
+        print('---Bottom of Stack---')

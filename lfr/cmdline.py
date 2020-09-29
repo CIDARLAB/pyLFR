@@ -73,6 +73,10 @@ def main():
 
     walker.walk(mapping_listener, tree)
 
+    mapping_listener.print_stack()
+
+    mapping_listener.print_variables()
+
     interactiongraph = mapping_listener.currentModule.FIG
 
     utils.printgraph(interactiongraph.G, mapping_listener.currentModule.name + ".dot")
