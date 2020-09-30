@@ -10,6 +10,7 @@ from lfr.compiler.moduleio import IOType, ModuleIO
 from lfr.compiler.storage import Storage
 from lfr.compiler.signal import Signal
 from enum import Enum
+from typing import List
 
 from lfr.antlrgen.lfrXListener import lfrXListener
 from lfr.antlrgen.lfrXParser import lfrXParser
@@ -247,7 +248,7 @@ class LFRCompiler(lfrXListener):
 
         c = Concatenation(stackslice)
 
-        # TODO: Here the selector will determine the start and endindex for the vector 
+        # TODO: Here the selector will determine the start and endindex for the vector
         # range
         startindex = 0
         endindex = len(c) - 1
@@ -290,7 +291,7 @@ class LFRCompiler(lfrXListener):
     def enterNumvarstat(self, ctx: lfrXParser.NumvarstatContext):
         self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
 
-        # Don't really need to do much here - If you need to go back in history 
+        # Don't really need to do much here - If you need to go back in history
         # for this method implmentation - refer commit - bf24c90
 
     def exitNumvarstat(self, ctx):
@@ -393,10 +394,15 @@ class LFRCompiler(lfrXListener):
         rhs = self.stack.pop()
         lhs = ctx.ID().getText()
         # TODO: Check all error conditions and if the right kinds of variables are being assigned here
-        self.vectors[lhs] = rhs
+        # self.vectors[lhs] = rhs
 
         if self.listermode is ListenerMode.VARIABLE_DECLARATION_MODE:
+            v = self.__createLiteralVector(lhs, rhs)
+            self.vectors[lhs] = v
             self.typeMap[lhs] = VariableTypes.NUMBER
+        else:
+            # TODO - How to assign the data to this
+            pass
 
     def exitSkeleton(self, ctx: lfrXParser.SkeletonContext):
         if len(self.compilingErrors) > 0:
@@ -427,7 +433,24 @@ class LFRCompiler(lfrXListener):
 
         return v
 
-    def __performUnaryOperation(self, operator: str, operand: VectorRange):      
+    def __createLiteralVector(self, name: str, values: List) -> Vector:
+
+        objectype = None
+
+        if isinstance(values, list):
+            objectype = type(values[0])
+        else:
+            objectype = type(values)
+            values = [values]
+
+        v = Vector.create_from_list_things(name, values)
+
+        self.vectors[name] = v
+        self.typeMap[name] = VariableTypes.NUMBER
+
+        return v
+
+    def __performUnaryOperation(self, operator: str, operand: VectorRange) -> FluidExpression:
         print("Performing unary operation - Operator: {0} \n Operand: {1}".format(operator, operand))
         # TODO: Return the vector range result of unary operator
         fluidexpression = FluidExpression(self.currentModule)

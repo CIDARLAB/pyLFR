@@ -76,14 +76,6 @@ class Module(object):
 
     def add_finteraction_finteraction_interaction(self, f_interaction1: Interaction, f_interaction2: Interaction, interaction_type: InteractionType) -> Interaction:
         # TODO - Revisit this to fix the fluid data mappings
-        output_fluid_1 = f_interaction1.get_output_fluid()
-        output_fluid_2 = f_interaction2.get_output_fluid()
-
-        if self.FIG.contains_fignode(output_fluid_1) is False:
-            self.FIG.add_fignode(output_fluid_1)
-
-        if self.FIG.contains_fignode(output_fluid_2) is False:
-            self.FIG.add_fignode(output_fluid_2)
 
         new_fluid_interaction = FluidFluidInteraction(f_interaction1, f_interaction2, interaction_type)
 

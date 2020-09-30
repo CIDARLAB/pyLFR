@@ -1,3 +1,4 @@
+from lfr.lfrCompiler import LFRCompiler
 import os
 from pathlib import Path
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
@@ -16,6 +17,7 @@ import lfr.utils as utils
 def load_libraries():
     library = dict()
     os.chdir(parameters.LIB_DIR)
+    print(" LIB Path : " + parameters.LIB_DIR)
     for filename in glob.glob("*.json"):
         file = open(filename, 'r')
         lib_object = json.loads(file.read())
@@ -47,8 +49,8 @@ def main():
         path = Path(parameters.OUTPUT_DIR)
         path.mkdir(parents=True)
 
-    abspath = os.path.abspath(args.library)
-    parameters.LIB_DIR = abspath
+    # abspath = os.path.abspath(args.library)
+    # parameters.LIB_DIR = abspath
 
     library_name = args.technology
     libraries = load_libraries()
@@ -70,7 +72,7 @@ def main():
 
     walker = ParseTreeWalker()
 
-    mapping_listener = MappingCompiler()
+    mapping_listener = LFRCompiler()
 
     walker.walk(mapping_listener, tree)
 

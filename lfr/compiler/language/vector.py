@@ -19,7 +19,7 @@ class Vector:
     def __len__(self):
         return abs(self.startindex - self.endindex)+1
 
-    def get_items(self) -> []:
+    def get_items(self) -> list:
         return self.vec
 
     def get_range(self, startindex: int = None, endindex: int = None) -> VectorRange:
