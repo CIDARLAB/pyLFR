@@ -26,16 +26,16 @@ class Interaction(Flow):
         return self._interaction_type
 
     @staticmethod
-    def get_id(fluid1: FIGNode = None, fluid2: FIGNode = None, operator: str = '') -> str:
+    def get_id(fluid1: FIGNode = None, fluid2: FIGNode = None, operator_string: str = '') -> str:
         id = None
 
         if fluid2 is not None:
             if fluid1.id < fluid2.id:
-                id = fluid1.id + "_" + operator + "_" + fluid2.id
+                id = fluid1.id + "_" + operator_string + "_" + fluid2.id
             else:
-                id = fluid2.id + "_" + operator + "_" + fluid1.id
+                id = fluid2.id + "_" + operator_string + "_" + fluid1.id
         else:
-            id = fluid1.id + "_" + operator
+            id = fluid1.id + "_" + operator_string
 
         return id
 
@@ -66,7 +66,7 @@ class FluidFluidInteraction(Interaction):
             interaction_type (InteractionType, optional): [description]. Defaults to None.
             interaction_data (str, optional): [description]. Defaults to None.
         """
-        id = Interaction.get_id(fluid1, fluid2, interaction_type)
+        id = Interaction.get_id(fluid1, fluid2, Interaction.get_operator_str(interaction_type))
         super().__init__(id, interaction_type)
         self._input_fignodes.append(fluid1)
         self._input_fignodes.append(fluid2)
@@ -79,7 +79,7 @@ class FluidFluidInteraction(Interaction):
 class FluidFluidCustomInteraction(FluidFluidInteraction):
 
     def __init__(self, fluid1: Flow, fluid2: Flow, custom_operator: str) -> None:
-        id = Interaction.get_id(fluid1, fluid2, operator=custom_operator)
+        id = Interaction.get_id(fluid1, fluid2, operator_string=custom_operator)
         super().__init__(fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS)
         self._id = id
         self._operator = custom_operator
@@ -96,7 +96,7 @@ class FluidProcessInteraction(Interaction):
             process_operator (str): [description]
         """
         operator_str = Interaction.get_operator_str(InteractionType.TECHNOLOGY_PROCESS, process_operator)
-        id = Interaction.get_id(fluid, operator=operator_str)
+        id = Interaction.get_id(fluid, operator_string=operator_str)
         super().__init__(id, InteractionType.TECHNOLOGY_PROCESS)
         self._input_fignodes.append(fluid)
 
@@ -118,7 +118,7 @@ class FluidNumberInteraction(Interaction):
         """
         # TODO: Add operator to this mix
         operator_str = Interaction.get_operator_str(interaction_type)
-        id = Interaction.get_id(fluid1=fluid, operator=operator_str)
+        id = Interaction.get_id(fluid1=fluid, operator_string=operator_str)
         super().__init__(id, interaction_type)
         self._input_fignodes.append(fluid)
         self._value: float = value
@@ -142,7 +142,7 @@ class FluidIntegerInteraction(Interaction):
             value (int): [description]
             interaction_type (InteractionType): [description]
         """
-        id = Interaction.get_id(fluid, Interaction.get_operator_str(interaction_type))
+        id = Interaction.get_id(fluid1=fluid, operator_string=Interaction.get_operator_str(interaction_type))
         super().__init__(id, interaction_type)
         self._input_fignodes.append(fluid)
         self._value: int = value
