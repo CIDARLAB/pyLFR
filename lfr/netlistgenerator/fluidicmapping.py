@@ -35,17 +35,17 @@ class FluidicMapping(object):
         default_component = default_netlist.getComponent('default_component')
         new_old_component_map = dict()
         new_old_component_map['default_component'] = component.ID
-        #Add all the components from 
+        # Add all the components from
         for component in default_netlist.get_components():
-            #Skip the default component
+            # Skip the default component
             if component == default_component:
                 continue
             else:
                 name = self.__name_generator.generate_name(component.entity)
                 new_old_component_map[component.ID] = name
                 netlist.addComponent(name, component.entity, component.params.data, '0')
-        
-        #Add connections from
+
+        # Add connections from
         for connection in default_netlist.get_connections():
             name = self.__name_generator.generate_name(connection.entity)
             source_target = self.rewrite_target(connection.source, new_old_component_map[connection.source.component])
@@ -62,13 +62,13 @@ class FluidicMapping(object):
         print("Found {} in FIG, constructing design now ...".format(interaction_id))
 
         # TODO: Pull the data of the default params from whereever
-        
+
         # Add the component first into the netlist
         name = self.__name_generator.generate_name(primitive.mint)
         component = netlist.addComponent(name, primitive.mint, {}, '0')
         self.__blacklist_map[interaction_id] = name
         self.__primitive_map[interaction_id] = primitive
-        
+
         # Stitch together the default netlist if it exists
         default_netlist = primitive.default_netlist
         if default_netlist is not None:
