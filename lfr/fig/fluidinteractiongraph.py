@@ -9,16 +9,25 @@ class FluidInteractionGraph(nx.DiGraph):
     def __init__(self, data=None, val=None, **attr) -> None:
         super(FluidInteractionGraph, self).__init__()
         self._fignodes = dict()
-        self._fluid_interactions = dict()
+        # self._fluid_interactions = dict()
         self._gen_id = 0
 
     def add_fignode(self, node: FIGNode) -> None:
         self._fignodes[node.id] = node
         self.add_node(node.id)
 
+    def get_fignode(self, id: str):
+        if id in self._fignodes.keys():
+            return self._fignodes[id]
+        else:
+            return None
+
+    def contains_fignode(self, fluid_object: FIGNode) -> bool:
+        return fluid_object.id in self.fluids.keys()
+
     def add_interaction(self, interaction: Interaction):
-        if interaction.id not in self._fluid_interactions.keys():
-            self._fluid_interactions[interaction.id] = interaction
+        if interaction.id not in self._fignodes.keys():
+            self._fignodes[interaction.id] = interaction
         else:
             raise Exception("Interaction already present in the FIG: {0}".format(interaction.id))
 
