@@ -46,6 +46,14 @@ class FluidInteractionGraph(nx.DiGraph):
         else:
             raise Exception("Invalid Interaction Type found here")
 
+    def connect_fignodes(self, source: FIGNode, target: FIGNode):
+        if source.id not in self._fignodes.keys():
+            raise Exception("Unable to add interaction because of missing flow: {0}".format(source.id))
+        if target.id not in self._fignodes.keys():
+            raise Exception("Unable to add interaction because of missing flow: {0}".format(target.id))
+
+        self.add_edge(source.id, target.id)
+
     def get_interactions(self) -> List[Interaction]:
         return [self._fluid_interactions[key] for key in self._fluid_interactions.keys()]
 

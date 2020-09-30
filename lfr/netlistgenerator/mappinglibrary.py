@@ -1,6 +1,6 @@
 from mint.mintcomponent import MINTComponent
 from typing import List, Optional
-from lfr.compiler.fluidinteraction import InteractionType
+from lfr.fig.interaction import InteractionType
 from mint.mintdevice import MINTDevice
 from mint.antlr.mintLexer import mintLexer
 from mint.antlr.mintParser import mintParser
@@ -62,12 +62,12 @@ class Primitive:
 
         walker.walk(listener, tree)
 
-        #Return the default library
+        # Return the default library
         return listener.current_device
 
 
-
 class MappingLibrary:
+
     def __init__(self, jsondict) -> None:
         self.__name = jsondict['name']
         self.__mix_operators = []

@@ -50,8 +50,8 @@ class DeviceGenerator(object):
         device = MINTDevice(self.devicemodule.name)
 
         # 1 map all the i/o to PORT
-        for key in self.devicemodule.io.keys():
-            io = self.devicemodule.io[key]
+        for key in self.devicemodule._io.keys():
+            io = self.devicemodule._io[key]
             device.addComponent(io.id, "PORT", {"portRadius": "2000"}, "0")
             port_list.append(io.id)
 
@@ -139,8 +139,8 @@ class DeviceGenerator(object):
         device.addLayer("0", 0, MINTLayerType.FLOW)
 
         # 1 map all the i/o to PORT
-        for key in self.devicemodule.io.keys():
-            io = self.devicemodule.io[key]
+        for key in self.devicemodule._io.keys():
+            io = self.devicemodule._io[key]
             device.addComponent(io.id, "PORT", {"portRadius": "2000"}, "0")
             port_list.append(io.id)
 

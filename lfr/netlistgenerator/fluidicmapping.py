@@ -1,15 +1,15 @@
 from mint.minttarget import MINTTarget
 from mint.mintcomponent import MINTComponent
 from .mappinglibrary import MappingLibrary, Primitive
-from lfr.compiler.fluidinteraction import FluidInteraction
-from lfr.compiler.fluidinteractiongraph import FluidInteractionGraph
+from lfr.fig.interaction import Interaction
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from mint.mintdevice import MINTDevice
 from typing import Optional
 
 
 class FluidicMapping(object):
 
-    def __init__(self, finteraction: FluidInteraction, device_generator) -> None:
+    def __init__(self, finteraction: Interaction, device_generator) -> None:
         if device_generator is None:
             raise Exception("Need to provide a default library")
         self.__library: MappingLibrary = device_generator.library
@@ -21,7 +21,7 @@ class FluidicMapping(object):
         self.technology: str = ''
         self.params = dict()
 
-    def get_technology(self, finteraction: FluidInteraction) -> Primitive:
+    def get_technology(self, finteraction: Interaction) -> Primitive:
         # TODO: Insert algorithm to figure which component would be the best fit for this scenario
 
         # Naive approach, pick the first component in the mapping library
@@ -52,9 +52,8 @@ class FluidicMapping(object):
             sink_targets = [self.rewrite_target(t, new_old_component_map[t.component]) for t in connection.sinks]
             netlist.addConnection(name, connection.entity, connection.params.data, source_target, sink_targets, '0')
 
-
-    def map(self, netlist:MINTDevice, fig:FluidInteractionGraph):
-        #TODO: map the operator  
+    def map(self, netlist: MINTDevice, fig: FluidInteractionGraph):
+        # TODO: map the operator
         interaction_id = self.__finteraction.id
         primitive = self.get_technology(self.__finteraction)
         if interaction_id not in fig.G.nodes:
@@ -62,30 +61,28 @@ class FluidicMapping(object):
 
         print("Found {} in FIG, constructing design now ...".format(interaction_id))
 
-        #TODO: Pull the data of the default params from whereever
+        # TODO: Pull the data of the default params from whereever
         
-        #Add the component first into the netlist
+        # Add the component first into the netlist
         name = self.__name_generator.generate_name(primitive.mint)
         component = netlist.addComponent(name, primitive.mint, {}, '0')
         self.__blacklist_map[interaction_id] = name
         self.__primitive_map[interaction_id] = primitive
         
-        #Stitch together the default netlist if it exists
+        # Stitch together the default netlist if it exists
         default_netlist = primitive.default_netlist
         if default_netlist is not None:
             print("Stitching component: {}".format(primitive.mint))
             self.stitch_component(component, netlist, default_netlist)
-        #Create arcs to it's neighbours ?
+        # Create arcs to it's neighbours ?
         # inputs = fig.get_input_nodes(interaction_id)
         # for _input in inputs :
         #     if not netlist.componentExists(_input):
-                #Create create a temporary that connects them
-            
-            #Create the arcs
+        #       Create create a temporary that connects them
 
-            
-        
-        #Check if inputs exist in 
-        #TODO: Connect the outputs to the component created
+            # Create the arcs
 
-        #TODO:Connect the inputs to the component created
+        # Check if inputs exist in
+        # TODO: Connect the outputs to the component created
+
+        # TODO:Connect the inputs to the component created

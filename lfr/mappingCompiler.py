@@ -141,7 +141,6 @@ class MappingCompiler(LFRCompiler):
             super().exitAssignstat(ctx)
             pass
 
-
     def exitPerformancedirective(self, ctx: lfrXParser.PerformancedirectiveContext):
         param_name = ctx.constraint().ID().getText()
         operator = ""

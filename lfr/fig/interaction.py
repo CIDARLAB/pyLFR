@@ -19,6 +19,7 @@ class Interaction(Flow):
         self._interaction_type: InteractionType = interaction_type
         self._input_fignodes: List[FIGNode] = []
         self._output_fignode: FIGNode = None
+        self._operator: str = ""
 
     @property
     def type(self) -> InteractionType:
@@ -39,7 +40,7 @@ class Interaction(Flow):
         return id
 
     @staticmethod
-    def get_operator_str(self, interaction_type: InteractionType, process_operator='') -> str:
+    def get_operator_str(interaction_type: InteractionType, process_operator='') -> str:
         if interaction_type is InteractionType.DILUTE:
             return "DILUTE_(*)"
         elif interaction_type is InteractionType.DIVIDE:
@@ -75,6 +76,15 @@ class FluidFluidInteraction(Interaction):
         return self._input_fignodes
 
 
+class FluidFluidCustomInteraction(FluidFluidInteraction):
+
+    def __init__(self, fluid1: Flow, fluid2: Flow, custom_operator: str) -> None:
+        id = Interaction.get_id(fluid1, fluid2, operator=custom_operator)
+        super().__init__(fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS)
+        self._id = id
+        self._operator = custom_operator
+
+
 class FluidProcessInteraction(Interaction):
 
     def __init__(self, fluid: Flow, process_operator: str) -> None:
@@ -107,7 +117,8 @@ class FluidNumberInteraction(Interaction):
             interaction_type (InteractionType): [description]
         """
         # TODO: Add operator to this mix
-        id = Interaction.get_id(fluid, Interaction.get_operator_str(interaction_type))
+        operator_str = Interaction.get_operator_str(interaction_type)
+        id = Interaction.get_id(fluid1=fluid, operator=operator_str)
         super().__init__(id, interaction_type)
         self._input_fignodes.append(fluid)
         self._value: float = value

@@ -1,9 +1,7 @@
 # The operator order has to be correct in the array, if any of the things are off,
 # other things will go off
-from lfr.compiler.fluidinteraction import InteractionType, FluidInteraction
+from lfr.fig.interaction import Interaction, InteractionType
 from lfr.compiler.language.utils import is_number
-from lfr.compiler.fluid import Fluid
-from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.language.vector import Vector
 
 
@@ -28,7 +26,6 @@ class FluidExpression:
         # if the numeric operation happens. In the second scenario, logic dictates that every 
         # find will require us to delete the operator and the term.
 
-        
         # First go over the numeric operator order
         for operatorset in self.numericoperatororder:
             # For each set we start the processing the individual thing
@@ -60,7 +57,6 @@ class FluidExpression:
                         termlist[index:index+2] = [result]
                         # Update the indices
                         indices = [i for i, x in enumerate(operatorlist) if x is operator]
-
 
         # Second go over the fluidic operator order
         for operatorset in self.operatororder:
@@ -118,7 +114,7 @@ class FluidExpression:
         result = []
         interaction = None
         for element in term:
-            if isinstance(element, FluidInteraction):
+            if isinstance(element, Interaction):
                 interaction = self.currentmodule.add_finteraction_custom_interaction(element, operator, InteractionType.TECHNOLOGY_PROCESS)
             else:
                 interaction = self.currentmodule.add_fluid_custom_interaction(element, operator, InteractionType.TECHNOLOGY_PROCESS)
@@ -168,11 +164,11 @@ class FluidExpression:
                     "Unsuppored operator on two fluid values: {0}".format(operator))
 
             # TODO: Check if the operation here is between two different fluids or a fluid and an fluidinteraction
-            if isinstance(operand1_element, FluidInteraction) and isinstance(operand2_element, FluidInteraction):
+            if isinstance(operand1_element, Interaction) and isinstance(operand2_element, Interaction):
                 result_element = self.currentmodule.add_finteraction_finteraction_interaction(operand1_element, operand2_element, interactiontype)
-            elif isinstance(operand1_element, FluidInteraction):
+            elif isinstance(operand1_element, Interaction):
                 result_element = self.currentmodule.add_fluid_finteraction_interaction(operand2_element, operand1_element, interactiontype)
-            elif isinstance(operand2_element, FluidInteraction):
+            elif isinstance(operand2_element, Interaction):
                 result_element = self.currentmodule.add_fluid_finteraction_interaction(operand1_element, operand2_element, interactiontype)
             else:
                 result_element = self.currentmodule.add_fluid_fluid_interaction(operand1_element, operand2_element, interactiontype)
@@ -207,14 +203,14 @@ class FluidExpression:
                 raise Exception(
                     "Unsuppored operator on 1:fluidic 2:numeric values: {0}".format(operator))
 
-            #TODO: add the required performance data to the interaction
+            # TODO: add the required performance data to the interaction
             for constraint_data in self.__performance_constraints:
                 if constraint_data.operator == operator:
                     for key in constraint_data.keys():
                         interaction.interaction_data[key] = constraint_data[key]
-                    
+
             interactions.append(interaction)
-        
+
         v = Vector.create_from_list_things("interaction_" + operand_fluidic.id, interactions)
         result = v.get_range()
         return result

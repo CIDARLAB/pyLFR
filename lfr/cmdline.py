@@ -12,7 +12,8 @@ import glob
 import json
 import lfr.utils as utils
 
-def load_libraries() -> dict:
+
+def load_libraries():
     library = dict()
     os.chdir(parameters.LIB_DIR)
     for filename in glob.glob("*.json"):
@@ -41,13 +42,13 @@ def main():
     abspath = os.path.abspath(args.outpath)
     parameters.OUTPUT_DIR = abspath
 
-    abspath = os.path.abspath(args.library)
-    parameters.LIB_DIR = abspath
-
     if os.path.isdir(abspath) is not True:
         print("Creating the output directory:")
         path = Path(parameters.OUTPUT_DIR)
         path.mkdir(parents=True)
+
+    abspath = os.path.abspath(args.library)
+    parameters.LIB_DIR = abspath
 
     library_name = args.technology
     libraries = load_libraries()
@@ -79,7 +80,7 @@ def main():
 
     interactiongraph = mapping_listener.currentModule.FIG
 
-    utils.printgraph(interactiongraph.G, mapping_listener.currentModule.name + ".dot")
+    utils.printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
 
     # Check if the module compilation was successful
     if mapping_listener.success:

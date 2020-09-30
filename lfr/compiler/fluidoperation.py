@@ -1,6 +1,3 @@
-from lfr.compiler.language.vectorrange import VectorRange
-
-
 class FluidOperation(object):
 
     def __init__(self, operandid: str, operator: str) -> None:

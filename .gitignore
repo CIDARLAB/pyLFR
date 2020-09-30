@@ -134,3 +134,5 @@ out/
 .idea/
 .antlr/
 Verilog2001.g4
+
+*.old
