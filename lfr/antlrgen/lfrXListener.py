@@ -17,6 +17,15 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#module.
+    def enterModule(self, ctx:lfrXParser.ModuleContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#module.
+    def exitModule(self, ctx:lfrXParser.ModuleContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#moduledefinition.
     def enterModuledefinition(self, ctx:lfrXParser.ModuledefinitionContext):
         pass
@@ -89,6 +98,42 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#ifElseBlock.
+    def enterIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#ifElseBlock.
+    def exitIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#elseBlock.
+    def enterElseBlock(self, ctx:lfrXParser.ElseBlockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#elseBlock.
+    def exitElseBlock(self, ctx:lfrXParser.ElseBlockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#elseIfBlock.
+    def enterElseIfBlock(self, ctx:lfrXParser.ElseIfBlockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#elseIfBlock.
+    def exitElseIfBlock(self, ctx:lfrXParser.ElseIfBlockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#statementBlock.
+    def enterStatementBlock(self, ctx:lfrXParser.StatementBlockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#statementBlock.
+    def exitStatementBlock(self, ctx:lfrXParser.StatementBlockContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#caseBlock.
     def enterCaseBlock(self, ctx:lfrXParser.CaseBlockContext):
         pass
@@ -104,6 +149,15 @@ class lfrXListener(ParseTreeListener):
 
     # Exit a parse tree produced by lfrXParser#casestat.
     def exitCasestat(self, ctx:lfrXParser.CasestatContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#distCondition.
+    def enterDistCondition(self, ctx:lfrXParser.DistConditionContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#distCondition.
+    def exitDistCondition(self, ctx:lfrXParser.DistConditionContext):
         pass
 
 
@@ -140,6 +194,69 @@ class lfrXListener(ParseTreeListener):
 
     # Exit a parse tree produced by lfrXParser#statement.
     def exitStatement(self, ctx:lfrXParser.StatementContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#moduleinstantiationstat.
+    def enterModuleinstantiationstat(self, ctx:lfrXParser.ModuleinstantiationstatContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#moduleinstantiationstat.
+    def exitModuleinstantiationstat(self, ctx:lfrXParser.ModuleinstantiationstatContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#instanceioblock.
+    def enterInstanceioblock(self, ctx:lfrXParser.InstanceioblockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#instanceioblock.
+    def exitInstanceioblock(self, ctx:lfrXParser.InstanceioblockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#orderedioblock.
+    def enterOrderedioblock(self, ctx:lfrXParser.OrderedioblockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#orderedioblock.
+    def exitOrderedioblock(self, ctx:lfrXParser.OrderedioblockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#unorderedioblock.
+    def enterUnorderedioblock(self, ctx:lfrXParser.UnorderedioblockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#unorderedioblock.
+    def exitUnorderedioblock(self, ctx:lfrXParser.UnorderedioblockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#explicitinstanceiomapping.
+    def enterExplicitinstanceiomapping(self, ctx:lfrXParser.ExplicitinstanceiomappingContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#explicitinstanceiomapping.
+    def exitExplicitinstanceiomapping(self, ctx:lfrXParser.ExplicitinstanceiomappingContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#instancenames.
+    def enterInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#instancenames.
+    def exitInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#moduletype.
+    def enterModuletype(self, ctx:lfrXParser.ModuletypeContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#moduletype.
+    def exitModuletype(self, ctx:lfrXParser.ModuletypeContext):
         pass
 
 

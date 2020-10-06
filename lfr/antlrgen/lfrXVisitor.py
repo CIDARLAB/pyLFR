@@ -14,6 +14,11 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#module.
+    def visitModule(self, ctx:lfrXParser.ModuleContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#moduledefinition.
     def visitModuledefinition(self, ctx:lfrXParser.ModuledefinitionContext):
         return self.visitChildren(ctx)
@@ -54,6 +59,26 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#ifElseBlock.
+    def visitIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#elseBlock.
+    def visitElseBlock(self, ctx:lfrXParser.ElseBlockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#elseIfBlock.
+    def visitElseIfBlock(self, ctx:lfrXParser.ElseIfBlockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#statementBlock.
+    def visitStatementBlock(self, ctx:lfrXParser.StatementBlockContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#caseBlock.
     def visitCaseBlock(self, ctx:lfrXParser.CaseBlockContext):
         return self.visitChildren(ctx)
@@ -61,6 +86,11 @@ class lfrXVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by lfrXParser#casestat.
     def visitCasestat(self, ctx:lfrXParser.CasestatContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#distCondition.
+    def visitDistCondition(self, ctx:lfrXParser.DistConditionContext):
         return self.visitChildren(ctx)
 
 
@@ -81,6 +111,41 @@ class lfrXVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by lfrXParser#statement.
     def visitStatement(self, ctx:lfrXParser.StatementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#moduleinstantiationstat.
+    def visitModuleinstantiationstat(self, ctx:lfrXParser.ModuleinstantiationstatContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#instanceioblock.
+    def visitInstanceioblock(self, ctx:lfrXParser.InstanceioblockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#orderedioblock.
+    def visitOrderedioblock(self, ctx:lfrXParser.OrderedioblockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#unorderedioblock.
+    def visitUnorderedioblock(self, ctx:lfrXParser.UnorderedioblockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#explicitinstanceiomapping.
+    def visitExplicitinstanceiomapping(self, ctx:lfrXParser.ExplicitinstanceiomappingContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#instancenames.
+    def visitInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#moduletype.
+    def visitModuletype(self, ctx:lfrXParser.ModuletypeContext):
         return self.visitChildren(ctx)
 
 
