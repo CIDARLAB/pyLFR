@@ -32,7 +32,14 @@ def main():
     parser.add_argument('--outpath', type=str, default="out/", help="This is the output directory")
     parser.add_argument('--technology', type=str, default="dropx", help="This is the mapping library you need to use")
     parser.add_argument('--library', type=str, default="./library", help="This sets the default library where the different technologies sit in")
+    parser.add_argument('--no-mapping', help="Skipping Explicit Mappings")
+    parser.add_argument('--no-gen', help="Force the program to skip the device generation")
     args = parser.parse_args()
+
+    if args.help:
+        parser.print_help()
+        exit(0)
+
     print("output dir:", args.outpath)
     print(args.input)
 

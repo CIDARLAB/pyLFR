@@ -1,5 +1,5 @@
-from mint.mintcomponent import MINTComponent
-from mint.mintdevice import MINTDevice
+from pymint.mintcomponent import MINTComponent
+from pymint.mintdevice import MINTDevice
 from typing import List, Optional
 from dafd import DAFD_Interface
 
