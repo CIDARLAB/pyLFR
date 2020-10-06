@@ -1,6 +1,8 @@
 grammar lfrX;
 
-skeleton: moduledefinition body 'endmodule';
+skeleton: module+ ;
+
+module: moduledefinition body 'endmodule';
 
 moduledefinition: 'module' ID ('(' ioblock ')')? ';';
 
@@ -10,7 +12,7 @@ body
 
 ioblock
    :    vectorvar (',' vectorvar)*
-   |    explicitIOBlock ( ',' explicitIOBlock)?
+   |    explicitIOBlock ( ',' explicitIOBlock)*
    ;
 
 vectorvar : ID vector? ;
@@ -31,18 +33,32 @@ distributionBody
 //TODO: modify the distribute block to be more precise
    :  (distributionassignstat)*
    |  caseBlock
+   |  ifElseBlock
+   ;
+
+ifElseBlock: 'if' '(' signallist ')' statementBlock elseIfBlock* elseBlock?;
+
+elseBlock: 'else' statementBlock;
+
+elseIfBlock: 'else' 'if' '(' signallist ')' statementBlock;
+
+statementBlock
+   :   'begin' distributionassignstat+ 'end'
+   |   distributionassignstat
    ;
 
 caseBlock
-   :  'case' '(' lhs ')' casestat 'endcase'
+   :  'case' '(' lhs ')' casestat+ 'endcase'
    ;
 
 casestat
-   :  distributionassignstat
+   :  distCondition ':' statementBlock
    ;
 
+distCondition: number;
+
 distributionassignstat
-   :  lhs '<=' (number | variables | expression) '*' logiccondition ';'
+   :  lhs '<=' (number | variables | expression) ';'
    //TODO: Have a switch->case block
    ;
 
@@ -59,7 +75,25 @@ statement
    |   assignstat
    |   tempvariablesstat
    |   literalassignstat
+   |   moduleinstantiationstat
    ;
+
+moduleinstantiationstat: moduletype instancenames '(' instanceioblock ')';
+
+instanceioblock
+   :   orderedioblock
+   |   unorderedioblock
+   ;
+
+orderedioblock:   vectorvar (',' vectorvar)* ;
+
+unorderedioblock: explicitinstanceiomapping ( ',' explicitinstanceiomapping)*;
+
+explicitinstanceiomapping : '.'vectorvar '('variables')' ;
+
+instancenames: ID;
+
+moduletype: ID;
 
 tempvariablesstat
    :   fluiddeclstat
@@ -103,7 +137,7 @@ logiccondition
     ;
 
 vector
-   :   '[' start=Decimal_number ':' end=Decimal_number  ']'
+   :   '[' start=Decimal_number (':' end=Decimal_number)?  ']'
    ;
 
 variables
@@ -168,6 +202,10 @@ One_line_comment
 
 Block_comment
    : '/*' .*? '*/' -> channel (HIDDEN)
+   ;
+
+Import_line
+   : '`' .*? '\r'? '\n' -> channel (HIDDEN)
    ;
 
 // Operators - Taken from Verilog2001
