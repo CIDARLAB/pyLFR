@@ -112,11 +112,10 @@ six = "*"
 
 [[package]]
 category = "main"
-description = ""
-develop = true
+description = "Python package for the library for DAFD."
 name = "dafd"
 optional = false
-python-versions = "3.8"
+python-versions = ">=3.8,<3.9"
 version = "0.1.0"
 
 [package.dependencies]
@@ -126,11 +125,6 @@ pandas = ">=1.1.2,<2.0.0"
 scikit-learn = ">=0.23.2,<0.24.0"
 tensorflow = ">=2.3.0,<3.0.0"
 tqdm = ">=4.48.2,<5.0.0"
-
-[package.source]
-reference = ""
-type = "directory"
-url = "../DAFD"
 
 [[package]]
 category = "main"
@@ -241,7 +235,7 @@ description = "Install packages from within code"
 name = "install"
 optional = false
 python-versions = ">=2.7, >=3.5"
-version = "1.3.3"
+version = "1.3.4"
 
 [[package]]
 category = "main"
@@ -329,25 +323,6 @@ name = "mccabe"
 optional = false
 python-versions = "*"
 version = "0.6.1"
-
-[[package]]
-category = "main"
-description = "MINT is a language to describe Microfluidic Hardware Netlists. MINT is the name of the Microfluidic Netlist language used to describe microfluidic devices for Fluigi to place and route. Mint is a flavor of (MHDL) Microfluidic Hardware Description Language that can be used to represent Microfluidic Circuits."
-develop = true
-name = "mint"
-optional = false
-python-versions = "~3.8"
-version = "0.1.0"
-
-[package.dependencies]
-antlr4-python3-runtime = ">=4.8,<5.0"
-install = ">=1.3.3,<2.0.0"
-parchmint = "0.1.2"
-
-[package.source]
-reference = ""
-type = "directory"
-url = "../pymint"
 
 [[package]]
 category = "dev"
@@ -452,19 +427,13 @@ test = ["pytest (>=4.0.2)", "pytest-xdist", "hypothesis (>=3.58)"]
 [[package]]
 category = "main"
 description = ""
-develop = true
 name = "parchmint"
 optional = false
-python-versions = "^3.8"
+python-versions = ">=3.8,<4.0"
 version = "0.1.2"
 
 [package.dependencies]
 networkx = ">=2.5,<3.0"
-
-[package.source]
-reference = ""
-type = "directory"
-url = "../pyparchmint"
 
 [[package]]
 category = "dev"
@@ -535,6 +504,19 @@ name = "pygraphviz"
 optional = false
 python-versions = ">=3.6"
 version = "1.6"
+
+[[package]]
+category = "main"
+description = "MINT is a language to describe Microfluidic Hardware Netlists. MINT is the name of the Microfluidic Netlist language used to describe microfluidic devices for Fluigi to place and route. Mint is a flavor of (MHDL) Microfluidic Hardware Description Language that can be used to represent Microfluidic Circuits."
+name = "pymint"
+optional = false
+python-versions = ">=3.8,<3.9"
+version = "0.1.0"
+
+[package.dependencies]
+antlr4-python3-runtime = ">=4.8,<5.0"
+install = ">=1.3.3,<2.0.0"
+parchmint = ">=0.1.2,<0.2.0"
 
 [[package]]
 category = "main"
@@ -820,7 +802,7 @@ python-versions = "*"
 version = "1.12.1"
 
 [metadata]
-content-hash = "8f30a08d3e00dc31337a096dafe8e5cc3c12884d9028fb565275a53389f0340b"
+content-hash = "4fdc11342678a2c8d95b98cc78c3209dbd64e875fd2461cfcc2dcb7e6e92c1a7"
 lock-version = "1.1"
 python-versions = "3.8"
 
@@ -867,7 +849,10 @@ cycler = [
     {file = "cycler-0.10.0-py2.py3-none-any.whl", hash = "sha256:1d8a5ae1ff6c5cf9b93e8811e581232ad8920aeec647c37316ceac982b08cb2d"},
     {file = "cycler-0.10.0.tar.gz", hash = "sha256:cd7b2d1018258d7247a71425e9f26463dfb444d411c39569972f4ce586b0c9d8"},
 ]
-dafd = []
+dafd = [
+    {file = "DAFD-0.1.0-py3-none-any.whl", hash = "sha256:7918901ecc9ed8b6beecbfe919df6b58fc0035071897882556cde491daf9aeab"},
+    {file = "DAFD-0.1.0.tar.gz", hash = "sha256:d729a21d8cf44bb167d5a1e8f29b7a35fe9591ba449a989828430de055f17d4e"},
+]
 decorator = [
     {file = "decorator-4.4.2-py2.py3-none-any.whl", hash = "sha256:41fa54c2a0cc4ba648be4fd43cff00aedf5b9465c9bf18d64325bc225f08f760"},
     {file = "decorator-4.4.2.tar.gz", hash = "sha256:e3a62f0520172440ca0dcc823749319382e377f37f140a0b99ef45fecb84bfe7"},
@@ -970,8 +955,8 @@ idna = [
     {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
 ]
 install = [
-    {file = "install-1.3.3-py3-none-any.whl", hash = "sha256:fe75019b45eb1febc9232f452861e7693efeadd554f18cdc4ff647f29349b145"},
-    {file = "install-1.3.3.tar.gz", hash = "sha256:d6d927c47b82f0183557830b98dcc36f3520489c66c3a2eda0c898b718e393b2"},
+    {file = "install-1.3.4-py3-none-any.whl", hash = "sha256:dfec614e0cc90f00659067a078bc2ec032d9f0758f3df230c073eeaffd0cefa1"},
+    {file = "install-1.3.4.tar.gz", hash = "sha256:1455304a2475b6753a9b0c28243ca7d8b7d71aeea1a88e6de94034fc57d765a0"},
 ]
 joblib = [
     {file = "joblib-0.16.0-py3-none-any.whl", hash = "sha256:d348c5d4ae31496b2aa060d6d9b787864dd204f9480baaa52d18850cb43e9f49"},
@@ -1043,7 +1028,6 @@ mccabe = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
-mint = []
 mypy = [
     {file = "mypy-0.782-cp35-cp35m-macosx_10_6_x86_64.whl", hash = "sha256:2c6cde8aa3426c1682d35190b59b71f661237d74b053822ea3d748e2c9578a7c"},
     {file = "mypy-0.782-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:9c7a9a7ceb2871ba4bac1cf7217a7dd9ccd44c27c2950edbc6dc08530f32ad4e"},
@@ -1117,7 +1101,10 @@ pandas = [
     {file = "pandas-1.1.2-cp38-cp38-win_amd64.whl", hash = "sha256:026d764d0b86ee53183aa4c0b90774b6146123eeada4e24946d7d24290777be1"},
     {file = "pandas-1.1.2.tar.gz", hash = "sha256:b64ffd87a2cfd31b40acd4b92cb72ea9a52a48165aec4c140e78fd69c45d1444"},
 ]
-parchmint = []
+parchmint = [
+    {file = "parchmint-0.1.2-py3-none-any.whl", hash = "sha256:f73aae5f06b02aed455811bd66ed3f4451bab759734bafa0843d55900918f52b"},
+    {file = "parchmint-0.1.2.tar.gz", hash = "sha256:494f24853dd56275ff12e733bdccb4a6d6809218314399e2cd14b646c03b89c0"},
+]
 pathspec = [
     {file = "pathspec-0.8.0-py2.py3-none-any.whl", hash = "sha256:7d91249d21749788d07a2d0f94147accd8f845507400749ea19c1ec9054a12b0"},
     {file = "pathspec-0.8.0.tar.gz", hash = "sha256:da45173eb3a6f2a5a487efba21f050af2b41948be6ab52b6a1e3ff22bb8b7061"},
@@ -1212,6 +1199,10 @@ pyflakes = [
 ]
 pygraphviz = [
     {file = "pygraphviz-1.6.zip", hash = "sha256:411ae84a5bc313e3e1523a1cace59159f512336318a510573b47f824edef8860"},
+]
+pymint = [
+    {file = "pymint-0.1.0-py3-none-any.whl", hash = "sha256:7f0f18fb0b1dbc5c73db7ee3e243b9828cd37b2df087eb42e4cd1f3f283c3eb1"},
+    {file = "pymint-0.1.0.tar.gz", hash = "sha256:b7409ba12cc51d4e74a18a9e2cadd28e8bcf65bfe7988eb05e2dc04c76758a4c"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},

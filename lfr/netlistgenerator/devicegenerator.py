@@ -1,7 +1,7 @@
 from .mappinglibrary import MappingLibrary
-from mint.mintlayer import MINTLayer, MINTLayerType
-from mint.minttarget import MINTTarget
-from mint.mintdevice import MINTDevice
+from pymint.mintlayer import MINTLayer, MINTLayerType
+from pymint.minttarget import MINTTarget
+from pymint.mintdevice import MINTDevice
 from .technologymapper import map_technologies
 from .fluidicmapping import FluidicMapping
 from .netlistsizor import NetlistSizor

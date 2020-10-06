@@ -1,10 +1,10 @@
-from mint.mintcomponent import MINTComponent
+from pymint.mintcomponent import MINTComponent
 from typing import List, Optional
 from lfr.fig.interaction import InteractionType
-from mint.mintdevice import MINTDevice
-from mint.antlr.mintLexer import mintLexer
-from mint.antlr.mintParser import mintParser
-from mint.mintcompiler import MINTCompiler
+from pymint.mintdevice import MINTDevice
+from pymint.antlr.mintLexer import mintLexer
+from pymint.antlr.mintParser import mintParser
+from pymint.mintcompiler import MINTCompiler
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
 from os import path
 

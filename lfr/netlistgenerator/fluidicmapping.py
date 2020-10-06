@@ -1,9 +1,9 @@
-from mint.minttarget import MINTTarget
-from mint.mintcomponent import MINTComponent
+from pymint.minttarget import MINTTarget
+from pymint.mintcomponent import MINTComponent
 from .mappinglibrary import MappingLibrary, Primitive
 from lfr.fig.interaction import Interaction
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from mint.mintdevice import MINTDevice
+from pymint.mintdevice import MINTDevice
 from typing import Optional
 
 

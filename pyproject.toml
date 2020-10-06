@@ -9,20 +9,20 @@ license = "BSD-3-Clause"
 python = "3.8"
 networkx = "^2.5"
 argparse = "^1.4.0"
-parchmint = {path = "../pyparchmint"}
-mint = {path = "../pymint"}
-dafd = {path = "../DAFD"}
 antlr4-python3-runtime = "^4.8"
 pygraphviz = "^1.6"
+dafd = "^0.1.0"
+pymint = "^0.1.0"
+parchmint = "^0.1.2"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"
 black = "^20.8b1"
 flake8 = "^3.8.3"
 
+[tool.poetry.scripts]
+pyLFR = "lfr.cmdline:main"
 [build-system]
 requires = ["poetry-core>=1.0.0a5"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.scripts]
-pyLFR = "lfr.cmdline:main"
