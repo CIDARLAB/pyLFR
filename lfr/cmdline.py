@@ -17,7 +17,7 @@ import lfr.utils as utils
 def load_libraries():
     library = dict()
     os.chdir(parameters.LIB_DIR)
-    print(" LIB Path : " + parameters.LIB_DIR)
+    print(" LIB Path : " + str(parameters.LIB_DIR))
     for filename in glob.glob("*.json"):
         file = open(filename, 'r')
         lib_object = json.loads(file.read())
@@ -36,9 +36,8 @@ def main():
     parser.add_argument('--no-gen', help="Force the program to skip the device generation")
     args = parser.parse_args()
 
-    if args.help:
-        parser.print_help()
-        exit(0)
+    input_path = Path(args.input).resolve()
+    print("Input Path: {0}".format(input_path))
 
     print("output dir:", args.outpath)
     print(args.input)
@@ -66,8 +65,8 @@ def main():
 
     library = libraries[library_name]
 
-    # TODO: Modifiy this to translate relative path to absolute path in the future
-    finput = FileStream(args.input)
+    # Modifiy this to translate relative path to absolute path in the future
+    finput = FileStream(input_path)
 
     lexer = lfrXLexer(finput)
 
