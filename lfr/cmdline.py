@@ -59,11 +59,12 @@ def main():
     # parameters.LIB_DIR = abspath
 
     library_name = args.technology
-    libraries = load_libraries()
-    if library_name not in libraries.keys():
-        raise Exception("Could not find mapping library")
+    # libraries = load_libraries()
+    # if library_name not in libraries.keys():
+    #     raise Exception("Could not find mapping library")
 
-    library = libraries[library_name]
+    library = None
+    # library = libraries[library_name]
 
     # Modifiy this to translate relative path to absolute path in the future
     finput = FileStream(input_path)
