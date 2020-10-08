@@ -9,11 +9,10 @@ license = "BSD-3-Clause"
 python = "^3.8"
 networkx = "^2.5"
 argparse = "^1.4.0"
-parchmint = {path = "../pyparchmint"}
-pymint = {path = "../pymint"}
-dafd = {path = "../DAFD"}
 antlr4-python3-runtime = "^4.8"
 pygraphviz = "^1.6"
+parchmint = "^0.1.2"
+pymint = "^0.1.2"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"
