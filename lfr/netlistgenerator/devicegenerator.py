@@ -1,33 +1,23 @@
-from .mappinglibrary import MappingLibrary
+import json
+from lfr.netlistgenerator.namegenerator import NameGenerator
+
+import lfr.utils as utils
+from lfr.compiler.module import Module
+from networkx import nx
+from pymint.mintdevice import MINTDevice
 from pymint.mintlayer import MINTLayer, MINTLayerType
 from pymint.minttarget import MINTTarget
-from pymint.mintdevice import MINTDevice
-from .technologymapper import map_technologies
+from pymint.mintcomponent import MINTComponent
+from pymint.mintconnection import MINTConnection
+
 from .fluidicmapping import FluidicMapping
+from .mappinglibrary import MappingLibrary
 from .netlistsizor import NetlistSizor
-from lfr.compiler.module import Module
-from .explicitmapping import ExplicitMapping
-from networkx import nx
-import lfr.utils as utils
-import json
 
-
-class NameGenerator(object):
-    def __init__(self) -> None:
-        self.dictionary = dict()
-
-    def generate_name(self, technology_string: str) -> str:
-        if technology_string in self.dictionary.keys():
-            # Increment the number in dictionary and return the name
-            ret = self.dictionary[technology_string] + 1
-            self.dictionary[technology_string] = ret
-            return "{}_{}".format(technology_string, ret).lower().replace(" ", "_")
-        else:
-            self.dictionary[technology_string] = 1
-            return "{}_{}".format(technology_string, 1).lower().replace(" ", "_")
 
 
 class DeviceGenerator(object):
+
     def __init__(self, name: str, module: Module, library: MappingLibrary):
         self.devicename = name
         self.devicemodule = module

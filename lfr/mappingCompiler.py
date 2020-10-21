@@ -172,4 +172,3 @@ class MappingCompiler(LFRCompiler):
         constraint_data['bound'] = constraint_bound
 
         self.current_performance_constraints.append(constraint_data)
-

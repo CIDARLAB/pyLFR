@@ -56,9 +56,6 @@ class LFRCompiler(lfrXListener):
 
         self.typeMap = dict()
 
-        # Performance Constraints
-        self.current_performance_constraints = []
-
         # This might be the new expression stack
         self.stack = []
         self.statestack = []
@@ -334,14 +331,12 @@ class LFRCompiler(lfrXListener):
         stackslice = self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
         del self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
 
-        fluidexpression = FluidExpression(self.currentModule, self.current_performance_constraints)
+        fluidexpression = FluidExpression(self.currentModule)
         # TODO: Figure out how to pass the FIG after this
         result = fluidexpression.process_expression(stackslice, self.binaryoperatorsstack[-1])
         self.stack.append(result)
 
         self.binaryoperatorsstack.pop()
-
-        self.current_performance_constraints.clear()
 
     def enterBracketexpression(self, ctx: lfrXParser.BracketexpressionContext):
         self.__updateMode(ListenerMode.EXPRESS_PARSING_MODE)

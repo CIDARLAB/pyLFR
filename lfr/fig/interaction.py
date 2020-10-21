@@ -39,6 +39,22 @@ class Interaction(Flow):
 
         return id
 
+    @property
+    def match_string(self):
+        interaction_type = self.type
+        if interaction_type is InteractionType.DILUTE:
+            return "DILUTE"
+        elif interaction_type is InteractionType.DIVIDE:
+            return "DIVIDE"
+        elif interaction_type is InteractionType.METER:
+            return "METER"
+        elif interaction_type is InteractionType.MIX:
+            return "MIX"
+        elif interaction_type is InteractionType.SIEVE:
+            return "SIEVE"
+        else:
+            return "PROCESS"
+
     @staticmethod
     def get_operator_str(interaction_type: InteractionType, process_operator='') -> str:
         if interaction_type is InteractionType.DILUTE:

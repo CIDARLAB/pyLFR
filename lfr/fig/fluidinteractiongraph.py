@@ -1,5 +1,5 @@
 from typing import List
-from lfr.fig.fignode import FIGNode, ValueNode
+from lfr.fig.fignode import FIGNode, IONode, ValueNode
 from lfr.fig.interaction import Interaction, FluidFluidInteraction, FluidProcessInteraction, FluidNumberInteraction, FluidIntegerInteraction, InteractionType
 from networkx import nx
 
@@ -55,7 +55,26 @@ class FluidInteractionGraph(nx.DiGraph):
         self.add_edge(source.id, target.id)
 
     def get_interactions(self) -> List[Interaction]:
-        return [self._fluid_interactions[key] for key in self._fluid_interactions.keys()]
+        return [self._fignodes[key] for key in self._fignodes.keys() if isinstance(self._fignodes[key], Interaction)]
+
+    @property
+    def get_io(self) -> List[IONode]:
+        ret = []
+        for key in self._fignodes.keys():
+            node = self._fignodes[key]
+            if isinstance(node, IONode):
+                ret.append(node)
+
+        return ret
+
+    # def generate_match_string(self) -> str:
+    #     # Generate match string that we can use against any kind of a string match system
+    #     ret = ''
+    #     # Start with the inputs
+    #     for ionode in self.get_io():
+    #         ret += ionode.match_string
+
+    #     return ret
 
     def __str__(self):
         return self.edges.__str__()

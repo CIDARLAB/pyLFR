@@ -1,6 +1,6 @@
 from typing import List
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
-from lfr.fig.fignode import FIGNode, IO, Flow
+from lfr.fig.fignode import FIGNode, IONode, Flow
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from .moduleio import ModuleIO
 from lfr.fig.interaction import FluidFluidCustomInteraction, FluidFluidInteraction, FluidIntegerInteraction, FluidNumberInteraction, FluidProcessInteraction, Interaction, InteractionType
@@ -15,9 +15,20 @@ class Module(object):
         self.fluids = dict()
         self.mappings: List[ExplicitMapping] = []
 
+    @property
+    def io(self) -> List[ModuleIO]:
+        return [v for k, v in self._io.items()]
+
+    @property
+    def imported_modules(self) -> List:
+        return self._imported_modules
+
+    def get_explicit_mappings(self) -> List[ExplicitMapping]:
+        return self.mappings
+
     def add_io(self, io: ModuleIO):
         self._io[io.id] = io
-        f = IO(io.id, io.type)
+        f = IONode(io.id, io.type)
         self.FIG.add_fignode(f)
 
     def get_io(self, name: str) -> ModuleIO:

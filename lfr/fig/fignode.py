@@ -34,14 +34,22 @@ class ValueNode(FIGNode):
     def value(self):
         return self._value
 
+    @property
+    def match_string(self):
+        return "VALUE"
+
 
 class Flow(FIGNode):
 
     def __init__(self, id) -> None:
         super().__init__(id)
 
+    @property
+    def match_string(self):
+        return "FLOW"
 
-class IO(Flow):
+
+class IONode(Flow):
 
     def __init__(self, id: str, iotype=None):
         super().__init__(id)
@@ -55,14 +63,26 @@ class IO(Flow):
     def __str__(self):
         return "Name: {0.id}, Type : {0.type}".format(self)
 
+    @property
+    def match_string(self):
+        return "IO"
+
 
 class Storage(Flow):
 
     def __init__(self, id: str) -> None:
         super().__init__(id)
 
+    @property
+    def match_string(self):
+        return "STORAGE"
+
 
 class Signal(FIGNode):
 
     def __init__(self, id: str) -> None:
         super().__init__(id)
+
+    @property
+    def match_string(self):
+        return "SIGNAL"
