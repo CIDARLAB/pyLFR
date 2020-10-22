@@ -48,4 +48,3 @@ class NameGenerator(object):
 
         for connection in device.connections:
             self.rename_connection(connection)
-

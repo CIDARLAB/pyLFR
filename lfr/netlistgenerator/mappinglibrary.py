@@ -163,6 +163,7 @@ class MappingLibrary:
         self.__divide_operators = []
         self.__technology_process_operators = []
         self.__io_primitives = []
+        self._default_IO_primitive = None
 
     def add_io_entry(self, primitive: Primitive) -> None:
         self.__io_primitives.append(primitive)
@@ -180,6 +181,12 @@ class MappingLibrary:
             self.__divide_operators.append(primitve)
         else:
             self.__technology_process_operators.append(primitve)
+
+    def get_default_IO(self) -> Primitive:
+        if self._default_IO_primitive is None:
+            return self.__io_primitives[0]
+        else:
+            return self._default_IO_primitive
 
     def get_operators(self, interaction_type: InteractionType) -> List[Primitive]:
         if interaction_type is InteractionType.MIX:

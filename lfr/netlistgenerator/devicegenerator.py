@@ -15,7 +15,6 @@ from .mappinglibrary import MappingLibrary
 from .netlistsizor import NetlistSizor
 
 
-
 class DeviceGenerator(object):
 
     def __init__(self, name: str, module: Module, library: MappingLibrary):

@@ -20,5 +20,3 @@ class MARSStrategy(GenStrategy):
             del cn.mapping_options[1:len(cn.mapping_options)]
             print(len(cn.mapping_options))
             pass
-
-

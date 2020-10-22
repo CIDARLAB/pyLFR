@@ -41,7 +41,7 @@ class MappingCompiler(LFRCompiler):
             if ctx.assignmode == 'assign':
                 self.mappingMode = TechnologyMappingMODE.ASSIGN_MAPPING
             elif ctx.assignmode == 'storage':
-                self.mappingMode = TechnologyMappingMODE.STORAGE_MAPPING 
+                self.mappingMode = TechnologyMappingMODE.STORAGE_MAPPING
         else:
             self.mappingMode = TechnologyMappingMODE.OPERATOR_MAPPING
             operator = ctx.mappingoperator().getText()
@@ -53,7 +53,7 @@ class MappingCompiler(LFRCompiler):
     def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):
 
         if self.mappingMode is TechnologyMappingMODE.OPERATOR_MAPPING:
-            # We need to do call super implementation first so that we can pull the 
+            # We need to do call super implementation first so that we can pull the
             # correct vectorranges
             super().exitAssignstat(ctx)
 

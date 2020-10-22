@@ -1,5 +1,3 @@
-
-from typing import overload
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
@@ -9,7 +7,6 @@ class DropXStrategy(GenStrategy):
     def __init__(self, construction_graph: ConstructionGraph) -> None:
         super().__init__(construction_graph)
 
-    @overload
     def reduce_mapping_options(self, construction_graph: ConstructionGraph) -> None:
         # TODO - Implement Generalized Ali Strategy 1
 
@@ -19,6 +16,4 @@ class DropXStrategy(GenStrategy):
             # Remove the extra mappings
             del cn.mapping_options[1:len(cn.mapping_options)]
             print(len(cn.mapping_options))
-            pass
-
 

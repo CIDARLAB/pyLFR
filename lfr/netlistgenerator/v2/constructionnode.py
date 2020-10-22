@@ -10,7 +10,6 @@ class ConstructionNode():
         self._id = node_id
         self._mapping_options: List[MappingOption] = []
         self._explict_mapping_flag = False
-        self._netlist_subgraph_views = dict()
 
     @property
     def id(self) -> str:
@@ -23,9 +22,6 @@ class ConstructionNode():
     @mapping_options.setter
     def mapping_options(self, options: List[MappingOption]):
         self._mapping_options = options
-
-    def get_subgraphview(self, mapping_option: MappingOption):
-        return self._netlist_subgraph_views[mapping_option]
 
     def use_explicit_mapping(self, mapping: ExplicitMapping, mapping_library: MappingLibrary) -> None:
         # Set the flag for explicit mapping

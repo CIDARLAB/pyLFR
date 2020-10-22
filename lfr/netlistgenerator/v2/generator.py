@@ -1,3 +1,6 @@
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.fig.fignode import Flow
+from typing import List
 from pymint.mintdevice import MINTDevice
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
@@ -12,6 +15,7 @@ from lfr.netlistgenerator.mappinglibrary import (
     PrimitiveType,
 )
 from lfr.compiler.module import Module
+import networkx as nx
 
 
 # def generate_MARS_library() -> MappingLibrary:
@@ -378,13 +382,15 @@ def generate_dropx_library() -> MappingLibrary:
     return library
 
 
-def generate(module: Module, library: MappingLibrary) -> ConstructionGraph:
+def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
     construction_graph = ConstructionGraph()
 
     name_generator = NameGenerator()
 
     cur_device = MINTDevice(module.name)
+
+    dummy_strategy = DummyStrategy(construction_graph)
 
     # First go through all the interactions in the design
 
@@ -428,6 +434,12 @@ def generate(module: Module, library: MappingLibrary) -> ConstructionGraph:
     # if its a 1-1 flow-flow connection, then create a construction node for the two flow nodes
     # if its a 1-n / n-1 / n-n construction nodes, then create a construction node capturing the whole network
 
+    # TODO - Deal with coverage issues here since we need to figure out what are the flow networks,
+    # that we want to match first and then ensure that they're no included on any list
+    cn_nodes = get_flow_flow_candidates(module, dummy_strategy)
+    for cn in cn_nodes:
+        construction_graph.add_construction_node(cn)
+
     # Apply all the explicit mappings in the module to the nodes, overwriting
     # the options from the library to match against
     # TODO - Modify Explicit Mapping Data structure
@@ -438,12 +450,16 @@ def generate(module: Module, library: MappingLibrary) -> ConstructionGraph:
 
     # Whittle Down the mapping options here to only include the requried single candidates
     # TODO - Check what library is being used and use the required library here
-    dummy_strategy = DummyStrategy(construction_graph)
     dummy_strategy.reduce_mapping_options()
+
+    # TODO - Consider what needs to get done for a combinatorial design space
+    # ----------------
+    # Generate edges in the construction graph, these edges will guide the generation/
+    # reduction of path and pipelineing that needs to get done for mars devices
+    construction_graph.generate_edges(module.FIG)
 
     # Now since all the mapping options are finalized Extract the netlist necessary
     construction_graph.generate_components(name_generator, cur_device)
-
 
     # Finally join all the netlist pieces attached to the construction nodes
     # and the input/output/load/carrier flows
@@ -457,12 +473,66 @@ def generate(module: Module, library: MappingLibrary) -> ConstructionGraph:
     # for this to function
     connect_orphan_IO()
 
+    return cur_device
+
 
 def generate_flowIO(module: Module, device: MINTDevice) -> None:
     # TODO - just do the explicit io mapping, look at the flow IO in the module
     # and then create the ports/whatever in the mint device
     print("Implement the waste generation system along with the basic I/O")
     pass
+
+
+def connect_orphan_IO():
+    print("Implement the orphan io generation system")
+
+
+def get_flow_flow_candidates(module: Module, gen_strategy: GenStrategy) -> List[ConstructionNode]:
+    # TODO - go through all the edges and see which ones are between flow-flow graphs
+    # If these connectsions are between flow-flow nodes then we need to figure out
+    # which ones are part of the same network/connected graphs with only flow nodes
+    # The networks with only the flow nodes will need to be covered as a part of.
+    # these construction nodes.
+
+    ret = []
+
+    # TODO-
+    # Step 1. Do a shallow copy of the graph
+    # Step 2. Remove all the fignodes that are not Flow
+    # Step 3. Now get the all the disconnected pieces of the graph
+    # Step 4. Create a Construction node for each of the disconnected pieces
+    # Return all the constructions nodes
+
+    # Step 1. Do a shallow copy of the graph
+    fig_original = module.FIG
+    fig_copy = module.FIG.copy()  # Note this does not copy anything besides the nx.DiGraph at the moment
+
+    # Step 2. Remove all the fignodes that are not Flow
+    remove_list = []
+    for node_id in fig_copy.nodes:
+        node = fig_original.get_fignode(node_id)
+        if node.match_string != "FLOW":
+            remove_list.append(node_id)
+
+    for node_id in remove_list:
+        fig_copy.remove_node(node_id)
+
+    # Step 3. Now get the all the disconnected pieces of the graph
+    i = 0
+    for component in nx.connected_components(fig_copy.to_undirected()):
+        print("Flow candidate")
+        print(component)
+        sub = fig_original.subgraph(component)
+        mapping_option = gen_strategy.get_flow_flow_mapping_option(sub)
+
+        # Step 4. Create a Construction node for each of the disconnected pieces
+        cn = ConstructionNode("flow_network_{}".format(i))
+        cn.add_mapping_option(mapping_option)
+
+        i += 1
+        ret.append(cn)
+
+    return ret
 
 
 def size_netlist():
@@ -476,4 +546,3 @@ def size_netlist():
     # Size all the Meter/Dilute/Divide nodes based on the value nodes
     # TODO - Talk to Ali about this for strategy
     construction_graph.size_components()
-
