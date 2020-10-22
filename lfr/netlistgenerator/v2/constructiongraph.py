@@ -48,9 +48,9 @@ class ConstructionGraph(nx.DiGraph):
     def generate_components(self, name_generator: NameGenerator, device: MINTDevice) -> None:
         for cn in [v for k, v in self._construction_nodes.items()]:
             if len(cn.mapping_options) > 1:
+                # TODO - update for combinatorial design space exploration
                 raise Exception("Does not support Combinatorial design exploration")
             elif len(cn.mapping_options) == 1:
-                # TODO - Do the work that needs to be done
                 mapping_option = cn.mapping_options[0]
                 if mapping_option.primitive.type is PrimitiveType.COMPONENT:
                     # Create a new component here based on the primitive technology
@@ -60,7 +60,6 @@ class ConstructionGraph(nx.DiGraph):
                     component_to_add = mapping_option.primitive.get_default_component(name_generator)
                     device.add_component(component_to_add)
                 elif mapping_option.primitive.type is PrimitiveType.NETLIST:
-                    # TODO - Do something else
                     netlist = mapping_option.primitive.get_default_netlist(name_generator)
                     device.merge_netlist(netlist)
             else:
