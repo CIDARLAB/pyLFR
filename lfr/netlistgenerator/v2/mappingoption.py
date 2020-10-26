@@ -35,11 +35,12 @@ class MappingOption():
         if self._primitive.type is PrimitiveType.COMPONENT:
             ret = MINTDevice("doesn't really matter what the name is")
         elif self._primitive.type is PrimitiveType.NETLIST:
-            ret = self._primitive.default_netlist
+            ret = self._primitive.get_default_netlist()
+
+            # Rename the netlist
+            name_generator.rename_netlist(ret)
         else:
             raise Exception("So Primitive Associated with this !")
-
-        name_generator.rename_netlist(ret)
 
         return ret
 
@@ -50,3 +51,16 @@ class MappingOption():
         sub_graph = explicit_mapping.get_subgraph()
         ret = MappingOption(primitive, sub_graph)
         return ret
+
+
+class ExplicitMappingOption(MappingOption):
+
+    def __init__(self, mapping: ExplicitMapping) -> None:
+        # TODO - Generate this from the Explicit Mapping
+        pass
+
+
+# TODO - this would be the class we want to use for network / connection type mappin
+# class NetworkMappingOption(MappingOption):
+
+#     def __init__(self, primitive: Primitive, edge_set) -> None:

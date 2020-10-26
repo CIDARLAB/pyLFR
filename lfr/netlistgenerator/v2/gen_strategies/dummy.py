@@ -12,7 +12,7 @@ class DummyStrategy(GenStrategy):
         # TODO - Implement Generalized Ali Strategy 1
 
         # Dummy strategy
-        for cn in [v for k, v in self._construction_graph.construction_nodes.items()]:
+        for cn in self._construction_graph.construction_nodes:
             print(len(cn.mapping_options))
             # Remove the extra mappings
             del cn.mapping_options[1:len(cn.mapping_options)]

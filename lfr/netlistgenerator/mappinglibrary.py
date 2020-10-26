@@ -1,7 +1,7 @@
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr import parameters
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from typing import List, Optional
-
+from typing import List
 from pymint.mintcomponent import MINTComponent
 from lfr.fig.interaction import InteractionType
 from pymint.mintdevice import MINTDevice
@@ -17,24 +17,6 @@ class PrimitiveType(Enum):
     COMPONENT = 0
     NETLIST = 1
     PROCEDURAL = 2
-
-
-class ConnectingOption:
-    def __init__(
-        self,
-        component_name: str = None,
-        component_port: List[int] = [],
-    ) -> None:
-        self._component_name: str = component_name
-        self._component_port: List[int] = component_port
-
-    @property
-    def component_name(self) -> Optional[str]:
-        return self._component_name
-
-    @property
-    def component_port(self) -> List[int]:
-        return self._component_port
 
 
 class Primitive:
@@ -103,7 +85,7 @@ class Primitive:
 
     @property
     def default_netlist_location(self):
-        return self._default_netlist_location
+        return self._default_netlist
 
     @property
     def inverse_design_query_params(self):
@@ -146,8 +128,6 @@ class Primitive:
         walker.walk(listener, tree)
 
         device = listener.current_device
-        # Rename the netlist
-        name_gen.rename_netlist(device)
 
         # Return the default netlist
         return device
@@ -164,6 +144,10 @@ class MappingLibrary:
         self.__technology_process_operators = []
         self.__io_primitives = []
         self._default_IO_primitive = None
+
+    @property
+    def name(self) -> str:
+        return self.__name
 
     def add_io_entry(self, primitive: Primitive) -> None:
         self.__io_primitives.append(primitive)

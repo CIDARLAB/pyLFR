@@ -1,12 +1,12 @@
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.fig.fignode import Flow
+from lfr.fig.fignode import Flow, IOType, ValueNode
 from typing import List
 from pymint.mintdevice import MINTDevice
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.fig.interaction import InteractionType
+from lfr.fig.interaction import FluidIntegerInteraction, FluidNumberInteraction, InteractionType
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from lfr.netlistgenerator.mappinglibrary import (
     ConnectingOption,
@@ -406,10 +406,18 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     for interaction in module.FIG.get_interactions():
         operator_candidates = library.get_operators(interaction_type=interaction.type)
         cn = ConstructionNode(interaction.id)
+        # if isinstance(interaction, ValueNode):
+        #     continue
 
         for operator_candidate in operator_candidates:
             # TODO: This will change in the future when we can match subgraphs correctly
-            sub_graph = module.FIG.subgraph(interaction.id)
+            if isinstance(interaction, FluidNumberInteraction) or isinstance(interaction, FluidIntegerInteraction):
+                # Basically add the value node id into the subgraph view also
+                node_ids = [module.FIG.get_fignode(edge[0]).id for edge in module.FIG.in_edges(interaction.id) if isinstance(module.FIG.get_fignode(edge[0]), ValueNode)]
+                node_ids.append(interaction.id)
+                sub_graph = module.FIG.subgraph(node_ids)
+            else:
+                sub_graph = module.FIG.subgraph(interaction.id)
             mapping_option = MappingOption(operator_candidate, sub_graph)
             cn.add_mapping_option(mapping_option)
 
@@ -418,9 +426,11 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Generate all ports necessary for the Explicitly declared IO
     # -------
     # Generate the flow layer IO. These are typically declared explicitly
-    # generate_flowIO(module, cur_device)
+    # TODO - Figure out how we should generate the construction nodes for control networks
 
     for io in module.io:
+        if io.type is IOType.CONTROL:
+            continue
         cn = ConstructionNode(io.id)
         sub_graph = module.FIG.subgraph(io.id)
         mapping_candidate = library.get_default_IO()
@@ -459,7 +469,9 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     construction_graph.generate_edges(module.FIG)
 
     # Now since all the mapping options are finalized Extract the netlist necessary
-    construction_graph.generate_components(name_generator, cur_device)
+    construction_graph.construct_components(name_generator, cur_device)
+
+    construction_graph.construct_connections(name_generator, cur_device)
 
     # Finally join all the netlist pieces attached to the construction nodes
     # and the input/output/load/carrier flows
@@ -474,13 +486,6 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     connect_orphan_IO()
 
     return cur_device
-
-
-def generate_flowIO(module: Module, device: MINTDevice) -> None:
-    # TODO - just do the explicit io mapping, look at the flow IO in the module
-    # and then create the ports/whatever in the mint device
-    print("Implement the waste generation system along with the basic I/O")
-    pass
 
 
 def connect_orphan_IO():
