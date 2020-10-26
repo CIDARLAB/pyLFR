@@ -1,3 +1,4 @@
+from networkx.algorithms.centrality.degree_alg import in_degree_centrality
 from lfr.netlistgenerator.v2 import mappingoption
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from parchmint.device import Device
@@ -15,11 +16,11 @@ class ConstructionGraph(nx.DiGraph):
 
     def __init__(self, data=None, val=None, **attr) -> None:
         super(ConstructionGraph, self).__init__()
-        self._construction_nodes = dict()
+        self._construction_nodes: Dict[str, ConstructionNode] = dict()
 
     @property
     def construction_nodes(self) -> List[ConstructionNode]:
-        return self._construction_nodes
+        return [v for k, v in self._construction_nodes.items()]
 
     def add_construction_node(self, node: ConstructionNode) -> None:
         self._construction_nodes[node.id] = node
@@ -45,8 +46,8 @@ class ConstructionGraph(nx.DiGraph):
                 print("Implement mapping override for network")
                 pass
 
-    def generate_components(self, name_generator: NameGenerator, device: MINTDevice) -> None:
-        for cn in [v for k, v in self._construction_nodes.items()]:
+    def construct_components(self, name_generator: NameGenerator, device: MINTDevice) -> None:
+        for cn in self.construction_nodes:
             if len(cn.mapping_options) > 1:
                 # TODO - update for combinatorial design space exploration
                 raise Exception("Does not support Combinatorial design exploration")
@@ -59,11 +60,64 @@ class ConstructionGraph(nx.DiGraph):
                     # Save the copy of subgraph view of the netlist in the construction node
                     component_to_add = mapping_option.primitive.get_default_component(name_generator)
                     device.add_component(component_to_add)
+                    # TODO - save the subgraph view reference
                 elif mapping_option.primitive.type is PrimitiveType.NETLIST:
                     netlist = mapping_option.primitive.get_default_netlist(name_generator)
                     device.merge_netlist(netlist)
+                    # TODO - Save the subgraph view reference
             else:
                 print("No mappings found to the current construction node {0}".format(cn))
+
+    def construct_connections(self, name_generator: NameGenerator, device: MINTDevice) -> None:
+        # TODO - Modify this to enable mapping options for edges
+
+        # Step 1 - Loop through each of the edges
+        for edge in self.edges:
+            src = self._construction_nodes[edge[0]]
+            tar = self._construction_nodes[edge[1]]
+
+            # Step 2 - Get the output requirement from src mapping option and the input mapping
+            # option and make a simple channel between them (I guess no parameters right now)
+            # TODO - Modify this based on what mapping option is enabled here later on
+
+            src.load_connection_options()
+            tar.load_connection_options()
+
+        # Step 3 - Loop through all the nodes and start filling out this input/output requirements
+        # This exploration could be using the reverse DFS traversal this way we can probably fill out
+        # the entire set of flows that way. 
+        # 
+        # TODO - This could probably be converted into network flow problems. Since this an extension 
+        # of bipartitie matching at every step, I think that can be converted into a max flow problem
+        # However, what needs to be determined is what factor becomes the capacity, weight, etc. 
+        # The only constraints that are known is that everything will have infinite capacity,
+        # Technically every node might be an edge and every edge might be a node, that way we can 
+        # take the input / output capacities and treat them as. This needs to eb thought through a little
+
+        for cn_id in self.nodes:
+            # Step 3.1 - Check to see if there are as many input options are there are incoming edges
+            # if its n->n or n->1, it'll be easy otherwise we need to figure out something else
+            in_neighbours = self.in_edges(cn_id)
+            cn = self._construction_nodes[cn_id]
+
+            # This 1->1 condition
+            # TODO - deal with n->n 1->n , etc. later
+            assert(len(in_neighbours) == 1)
+            src_id = in_neighbours[0][0]
+            src = self._construction_nodes[src_id]
+            start_point = src.output_options[0]
+
+            end_point = cn.input_options[0]
+
+            
+
+            # TODO - Once we are done creating a path, we need to delete the start and end point options
+            # from their respective construction nodes.
+            
+
+
+        # Step 4 - Get the first output option and then bind it to the first input option,
+        # once completed remove them from the construction node options
 
     def generate_edges(self, fig: FluidInteractionGraph) -> None:
         # Look at the mapping options for each of the constructionnodes,
@@ -89,10 +143,13 @@ class ConstructionGraph(nx.DiGraph):
             for mapping_option in cn.mapping_options:
                 for node_id in mapping_option.fig_subgraph.nodes:
                     if node_id in fig_nodes_cn_reverse_map.keys():
-                        fig_nodes_cn_reverse_map[node_id].append(node_id)
+
+                        # Make sure there are no repeats here
+                        if node_id not in fig_nodes_cn_reverse_map[cn.id]:
+                            fig_nodes_cn_reverse_map[node_id].append(cn.id)
                     else:
                         fig_nodes_cn_reverse_map[node_id] = []
-                        fig_nodes_cn_reverse_map[node_id].append(node_id)
+                        fig_nodes_cn_reverse_map[node_id].append(cn.id)
 
         # Step 2 - Now that we know the mapping, go through each connection in the fig,
         for edge in fig.edges:
@@ -109,8 +166,10 @@ class ConstructionGraph(nx.DiGraph):
 
                 # Step 3 - now check to see if both are in the same cn or not, if they're not create an cn_edge
                 # TODO - implement list search/edge creation incase there are multiple cn's associated
-                if src_cn[0] == tar_cn[0]:
-                    self.add_edge(src_cn[0].id, tar_cn[0].id)
+                if src_cn[0] != tar_cn[0]:
+                    self.add_edge(src_cn[0], tar_cn[0])
+                else:
+                    pass
 
     def generate_flow_cn_edges(self, module: Module) -> None:
         # TODO - Figure out what we need for the generating the edges here
