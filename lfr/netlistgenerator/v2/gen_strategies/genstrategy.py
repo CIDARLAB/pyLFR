@@ -11,7 +11,3 @@ class GenStrategy:
     @overload
     def reduce_mapping_options(self) -> None:
         pass
-
-    @overload
-    def get_flow_flow_mapping_option(subgraph_view) -> MappingOption:
-        pass

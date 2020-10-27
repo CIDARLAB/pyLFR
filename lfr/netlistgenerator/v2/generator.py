@@ -7,7 +7,7 @@ from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 from lfr.fig.interaction import FluidIntegerInteraction, FluidNumberInteraction, InteractionType
-from lfr.netlistgenerator.v2.mappingoption import MappingOption
+from lfr.netlistgenerator.v2.mappingoption import MappingOption, NetworkMappingOption, NetworkMappingOptionType
 from lfr.netlistgenerator.mappinglibrary import (
     ConnectingOption,
     MappingLibrary,
@@ -536,8 +536,11 @@ def get_flow_flow_candidates(module: Module, gen_strategy: GenStrategy) -> List[
         print("Flow candidate")
         print(component)
         sub = fig_original.subgraph(component)
-        mapping_option = gen_strategy.get_flow_flow_mapping_option(sub)
-
+        # TODO - Decide what the mapping type should be. for now assume that we just a single
+        # passthrough type scenario where we don't have to do much work
+        assert(len(sub.nodes) == 1)
+        mapping_type = NetworkMappingOptionType.PASS_THROUGH
+        mapping_option = NetworkMappingOption(gen_strategy, mapping_type, sub)
         # Step 4. Create a Construction node for each of the disconnected pieces
         cn = ConstructionNode("flow_network_{}".format(i))
         cn.add_mapping_option(mapping_option)
