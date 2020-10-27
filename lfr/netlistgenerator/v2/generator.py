@@ -1,3 +1,4 @@
+from lfr.netlistgenerator.v2.networkmappingoption import NetworkMappingOption, NetworkMappingOptionType
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 from lfr.fig.fignode import Flow, IOType, ValueNode
 from typing import List
@@ -7,7 +8,7 @@ from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 from lfr.fig.interaction import FluidIntegerInteraction, FluidNumberInteraction, InteractionType
-from lfr.netlistgenerator.v2.mappingoption import MappingOption, NetworkMappingOption, NetworkMappingOptionType
+from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from lfr.netlistgenerator.mappinglibrary import (
     ConnectingOption,
     MappingLibrary,

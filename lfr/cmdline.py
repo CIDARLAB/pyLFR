@@ -5,7 +5,6 @@ from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
 from lfr.antlrgen.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.mappingCompiler import MappingCompiler
-from lfr.netlistgenerator.devicegenerator import DeviceGenerator
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 import argparse
 import lfr.parameters as parameters
@@ -96,14 +95,6 @@ def main():
     # Check if the module compilation was successful
     if mapping_listener.success:
         # Now Process the Modules Generated
-        devicegenerator = DeviceGenerator(mapping_listener.currentModule.name, mapping_listener.currentModule, library)
-        # devicegenerator.generate_fluidic_netlist()
-        # # devicegenerator.size_netlist()
-
-        # devicegenerator.print_netlist()
-        # devicegenerator.serialize_netlist()
-        pass
-
         # V2 generator
         library = generate_dropx_library()
 

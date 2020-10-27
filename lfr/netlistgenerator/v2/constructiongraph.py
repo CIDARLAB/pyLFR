@@ -106,52 +106,79 @@ class ConstructionGraph(nx.DiGraph):
             if len(in_neighbours) == 0:
                 continue
 
-            # This 1->1 condition
+            # TODO - Go through netlist and then figure out what needs to get done
+            # based on the strategy we need to do different things. This is the requirement for when its a
+            # FLOW-FLOW-CONSTRUCTION-NODE
+
+            # if self._mapping_type is NetworkMappingOptionType.PASS_THROUGH:
+            #     # TODO - In this case it needs to be an empty netlist
+            #     raise Exception("Network Mapping Option Type 'PASS_THROUGH' is not supported for this method")
+            #     pass
+            # elif self._mapping_type is NetworkMappingOptionType.COMPONENT_REPLACEMENT:
+            #     # TODO - In this case it needs to be an component with the corresponding
+            #     # input and output options loaded into the placeholder primitive
+            #     raise Exception("Network Mapping Option Type 'COMPONENT_REPLACEMENT' is not supported for this method")
+            #     pass
+            # elif self._mapping_type is NetworkMappingOptionType.CHANNEL_NETWORK:
+            #     # TODO - This would be a netlist but I'll need to enable terminals/nodes
+            #     # where the network will connect through. Most likely we will not need to
+            #     # use this
+
+            # This 1->1, n->1 condition
             # TODO - deal with n->n 1->n , etc. later
-            assert(len(in_neighbours) == 1)
-            src_id = list(in_neighbours)[0][0]
-            src = self._construction_nodes[src_id]
-            start_point = src.output_options[0]
+            for edge in list(in_neighbours):
+                src_id = edge[0]
 
-            if start_point.component_name is None:
-                # This means a single component was mapped here
-                src_component_name = self._component_refs[src_id][0]
-            else:
-                src_component_name = name_generator.get_cn_name(src_id, start_point.component_name)
-
-            end_point = cn.input_options[0]
-
-            if end_point.component_name is None:
-                # This means a single component was mapped here
-                tar_component_name = self._component_refs[cn.id][0]
-            else:
-                tar_component_name = name_generator.get_cn_name(cn.id, end_point.component_name)
-
-            print("Generating the channel - Source: {0} {2}, Target: {1} {3}".format(src_component_name, tar_component_name, start_point.component_port, end_point.component_port))
-
-            # TODO - Change how we retrieve the technology type for the channel
-            tech_string = "CHANNEL"
-            # channel_name = name_generator.generate_name(tech_string)
-
-            # TODO - Figure out how to hande a scenario where this isn't ture
-            assert(len(end_point.component_port) == 1)
-            for component_port in start_point.component_port:
-                channel_name = name_generator.generate_name(tech_string)
-                source = MINTTarget(src_component_name, component_port)
-                sink = MINTTarget(tar_component_name, end_point.component_port[0])
-                # TODO - Figure out how to make this layer generate automatically
-                device.addConnection(channel_name, tech_string, dict(), source, [sink], "0")
-
-            # TODO - Once we are done creating a path, we need to delete the start and end point options
-            # from their respective construction nodes.
-            print("Updated the connectionoptions in {} - Removing {}".format(src, start_point))
-            src.output_options.remove(start_point)
-
-            print("Updated the connectionoptions in {} - Removing {}".format(cn, end_point))
-            cn.input_options.remove(end_point)
+                self.__create_intercn_channel(
+                    src_id,
+                    name_generator,
+                    cn,
+                    device
+                )
 
         # TODO - I need to figure out how to pipeline the loadings/carriers and other things
         pass
+
+    def __create_intercn_channel(self, src_id: str, name_generator: NameGenerator, cn: ConstructionNode, device: MINTDevice) -> None:
+        src = self._construction_nodes[src_id]
+        start_point = src.output_options[0]
+
+        if start_point.component_name is None:
+            # This means a single component was mapped here
+            src_component_name = self._component_refs[src_id][0]
+        else:
+            src_component_name = name_generator.get_cn_name(src_id, start_point.component_name)
+
+        end_point = cn.input_options[0]
+
+        if end_point.component_name is None:
+            # This means a single component was mapped here
+            tar_component_name = self._component_refs[cn.id][0]
+        else:
+            tar_component_name = name_generator.get_cn_name(cn.id, end_point.component_name)
+
+        print("Generating the channel - Source: {0} {2}, Target: {1} {3}".format(src_component_name, tar_component_name, start_point.component_port, end_point.component_port))
+
+        # TODO - Change how we retrieve the technology type for the channel
+        tech_string = "CHANNEL"
+        # channel_name = name_generator.generate_name(tech_string)
+
+        # TODO - Figure out how to hande a scenario where this isn't ture
+        assert(len(end_point.component_port) == 1)
+        for component_port in start_point.component_port:
+            channel_name = name_generator.generate_name(tech_string)
+            source = MINTTarget(src_component_name, component_port)
+            sink = MINTTarget(tar_component_name, end_point.component_port[0])
+            # TODO - Figure out how to make this layer generate automatically
+            device.addConnection(channel_name, tech_string, dict(), source, [sink], "0")
+
+        # TODO - Once we are done creating a path, we need to delete the start and end point options
+        # from their respective construction nodes.
+        print("Updated the connectionoptions in {} - Removing {}".format(src, start_point))
+        src.output_options.remove(start_point)
+
+        print("Updated the connectionoptions in {} - Removing {}".format(cn, end_point))
+        cn.input_options.remove(end_point)
 
     def generate_edges(self, fig: FluidInteractionGraph) -> None:
         # Look at the mapping options for each of the constructionnodes,

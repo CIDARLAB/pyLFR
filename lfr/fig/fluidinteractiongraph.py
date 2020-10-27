@@ -16,7 +16,7 @@ class FluidInteractionGraph(nx.DiGraph):
         self._fignodes[node.id] = node
         self.add_node(node.id)
 
-    def get_fignode(self, id: str):
+    def get_fignode(self, id: str) -> FIGNode:
         if id in self._fignodes.keys():
             return self._fignodes[id]
         else:
