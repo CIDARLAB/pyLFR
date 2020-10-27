@@ -21,7 +21,10 @@ class FIGNode(object):
         return self.id
 
     def __eq__(self, other) -> bool:
-        return self.id == other.id
+        if isinstance(other, FIGNode):
+            return self.id == other.id
+        else:
+            False
 
 
 class ValueNode(FIGNode):

@@ -1,4 +1,4 @@
-from lfr.compiler.fluid import Fluid
+from lfr.fig.fignode import Flow, Storage, Signal
 from lfr.compiler.language.concatenation import Concatenation
 from lfr.compiler.language.fluidexpression import FluidExpression
 from lfr.compiler.language.utils import is_number
@@ -7,8 +7,6 @@ from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
 from lfr.compiler.moduleio import IOType, ModuleIO
-from lfr.compiler.storage import Storage
-from lfr.compiler.signal import Signal
 from enum import Enum
 from typing import List
 
@@ -158,7 +156,7 @@ class LFRCompiler(lfrXListener):
                 startindex = int(declvar.vector().start.text)
                 endindex = int(declvar.vector().end.text)
 
-            v = self.__createVector(name, Fluid, startindex, endindex)
+            v = self.__createVector(name, Flow, startindex, endindex)
 
             for item in v.get_items():
                 self.currentModule.add_fluid(item)
