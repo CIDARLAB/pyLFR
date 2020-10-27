@@ -11,8 +11,8 @@ networkx = "^2.5"
 argparse = "^1.4.0"
 antlr4-python3-runtime = "^4.8"
 pygraphviz = "^1.6"
-parchmint = "^0.1.2"
-pymint = "^0.1.2"
+parchmint = {path = "../pyparchmint"}
+pymint = {path = "../pymint"}
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"

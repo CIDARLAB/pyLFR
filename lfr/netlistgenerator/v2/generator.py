@@ -149,11 +149,11 @@ def generate_dropx_library() -> MappingLibrary:
 
     droplet_generator_inputs = []
 
-    droplet_generator_inputs.append(ConnectingOption(None, [1]))
+    droplet_generator_inputs.append(ConnectingOption("default_component", [1]))
 
     droplet_generator_outputs = []
 
-    droplet_generator_outputs.append(ConnectingOption(None, [3]))
+    droplet_generator_outputs.append(ConnectingOption("default_component", [3]))
 
     droplet_generator_loadings = []
     droplet_generator_carriers = []

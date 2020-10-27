@@ -102,7 +102,7 @@ class Primitive:
         mc = MINTComponent(name, self.mint, dict())
         return mc
 
-    def get_default_netlist(self, name_gen: NameGenerator) -> MINTDevice:
+    def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
         if self.type is not PrimitiveType.NETLIST:
             raise Exception("Cannot execute this method for this kind of a  primitive")
 
@@ -129,6 +129,7 @@ class Primitive:
 
         device = listener.current_device
 
+        name_gen.rename_netlist(cn_id, device)
         # Return the default netlist
         return device
 
