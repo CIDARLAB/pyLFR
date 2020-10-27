@@ -13,6 +13,7 @@ import glob
 import json
 import lfr.utils as utils
 from lfr.netlistgenerator.v2.generator import generate_dropx_library, generate
+from lfr.utils import print_netlist, printgraph, serialize_netlist
 
 
 def load_libraries():
@@ -106,7 +107,13 @@ def main():
         # V2 generator
         library = generate_dropx_library()
 
-        generate(mapping_listener.currentModule, library)
+        unsized_device = generate(mapping_listener.currentModule, library)
+
+        unsized_device.toMINT()
+
+        printgraph(mapping_listener.currentModule.FIG, mapping_listener.currentModule.name)
+        print_netlist(unsized_device)
+        serialize_netlist(unsized_device)
 
 
 if __name__ == "__main__":

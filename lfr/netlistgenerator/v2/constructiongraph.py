@@ -79,12 +79,12 @@ class ConstructionGraph(nx.DiGraph):
         #     src = self._construction_nodes[edge[0]]
         #     tar = self._construction_nodes[edge[1]]
 
-            # Step 2 - Get the output requirement from src mapping option and the input mapping
-            # option and make a simple channel between them (I guess no parameters right now)
-            # TODO - Modify this based on what mapping option is enabled here later on
+        # Step 2 - Get the output requirement from src mapping option and the input mapping
+        # option and make a simple channel between them (I guess no parameters right now)
+        # TODO - Modify this based on what mapping option is enabled here later on
 
-            # src.load_connection_options()
-            # tar.load_connection_options()
+        # src.load_connection_options()
+        # tar.load_connection_options()
 
         # Step 3 - Loop through all the nodes and start filling out this input/output requirements
         # This exploration could be using the reverse DFS traversal this way we can probably fill out
