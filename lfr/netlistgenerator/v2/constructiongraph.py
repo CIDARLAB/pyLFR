@@ -1,3 +1,4 @@
+from lfr.netlistgenerator.v2.networkmappingoption import NetworkMappingOption, NetworkMappingOptionType
 from lfr.netlistgenerator.primitive import PrimitiveType
 from pymint.minttarget import MINTTarget
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
@@ -52,6 +53,12 @@ class ConstructionGraph(nx.DiGraph):
                 raise Exception("Does not support Combinatorial design exploration")
             elif len(cn.mapping_options) == 1:
                 mapping_option = cn.mapping_options[0]
+
+                # TODO - Make sure we skip the mapping option if pass through is enabled
+                if isinstance(mapping_option, NetworkMappingOption):
+                    if mapping_option.mapping_type is NetworkMappingOptionType.PASS_THROUGH:
+                        continue
+
                 if mapping_option.primitive.type is PrimitiveType.COMPONENT:
                     # Create a new component here based on the primitive technology
                     # and the name generator
@@ -105,6 +112,9 @@ class ConstructionGraph(nx.DiGraph):
         # Technically every node might be an edge and every edge might be a node, that way we can
         # take the input / output capacities and treat them as. This needs to eb thought through a little
 
+        # We first do the channel creation for the pass throughs so that we don't finish up the input
+        # output resources.
+        skip_list = []
         for cn_id in self.nodes:
             # Step 3.1 - Check to see if there are as many input options are there are incoming edges
             # if its n->n or n->1, it'll be easy otherwise we need to figure out something else
@@ -118,10 +128,32 @@ class ConstructionGraph(nx.DiGraph):
             # based on the strategy we need to do different things. This is the requirement for when its a
             # FLOW-FLOW-CONSTRUCTION-NODE
 
-            # if self._mapping_type is NetworkMappingOptionType.PASS_THROUGH:
-            #     # TODO - In this case it needs to be an empty netlist
-            #     raise Exception("Network Mapping Option Type 'PASS_THROUGH' is not supported for this method")
-            #     pass
+            # In this case it needs to treat as an empty netlist because a pass through would just connect the neighbours instead
+            # TODO - This will potentially get removed later as we might just want to eliminate the construction node later on
+            if isinstance(cn.mapping_options[0], NetworkMappingOption):
+                if cn.mapping_options[0].mapping_type is NetworkMappingOptionType.PASS_THROUGH:
+                    # Figure out what the pass through strategy is for this, find the input
+                    # to this cn and link the outputs to the cn
+                    out_neighbours = self.out_edges(cn_id)
+
+                    # Add to skip list
+                    skip_list.append(cn_id)
+
+                    # If this is pass through, the in edges should be equal to out edges (I think)
+                    assert(len(in_neighbours) == len(out_neighbours))
+                    # TODO - Figure out what to do if this assert fails
+                    for i in range(len(in_neighbours)):
+                        cn_start_id = list(in_neighbours)[i][0]
+                        cn_end_id = list(out_neighbours)[i][1]
+
+                        self.__create_passthrough_channel(
+                            cn_start_id,
+                            cn_end_id,
+                            name_generator,
+                            device
+                        )
+
+            # TODO - Figure out if these conditions require any more thought in terms of implementation
             # elif self._mapping_type is NetworkMappingOptionType.COMPONENT_REPLACEMENT:
             #     # TODO - In this case it needs to be an component with the corresponding
             #     # input and output options loaded into the placeholder primitive
@@ -132,6 +164,22 @@ class ConstructionGraph(nx.DiGraph):
             #     # where the network will connect through. Most likely we will not need to
             #     # use this
 
+        for cn_id in self.nodes:
+            # Skip the round if in skip list
+            if cn_id in skip_list:
+                continue
+
+            # Step 3.1 - Check to see if there are as many input options are there are incoming edges
+            # if its n->n or n->1, it'll be easy otherwise we need to figure out something else
+            in_neighbours = self.in_edges(cn_id)
+            cn = self._construction_nodes[cn_id]
+
+            # Check if any inputs are left to deal with , skip if there are no more inputs left
+            if len(cn.input_options) == 0:
+                continue
+
+            if len(in_neighbours) == 0:
+                continue
             # This 1->1, n->1 condition
             # TODO - deal with n->n 1->n , etc. later
             for edge in list(in_neighbours):
@@ -146,6 +194,52 @@ class ConstructionGraph(nx.DiGraph):
 
         # TODO - I need to figure out how to pipeline the loadings/carriers and other things
         pass
+
+    def __create_passthrough_channel(self, cn_start_id: str, cn_end_id: str, name_generator: NameGenerator, device: MINTDevice) -> None:
+        cn_start = self._construction_nodes[cn_start_id]
+        start_point = cn_start.output_options[0]
+
+        cn_end = self._construction_nodes[cn_end_id]
+        end_point = cn_end.input_options[0]
+
+        if start_point.component_name is None:
+            # This means a single component was mapped here
+            src_component_name = self._component_refs[cn_start_id][0]
+        else:
+            src_component_name = name_generator.get_cn_name(cn_start_id, start_point.component_name)
+
+        if end_point.component_name is None:
+            # This means a single component was mapped here
+            tar_component_name = self._component_refs[cn_end_id][0]
+        else:
+            tar_component_name = name_generator.get_cn_name(cn_end_id, end_point.component_name)
+
+        # TODO - Change how we retrieve the technology type for the channel
+        tech_string = "CHANNEL"
+        # channel_name = name_generator.generate_name(tech_string)
+
+        # TODO - Figure out how to hande a scenario where this isn't ture
+        assert(len(end_point.component_port) == 1)
+        if len(start_point.component_port) == 0:
+            channel_name = name_generator.generate_name(tech_string)
+            source = MINTTarget(src_component_name, None)
+            sink = MINTTarget(tar_component_name, end_point.component_port[0])
+            device.addConnection(channel_name, tech_string, dict(), source, [sink], "0")
+        else:
+            for component_port in start_point.component_port:
+                channel_name = name_generator.generate_name(tech_string)
+                source = MINTTarget(src_component_name, component_port)
+                sink = MINTTarget(tar_component_name, end_point.component_port[0])
+                # TODO - Figure out how to make this layer generate automatically
+                device.addConnection(channel_name, tech_string, dict(), source, [sink], "0")
+
+        # TODO - Once we are done creating a path, we need to delete the start and end point options
+        # from their respective construction nodes.
+        print("Updated the connectionoptions in {} - Removing {}".format(cn_start, start_point))
+        cn_start.output_options.remove(start_point)
+
+        print("Updated the connectionoptions in {} - Removing {}".format(cn_end, end_point))
+        cn_end.input_options.remove(end_point)
 
     def __create_intercn_channel(self, src_id: str, name_generator: NameGenerator, cn: ConstructionNode, device: MINTDevice) -> None:
         src = self._construction_nodes[src_id]
@@ -173,12 +267,18 @@ class ConstructionGraph(nx.DiGraph):
 
         # TODO - Figure out how to hande a scenario where this isn't ture
         assert(len(end_point.component_port) == 1)
-        for component_port in start_point.component_port:
+        if len(start_point.component_port) == 0:
             channel_name = name_generator.generate_name(tech_string)
-            source = MINTTarget(src_component_name, component_port)
+            source = MINTTarget(src_component_name, None)
             sink = MINTTarget(tar_component_name, end_point.component_port[0])
-            # TODO - Figure out how to make this layer generate automatically
             device.addConnection(channel_name, tech_string, dict(), source, [sink], "0")
+        else:
+            for component_port in start_point.component_port:
+                channel_name = name_generator.generate_name(tech_string)
+                source = MINTTarget(src_component_name, component_port)
+                sink = MINTTarget(tar_component_name, end_point.component_port[0])
+                # TODO - Figure out how to make this layer generate automatically
+                device.addConnection(channel_name, tech_string, dict(), source, [sink], "0")
 
         # TODO - Once we are done creating a path, we need to delete the start and end point options
         # from their respective construction nodes.

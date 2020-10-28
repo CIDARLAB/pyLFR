@@ -148,5 +148,5 @@ class NetworkPrimitive(Primitive):
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
         # Utilise the subgraph view to decide how you want to generate a netlist
         # Load all the inputs and outputs based on that information
-        ret = name_gen.rename_netlist(cn_id, self._netlist)
-        return ret
+        name_gen.rename_netlist(cn_id, self._netlist)
+        return self._netlist

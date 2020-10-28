@@ -16,3 +16,7 @@ class NetworkMappingOption(MappingOption):
         self._mapping_type: NetworkMappingOptionType = mapping_type
 
         # Automatically Assign the Network/ProceduralPrimitive if its a channel network
+
+    @property
+    def mapping_type(self) -> NetworkMappingOptionType:
+        return self._mapping_type
