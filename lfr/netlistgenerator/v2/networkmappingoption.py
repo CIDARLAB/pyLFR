@@ -1,4 +1,4 @@
-from lfr.netlistgenerator.mappinglibrary import NetworkPrimitive
+from lfr.netlistgenerator.primitive import NetworkPrimitive
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from enum import Enum
 
@@ -16,4 +16,3 @@ class NetworkMappingOption(MappingOption):
         self._mapping_type: NetworkMappingOptionType = mapping_type
 
         # Automatically Assign the Network/ProceduralPrimitive if its a channel network
-        self._primitive = NetworkPrimitive(self.fig_subgraph)

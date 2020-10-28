@@ -1,8 +1,8 @@
+from lfr.netlistgenerator.primitive import PrimitiveType
 from pymint.minttarget import MINTTarget
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.module import Module
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.mappinglibrary import PrimitiveType
 from typing import Dict, List
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping, ExplicitMappingType
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
@@ -51,7 +51,6 @@ class ConstructionGraph(nx.DiGraph):
                 # TODO - update for combinatorial design space exploration
                 raise Exception("Does not support Combinatorial design exploration")
             elif len(cn.mapping_options) == 1:
-                cn.load_connection_options()
                 mapping_option = cn.mapping_options[0]
                 if mapping_option.primitive.type is PrimitiveType.COMPONENT:
                     # Create a new component here based on the primitive technology
@@ -68,6 +67,15 @@ class ConstructionGraph(nx.DiGraph):
                     self._component_refs[cn.id] = [component.ID for component in netlist.components]
                     device.merge_netlist(netlist)
                     # TODO - Save the subgraph view reference
+                elif mapping_option.primitive.type is PrimitiveType.PROCEDURAL:
+                    netlist = mapping_option.primitive.get_default_netlist(cn.id, name_generator)
+                    self._component_refs[cn.id] = [component.ID for component in netlist.components]
+                    device.merge_netlist(netlist)
+                else:
+                    raise Exception("Does not work with any known option for primitive type")
+
+                cn.load_connection_options()
+
             else:
                 print("No mappings found to the current construction node {0}".format(cn))
 

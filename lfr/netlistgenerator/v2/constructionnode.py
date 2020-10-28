@@ -1,4 +1,4 @@
-from lfr.netlistgenerator.mappinglibrary import ConnectingOption
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.v2.mappingoption import ExplicitMappingOption, MappingOption
 from typing import List
 import copy
