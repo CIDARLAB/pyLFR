@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--technology', type=str, default="dropx", help="This is the mapping library you need to use")
     parser.add_argument('--library', type=str, default="./library", help="This sets the default library where the different technologies sit in")
     parser.add_argument('--no-mapping', help="Skipping Explicit Mappings")
-    parser.add_argument('--no-gen', help="Force the program to skip the device generation")
+    parser.add_argument('--no-gen', action="store_true", help="Force the program to skip the device generation")
     args = parser.parse_args()
 
     input_path = Path(args.input).resolve()
@@ -92,17 +92,31 @@ def main():
 
     utils.printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
 
+    printgraph(mapping_listener.currentModule.FIG, mapping_listener.currentModule.name)
+
+    if args.no_gen is True:
+        exit(0)
+
     # Check if the module compilation was successful
     if mapping_listener.success:
         # Now Process the Modules Generated
         # V2 generator
-        library = generate_dropx_library()
+        if args.technology == "dropx":
+            library = generate_dropx_library()
+        elif args.technology == "mars":
+            print("Implement Library for MARS")
+            pass
+        elif args.technology == "mlsi":
+            print("Implement Library for MLSI")
+            pass
+        else:
+            print("Implement Library for whatever else")
+            pass
 
         unsized_device = generate(mapping_listener.currentModule, library)
 
         unsized_device.toMINT()
 
-        printgraph(mapping_listener.currentModule.FIG, mapping_listener.currentModule.name)
         print_netlist(unsized_device)
         serialize_netlist(unsized_device)
 

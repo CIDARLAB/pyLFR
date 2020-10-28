@@ -78,5 +78,19 @@
             ],
             "console": "integratedTerminal"
         },
+        {
+            "name": "Debug - Customfile, NO GEN",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/lfr/cmdline.py",
+            "args": [
+                "--no-gen",
+                "--outpath",
+                "./out/",
+                "${file}"
+            ],
+            "console": "integratedTerminal"
+        },
+
     ]
 }
