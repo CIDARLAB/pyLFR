@@ -26,7 +26,7 @@ explicitIOBlock
 declvar : vector? ID ;
 
 distributionBlock
-   :  'distribute@' '(' signallist ')' 'begin' distributionBody 'end'
+   :  'distribute@' '(' sensitivitylist ')' 'begin' distributionBody 'end'
    ;
 
 distributionBody
@@ -36,11 +36,11 @@ distributionBody
    |  ifElseBlock
    ;
 
-ifElseBlock: 'if' '(' signallist ')' statementBlock elseIfBlock* elseBlock?;
+ifElseBlock: 'if' '(' sensitivitylist ')' statementBlock elseIfBlock* elseBlock?;
 
 elseBlock: 'else' statementBlock;
 
-elseIfBlock: 'else' 'if' '(' signallist ')' statementBlock;
+elseIfBlock: 'else' 'if' '(' sensitivitylist ')' statementBlock;
 
 statementBlock
    :   'begin' distributionassignstat+ 'end'
@@ -62,7 +62,9 @@ distributionassignstat
    //TODO: Have a switch->case block
    ;
 
-signallist : ID vector? (',' ID vector?)* ;
+sensitivitylist : signal (',' signal)* ;
+
+signal : ID vector? ;
 
 statements
    :   statement ';'
