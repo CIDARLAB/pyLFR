@@ -1,3 +1,4 @@
+from lfr.distBlockListener import DistBlockListener
 from lfr.lfrCompiler import LFRCompiler
 import os
 from pathlib import Path
@@ -80,7 +81,7 @@ def main():
 
     walker = ParseTreeWalker()
 
-    mapping_listener = LFRCompiler()
+    mapping_listener = DistBlockListener()
 
     walker.walk(mapping_listener, tree)
 

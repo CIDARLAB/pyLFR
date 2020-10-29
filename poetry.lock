@@ -23,6 +23,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "bitvector"
+version = "3.4.9"
+description = "A memory-efficient packed representation for bit arrays in pure Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "black"
 version = "20.8b1"
 description = "The uncompromising code formatter."
@@ -139,14 +147,19 @@ scipy = ["scipy"]
 
 [[package]]
 name = "parchmint"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "^3.8"
+develop = false
 
 [package.dependencies]
 networkx = ">=2.5,<3.0"
+
+[package.source]
+type = "directory"
+url = "../pyparchmint"
 
 [[package]]
 name = "pathspec"
@@ -186,12 +199,17 @@ version = "0.1.2"
 description = "MINT is a language to describe Microfluidic Hardware Netlists. MINT is the name of the Microfluidic Netlist language used to describe microfluidic devices for Fluigi to place and route. Mint is a flavor of (MHDL) Microfluidic Hardware Description Language that can be used to represent Microfluidic Circuits."
 category = "main"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "^3.8"
+develop = false
 
 [package.dependencies]
 antlr4-python3-runtime = ">=4.8,<5.0"
 install = ">=1.3.3,<2.0.0"
-parchmint = ">=0.1.2,<0.2.0"
+parchmint = "0.1.3"
+
+[package.source]
+type = "directory"
+url = "../pymint"
 
 [[package]]
 name = "regex"
@@ -200,6 +218,17 @@ description = "Alternative regular expression module, to replace re."
 category = "dev"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "rope"
+version = "0.18.0"
+description = "a python refactoring library..."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.extras]
+dev = ["pytest"]
 
 [[package]]
 name = "toml"
@@ -228,7 +257,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8f76ebf1f90186613fe91177bd6c1b0fcd5f4f04950bb4b434e2830cf46c1941"
+content-hash = "e3cc8dc99eb4a1055c8837d7a55666bc3dedb3d9c36c7bb4acff268c7eb2d24e"
 
 [metadata.files]
 antlr4-python3-runtime = [
@@ -241,6 +270,9 @@ appdirs = [
 argparse = [
     {file = "argparse-1.4.0-py2.py3-none-any.whl", hash = "sha256:c31647edb69fd3d465a847ea3157d37bed1f95f19760b11a47aa91c04b666314"},
     {file = "argparse-1.4.0.tar.gz", hash = "sha256:62b089a55be1d8949cd2bc7e0df0bddb9e028faefc8c32038cc84862aefdd6e4"},
+]
+bitvector = [
+    {file = "BitVector-3.4.9.tar.gz", hash = "sha256:a5e94cbb4804213b1f0c32d84517cd8f0bb8c689b5eb8055d351632e220a5edd"},
 ]
 black = [
     {file = "black-20.8b1.tar.gz", hash = "sha256:1c02557aa099101b9d21496f8a914e9ed2222ef70336404eeeac8edba836fbea"},
@@ -289,10 +321,7 @@ networkx = [
     {file = "networkx-2.5-py3-none-any.whl", hash = "sha256:8c5812e9f798d37c50570d15c4a69d5710a18d77bafc903ee9c5fba7454c616c"},
     {file = "networkx-2.5.tar.gz", hash = "sha256:7978955423fbc9639c10498878be59caf99b44dc304c2286162fd24b458c1602"},
 ]
-parchmint = [
-    {file = "parchmint-0.1.2-py3-none-any.whl", hash = "sha256:f73aae5f06b02aed455811bd66ed3f4451bab759734bafa0843d55900918f52b"},
-    {file = "parchmint-0.1.2.tar.gz", hash = "sha256:494f24853dd56275ff12e733bdccb4a6d6809218314399e2cd14b646c03b89c0"},
-]
+parchmint = []
 pathspec = [
     {file = "pathspec-0.8.0-py2.py3-none-any.whl", hash = "sha256:7d91249d21749788d07a2d0f94147accd8f845507400749ea19c1ec9054a12b0"},
     {file = "pathspec-0.8.0.tar.gz", hash = "sha256:da45173eb3a6f2a5a487efba21f050af2b41948be6ab52b6a1e3ff22bb8b7061"},
@@ -308,10 +337,7 @@ pyflakes = [
 pygraphviz = [
     {file = "pygraphviz-1.6.zip", hash = "sha256:411ae84a5bc313e3e1523a1cace59159f512336318a510573b47f824edef8860"},
 ]
-pymint = [
-    {file = "pymint-0.1.2-py3-none-any.whl", hash = "sha256:1275690761ab63178bd36cb212283fc55d2870e05fd9f3fad45c554171d36d3a"},
-    {file = "pymint-0.1.2.tar.gz", hash = "sha256:02460e63ecfb20723868cb0843967865465b58ef4b153034d2dc5c077a79188e"},
-]
+pymint = []
 regex = [
     {file = "regex-2020.9.27-cp27-cp27m-win32.whl", hash = "sha256:d23a18037313714fb3bb5a94434d3151ee4300bae631894b1ac08111abeaa4a3"},
     {file = "regex-2020.9.27-cp27-cp27m-win_amd64.whl", hash = "sha256:84e9407db1b2eb368b7ecc283121b5e592c9aaedbe8c78b1a2f1102eb2e21d19"},
@@ -340,6 +366,9 @@ regex = [
     {file = "regex-2020.9.27-cp39-cp39-win32.whl", hash = "sha256:49f23ebd5ac073765ecbcf046edc10d63dcab2f4ae2bce160982cb30df0c0302"},
     {file = "regex-2020.9.27-cp39-cp39-win_amd64.whl", hash = "sha256:3d20024a70b97b4f9546696cbf2fd30bae5f42229fbddf8661261b1eaff0deb7"},
     {file = "regex-2020.9.27.tar.gz", hash = "sha256:a6f32aea4260dfe0e55dc9733ea162ea38f0ea86aa7d0f77b15beac5bf7b369d"},
+]
+rope = [
+    {file = "rope-0.18.0.tar.gz", hash = "sha256:786b5c38c530d4846aa68a42604f61b4e69a493390e3ca11b88df0fbfdc3ed04"},
 ]
 toml = [
     {file = "toml-0.10.1-py2.py3-none-any.whl", hash = "sha256:bda89d5935c2eac546d648028b9901107a595863cb36bae0c73ac804a9b4ce88"},

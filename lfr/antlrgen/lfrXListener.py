@@ -98,12 +98,30 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#distributeBodyStat.
+    def enterDistributeBodyStat(self, ctx:lfrXParser.DistributeBodyStatContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#distributeBodyStat.
+    def exitDistributeBodyStat(self, ctx:lfrXParser.DistributeBodyStatContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#ifElseBlock.
     def enterIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
         pass
 
     # Exit a parse tree produced by lfrXParser#ifElseBlock.
     def exitIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#ifBlock.
+    def enterIfBlock(self, ctx:lfrXParser.IfBlockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#ifBlock.
+    def exitIfBlock(self, ctx:lfrXParser.IfBlockContext):
         pass
 
 

@@ -59,8 +59,18 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#distributeBodyStat.
+    def visitDistributeBodyStat(self, ctx:lfrXParser.DistributeBodyStatContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#ifElseBlock.
     def visitIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#ifBlock.
+    def visitIfBlock(self, ctx:lfrXParser.IfBlockContext):
         return self.visitChildren(ctx)
 
 

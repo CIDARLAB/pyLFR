@@ -29,18 +29,21 @@ distributionBlock
    :  'distribute@' '(' sensitivitylist ')' 'begin' distributionBody 'end'
    ;
 
-distributionBody
-//TODO: modify the distribute block to be more precise
-   :  (distributionassignstat)*
-   |  caseBlock
-   |  ifElseBlock
-   ;
+distributionBody:  distributeBodyStat+;
 
-ifElseBlock: 'if' '(' sensitivitylist ')' statementBlock elseIfBlock* elseBlock?;
+distributeBodyStat
+    :   distributionassignstat
+    |   caseBlock
+    |   ifElseBlock
+    ;
+
+ifElseBlock: ifBlock elseIfBlock* elseBlock?;
+
+ifBlock: 'if' '(' expression ')' statementBlock;
 
 elseBlock: 'else' statementBlock;
 
-elseIfBlock: 'else' 'if' '(' sensitivitylist ')' statementBlock;
+elseIfBlock: 'else' 'if' '(' expression ')' statementBlock;
 
 statementBlock
    :   'begin' distributionassignstat+ 'end'
@@ -134,9 +137,15 @@ expressionterm
    |    number
    ;
 
-logiccondition
+logiccondition_operand
     :   (bracketexpression | expressionterm ) (binary_operator (bracketexpression | expressionterm ))*
     ;
+
+logiccondition
+    :   logiccondition_operand binary_module_path_operator logic_value
+    ;
+
+logic_value: number ;
 
 vector
    :   '[' start=Decimal_number (':' end=Decimal_number)?  ']'
