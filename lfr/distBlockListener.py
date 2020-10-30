@@ -39,7 +39,7 @@ class DistBlockListener(LFRCompiler):
                 self.compilingErrors.append(
                     LFRError(
                         ErrorType.SIGNAL_NOT_FOUND,
-                        "Cannot find signal {}".format(signal_name)
+                        "Cannot find signal - {}".format(signal_name)
                     )
                 )
                 continue
