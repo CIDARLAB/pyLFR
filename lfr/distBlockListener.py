@@ -4,7 +4,7 @@ from lfr.compiler.distribute.distributeblock import DistributeBlock
 from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.lfrCompiler import LFRCompiler, ListenerMode
 from lfr.compiler.language.vectorrange import VectorRange
-from BitVector import BitVector
+from lfr.compiler.distribute.BitVector import BitVector
 
 
 class DistBlockListener(LFRCompiler):
@@ -19,12 +19,31 @@ class DistBlockListener(LFRCompiler):
         # figuring out the else statement
         self._accumulated_states: List[BitVector] = None
 
+    def exitDistributeCondition(self, ctx: lfrXParser.DistributeConditionContext):
+        rhs = self.stack.pop()
+        lhs = self.stack.pop()
+
+        relation_operator = ctx.binary_module_path_operator().getText()
+
+        # TODO - Basically we need to know what the conditions are we need to set
+        # the singals and the current state for the if statement
+
+        # TODO - We only have a very limited range of validation right now
+        # this needs to be extended to work with all kinds of conditions
+        # not just 1 variable and the values of 0 or 1.
+        assert(len(lhs) == 1)
+        assert(rhs == 0 or rhs == 1)
+        assert(relation_operator == '==')
+
+        state_vector = self._current_dist_block.generate_state_vector([lhs], [rhs])
+        self._current_state = state_vector
+
     def enterDistributionBlock(self, ctx: lfrXParser.DistributionBlockContext):
         print("Entering the Distribution Block")
         # TODO - Instantiate the distribute graph or whatever class that encapsulates this
         self._current_dist_block = DistributeBlock()
 
-    def enterSensitivitylist(self, ctx: lfrXParser.SensitivitylistContext):
+    def exitSensitivitylist(self, ctx: lfrXParser.SensitivitylistContext):
         sentivity_list = []
 
         # TODO - Go through the signals and then add then to the sentivity list
@@ -57,7 +76,7 @@ class DistBlockListener(LFRCompiler):
 
             sentivity_list.append(vrange)
 
-        self._current_dist_block.sentivity_list = sentivity_list
+        self._current_dist_block.sensitivity_list = sentivity_list
 
     def exitDistributionBlock(self, ctx: lfrXParser.DistributionBlockContext):
         print("Exit the Distribution Block")
@@ -71,45 +90,59 @@ class DistBlockListener(LFRCompiler):
 
     def exitDistributionassignstat(self, ctx: lfrXParser.DistributionassignstatContext):
         print("Exiting the dist assign stat")
-        pass
+        rhs = self.stack.pop()
+        lhs = self.stack.pop()
+
+        # Do the same connectivity as we would do this in the normal assign
+        # stat and save it for current state in the distblock object
+        if len(lhs) == len(rhs):
+            print("LHS, RHS sizes are equal")
+            for source, target in zip(rhs, lhs):
+                print(source, target)
+                sourceid = source.id
+                targetid = target.id
+
+                self._current_connectivities.append(sourceid, targetid)
+
+        elif len(lhs) != len(rhs):
+            print("LHS not equal to RHS")
+            for source in rhs:
+                sourceid = source.id
+
+                for target in lhs:
+                    targetid = target.id
+                    self._current_connectivities.append({sourceid, targetid})
 
     def enterIfElseBlock(self, ctx: lfrXParser.IfElseBlockContext):
         # TODO - Setup the class level variables necessary to capture
         # the various states necessary for distribute blocks
-        pass
+        self._accumulated_states = []
 
     def enterIfBlock(self, ctx: lfrXParser.IfBlockContext):
         self._current_connectivities = []
         self._accumulated_states = []
 
-    def exitIfBlock(self, ctx: lfrXParser.IfBlockContext):
-        # TODO - Get the condition(s) and store in the current state option
-        # We need to figure out what kind of conditions would work or only
-        # a single signal would work
-        states = []
-        # TODO - Modify this line to extract and parse the logic condition
-        condition = "Logic Expresstion"
-        states = self._current_dist_block.generate_states(condition)
-        for state in states:
-            for connectivity in self._current_connectivities:
-                self._current_dist_block.set_connectivity(state, connectivity[0], connectivity[1])
-
     def enterElseIfBlock(self, ctx: lfrXParser.ElseIfBlockContext):
         self._current_connectivities = []
 
-    def exitElseIfBlock(self, ctx: lfrXParser.ElseIfBlockContext):
-        # TODO - Get the condition(s) and store in the current state option
-        # This would have very much the identical code as the ifBlock
-        states = []
-        # TODO - Modify this line to extract and parse the logic condition
-        condition = "Logic Expresstion"
-        states = self._current_dist_block.generate_states(condition)
-        for state in states:
-            for connectivity in self._current_connectivities:
-                self._current_dist_block.set_connectivity(state, connectivity[0], connectivity[1])
-
     def enterElseBlock(self, ctx: lfrXParser.ElseBlockContext):
         self._current_connectivities = []
+
+    def exitIfBlock(self, ctx: lfrXParser.IfBlockContext):
+        # We need to go through all the current connectivities
+        # and put them into the distribute block
+        self._accumulated_states.append(self._current_state)
+        dist_block = self._current_dist_block
+        for connectivity in self._current_connectivities:
+            dist_block.set_connectivity(self._current_state, connectivity[0], connectivity[1])
+
+    def exitElseIfBlock(self, ctx: lfrXParser.ElseIfBlockContext):
+        # We need to go through all the current connectivities
+        # and put them into the distribute block
+        self._accumulated_states.append(self._current_state)
+        dist_block = self._current_dist_block
+        for connectivity in self._current_connectivities:
+            dist_block.set_connectivity(self._current_state, connectivity[0], connectivity[1])
 
     def exitElseBlock(self, ctx: lfrXParser.ElseBlockContext):
         states = self._current_dist_block.get_remaining_states(self._accumulated_states)

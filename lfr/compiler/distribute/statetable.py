@@ -1,6 +1,6 @@
 from typing import Dict, List
-from BitVector import BitVector
 import networkx as nx
+from lfr.compiler.distribute.BitVector import BitVector
 
 
 class StateTable(object):

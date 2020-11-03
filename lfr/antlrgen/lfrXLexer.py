@@ -1,4 +1,4 @@
-# Generated from /Volumes/krishna-1/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
+# Generated from /Volumes/krishna/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
 from antlr4 import *
 from io import StringIO
 from typing.io import TextIO

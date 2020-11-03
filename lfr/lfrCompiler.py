@@ -219,16 +219,20 @@ class LFRCompiler(lfrXListener):
         startindex = 0
         endindex = 0
 
-        if ctx.vector() is not None:
-            startindex = int(ctx.vector().start.text)
-            endindex = int(ctx.vector().end.text)
-
         if name in self.vectors:
             v = self.vectors[name]
             startindex = v.startindex
             endindex = v.endindex
         else:
             raise Exception("Trying to parse vector variable {} and we couldn't find the vector in itself: Line - {}".format(name, ctx.start.line))
+
+        # Check to see if the slice is present utilize the index
+        if ctx.vector() is not None:
+            startindex = int(ctx.vector().start.text)
+            if ctx.vector().end is not None:
+                endindex = int(ctx.vector().end.text)
+            else:
+                endindex = startindex
 
         vrange = VectorRange(v, startindex, endindex)
 

@@ -39,11 +39,13 @@ distributeBodyStat
 
 ifElseBlock: ifBlock elseIfBlock* elseBlock?;
 
-ifBlock: 'if' '(' expression ')' statementBlock;
+ifBlock: 'if' '(' distributeCondition ')' statementBlock;
 
 elseBlock: 'else' statementBlock;
 
-elseIfBlock: 'else' 'if' '(' expression ')' statementBlock;
+elseIfBlock: 'else' 'if' '(' distributeCondition ')' statementBlock;
+
+distributeCondition: lhs binary_module_path_operator distvalue ;
 
 statementBlock
    :   'begin' distributionassignstat+ 'end'
@@ -55,10 +57,10 @@ caseBlock
    ;
 
 casestat
-   :  distCondition ':' statementBlock
+   :  distvalue ':' statementBlock
    ;
 
-distCondition: number;
+distvalue: number;
 
 distributionassignstat
    :  lhs '<=' (number | variables | expression) ';'

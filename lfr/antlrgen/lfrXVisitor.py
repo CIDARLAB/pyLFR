@@ -1,4 +1,4 @@
-# Generated from /Volumes/krishna-1/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
+# Generated from /Volumes/krishna/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .lfrXParser import lfrXParser
@@ -81,6 +81,11 @@ class lfrXVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by lfrXParser#elseIfBlock.
     def visitElseIfBlock(self, ctx:lfrXParser.ElseIfBlockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#distributeCondition.
+    def visitDistributeCondition(self, ctx:lfrXParser.DistributeConditionContext):
         return self.visitChildren(ctx)
 
 
@@ -214,8 +219,18 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#logiccondition_operand.
+    def visitLogiccondition_operand(self, ctx:lfrXParser.Logiccondition_operandContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#logiccondition.
     def visitLogiccondition(self, ctx:lfrXParser.LogicconditionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#logic_value.
+    def visitLogic_value(self, ctx:lfrXParser.Logic_valueContext):
         return self.visitChildren(ctx)
 
 

@@ -1,4 +1,4 @@
-# Generated from /Volumes/krishna-1/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
+# Generated from /Volumes/krishna/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .lfrXParser import lfrXParser
@@ -140,6 +140,15 @@ class lfrXListener(ParseTreeListener):
 
     # Exit a parse tree produced by lfrXParser#elseIfBlock.
     def exitElseIfBlock(self, ctx:lfrXParser.ElseIfBlockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#distributeCondition.
+    def enterDistributeCondition(self, ctx:lfrXParser.DistributeConditionContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#distributeCondition.
+    def exitDistributeCondition(self, ctx:lfrXParser.DistributeConditionContext):
         pass
 
 
@@ -377,12 +386,30 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#logiccondition_operand.
+    def enterLogiccondition_operand(self, ctx:lfrXParser.Logiccondition_operandContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#logiccondition_operand.
+    def exitLogiccondition_operand(self, ctx:lfrXParser.Logiccondition_operandContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#logiccondition.
     def enterLogiccondition(self, ctx:lfrXParser.LogicconditionContext):
         pass
 
     # Exit a parse tree produced by lfrXParser#logiccondition.
     def exitLogiccondition(self, ctx:lfrXParser.LogicconditionContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#logic_value.
+    def enterLogic_value(self, ctx:lfrXParser.Logic_valueContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#logic_value.
+    def exitLogic_value(self, ctx:lfrXParser.Logic_valueContext):
         pass
 
 

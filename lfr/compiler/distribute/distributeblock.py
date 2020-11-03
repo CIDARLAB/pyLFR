@@ -2,7 +2,7 @@ from lfr.compiler.distribute.statetable import StateTable
 from typing import List
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from BitVector import BitVector
+from lfr.compiler.distribute.BitVector import BitVector
 
 
 class DistributeBlock(object):
@@ -28,7 +28,6 @@ class DistributeBlock(object):
     def sensitivity_list(self, signal_list: List[VectorRange]) -> None:
         self._sensitivity_list = signal_list
         self._state_header = self.__generate_state_header()
-        self._state_table = StateTable(self._state_header)
 
     def set_connectivity(self, state, source, target) -> None:
         # TODO - Make the connectivity here based on the state
@@ -42,18 +41,17 @@ class DistributeBlock(object):
                 state_header.append("{}_{}".format(vector_range.id, str(i)))
         return state_header
 
-    def generate_states(self, condition) -> List[BitVector]:
-        # TODO - Utilize the logic expression and generate
-        # bitvectors for each of the states represented by the
-        # logic condition that is imported here
+    def generate_state_vector(self, signal_list: List[str], val_list: List[str]) -> BitVector:
+        # Go through the signal_list and start creating a right vector for everything else
+        val_vector = BitVector(intVal=0, size=len(signal_list))
 
-        # Return dummmy data
-        ret = []
-        ret.append(BitVector(intVal=1))
-        ret.append(BitVector(intVal=2))
-        ret.append(BitVector(intVal=3))
+        for signal in signal_list:
+            for i in range(len(signal)):
+                signal_id = ("{}_{}".format(signal.id, str(i)))
+                index = self._state_header.index(signal_id)
+                val_vector[index] = 1
 
-        return ret
+        return val_vector
 
     def get_remaining_states(self, states: List[BitVector]) -> List[BitVector]:
         # TODO - Return the remaining states
