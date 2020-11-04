@@ -123,8 +123,6 @@ class DistBlockListener(LFRCompiler):
     def enterElseIfBlock(self, ctx: lfrXParser.ElseIfBlockContext):
         self._current_connectivities = []
 
-    def enterElseBlock(self, ctx: lfrXParser.ElseBlockContext):
-        self._current_connectivities = []
 
     def exitIfBlock(self, ctx: lfrXParser.IfBlockContext):
         # We need to go through all the current connectivities
@@ -141,6 +139,9 @@ class DistBlockListener(LFRCompiler):
         dist_block = self._current_dist_block
         for connectivity in self._current_connectivities:
             dist_block.set_connectivity(self._current_state, connectivity[0], connectivity[1])
+
+    def enterElseBlock(self, ctx: lfrXParser.ElseBlockContext):
+        self._current_connectivities = []
 
     def exitElseBlock(self, ctx: lfrXParser.ElseBlockContext):
         remaining_states = self._current_dist_block.get_remaining_states(self._accumulated_states)

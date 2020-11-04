@@ -15,7 +15,13 @@ class DistributeBlock(object):
     def generate_fig(self, fig: FluidInteractionGraph) -> None:
         # TODO - Create the fig based on the given distribute logic shown here
         print("Implement the fig generation from this")
-        pass
+        self._state_table.generate_connectivity_table()
+
+        self._state_table.generate_and_annotations()
+
+        self._state_table.geneerate_or_annotations()
+
+        self._state_table.compute_control_mapping()
 
     @property
     def state_table(self) -> StateTable:
@@ -44,6 +50,14 @@ class DistributeBlock(object):
         print("Implement the method that will return the missing signal states \
              in the state table")
         ret = []
+        # Get the size of the state, generate every state until that size and add 
+        # whatever is not done into the ret
+        vector_size = len(states[0])
+        for i in range(pow(2, vector_size)):
+            bv = BitVector(intVal=i, size=vector_size)
+            if bv not in states:
+                ret.append(bv)
+
         return ret
 
     def generate_state_vector(self, signal_list: List[VectorRange], value_list: List[bool]) -> BitVector:
