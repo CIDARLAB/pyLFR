@@ -27,17 +27,22 @@ class DistributeBlock(object):
 
     @sensitivity_list.setter
     def sensitivity_list(self, signal_list: List[VectorRange]) -> None:
+        if self._state_table is not None:
+            raise Exception("Cannot update the sensitivity list since \
+                state table has already been generated !")
         self._sensitivity_list = signal_list
         # self._state_header = self.__generate_state_header()
-        self._state_table = StateTable(signal_list)
+        self._state_table = StateTable(self.__generate_state_header(signal_list))
 
     def set_connectivity(self, state, source, target) -> None:
-        # TODO - Make the connectivity here based on the state
+        # Make the connectivity here based on the state
         # This will be called mulitple times per distributeassignstat
-        pass
+        self._state_table.save_connectivity(state, source, target)
 
     def get_remaining_states(self, states: List[BitVector]) -> List[BitVector]:
         # TODO - Return the remaining states
+        print("Implement the method that will return the missing signal states \
+             in the state table")
         ret = []
         return ret
 
@@ -56,3 +61,10 @@ class DistributeBlock(object):
             individual_value_list
         )
         return ret
+
+    def __generate_state_header(self, signal_list: List[VectorRange]) -> List[str]:
+        state_header = []
+        for vector_range in signal_list:
+            for i in range(len(vector_range)):
+                state_header.append(vector_range[i].id)
+        return state_header

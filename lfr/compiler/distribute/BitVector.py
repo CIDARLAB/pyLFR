@@ -3220,6 +3220,9 @@ class BitVector( object ):
         intvals_for_circular_shifts  =  [int(self << 1) for _ in range(len(self))] 
         return BitVector( intVal = min(intvals_for_circular_shifts), size = len(self))
 
+    def __hash__(self):
+        # TODO - Figure out a better way to do this
+        return hash(self.__str__())
 
 #--------------------------------  BitVectorIterator Class -----------------------------------
 
