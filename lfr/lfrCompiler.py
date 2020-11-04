@@ -9,7 +9,8 @@ from lfr.compiler.module import Module
 from lfr.compiler.moduleio import IOType, ModuleIO
 from enum import Enum
 from typing import List
-
+from lfr.compiler.distribute.BitVector import BitVector
+import re
 from lfr.antlrgen.lfrXListener import lfrXListener
 from lfr.antlrgen.lfrXParser import lfrXParser
 
@@ -280,7 +281,7 @@ class LFRCompiler(lfrXListener):
             n = int(ctx.Hex_number().getText(), 16)
 
         elif ctx.Binary_number() is not None:
-            n = int(ctx.Binary_number().getText(), 2)
+            n = self.__parseBinaryNumber(ctx.Binary_number().getText())
 
         else:
             n = float(ctx.Real_number().getText())
@@ -472,3 +473,11 @@ class LFRCompiler(lfrXListener):
             print(item)
 
         print('---Bottom of Stack---')
+
+    def __parseBinaryNumber(self, text: str) -> BitVector:
+        pattern = r"(\d+)'b(\d+)"
+        matches = re.search(pattern, text)
+        # size = int(matches.group(1))
+        bit_pattern = matches.group(2)
+        n = BitVector(bitstring=bit_pattern)
+        return n

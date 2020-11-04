@@ -53,12 +53,16 @@ statementBlock
    ;
 
 caseBlock
-   :  'case' '(' lhs ')' casestat+ 'endcase'
+   :  caseBlockHeader casestat+ defaultCaseStat? 'endcase'
    ;
+
+caseBlockHeader : 'case' '(' lhs ')' ;
 
 casestat
    :  distvalue ':' statementBlock
    ;
+
+defaultCaseStat : 'default' ':' statementBlock ;
 
 distvalue: number;
 

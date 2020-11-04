@@ -99,13 +99,23 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#caseBlockHeader.
+    def visitCaseBlockHeader(self, ctx:lfrXParser.CaseBlockHeaderContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#casestat.
     def visitCasestat(self, ctx:lfrXParser.CasestatContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by lfrXParser#distCondition.
-    def visitDistCondition(self, ctx:lfrXParser.DistConditionContext):
+    # Visit a parse tree produced by lfrXParser#defaultCaseStat.
+    def visitDefaultCaseStat(self, ctx:lfrXParser.DefaultCaseStatContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#distvalue.
+    def visitDistvalue(self, ctx:lfrXParser.DistvalueContext):
         return self.visitChildren(ctx)
 
 

@@ -18,6 +18,7 @@ class DistBlockListener(LFRCompiler):
         # This particular variable is only used for
         # figuring out the else statement
         self._accumulated_states: List[BitVector] = None
+        self._current_lhs = None
 
     def exitDistributeCondition(self, ctx: lfrXParser.DistributeConditionContext):
         rhs = self.stack.pop()
@@ -35,7 +36,7 @@ class DistBlockListener(LFRCompiler):
         assert(rhs == 0 or rhs == 1)
         assert(relation_operator == '==')
 
-        state_vector = self._current_dist_block.generate_state_vector([lhs], [rhs])
+        state_vector = self._current_dist_block.generate_state_vector([lhs], [rhs == 1])
         self._current_state = state_vector
 
     def enterDistributionBlock(self, ctx: lfrXParser.DistributionBlockContext):
@@ -47,11 +48,9 @@ class DistBlockListener(LFRCompiler):
         sentivity_list = []
 
         # TODO - Go through the signals and then add then to the sentivity list
-
         for signal in ctx.signal():
             start_index = 0
             end_index = 0
-
             signal_name = signal.ID().getText()
 
             if signal_name not in self.vectors.keys():
@@ -73,7 +72,6 @@ class DistBlockListener(LFRCompiler):
                 end_index = v.endindex
 
             vrange = VectorRange(v, start_index, end_index)
-
             sentivity_list.append(vrange)
 
         self._current_dist_block.sensitivity_list = sentivity_list
@@ -102,7 +100,7 @@ class DistBlockListener(LFRCompiler):
                 sourceid = source.id
                 targetid = target.id
 
-                self._current_connectivities.append(sourceid, targetid)
+                self._current_connectivities.append((sourceid, targetid))
 
         elif len(lhs) != len(rhs):
             print("LHS not equal to RHS")
@@ -111,7 +109,7 @@ class DistBlockListener(LFRCompiler):
 
                 for target in lhs:
                     targetid = target.id
-                    self._current_connectivities.append({sourceid, targetid})
+                    self._current_connectivities.append((sourceid, targetid))
 
     def enterIfElseBlock(self, ctx: lfrXParser.IfElseBlockContext):
         # TODO - Setup the class level variables necessary to capture
@@ -145,7 +143,30 @@ class DistBlockListener(LFRCompiler):
             dist_block.set_connectivity(self._current_state, connectivity[0], connectivity[1])
 
     def exitElseBlock(self, ctx: lfrXParser.ElseBlockContext):
-        states = self._current_dist_block.get_remaining_states(self._accumulated_states)
-        for state in states:
+        remaining_states = self._current_dist_block.get_remaining_states(self._accumulated_states)
+        for state in remaining_states:
             for connectivity in self._current_connectivities:
                 self._current_dist_block.set_connectivity(state, connectivity[0], connectivity[1])
+
+    def enterCaseBlock(self, ctx: lfrXParser.CaseBlockContext):
+        self._accumulated_states = []
+        self._current_state = None
+
+    def exitCaseBlockHeader(self, ctx: lfrXParser.CaseBlockHeaderContext):
+        lhs = self.stack.pop()
+        self._current_lhs = lhs
+
+    def enterCasestat(self, ctx: lfrXParser.CasestatContext):
+        self._current_connectivities = []
+
+    def exitCasestat(self, ctx: lfrXParser.CasestatContext):
+        rhs = self.stack.pop()
+        assert(isinstance(rhs, BitVector))
+        lhs = self._current_lhs
+        dist_block = self._current_dist_block
+        rhs_list = [rhs[i] == 1 for i in range(len(rhs))]
+        state_vector = self._current_dist_block.generate_state_vector([lhs], rhs_list)
+        self._current_state = state_vector
+
+        for connectivity in self._current_connectivities:
+            dist_block.set_connectivity(self._current_state, connectivity[0], connectivity[1])

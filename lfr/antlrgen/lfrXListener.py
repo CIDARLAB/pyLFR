@@ -170,6 +170,15 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#caseBlockHeader.
+    def enterCaseBlockHeader(self, ctx:lfrXParser.CaseBlockHeaderContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#caseBlockHeader.
+    def exitCaseBlockHeader(self, ctx:lfrXParser.CaseBlockHeaderContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#casestat.
     def enterCasestat(self, ctx:lfrXParser.CasestatContext):
         pass
@@ -179,12 +188,21 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by lfrXParser#distCondition.
-    def enterDistCondition(self, ctx:lfrXParser.DistConditionContext):
+    # Enter a parse tree produced by lfrXParser#defaultCaseStat.
+    def enterDefaultCaseStat(self, ctx:lfrXParser.DefaultCaseStatContext):
         pass
 
-    # Exit a parse tree produced by lfrXParser#distCondition.
-    def exitDistCondition(self, ctx:lfrXParser.DistConditionContext):
+    # Exit a parse tree produced by lfrXParser#defaultCaseStat.
+    def exitDefaultCaseStat(self, ctx:lfrXParser.DefaultCaseStatContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#distvalue.
+    def enterDistvalue(self, ctx:lfrXParser.DistvalueContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#distvalue.
+    def exitDistvalue(self, ctx:lfrXParser.DistvalueContext):
         pass
 
 
