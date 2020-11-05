@@ -69,11 +69,7 @@ class DistributeBlock(object):
         # self._state_table.convert_to_fullstate_vector()
         individual_signal_list = []
         individual_value_list = []
-        # for signal, value in zip(signal_list, value_list):
-        #     for i in range(len(signal)):
-        #         # signal_name = "{}_{}".format(signal.id, str(i))
-        #         individual_signal_list.append(signal[i].id)
-        #         individual_value_list.append(value)
+
         i = 0
         for signal in signal_list:
             for j in range(len(signal)):
