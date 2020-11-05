@@ -71,13 +71,15 @@ class FluidInteractionGraph(nx.DiGraph):
         print("Need to implement the generation of the AND annotations")
         fig_node_name = "_".join([node.id for node in nodes])
         annotation_node = ANDAnnotation(fig_node_name)
+        self.add_fignode(annotation_node)
         for node in nodes:
             self.add_edge(node.id, annotation_node.id)
 
     def add_or_annotation(self, nodes: List[FIGNode]) -> None:
         print("Need to implement the generation of the OR annotation")
-        fig_node_name = "_".join([node.id for node in nodes])
+        fig_node_name = "DIST_OR_" + "_".join([node.id for node in nodes])
         annotation_node = ORAnnotation(fig_node_name)
+        self.add_fignode(annotation_node)
         for node in nodes:
             self.add_edge(node.id, annotation_node.id)
 
