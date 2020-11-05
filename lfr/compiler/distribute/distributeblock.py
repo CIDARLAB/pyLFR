@@ -21,9 +21,12 @@ class DistributeBlock(object):
 
         self._state_table.generate_or_annotations(fig)
 
-        # TODO - How to map the control mappings for each 
+        # TODO - How to map the control mappings for each
         # of the annotations to the control signals
         # self._state_table.compute_control_mapping()
+
+        # TODO - Mark all the single items with no pairs
+        pass
 
     @property
     def state_table(self) -> StateTable:
