@@ -30,6 +30,9 @@ class Vector:
         return ret
 
     def __getitem__(self, key: int):
+        if isinstance(key, slice):
+            start, stop, step = key.indices(len(self.vec))
+            return [self.vec[i] for i in range(start, stop, step)]
         if key > len(self.vec) - 1:
             raise IndexError()
         return self.vec[key]

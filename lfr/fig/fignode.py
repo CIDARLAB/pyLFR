@@ -2,6 +2,17 @@ from enum import Enum
 from typing import overload
 
 
+MATCH_STRING_ORDERING = [
+    "IO",
+    "FLOW",
+    "VALUE",
+    "STORAGE",
+    "SIGNAL",
+    "DISTRIBUTE-AND",
+    'DISTRIBUTE-OR'
+]
+
+
 class IOType(Enum):
     FLOW_INPUT = 1
     FLOW_OUTPUT = 2
@@ -89,3 +100,29 @@ class Signal(FIGNode):
     @property
     def match_string(self):
         return "SIGNAL"
+
+
+class DistributeNode(FIGNode):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+
+class ANDAnnotation(DistributeNode):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+    @property
+    def match_string(self):
+        return "DISTRIBUTE-AND"
+
+
+class ORAnnotation(DistributeNode):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+    @property
+    def match_string(self):
+        return "DISTRIBUTE-OR"

@@ -1,5 +1,5 @@
 from typing import List
-from lfr.fig.fignode import FIGNode, IONode, ValueNode
+from lfr.fig.fignode import ANDAnnotation, FIGNode, IONode, ORAnnotation, ValueNode
 from lfr.fig.interaction import Interaction, FluidFluidInteraction, FluidProcessInteraction, FluidNumberInteraction, FluidIntegerInteraction, InteractionType
 from networkx import nx
 
@@ -66,6 +66,20 @@ class FluidInteractionGraph(nx.DiGraph):
                 ret.append(node)
 
         return ret
+
+    def add_and_annotation(self, nodes: List[FIGNode]) -> None:
+        print("Need to implement the generation of the AND annotations")
+        fig_node_name = "_".join([node.id for node in nodes])
+        annotation_node = ANDAnnotation(fig_node_name)
+        for node in nodes:
+            self.add_edge(node.id, annotation_node.id)
+
+    def add_or_annotation(self, nodes: List[FIGNode]) -> None:
+        print("Need to implement the generation of the OR annotation")
+        fig_node_name = "_".join([node.id for node in nodes])
+        annotation_node = ORAnnotation(fig_node_name)
+        for node in nodes:
+            self.add_edge(node.id, annotation_node.id)
 
     # def generate_match_string(self) -> str:
     #     # Generate match string that we can use against any kind of a string match system

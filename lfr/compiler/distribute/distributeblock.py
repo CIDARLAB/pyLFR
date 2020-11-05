@@ -17,7 +17,7 @@ class DistributeBlock(object):
         print("Implement the fig generation from this")
         self._state_table.generate_connectivity_table()
 
-        self._state_table.generate_and_annotations()
+        self._state_table.generate_and_annotations(fig)
 
         self._state_table.geneerate_or_annotations()
 
