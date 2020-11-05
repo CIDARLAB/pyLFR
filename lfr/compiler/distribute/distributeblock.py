@@ -19,9 +19,11 @@ class DistributeBlock(object):
 
         self._state_table.generate_and_annotations(fig)
 
-        self._state_table.geneerate_or_annotations()
+        self._state_table.generate_or_annotations(fig)
 
-        self._state_table.compute_control_mapping()
+        # TODO - How to map the control mappings for each 
+        # of the annotations to the control signals
+        # self._state_table.compute_control_mapping()
 
     @property
     def state_table(self) -> StateTable:

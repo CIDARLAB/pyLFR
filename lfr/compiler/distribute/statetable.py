@@ -95,7 +95,7 @@ class StateTable(object):
         skip_list = []
         for i in range(n_cols):
             candidate = []
-            candidate.append(i)
+            candidate.append(self.get_fig(i))
             found_flag = False
             if i in skip_list:
                 continue
@@ -108,7 +108,7 @@ class StateTable(object):
                 if np.array_equal(col_i, col_j):
                     skip_list.append(i)
                     skip_list.append(j)
-                    candidate.append(self.get_signal())
+                    candidate.append(self.get_edge(j))
                     found_flag = True
 
             if found_flag is True:
@@ -137,9 +137,9 @@ class StateTable(object):
         all_candidates = []
         skip_list = []
         for i in range(n_rows):
-            candidate = [i]
+            candidate = [self.get_fig(i)]
             accumulate_vector = m[i, :]
-            ones_count = 0
+            ones_count = self.__ones_count(accumulate_vector)
             found_flag = False
             if i in skip_list:
                 continue
@@ -161,8 +161,9 @@ class StateTable(object):
                 count = self.__ones_count(xord_vector)
 
                 if distance == 1 and count == ones_count + 1:
-                    candidate.append(j)
-                    ones_count += 1
+                    candidate.append(self.get_fig(j))
+                    # ones_count += 1
+                    accumulate_vector = xord_vector
                     skip_list.append(j)
                     found_flag = True
 
@@ -211,3 +212,9 @@ class StateTable(object):
         m = self._connectivity_matrix
         column = self._connectivity_column_headers.index(edge_name)
         m[row, column] = value
+
+    def get_fig(self, i: int):
+        # Returns the edge from here
+        edge_name = self._connectivity_column_headers[i]
+        edge = self._connectivity_edges[edge_name]
+        return edge
