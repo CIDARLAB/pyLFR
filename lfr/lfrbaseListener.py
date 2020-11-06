@@ -32,20 +32,20 @@ class VariableTypes(Enum):
     SIGNAL = 4
 
 
-class LFRCompiler(lfrXListener):
+class LFRBaseListener(lfrXListener):
 
     def __init__(self):
 
         print("Initialized the lfrcompiler")
         self.modules = []
-        self.currentModule: Module
+        self.currentModule: Module = None
         self.lhs = None
         self.rhs = None
         self.operatormap = dict()
         self.expressionoperatorstack = []
         self.expressionvariablestack = None
         self.technologyOverride = None
-        self.compilingErrors = []
+        self.compilingErrors: LFRError = []
         self.success = False
         self.vectors = dict()
         self.expressionresults = None
@@ -60,13 +60,22 @@ class LFRCompiler(lfrXListener):
         self.statestack = []
         self.binaryoperatorsstack = [[]]
 
+    def enterModule(self, ctx: lfrXParser.ModuleContext):
+        if self.currentModule is not None:
+            self.modules.append(self.currentModule)
+            self.currentModule = None
+
     def enterModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
         m = Module(ctx.ID().getText())
         # self.modules.append(m)
         self.currentModule = m
 
-    def exitModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
-        self.modules.append(self.currentModule)
+    # def exitModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
+    #     self.modules.append(self.currentModule)
+
+    # def exitModule(self, ctx: lfrXParser.ModuleContext):
+    #     self.modules.append(self.currentModule)
+    #     self.currentModule = None
 
     def enterIoblock(self, ctx: lfrXParser.IoblockContext):
         # If io block has an explicit declaration set the flag

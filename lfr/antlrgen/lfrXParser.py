@@ -373,7 +373,7 @@ class lfrXParser ( Parser ):
     RULE_orderedioblock = 29
     RULE_unorderedioblock = 30
     RULE_explicitinstanceiomapping = 31
-    RULE_instancenames = 32
+    RULE_instancename = 32
     RULE_moduletype = 33
     RULE_tempvariablesstat = 34
     RULE_signalvarstat = 35
@@ -415,7 +415,7 @@ class lfrXParser ( Parser ):
                    "defaultCaseStat", "distvalue", "distributionassignstat", 
                    "sensitivitylist", "signal", "statements", "statement", 
                    "moduleinstantiationstat", "instanceioblock", "orderedioblock", 
-                   "unorderedioblock", "explicitinstanceiomapping", "instancenames", 
+                   "unorderedioblock", "explicitinstanceiomapping", "instancename", 
                    "moduletype", "tempvariablesstat", "signalvarstat", "fluiddeclstat", 
                    "storagestat", "numvarstat", "assignstat", "literalassignstat", 
                    "bracketexpression", "expression", "expressionterm", 
@@ -2341,8 +2341,8 @@ class lfrXParser ( Parser ):
             return self.getTypedRuleContext(lfrXParser.ModuletypeContext,0)
 
 
-        def instancenames(self):
-            return self.getTypedRuleContext(lfrXParser.InstancenamesContext,0)
+        def instancename(self):
+            return self.getTypedRuleContext(lfrXParser.InstancenameContext,0)
 
 
         def instanceioblock(self):
@@ -2378,7 +2378,7 @@ class lfrXParser ( Parser ):
             self.state = 330
             self.moduletype()
             self.state = 331
-            self.instancenames()
+            self.instancename()
             self.state = 332
             self.match(lfrXParser.T__2)
             self.state = 333
@@ -2643,7 +2643,7 @@ class lfrXParser ( Parser ):
         return localctx
 
 
-    class InstancenamesContext(ParserRuleContext):
+    class InstancenameContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -2653,29 +2653,29 @@ class lfrXParser ( Parser ):
             return self.getToken(lfrXParser.ID, 0)
 
         def getRuleIndex(self):
-            return lfrXParser.RULE_instancenames
+            return lfrXParser.RULE_instancename
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterInstancenames" ):
-                listener.enterInstancenames(self)
+            if hasattr( listener, "enterInstancename" ):
+                listener.enterInstancename(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitInstancenames" ):
-                listener.exitInstancenames(self)
+            if hasattr( listener, "exitInstancename" ):
+                listener.exitInstancename(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitInstancenames" ):
-                return visitor.visitInstancenames(self)
+            if hasattr( visitor, "visitInstancename" ):
+                return visitor.visitInstancename(self)
             else:
                 return visitor.visitChildren(self)
 
 
 
 
-    def instancenames(self):
+    def instancename(self):
 
-        localctx = lfrXParser.InstancenamesContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 64, self.RULE_instancenames)
+        localctx = lfrXParser.InstancenameContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 64, self.RULE_instancename)
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 362

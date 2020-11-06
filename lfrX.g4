@@ -89,7 +89,7 @@ statement
    |   moduleinstantiationstat
    ;
 
-moduleinstantiationstat: moduletype instancenames '(' instanceioblock ')';
+moduleinstantiationstat: moduletype instancename '(' instanceioblock ')';
 
 instanceioblock
    :   orderedioblock
@@ -102,7 +102,7 @@ unorderedioblock: explicitinstanceiomapping ( ',' explicitinstanceiomapping)*;
 
 explicitinstanceiomapping : '.'vectorvar '('variables')' ;
 
-instancenames: ID;
+instancename: ID;
 
 moduletype: ID;
 

@@ -2,12 +2,12 @@ from typing import List, Tuple
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.distribute.distributeblock import DistributeBlock
 from lfr.antlrgen.lfrXParser import lfrXParser
-from lfr.lfrCompiler import LFRCompiler, ListenerMode
+from lfr.lfrbaseListener import LFRBaseListener, ListenerMode
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.distribute.BitVector import BitVector
 
 
-class DistBlockListener(LFRCompiler):
+class DistBlockListener(LFRBaseListener):
 
     def __init__(self) -> None:
         super().__init__()

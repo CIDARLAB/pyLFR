@@ -169,8 +169,8 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by lfrXParser#instancenames.
-    def visitInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+    # Visit a parse tree produced by lfrXParser#instancename.
+    def visitInstancename(self, ctx:lfrXParser.InstancenameContext):
         return self.visitChildren(ctx)
 
 

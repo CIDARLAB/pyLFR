@@ -1,6 +1,6 @@
 from lfr.preprocessor import PreProcessor
 from lfr.distBlockListener import DistBlockListener
-from lfr.lfrCompiler import LFRCompiler
+from lfr.lfrbaseListener import LFRBaseListener
 import os
 from pathlib import Path
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream

@@ -1,9 +1,10 @@
-from typing import List
+from typing import Dict, List
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from lfr.fig.fignode import FIGNode, IONode, Flow
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from .moduleio import ModuleIO
+from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.interaction import FluidFluidCustomInteraction, FluidFluidInteraction, FluidIntegerInteraction, FluidNumberInteraction, FluidProcessInteraction, Interaction, InteractionType
+import copy
 
 
 class Module(object):
@@ -22,6 +23,9 @@ class Module(object):
     @property
     def imported_modules(self) -> List:
         return self._imported_modules
+
+    def add_new_import(self, module: object) -> None:
+        self._imported_modules.append(module)
 
     def get_explicit_mappings(self) -> List[ExplicitMapping]:
         return self.mappings
@@ -123,3 +127,27 @@ class Module(object):
             ret += self._io[key].__str__()
             ret += "\n"
         return ret
+
+    def instantiate_module(self, type_id: str, var_name: str, io_mapping: Dict[str, str]) -> None:
+        # Step 1 - Find the corresponding module from the imports
+        module_to_import = None
+        for module_check in self.imported_modules:
+            if module_to_import.name == type_id:
+                module_to_import = module_check
+
+        # Step 2 - Create a copy of the fig
+        fig_copy = copy.deepcopy(module_to_import.FIG)
+
+        # Step 3 - Convert all the flow IO nodes where mappings exist
+        # to flow nodes
+        for io_key in self._io.key():
+            module_io = self._io[io_key]
+
+
+        # Step 4 - Relabel all the nodes with the prefix defined by
+        # var_name
+
+        # Step 5 - Stitch togher tall the io newly formed io nodes into
+        # current fig
+
+        pass

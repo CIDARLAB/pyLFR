@@ -91,6 +91,21 @@
             ],
             "console": "integratedTerminal"
         },
+        {
+            "name": "Debug - CLI TEST",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/lfr/cmdline.py",
+            "args": [
+                "--no-gen",
+                "--outpath",
+                "./out/",
+                "${workspaceFolder}/test/chthesis/rotary16.lfr",
+                "${workspaceFolder}/test/distribute-library/mux_16_in.lfr",
+                "${workspaceFolder}/test/distribute-library/mux_16_out.lfr"
+            ],
+            "console": "integratedTerminal"
+        },
 
     ]
 }

@@ -296,12 +296,12 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by lfrXParser#instancenames.
-    def enterInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+    # Enter a parse tree produced by lfrXParser#instancename.
+    def enterInstancename(self, ctx:lfrXParser.InstancenameContext):
         pass
 
-    # Exit a parse tree produced by lfrXParser#instancenames.
-    def exitInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+    # Exit a parse tree produced by lfrXParser#instancename.
+    def exitInstancename(self, ctx:lfrXParser.InstancenameContext):
         pass
 
 

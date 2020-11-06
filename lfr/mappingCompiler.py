@@ -2,7 +2,7 @@ from lfr.compiler.constraints.performanceconstraint import \
     PerformanceConstraintData
 from enum import Enum
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
-from lfr.lfrCompiler import LFRCompiler
+from lfr.lfrbaseListener import LFRBaseListener
 from lfr.antlrgen.lfrXParser import lfrXParser
 
 
@@ -21,7 +21,7 @@ class ConstriantBoundType(Enum):
     GREATER_THAN_EQUALS = 4
 
 
-class MappingCompiler(LFRCompiler):
+class MappingCompiler(LFRBaseListener):
 
     def __init__(self):
         super().__init__()

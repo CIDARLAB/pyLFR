@@ -7,6 +7,7 @@ class ErrorType(Enum):
     VECTOR_SIZE_MISMATCH = 20
     VARIABLE_NOT_RECOGNIZED = 30
     SIGNAL_NOT_FOUND = 40
+    MODULE_NOT_FOUND = 50
 
 
 class LFRError:
