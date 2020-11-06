@@ -62,7 +62,7 @@ class LFRCompiler(lfrXListener):
 
     def enterModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
         m = Module(ctx.ID().getText())
-        self.modules.append(m)
+        # self.modules.append(m)
         self.currentModule = m
 
     def exitModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):

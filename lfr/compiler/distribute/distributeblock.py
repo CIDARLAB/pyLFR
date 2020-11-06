@@ -51,11 +51,9 @@ class DistributeBlock(object):
         self._state_table.save_connectivity(state, source, target)
 
     def get_remaining_states(self, states: List[BitVector]) -> List[BitVector]:
-        # TODO - Return the remaining states
-        print("Implement the method that will return the missing signal states \
-             in the state table")
+        # Return the remaining states
         ret = []
-        # Get the size of the state, generate every state until that size and add 
+        # Get the size of the state, generate every state until that size and add
         # whatever is not done into the ret
         vector_size = len(states[0])
         for i in range(pow(2, vector_size)):

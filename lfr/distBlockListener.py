@@ -123,7 +123,6 @@ class DistBlockListener(LFRCompiler):
     def enterElseIfBlock(self, ctx: lfrXParser.ElseIfBlockContext):
         self._current_connectivities = []
 
-
     def exitIfBlock(self, ctx: lfrXParser.IfBlockContext):
         # We need to go through all the current connectivities
         # and put them into the distribute block

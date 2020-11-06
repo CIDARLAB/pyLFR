@@ -132,7 +132,7 @@ class StateTable(object):
         m = self._connectivity_matrix
         shape = m.shape
         n_rows = shape[0]
-        n_cols = shape[1]
+        # n_cols = shape[1]
 
         all_candidates = []
         skip_list = []

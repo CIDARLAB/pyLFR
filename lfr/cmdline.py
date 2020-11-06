@@ -1,3 +1,4 @@
+from lfr.preprocessor import PreProcessor
 from lfr.distBlockListener import DistBlockListener
 from lfr.lfrCompiler import LFRCompiler
 import os
@@ -30,7 +31,7 @@ def load_libraries():
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('input', help="This is the file thats used as the input ")
+    parser.add_argument('input', nargs='+', help="This is the file thats used as the input ")
     parser.add_argument('--outpath', type=str, default="out/", help="This is the output directory")
     parser.add_argument('--technology', type=str, default="dropx", help="This is the mapping library you need to use")
     parser.add_argument('--library', type=str, default="./library", help="This sets the default library where the different technologies sit in")
@@ -38,16 +39,16 @@ def main():
     parser.add_argument('--no-gen', action="store_true", help="Force the program to skip the device generation")
     args = parser.parse_args()
 
-    input_path = Path(args.input).resolve()
-    print("Input Path: {0}".format(input_path))
+    # Utilize the prepreocessor to generate the input file
+    preprocessor = PreProcessor(args.input)
+
+    preprocessor.process()
 
     print("output dir:", args.outpath)
     print(args.input)
 
-    extension = Path(args.input).suffix
-    if extension != '.lfr':
-        print("Unrecognized file Extension")
-        exit()
+    rel_input_path = "pre_processor_dump.lfr"
+    input_path = Path(rel_input_path).resolve()
 
     abspath = os.path.abspath(args.outpath)
     parameters.OUTPUT_DIR = abspath
@@ -56,9 +57,6 @@ def main():
         print("Creating the output directory:")
         path = Path(parameters.OUTPUT_DIR)
         path.mkdir(parents=True)
-
-    # abspath = os.path.abspath(args.library)
-    # parameters.LIB_DIR = abspath
 
     library_name = args.technology
     # libraries = load_libraries()
