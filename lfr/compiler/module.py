@@ -165,9 +165,17 @@ class Module(object):
 
         fig_copy.rename_nodes(rename_map)
 
-        # Step 5 - Stitch togher tall the io newly formed io nodes into
+        # Step 5 - Stitch together tall the io newly formed io nodes into
         # current fig
+        self.FIG.add_fig(fig_copy)
 
+        # Step 6 - connect all the io nodes
+        for key, value in io_mapping.items():
+            source_fig = self.FIG.get_fignode(rename_map[value])
+            target_fig = self.FIG.get_fignode(key)
+            assert(source_fig is not None)
+            assert(target_fig is not None)
+            self.FIG.connect_fignodes(source_fig, target_fig)
         pass
 
     def __generate_instance_node_name(self, node: str, var_name: str) -> str:

@@ -1,3 +1,5 @@
+from __future__ import annotations
+from lfr import fig
 from typing import List, Dict, Optional
 from lfr.fig.fignode import ANDAnnotation, FIGNode, IONode, ORAnnotation, ValueNode
 from lfr.fig.interaction import Interaction, FluidFluidInteraction, FluidProcessInteraction, FluidNumberInteraction, FluidIntegerInteraction, InteractionType
@@ -109,6 +111,16 @@ class FluidInteractionGraph(nx.DiGraph):
     #         ret += ionode.match_string
 
     #     return ret
+
+    def add_fig(self, fig_to_add: FluidInteractionGraph) -> None:
+        # Check if any of the incoming fig nodes
+        for node_id in fig_to_add.nodes:
+            fig_node = fig_to_add.get_fignode(node_id)
+            assert(fig_node is not None)
+            self.add_fignode(fig_node)
+
+        for edge in fig_to_add.edges:
+            self.add_edge(edge[0], edge[1])
 
     def __str__(self):
         return self.edges.__str__()
