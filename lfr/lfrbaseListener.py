@@ -8,7 +8,7 @@ from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
 from lfr.compiler.moduleio import IOType, ModuleIO
 from enum import Enum
-from typing import List
+from typing import List, Optional
 from lfr.compiler.distribute.BitVector import BitVector
 import re
 from lfr.antlrgen.lfrXListener import lfrXListener
@@ -38,14 +38,14 @@ class LFRBaseListener(lfrXListener):
 
         print("Initialized the lfrcompiler")
         self.modules = []
-        self.currentModule: Module = None
+        self.currentModule: Optional[Module] = None
         self.lhs = None
         self.rhs = None
         self.operatormap = dict()
         self.expressionoperatorstack = []
         self.expressionvariablestack = None
         self.technologyOverride = None
-        self.compilingErrors: LFRError = []
+        self.compilingErrors: List[LFRError] = []
         self.success = False
         self.vectors = dict()
         self.expressionresults = None

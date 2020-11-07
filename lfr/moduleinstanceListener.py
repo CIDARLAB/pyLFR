@@ -9,7 +9,7 @@ class ModuleInstanceListener(DistBlockListener):
 
     def __init__(self) -> None:
         super().__init__()
-        self._io_mapping: Dict[str, str] = None
+        self._io_mapping: Dict[str, str] = dict()
 
     def enterModuleinstantiationstat(self, ctx: lfrXParser.ModuleinstantiationstatContext):
         # Check if the type exists in current compiler memory
@@ -19,7 +19,7 @@ class ModuleInstanceListener(DistBlockListener):
             if module_to_check.name == type_id:
                 module_to_import = module_to_check
         if module_to_import is None:
-            self.compilingErrors.append(LFRError(ErrorType.MODULE_NOT_FOUND))
+            self.compilingErrors.append(LFRError(ErrorType.MODULE_NOT_FOUND), "Could find type {}".format(type_id))
             return
         self._io_mapping = dict()
 
@@ -29,5 +29,6 @@ class ModuleInstanceListener(DistBlockListener):
         # Create new instance of the import the type
         type_id = ctx.moduletype().getText()
         io_mapping = self._io_mapping
-        var_name = self.stack.pop()
+        var_name = ctx.instancename().getText()
         self.currentModule.instantiate_module(type_id, var_name, io_mapping)
+

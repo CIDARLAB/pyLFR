@@ -11,13 +11,13 @@ class DistBlockListener(LFRBaseListener):
 
     def __init__(self) -> None:
         super().__init__()
-        self._current_dist_block: DistributeBlock = None
+        self._current_dist_block: Optional[DistributeBlock] = None
         self._current_sensitivity_list = None
-        self._current_state: BitVector = None
-        self._current_connectivities: Tuple[str, str] = None
+        self._current_state: Optional[BitVector] = None
+        self._current_connectivities: List[Tuple[str, str]] = []
         # This particular variable is only used for
         # figuring out the else statement
-        self._accumulated_states: List[BitVector] = None
+        self._accumulated_states: List[BitVector] = []
         self._current_lhs = None
 
     def exitDistributeCondition(self, ctx: lfrXParser.DistributeConditionContext):

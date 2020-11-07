@@ -1,14 +1,15 @@
-from typing import List
+from typing import List, Dict, Optional
 from lfr.fig.fignode import ANDAnnotation, FIGNode, IONode, ORAnnotation, ValueNode
 from lfr.fig.interaction import Interaction, FluidFluidInteraction, FluidProcessInteraction, FluidNumberInteraction, FluidIntegerInteraction, InteractionType
-from networkx import nx
+import networkx as nx
+import copy
 
 
 class FluidInteractionGraph(nx.DiGraph):
 
     def __init__(self, data=None, val=None, **attr) -> None:
         super(FluidInteractionGraph, self).__init__()
-        self._fignodes = dict()
+        self._fignodes: Dict[str, FIGNode] = dict()
         # self._fluid_interactions = dict()
         self._gen_id = 0
 
@@ -16,14 +17,31 @@ class FluidInteractionGraph(nx.DiGraph):
         self._fignodes[node.id] = node
         self.add_node(node.id)
 
-    def get_fignode(self, id: str) -> FIGNode:
+    def get_fignode(self, id: str) -> Optional[FIGNode]:
         if id in self._fignodes.keys():
             return self._fignodes[id]
         else:
             return None
 
+    def load_fignodes(self, fig_nodes: List[FIGNode]) -> None:
+        for node in fig_nodes:
+            self._fignodes[node.id] = node
+
     def contains_fignode(self, fluid_object: FIGNode) -> bool:
-        return fluid_object.id in self.fluids.keys()
+        return fluid_object.id in self._fignodes.keys()
+
+    def switch_fignode(self, old_fignode: FIGNode, new_fignode: FIGNode) -> None:
+        self._fignodes[old_fignode.id] = new_fignode
+
+    def rename_nodes(self, rename_map: Dict[str, str]) -> None:
+        for node in self.nodes:
+            fig_node = self._fignodes[node]
+            self._fignodes[rename_map[node]] = fig_node
+
+            # Deleted the old key in the dictionary
+            self._fignodes.pop(node, None)
+
+        nx.relabel_nodes(self, rename_map, False)
 
     def add_interaction(self, interaction: Interaction):
         if interaction.id not in self._fignodes.keys():
@@ -94,6 +112,18 @@ class FluidInteractionGraph(nx.DiGraph):
 
     def __str__(self):
         return self.edges.__str__()
+
+    def __deepcopy__(self, memo={}):
+        not_there = []
+        existing = memo.get(self, not_there)
+        if existing is not not_there:
+            print('ALREADY COPIED TO', repr(existing))
+            return existing
+        fignodes_copy = copy.deepcopy([self._fignodes[key] for key in self._fignodes.keys()], memo)
+        fig_copy = self.copy(as_view=False)
+        fig_copy.__class__ = FluidInteractionGraph
+        fig_copy.load_fignodes(fignodes_copy)
+        return fig_copy
 
     # ---------- HELPER METHODS -----------
 

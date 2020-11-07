@@ -1,8 +1,9 @@
-from typing import Dict, List
+from __future__ import annotations
+from typing import Dict, List, Optional
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from lfr.fig.fignode import FIGNode, IONode, Flow
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.compiler.moduleio import ModuleIO
+from lfr.compiler.moduleio import IOType, ModuleIO
 from lfr.fig.interaction import FluidFluidCustomInteraction, FluidFluidInteraction, FluidIntegerInteraction, FluidNumberInteraction, FluidProcessInteraction, Interaction, InteractionType
 import copy
 
@@ -11,41 +12,45 @@ class Module(object):
     def __init__(self, name):
         self.name = name
         self._imported_modules: List[Module] = []
-        self._io = dict()
+        self._io: List[ModuleIO] = []
         self.FIG = FluidInteractionGraph()
         self.fluids = dict()
         self.mappings: List[ExplicitMapping] = []
 
     @property
     def io(self) -> List[ModuleIO]:
-        return [v for k, v in self._io.items()]
+        return self._io
 
     @property
-    def imported_modules(self) -> List:
+    def imported_modules(self) -> List[Module]:
         return self._imported_modules
 
-    def add_new_import(self, module: object) -> None:
+    def add_new_import(self, module: Module) -> None:
         self._imported_modules.append(module)
 
     def get_explicit_mappings(self) -> List[ExplicitMapping]:
         return self.mappings
 
     def add_io(self, io: ModuleIO):
-        self._io[io.id] = io
+        self._io.append(io)
         f = IONode(io.id, io.type)
         self.FIG.add_fignode(f)
 
     def get_io(self, name: str) -> ModuleIO:
-        if name in self._io:
-            return self._io[name]
-        else:
-            raise Exception("ModuleIO:{0} not found !".format(name))
+        for module_io in self._io:
+            if name == module_io.id:
+                return module_io
+
+        raise Exception("ModuleIO:{0} not found !".format(name))
+
+    def get_all_io(self) -> List[ModuleIO]:
+        return self._io
 
     def add_fluid(self, fluid: Flow):
         self.fluids[fluid.id] = fluid
         self.FIG.add_fignode(fluid)
 
-    def get_fluid(self, name: str) -> FIGNode:
+    def get_fluid(self, name: str) -> Optional[FIGNode]:
         return self.FIG.get_fignode(name)
 
     def add_fluid_connection(self, item1id: str, item2id: str) -> None:
@@ -123,8 +128,8 @@ class Module(object):
 
     def __str__(self):
         ret = "Name : " + self.name + "\n"
-        for key in self._io.keys():
-            ret += self._io[key].__str__()
+        for module_io in self._io:
+            ret += module_io.__str__()
             ret += "\n"
         return ret
 
@@ -132,7 +137,7 @@ class Module(object):
         # Step 1 - Find the corresponding module from the imports
         module_to_import = None
         for module_check in self.imported_modules:
-            if module_to_import.name == type_id:
+            if module_check.name == type_id:
                 module_to_import = module_check
 
         # Step 2 - Create a copy of the fig
@@ -140,14 +145,30 @@ class Module(object):
 
         # Step 3 - Convert all the flow IO nodes where mappings exist
         # to flow nodes
-        for io_key in self._io.key():
-            module_io = self._io[io_key]
-
+        for module_io in module_to_import.get_all_io():
+            if module_io.id in io_mapping.keys():
+                # Convert this node into a flow node
+                fignode = fig_copy.get_fignode(module_io.id)
+                if fignode is None:
+                    continue
+                # Sanity check to see if its flow input/output
+                assert(module_io.type is IOType.FLOW_INPUT or module_io.type is IOType.FLOW_OUTPUT)
+                # Replace
+                new_fignode = Flow(fignode.id)
+                fig_copy.switch_fignode(fignode, new_fignode)
 
         # Step 4 - Relabel all the nodes with the prefix defined by
         # var_name
+        rename_map = dict()
+        for node in list(fig_copy.nodes):
+            rename_map[node] = self.__generate_instance_node_name(node, var_name)
+
+        fig_copy.rename_nodes(rename_map)
 
         # Step 5 - Stitch togher tall the io newly formed io nodes into
         # current fig
 
         pass
+
+    def __generate_instance_node_name(self, node: str, var_name: str) -> str:
+        return "{0}_{1}".format(var_name, node)

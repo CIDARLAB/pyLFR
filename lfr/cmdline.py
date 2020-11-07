@@ -1,3 +1,4 @@
+from lfr.moduleinstanceListener import ModuleInstanceListener
 from lfr.preprocessor import PreProcessor
 from lfr.distBlockListener import DistBlockListener
 from lfr.lfrbaseListener import LFRBaseListener
@@ -79,7 +80,7 @@ def main():
 
     walker = ParseTreeWalker()
 
-    mapping_listener = DistBlockListener()
+    mapping_listener = ModuleInstanceListener()
 
     walker.walk(mapping_listener, tree)
 
