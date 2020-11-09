@@ -9,7 +9,6 @@ class MARSStrategy(GenStrategy):
     def __init__(self, construction_graph: ConstructionGraph) -> None:
         super().__init__(construction_graph)
 
-    @overload
     def reduce_mapping_options(self) -> None:
         # TODO - Implement Generalized Ali Strategy 1
 

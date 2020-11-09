@@ -13,7 +13,7 @@ class StateTable(object):
         # TODO - Figure out from Nada's paper on how to transform the
         # state table into flow annotations using z3
         self._connectivity_states: Dict[BitVector, nx.DiGraph] = dict()
-        self._colored_graph: nx.DiGraph = None
+        # self._colored_graph: nx.DiGraph = None
         self._connectivity_matrix: np.array = None
         self._connectivity_column_headers = None
         self._connectivity_edges = dict()
@@ -21,6 +21,9 @@ class StateTable(object):
     @property
     def headers(self) -> List[str]:
         return self._headers
+
+    def get_edge(self, j):
+        return self._connectivity_edges[self._connectivity_column_headers[j]]
 
     def convert_to_fullstate_vector(self, signal_list: List[str], state: BitVector) -> BitVector:
         # Go through the each of the signal and update the specific BitVector value
@@ -121,10 +124,15 @@ class StateTable(object):
                 # TODO - Figure out if the edge needs any additional markup here
                 source_node = fig.get_fignode(edge[0])
                 target_node = fig.get_fignode(edge[1])
+                if source_node is None:
+                    raise Exception("Could not find the corresponding nodes {}".format(source_node))
+                if target_node is None:
+                    raise Exception("could not find the corresponding nodes {}".format(target_node))
                 fig.connect_fignodes(source_node, target_node)
 
             origin_nodes = [fig.get_fignode(edge[0]) for edge in candidate]
             print("Added AND annotation on FIG: {}".format(str(origin_nodes)))
+            assert(origin_nodes is not None)
             fig.add_and_annotation(origin_nodes)
 
     def generate_or_annotations(self, fig: FluidInteractionGraph) -> None:

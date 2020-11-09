@@ -68,7 +68,7 @@ def main():
     # library = libraries[library_name]
 
     # Modifiy this to translate relative path to absolute path in the future
-    finput = FileStream(input_path)
+    finput = FileStream(str(input_path))
 
     lexer = lfrXLexer(finput)
 

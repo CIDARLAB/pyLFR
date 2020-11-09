@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.distribute.distributeblock import DistributeBlock
 from lfr.antlrgen.lfrXParser import lfrXParser
