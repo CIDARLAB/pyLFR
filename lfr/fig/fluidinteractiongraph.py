@@ -1,6 +1,5 @@
 from __future__ import annotations
-from lfr import fig
-from typing import List, Dict, Optional
+from typing import List, Dict
 from lfr.fig.fignode import ANDAnnotation, FIGNode, IONode, NOTAnnotation, ORAnnotation, ValueNode
 from lfr.fig.interaction import Interaction, FluidFluidInteraction, FluidProcessInteraction, FluidNumberInteraction, FluidIntegerInteraction, InteractionType
 import networkx as nx
@@ -186,7 +185,7 @@ class FluidInteractionGraph(nx.DiGraph):
 
     def __add_fluid_number_interaction(self, interaction: FluidNumberInteraction) -> None:
         if interaction.fluid.id not in self._fignodes.keys():
-            raise Exception("Unable to add interaction because of missing flow: {0}".format(interaction.fluids[0].id))
+            raise Exception("Unable to add interaction because of missing flow: {0}".format(interaction.fluid.id))
 
         # Create new Value node
         val_node = ValueNode(self.__get_val_node_id(), interaction.value)
@@ -198,7 +197,7 @@ class FluidInteractionGraph(nx.DiGraph):
 
     def __add_fluid_integer_interaction(self, interaction: FluidIntegerInteraction) -> None:
         if interaction.fluid.id not in self._fignodes.keys():
-            raise Exception("Unable to add interaction because of missing flow: {0}".format(interaction.fluids[0].id))
+            raise Exception("Unable to add interaction because of missing flow: {0}".format(interaction.fluid.id))
 
         # Create new Value node
         val_node = ValueNode(self.__get_val_node_id(), interaction.value)

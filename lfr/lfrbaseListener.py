@@ -249,8 +249,11 @@ class LFRBaseListener(lfrXListener):
         self.stack.append(vrange)
 
     def exitConcatenation(self, ctx: lfrXParser.ConcatenationContext):
-
-        item_in_concatenation = len(ctx.vectorvar())
+        if ctx.vectorvar() is not None:
+            item_in_concatenation = len(ctx.vectorvar())
+        else:
+            # TODO - Check if this is right ?
+            item_in_concatenation = 1
         # slice the items out of the stack
         stackslice = self.stack[-(item_in_concatenation):]
         del self.stack[-(item_in_concatenation):]
@@ -419,19 +422,6 @@ class LFRBaseListener(lfrXListener):
         else:
             self.success = True
         print(self.currentModule)
-
-    def __validatevariable(self, variable):
-        if variable in self.currentModule.intermediates:
-            return True
-        else:
-            ret = self.currentModule.get_io(variable)
-            if ret is not None:
-                return True
-
-        return False
-
-    def __clearoperatormap(self):
-        self.operatormap.clear()
 
     def __createVector(self, name: str, objecttype, startindex: int, endindex: int) -> Vector:
         v = Vector(name, objecttype, startindex, endindex)

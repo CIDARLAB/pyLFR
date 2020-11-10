@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import overload
 
 
 MATCH_STRING_ORDERING = [
