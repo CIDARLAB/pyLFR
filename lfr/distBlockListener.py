@@ -13,7 +13,7 @@ class DistBlockListener(LFRBaseListener):
         super().__init__()
         self._current_dist_block: Optional[DistributeBlock] = None
         self._current_sensitivity_list = None
-        self._current_state: Optional[BitVector] = None
+        self._current_state: BitVector
         self._current_connectivities: List[Tuple[str, str]] = []
         # This particular variable is only used for
         # figuring out the else statement

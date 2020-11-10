@@ -1,9 +1,9 @@
 from __future__ import annotations
 from typing import Dict, List, Optional
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
-from lfr.fig.fignode import FIGNode, IONode, Flow
+from lfr.fig.fignode import FIGNode, IONode, Flow, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.compiler.moduleio import IOType, ModuleIO
+from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.interaction import FluidFluidCustomInteraction, FluidFluidInteraction, FluidIntegerInteraction, FluidNumberInteraction, FluidProcessInteraction, Interaction, InteractionType
 import copy
 
@@ -33,8 +33,8 @@ class Module(object):
 
     def add_io(self, io: ModuleIO):
         self._io.append(io)
-        f = IONode(io.id, io.type)
-        self.FIG.add_fignode(f)
+        for i in range(len(io.vector_ref)):
+            self.FIG.add_fignode(io.vector_ref[i])
 
     def get_io(self, name: str) -> ModuleIO:
         for module_io in self._io:
@@ -145,17 +145,17 @@ class Module(object):
 
         # Step 3 - Convert all the flow IO nodes where mappings exist
         # to flow nodes
-        for module_io in module_to_import.get_all_io():
-            if module_io.id in io_mapping.keys():
-                # Convert this node into a flow node
-                fignode = fig_copy.get_fignode(module_io.id)
-                if fignode is None:
-                    continue
-                # Sanity check to see if its flow input/output
-                assert(module_io.type is IOType.FLOW_INPUT or module_io.type is IOType.FLOW_OUTPUT)
-                # Replace
-                new_fignode = Flow(fignode.id)
-                fig_copy.switch_fignode(fignode, new_fignode)
+        for there_node_key in io_mapping.keys():
+            fignode = fig_copy.get_fignode(there_node_key)
+            # Skip if its a control type one
+            if fignode.type is IOType.CONTROL:
+                continue
+            # Convert this node into a flow node
+            # Sanity check to see if its flow input/output
+            assert(fignode.type is IOType.FLOW_INPUT or fignode.type is IOType.FLOW_OUTPUT)
+            # Replace
+            new_fignode = Flow(fignode.id)
+            fig_copy.switch_fignode(fignode, new_fignode)
 
         # Step 4 - Relabel all the nodes with the prefix defined by
         # var_name
@@ -170,12 +170,24 @@ class Module(object):
         self.FIG.add_fig(fig_copy)
 
         # Step 6 - connect all the io nodes
-        for key, value in io_mapping.items():
-            source_fig = self.FIG.get_fignode(rename_map[value])
-            target_fig = self.FIG.get_fignode(key)
-            assert(source_fig is not None)
-            assert(target_fig is not None)
-            self.FIG.connect_fignodes(source_fig, target_fig)
+        for there_id, here_id in io_mapping.items():
+            # target_fig = self.FIG.get_fignode(rename_map[value])
+            # source_fig = self.FIG.get_fignode(key)
+            there_check_node = module_to_import.FIG.get_fignode(there_id)
+            there_node = self.FIG.get_fignode(rename_map[there_id])
+            here_node = self.FIG.get_fignode(here_id)
+            if there_check_node.type is IOType.FLOW_INPUT:
+                source_node = here_node
+                target_node = there_node
+            elif there_check_node.type is IOType.FLOW_OUTPUT:
+                source_node = there_node
+                target_node = here_node
+            else:
+                source_node = here_node
+                target_node = there_node
+            assert(source_node is not None)
+            assert(target_node is not None)
+            self.FIG.connect_fignodes(source_node, target_node)
         pass
 
     def __generate_instance_node_name(self, node: str, var_name: str) -> str:

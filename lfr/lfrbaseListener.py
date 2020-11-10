@@ -1,4 +1,4 @@
-from lfr.fig.fignode import Flow, Storage, Signal
+from lfr.fig.fignode import IOType, Flow, IONode, Storage, Signal
 from lfr.compiler.language.concatenation import Concatenation
 from lfr.compiler.language.fluidexpression import FluidExpression
 from lfr.compiler.language.utils import is_number
@@ -6,7 +6,7 @@ from lfr.compiler.language.vector import Vector
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
-from lfr.compiler.moduleio import IOType, ModuleIO
+from lfr.compiler.moduleio import ModuleIO
 from enum import Enum
 from typing import List, Optional
 from lfr.compiler.distribute.BitVector import BitVector
@@ -73,9 +73,21 @@ class LFRBaseListener(lfrXListener):
     # def exitModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
     #     self.modules.append(self.currentModule)
 
-    # def exitModule(self, ctx: lfrXParser.ModuleContext):
-    #     self.modules.append(self.currentModule)
-    #     self.currentModule = None
+    def exitModule(self, ctx: lfrXParser.ModuleContext):
+        self.operatormap = dict()
+        self.expressionoperatorstack = []
+        self.expressionvariablestack = None
+        self.technologyOverride = None
+        self.success = False
+        self.vectors = dict()
+        self.expressionresults = None
+        self.listermode: ListenerMode = ListenerMode.NONE
+        self.lastlistenermode: ListenerMode = ListenerMode.NONE
+
+        self.stack = []
+        self.statestack = []
+        self.binaryoperatorsstack = [[]]
+
 
     def enterIoblock(self, ctx: lfrXParser.IoblockContext):
         # If io block has an explicit declaration set the flag
@@ -91,13 +103,14 @@ class LFRBaseListener(lfrXListener):
                 startindex = int(vv.vector().start.text)
                 endindex = int(vv.vector().end.text)
 
-            v = self.__createVector(name, ModuleIO, startindex, endindex)
+            v = self.__createVector(name, IONode, startindex, endindex)
 
             self.vectors[name] = v
             self.typeMap[name] = VariableTypes.FLUID
 
-            for item in v.get_items():
-                self.currentModule.add_io(item)
+            m = ModuleIO(name)
+            m.vector_ref = v.get_range()
+            self.currentModule.add_io(m)
 
     def exitExplicitIOBlock(self, ctx: lfrXParser.ExplicitIOBlockContext):
         #  First check the type of the explicit io block
@@ -139,17 +152,18 @@ class LFRBaseListener(lfrXListener):
                 if self.EXPLICIT_MODULE_DECLARATION is True:
                     # This is the scenario where all the declaration is done explicitly
                     vec = self.__createVector(
-                        name, ModuleIO, startindex, endindex)
+                        name, IONode, startindex, endindex)
                     self.vectors[name] = vec
                     self.typeMap[name] = VariableTypes.FLUID
-
-                    # Add the declared IO as the module's IO
-                    for item in vec.get_items():
-                        self.currentModule.add_io(item)
 
                     # Go through each of the ios and modify the type
                     for io in vec.get_items():
                         io.type = mode
+
+                    # Create and add a ModuleIO reference
+                    m = ModuleIO(name, mode)
+                    m.vector_ref = vec.get_range()
+                    self.currentModule.add_io(m)
 
                 else:
                     self.compilingErrors.append(
@@ -282,7 +296,6 @@ class LFRBaseListener(lfrXListener):
 
         # TODO: Figure out to do the parsing for the binary, hex and octal
         # numbers. Need to cleave the header for this
-
         if ctx.Decimal_number() is not None:
             n = int(ctx.Decimal_number().getText())
 

@@ -36,6 +36,9 @@ class FIGNode(object):
         else:
             False
 
+    def rename(self, id: str) -> None:
+        self._id = id
+
 
 class ValueNode(FIGNode):
 
@@ -69,8 +72,12 @@ class IONode(Flow):
         self._type = iotype
 
     @property
-    def type(self):
+    def type(self) -> IOType:
         return self._type
+
+    @type.setter
+    def type(self, iotype: IOType) -> None:
+        self._type = iotype
 
     def __str__(self) -> str:
         return "Name: {0.id}, Type : {0.type}".format(self)

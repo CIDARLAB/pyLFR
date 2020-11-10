@@ -38,10 +38,11 @@ class FluidInteractionGraph(nx.DiGraph):
     def rename_nodes(self, rename_map: Dict[str, str]) -> None:
         for node in self.nodes:
             fig_node = self._fignodes[node]
+            fig_node.rename(rename_map[node])
             self._fignodes[rename_map[node]] = fig_node
 
             # Deleted the old key in the dictionary
-            self._fignodes.pop(node, None)
+            del self._fignodes[node]
 
         nx.relabel_nodes(self, rename_map, False)
 
@@ -128,6 +129,7 @@ class FluidInteractionGraph(nx.DiGraph):
         for node_id in fig_to_add.nodes:
             fig_node = fig_to_add.get_fignode(node_id)
             assert(fig_node is not None)
+            # Check if fignode is alreay present in this
             self.add_fignode(fig_node)
 
         for edge in fig_to_add.edges:
