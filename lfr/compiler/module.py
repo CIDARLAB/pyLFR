@@ -106,7 +106,7 @@ class Module(object):
     def add_interaction_output(self, output: Flow, interaction: Interaction):
         self.FIG.connect_fignodes(output, interaction)
 
-    def add_fluid_numeric_interaction(self, fluid1: FIGNode, number, interaction_type: InteractionType) -> Interaction:
+    def add_fluid_numeric_interaction(self, fluid1: Flow, number: Optional[int, float], interaction_type: InteractionType) -> Interaction:
         # finteraction = FluidInteraction(fluid1=fluid1, interactiontype=interaction)
         finteraction = None
 

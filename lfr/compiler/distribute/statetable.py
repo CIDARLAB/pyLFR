@@ -1,5 +1,7 @@
+from __future__ import annotations
+from lfr.fig.fignode import ANDAnnotation, ORAnnotation
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import networkx as nx
 from lfr.compiler.distribute.BitVector import BitVector
 import numpy as np
@@ -17,12 +19,14 @@ class StateTable(object):
         self._connectivity_matrix: np.array = None
         self._connectivity_column_headers = None
         self._connectivity_edges = dict()
+        self._and_annotations: List[ANDAnnotation] = []
+        self._or_annotations: List[ORAnnotation] = []
 
     @property
     def headers(self) -> List[str]:
         return self._headers
 
-    def get_edge(self, j):
+    def get_edge(self, j: int) -> Tuple[str, str]:
         return self._connectivity_edges[self._connectivity_column_headers[j]]
 
     def convert_to_fullstate_vector(self, signal_list: List[str], state: BitVector) -> BitVector:
@@ -133,7 +137,8 @@ class StateTable(object):
             origin_nodes = [fig.get_fignode(edge[0]) for edge in candidate]
             print("Added AND annotation on FIG: {}".format(str(origin_nodes)))
             assert(origin_nodes is not None)
-            fig.add_and_annotation(origin_nodes)
+            annotation = fig.add_and_annotation(origin_nodes)
+            self._and_annotations.append(annotation)
 
     def generate_or_annotations(self, fig: FluidInteractionGraph) -> None:
 
@@ -145,7 +150,7 @@ class StateTable(object):
         all_candidates = []
         skip_list = []
         for i in range(n_rows):
-            candidate = [self.get_fig(i)]
+            candidate_row_index = [i]
             accumulate_vector = m[i, :]
             ones_count = self.__ones_count(accumulate_vector)
             found_flag = False
@@ -169,27 +174,58 @@ class StateTable(object):
                 count = self.__ones_count(xord_vector)
 
                 if distance == 1 and count == ones_count + 1:
-                    candidate.append(self.get_fig(j))
-                    # ones_count += 1
+                    candidate_row_index.append(j)
                     accumulate_vector = xord_vector
+                    ones_count = count
                     skip_list.append(j)
                     found_flag = True
 
             if found_flag:
-                all_candidates.append(candidate)
+                all_candidates.append(candidate_row_index)
 
         print(all_candidates)
-        # Generate all the different AND annotations necessary
-        for candidate in all_candidates:
-            for edge in candidate:
-                # TODO - Figure out if the edge needs any additional markup here
-                source_node = fig.get_fignode(edge[0])
-                target_node = fig.get_fignode(edge[1])
-                fig.connect_fignodes(source_node, target_node)
+        # Generate all the different OR annotations necessary
 
-            origin_nodes = [fig.get_fignode(edge[0]) for edge in candidate]
-            print("Added AND annotation on FIG: {}".format(str(origin_nodes)))
-            fig.add_or_annotation(origin_nodes)
+        # Figure out how to process the candidates:
+        # We should be able to go through each row,
+        # figure out if the row's->positive's->source are in any of the AND annotations
+        # if they are pick up the AND annotation node as one of the targets
+        # else (is not present in AND annotation) pick up the positive's corresponding
+        # flow node as one of the targets for the or annotation
+        for candidate in all_candidates:
+            args_for_annotation = []
+            for row_index in candidate:
+                row = m[row_index, :]
+                for i in range(len(row)):
+                    if row[i] == 1:
+                        # Find the corresponding collumn edge:
+                        edge = self.get_edge(i)
+                        # First make a connection so that this is taken care or
+                        source_node = fig.get_fignode(edge[0])
+                        target_node = fig.get_fignode(edge[1])
+                        fig.connect_fignodes(source_node, target_node)
+
+                        # Add the connection target in inot the annotion targets we want
+                        # this representated for the entire converage
+                        target = edge[1]
+                        args_for_annotation.append(fig.get_fignode(target))
+                        # Check if the source is in any of the AND annotations
+                        source = edge[0]
+                        found_flag = False
+                        annotation_to_use = None
+                        for annotation in self._and_annotations:
+                            if source in fig.neighbors(annotation.id):
+                                found_flag = True
+                                annotation_to_use = fig.get_fignode(annotation.id)
+                                break
+                        if found_flag is True:
+                            if annotation_to_use not in args_for_annotation:
+                                args_for_annotation.append(annotation_to_use)
+                        else:
+                            if source not in args_for_annotation:
+                                args_for_annotation.append(fig.get_fignode(source))
+
+            self._or_annotations.append(fig.add_or_annotation(args_for_annotation))
 
     def __hamming_distance(self, vec1, vec2) -> int:
         assert(vec1.size == vec2.size)

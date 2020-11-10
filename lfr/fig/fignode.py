@@ -73,8 +73,7 @@ class IONode(Flow):
     def type(self):
         return self._type
 
-    @overload
-    def __str__(self):
+    def __str__(self) -> str:
         return "Name: {0.id}, Type : {0.type}".format(self)
 
     @property
@@ -126,3 +125,13 @@ class ORAnnotation(DistributeNode):
     @property
     def match_string(self):
         return "DISTRIBUTE-OR"
+
+
+class NOTAnnotation(DistributeNode):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+    @property
+    def match_string(self):
+        return "DISTRIBUTE-NOT"

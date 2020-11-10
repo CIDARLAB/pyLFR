@@ -8,7 +8,7 @@ from lfr.compiler.distribute.BitVector import BitVector
 class DistributeBlock(object):
 
     def __init__(self) -> None:
-        self._sensitivity_list: List[VectorRange] = None
+        self._sensitivity_list: List[VectorRange] = []
         # self._state_header: List[str] = None
         self._state_table: StateTable = None
 
