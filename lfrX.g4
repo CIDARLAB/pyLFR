@@ -111,6 +111,7 @@ tempvariablesstat
    |   storagestat
    |   numvarstat
    |   signalvarstat
+   |   pumpvarstat
    ;
 
 signalvarstat: 'signal' declvar (',' declvar)* ;
@@ -118,6 +119,8 @@ signalvarstat: 'signal' declvar (',' declvar)* ;
 fluiddeclstat : 'flow' declvar (',' declvar)* ;
 
 storagestat : 'storage' declvar (',' declvar)* ;
+
+pumpvarstat: 'pump' declvar (',' declvar)* ;
 
 numvarstat : 'number'  literalassignstat (',' literalassignstat)*  ;
 

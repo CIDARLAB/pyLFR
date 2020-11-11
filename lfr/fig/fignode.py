@@ -97,6 +97,16 @@ class Storage(Flow):
         return "STORAGE"
 
 
+class Pump(Flow):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+    @property
+    def match_string(self) -> str:
+        return "PUMP"
+
+
 class Signal(FIGNode):
 
     def __init__(self, id: str) -> None:

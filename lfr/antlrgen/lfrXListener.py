@@ -350,6 +350,15 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#pumpvarstat.
+    def enterPumpvarstat(self, ctx:lfrXParser.PumpvarstatContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#pumpvarstat.
+    def exitPumpvarstat(self, ctx:lfrXParser.PumpvarstatContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#numvarstat.
     def enterNumvarstat(self, ctx:lfrXParser.NumvarstatContext):
         pass

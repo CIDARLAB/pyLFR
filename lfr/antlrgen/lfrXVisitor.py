@@ -199,6 +199,11 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#pumpvarstat.
+    def visitPumpvarstat(self, ctx:lfrXParser.PumpvarstatContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#numvarstat.
     def visitNumvarstat(self, ctx:lfrXParser.NumvarstatContext):
         return self.visitChildren(ctx)
