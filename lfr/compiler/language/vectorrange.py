@@ -19,7 +19,7 @@ class VectorRange:
         return self.vector[self.startindex + key]
 
     def __iter__(self):
-        return iter(self.vector)
+        return iter(self.vector[self.startindex:self.endindex+1])
 
     def __len__(self):
         return abs(self.startindex - self.endindex) + 1

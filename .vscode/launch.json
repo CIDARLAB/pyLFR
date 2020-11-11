@@ -78,5 +78,34 @@
             ],
             "console": "integratedTerminal"
         },
+        {
+            "name": "Debug - Customfile, NO GEN",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/lfr/cmdline.py",
+            "args": [
+                "--no-gen",
+                "--outpath",
+                "./out/",
+                "${file}"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug - CLI TEST",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/lfr/cmdline.py",
+            "args": [
+                "--no-gen",
+                "--outpath",
+                "./out/",
+                "${workspaceFolder}/test/chthesis/rotary_cells.lfr",
+                "${workspaceFolder}/test/distribute-library/mux_04_in.lfr",
+                "${workspaceFolder}/test/distribute-library/mux_04_out.lfr"
+            ],
+            "console": "integratedTerminal"
+        },
+
     ]
 }

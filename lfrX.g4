@@ -26,21 +26,26 @@ explicitIOBlock
 declvar : vector? ID ;
 
 distributionBlock
-   :  'distribute@' '(' signallist ')' 'begin' distributionBody 'end'
+   :  'distribute@' '(' sensitivitylist ')' 'begin' distributionBody 'end'
    ;
 
-distributionBody
-//TODO: modify the distribute block to be more precise
-   :  (distributionassignstat)*
-   |  caseBlock
-   |  ifElseBlock
-   ;
+distributionBody:  distributeBodyStat+;
 
-ifElseBlock: 'if' '(' signallist ')' statementBlock elseIfBlock* elseBlock?;
+distributeBodyStat
+    :   distributionassignstat
+    |   caseBlock
+    |   ifElseBlock
+    ;
+
+ifElseBlock: ifBlock elseIfBlock* elseBlock?;
+
+ifBlock: 'if' '(' distributeCondition ')' statementBlock;
 
 elseBlock: 'else' statementBlock;
 
-elseIfBlock: 'else' 'if' '(' signallist ')' statementBlock;
+elseIfBlock: 'else' 'if' '(' distributeCondition ')' statementBlock;
+
+distributeCondition: lhs binary_module_path_operator distvalue ;
 
 statementBlock
    :   'begin' distributionassignstat+ 'end'
@@ -48,21 +53,27 @@ statementBlock
    ;
 
 caseBlock
-   :  'case' '(' lhs ')' casestat+ 'endcase'
+   :  caseBlockHeader casestat+ defaultCaseStat? 'endcase'
    ;
+
+caseBlockHeader : 'case' '(' lhs ')' ;
 
 casestat
-   :  distCondition ':' statementBlock
+   :  distvalue ':' statementBlock
    ;
 
-distCondition: number;
+defaultCaseStat : 'default' ':' statementBlock ;
+
+distvalue: number;
 
 distributionassignstat
    :  lhs '<=' (number | variables | expression) ';'
    //TODO: Have a switch->case block
    ;
 
-signallist : ID vector? (',' ID vector?)* ;
+sensitivitylist : signal (',' signal)* ;
+
+signal : ID vector? ;
 
 statements
    :   statement ';'
@@ -78,7 +89,7 @@ statement
    |   moduleinstantiationstat
    ;
 
-moduleinstantiationstat: moduletype instancenames '(' instanceioblock ')';
+moduleinstantiationstat: moduletype instancename '(' instanceioblock ')';
 
 instanceioblock
    :   orderedioblock
@@ -89,9 +100,9 @@ orderedioblock:   vectorvar (',' vectorvar)* ;
 
 unorderedioblock: explicitinstanceiomapping ( ',' explicitinstanceiomapping)*;
 
-explicitinstanceiomapping : '.'vectorvar '('variables')' ;
+explicitinstanceiomapping : '.'ID '('variables')' ;
 
-instancenames: ID;
+instancename: ID;
 
 moduletype: ID;
 
@@ -132,9 +143,15 @@ expressionterm
    |    number
    ;
 
-logiccondition
+logiccondition_operand
     :   (bracketexpression | expressionterm ) (binary_operator (bracketexpression | expressionterm ))*
     ;
+
+logiccondition
+    :   logiccondition_operand binary_module_path_operator logic_value
+    ;
+
+logic_value: number ;
 
 vector
    :   '[' start=Decimal_number (':' end=Decimal_number)?  ']'

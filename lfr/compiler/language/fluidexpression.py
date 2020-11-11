@@ -11,11 +11,10 @@ NUMERIC_OPERATOR_ORDER = [['/', '*'], ['%'], ['+', '-']]
 
 class FluidExpression:
 
-    def __init__(self, module, performance_constraints=[]) -> None:
+    def __init__(self, module) -> None:
         self.currentmodule = module
         self.operatororder = OPERATOR_ORDER
         self.numericoperatororder = NUMERIC_OPERATOR_ORDER
-        self.__performance_constraints = performance_constraints
 
     def process_expression(self, termlist, operatorlist):
 

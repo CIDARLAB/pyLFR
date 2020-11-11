@@ -7,5 +7,5 @@ for f in $1/*.lfr;
 
 do 
 	echo "Running File $f";
-    python ../lfr/cmdline.py --outpath ../out/ $f
+    python ../lfr/cmdline.py --no-gen --outpath ../out/ $f
 done  

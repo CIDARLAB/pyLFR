@@ -2,7 +2,7 @@ from lfr.compiler.constraints.performanceconstraint import \
     PerformanceConstraintData
 from enum import Enum
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
-from lfr.lfrCompiler import LFRCompiler
+from lfr.lfrbaseListener import LFRBaseListener
 from lfr.antlrgen.lfrXParser import lfrXParser
 
 
@@ -21,7 +21,7 @@ class ConstriantBoundType(Enum):
     GREATER_THAN_EQUALS = 4
 
 
-class MappingCompiler(LFRCompiler):
+class MappingCompiler(LFRBaseListener):
 
     def __init__(self):
         super().__init__()
@@ -41,7 +41,7 @@ class MappingCompiler(LFRCompiler):
             if ctx.assignmode == 'assign':
                 self.mappingMode = TechnologyMappingMODE.ASSIGN_MAPPING
             elif ctx.assignmode == 'storage':
-                self.mappingMode = TechnologyMappingMODE.STORAGE_MAPPING 
+                self.mappingMode = TechnologyMappingMODE.STORAGE_MAPPING
         else:
             self.mappingMode = TechnologyMappingMODE.OPERATOR_MAPPING
             operator = ctx.mappingoperator().getText()
@@ -53,7 +53,7 @@ class MappingCompiler(LFRCompiler):
     def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):
 
         if self.mappingMode is TechnologyMappingMODE.OPERATOR_MAPPING:
-            # We need to do call super implementation first so that we can pull the 
+            # We need to do call super implementation first so that we can pull the
             # correct vectorranges
             super().exitAssignstat(ctx)
 
@@ -172,4 +172,3 @@ class MappingCompiler(LFRCompiler):
         constraint_data['bound'] = constraint_bound
 
         self.current_performance_constraints.append(constraint_data)
-

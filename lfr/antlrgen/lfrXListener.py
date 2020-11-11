@@ -98,12 +98,30 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#distributeBodyStat.
+    def enterDistributeBodyStat(self, ctx:lfrXParser.DistributeBodyStatContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#distributeBodyStat.
+    def exitDistributeBodyStat(self, ctx:lfrXParser.DistributeBodyStatContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#ifElseBlock.
     def enterIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
         pass
 
     # Exit a parse tree produced by lfrXParser#ifElseBlock.
     def exitIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#ifBlock.
+    def enterIfBlock(self, ctx:lfrXParser.IfBlockContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#ifBlock.
+    def exitIfBlock(self, ctx:lfrXParser.IfBlockContext):
         pass
 
 
@@ -125,6 +143,15 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#distributeCondition.
+    def enterDistributeCondition(self, ctx:lfrXParser.DistributeConditionContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#distributeCondition.
+    def exitDistributeCondition(self, ctx:lfrXParser.DistributeConditionContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#statementBlock.
     def enterStatementBlock(self, ctx:lfrXParser.StatementBlockContext):
         pass
@@ -143,6 +170,15 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#caseBlockHeader.
+    def enterCaseBlockHeader(self, ctx:lfrXParser.CaseBlockHeaderContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#caseBlockHeader.
+    def exitCaseBlockHeader(self, ctx:lfrXParser.CaseBlockHeaderContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#casestat.
     def enterCasestat(self, ctx:lfrXParser.CasestatContext):
         pass
@@ -152,12 +188,21 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by lfrXParser#distCondition.
-    def enterDistCondition(self, ctx:lfrXParser.DistConditionContext):
+    # Enter a parse tree produced by lfrXParser#defaultCaseStat.
+    def enterDefaultCaseStat(self, ctx:lfrXParser.DefaultCaseStatContext):
         pass
 
-    # Exit a parse tree produced by lfrXParser#distCondition.
-    def exitDistCondition(self, ctx:lfrXParser.DistConditionContext):
+    # Exit a parse tree produced by lfrXParser#defaultCaseStat.
+    def exitDefaultCaseStat(self, ctx:lfrXParser.DefaultCaseStatContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#distvalue.
+    def enterDistvalue(self, ctx:lfrXParser.DistvalueContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#distvalue.
+    def exitDistvalue(self, ctx:lfrXParser.DistvalueContext):
         pass
 
 
@@ -170,12 +215,21 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by lfrXParser#signallist.
-    def enterSignallist(self, ctx:lfrXParser.SignallistContext):
+    # Enter a parse tree produced by lfrXParser#sensitivitylist.
+    def enterSensitivitylist(self, ctx:lfrXParser.SensitivitylistContext):
         pass
 
-    # Exit a parse tree produced by lfrXParser#signallist.
-    def exitSignallist(self, ctx:lfrXParser.SignallistContext):
+    # Exit a parse tree produced by lfrXParser#sensitivitylist.
+    def exitSensitivitylist(self, ctx:lfrXParser.SensitivitylistContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#signal.
+    def enterSignal(self, ctx:lfrXParser.SignalContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#signal.
+    def exitSignal(self, ctx:lfrXParser.SignalContext):
         pass
 
 
@@ -242,12 +296,12 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by lfrXParser#instancenames.
-    def enterInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+    # Enter a parse tree produced by lfrXParser#instancename.
+    def enterInstancename(self, ctx:lfrXParser.InstancenameContext):
         pass
 
-    # Exit a parse tree produced by lfrXParser#instancenames.
-    def exitInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+    # Exit a parse tree produced by lfrXParser#instancename.
+    def exitInstancename(self, ctx:lfrXParser.InstancenameContext):
         pass
 
 
@@ -350,12 +404,30 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#logiccondition_operand.
+    def enterLogiccondition_operand(self, ctx:lfrXParser.Logiccondition_operandContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#logiccondition_operand.
+    def exitLogiccondition_operand(self, ctx:lfrXParser.Logiccondition_operandContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#logiccondition.
     def enterLogiccondition(self, ctx:lfrXParser.LogicconditionContext):
         pass
 
     # Exit a parse tree produced by lfrXParser#logiccondition.
     def exitLogiccondition(self, ctx:lfrXParser.LogicconditionContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#logic_value.
+    def enterLogic_value(self, ctx:lfrXParser.Logic_valueContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#logic_value.
+    def exitLogic_value(self, ctx:lfrXParser.Logic_valueContext):
         pass
 
 

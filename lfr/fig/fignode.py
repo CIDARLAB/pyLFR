@@ -1,5 +1,15 @@
 from enum import Enum
-from typing import overload
+
+
+MATCH_STRING_ORDERING = [
+    "IO",
+    "FLOW",
+    "VALUE",
+    "STORAGE",
+    "SIGNAL",
+    "DISTRIBUTE-AND",
+    'DISTRIBUTE-OR'
+]
 
 
 class IOType(Enum):
@@ -21,7 +31,13 @@ class FIGNode(object):
         return self.id
 
     def __eq__(self, other) -> bool:
-        return self.id == other.id
+        if isinstance(other, FIGNode):
+            return self.id == other.id
+        else:
+            False
+
+    def rename(self, id: str) -> None:
+        self._id = id
 
 
 class ValueNode(FIGNode):
@@ -34,26 +50,41 @@ class ValueNode(FIGNode):
     def value(self):
         return self._value
 
+    @property
+    def match_string(self):
+        return "VALUE"
+
 
 class Flow(FIGNode):
 
     def __init__(self, id) -> None:
         super().__init__(id)
 
+    @property
+    def match_string(self):
+        return "FLOW"
 
-class IO(Flow):
+
+class IONode(Flow):
 
     def __init__(self, id: str, iotype=None):
         super().__init__(id)
         self._type = iotype
 
     @property
-    def type(self):
+    def type(self) -> IOType:
         return self._type
 
-    @overload
-    def __str__(self):
+    @type.setter
+    def type(self, iotype: IOType) -> None:
+        self._type = iotype
+
+    def __str__(self) -> str:
         return "Name: {0.id}, Type : {0.type}".format(self)
+
+    @property
+    def match_string(self):
+        return "IO"
 
 
 class Storage(Flow):
@@ -61,8 +92,52 @@ class Storage(Flow):
     def __init__(self, id: str) -> None:
         super().__init__(id)
 
+    @property
+    def match_string(self):
+        return "STORAGE"
+
 
 class Signal(FIGNode):
 
     def __init__(self, id: str) -> None:
         super().__init__(id)
+
+    @property
+    def match_string(self):
+        return "SIGNAL"
+
+
+class DistributeNode(FIGNode):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+
+class ANDAnnotation(DistributeNode):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+    @property
+    def match_string(self):
+        return "DISTRIBUTE-AND"
+
+
+class ORAnnotation(DistributeNode):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+    @property
+    def match_string(self):
+        return "DISTRIBUTE-OR"
+
+
+class NOTAnnotation(DistributeNode):
+
+    def __init__(self, id: str) -> None:
+        super().__init__(id)
+
+    @property
+    def match_string(self):
+        return "DISTRIBUTE-NOT"

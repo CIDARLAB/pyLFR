@@ -1,5 +1,4 @@
 {
-  "python.pythonPath": "/home/krishna/.cache/pypoetry/virtualenvs/pylfr-FQa9NuUG-py3.8",
   "python.linting.flake8Enabled": true,
   "python.linting.enabled": true,
   "python.linting.flake8Args": ["--max-line-length=300"],

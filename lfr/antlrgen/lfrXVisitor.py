@@ -59,8 +59,18 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#distributeBodyStat.
+    def visitDistributeBodyStat(self, ctx:lfrXParser.DistributeBodyStatContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#ifElseBlock.
     def visitIfElseBlock(self, ctx:lfrXParser.IfElseBlockContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#ifBlock.
+    def visitIfBlock(self, ctx:lfrXParser.IfBlockContext):
         return self.visitChildren(ctx)
 
 
@@ -74,6 +84,11 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#distributeCondition.
+    def visitDistributeCondition(self, ctx:lfrXParser.DistributeConditionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#statementBlock.
     def visitStatementBlock(self, ctx:lfrXParser.StatementBlockContext):
         return self.visitChildren(ctx)
@@ -84,13 +99,23 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#caseBlockHeader.
+    def visitCaseBlockHeader(self, ctx:lfrXParser.CaseBlockHeaderContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#casestat.
     def visitCasestat(self, ctx:lfrXParser.CasestatContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by lfrXParser#distCondition.
-    def visitDistCondition(self, ctx:lfrXParser.DistConditionContext):
+    # Visit a parse tree produced by lfrXParser#defaultCaseStat.
+    def visitDefaultCaseStat(self, ctx:lfrXParser.DefaultCaseStatContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#distvalue.
+    def visitDistvalue(self, ctx:lfrXParser.DistvalueContext):
         return self.visitChildren(ctx)
 
 
@@ -99,8 +124,13 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by lfrXParser#signallist.
-    def visitSignallist(self, ctx:lfrXParser.SignallistContext):
+    # Visit a parse tree produced by lfrXParser#sensitivitylist.
+    def visitSensitivitylist(self, ctx:lfrXParser.SensitivitylistContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#signal.
+    def visitSignal(self, ctx:lfrXParser.SignalContext):
         return self.visitChildren(ctx)
 
 
@@ -139,8 +169,8 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by lfrXParser#instancenames.
-    def visitInstancenames(self, ctx:lfrXParser.InstancenamesContext):
+    # Visit a parse tree produced by lfrXParser#instancename.
+    def visitInstancename(self, ctx:lfrXParser.InstancenameContext):
         return self.visitChildren(ctx)
 
 
@@ -199,8 +229,18 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#logiccondition_operand.
+    def visitLogiccondition_operand(self, ctx:lfrXParser.Logiccondition_operandContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#logiccondition.
     def visitLogiccondition(self, ctx:lfrXParser.LogicconditionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#logic_value.
+    def visitLogic_value(self, ctx:lfrXParser.Logic_valueContext):
         return self.visitChildren(ctx)
 
 

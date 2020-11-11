@@ -1,6 +1,7 @@
-import os
+import lfr
+import pathlib
 
 # Global Variables
-OUTPUT_DIR = ""
-LFR_DIR = os.path.abspath("/home/krishna/CIDAR/pylfr/")
-LIB_DIR = os.path.abspath("/home/krishna/CIDAR/pylfr/library")
+LFR_DIR = pathlib.Path(lfr.__file__).parent.parent.absolute()
+LIB_DIR = LFR_DIR.joinpath("library")
+OUTPUT_DIR = LFR_DIR.joinpath("output")

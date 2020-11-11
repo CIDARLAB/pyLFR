@@ -1,4 +1,4 @@
-from lfr.compiler.fluid import Fluid
+from lfr.fig.fignode import IOType, Flow, IONode, Storage, Signal
 from lfr.compiler.language.concatenation import Concatenation
 from lfr.compiler.language.fluidexpression import FluidExpression
 from lfr.compiler.language.utils import is_number
@@ -6,12 +6,11 @@ from lfr.compiler.language.vector import Vector
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
-from lfr.compiler.moduleio import IOType, ModuleIO
-from lfr.compiler.storage import Storage
-from lfr.compiler.signal import Signal
+from lfr.compiler.moduleio import ModuleIO
 from enum import Enum
-from typing import List
-
+from typing import List, Optional
+from lfr.compiler.distribute.BitVector import BitVector
+import re
 from lfr.antlrgen.lfrXListener import lfrXListener
 from lfr.antlrgen.lfrXParser import lfrXParser
 
@@ -33,20 +32,20 @@ class VariableTypes(Enum):
     SIGNAL = 4
 
 
-class LFRCompiler(lfrXListener):
+class LFRBaseListener(lfrXListener):
 
     def __init__(self):
 
         print("Initialized the lfrcompiler")
         self.modules = []
-        self.currentModule: Module
+        self.currentModule: Optional[Module] = None
         self.lhs = None
         self.rhs = None
         self.operatormap = dict()
         self.expressionoperatorstack = []
         self.expressionvariablestack = None
         self.technologyOverride = None
-        self.compilingErrors = []
+        self.compilingErrors: List[LFRError] = []
         self.success = False
         self.vectors = dict()
         self.expressionresults = None
@@ -56,21 +55,39 @@ class LFRCompiler(lfrXListener):
 
         self.typeMap = dict()
 
-        # Performance Constraints
-        self.current_performance_constraints = []
-
         # This might be the new expression stack
         self.stack = []
         self.statestack = []
         self.binaryoperatorsstack = [[]]
 
+    def enterModule(self, ctx: lfrXParser.ModuleContext):
+        if self.currentModule is not None:
+            self.modules.append(self.currentModule)
+            self.currentModule = None
+
     def enterModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
         m = Module(ctx.ID().getText())
-        self.modules.append(m)
+        # self.modules.append(m)
         self.currentModule = m
 
-    def exitModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
-        self.modules.append(self.currentModule)
+    # def exitModuledefinition(self, ctx: lfrXParser.ModuledefinitionContext):
+    #     self.modules.append(self.currentModule)
+
+    def exitModule(self, ctx: lfrXParser.ModuleContext):
+        self.operatormap = dict()
+        self.expressionoperatorstack = []
+        self.expressionvariablestack = None
+        self.technologyOverride = None
+        self.success = False
+        self.vectors = dict()
+        self.expressionresults = None
+        self.listermode: ListenerMode = ListenerMode.NONE
+        self.lastlistenermode: ListenerMode = ListenerMode.NONE
+
+        self.stack = []
+        self.statestack = []
+        self.binaryoperatorsstack = [[]]
+
 
     def enterIoblock(self, ctx: lfrXParser.IoblockContext):
         # If io block has an explicit declaration set the flag
@@ -86,13 +103,14 @@ class LFRCompiler(lfrXListener):
                 startindex = int(vv.vector().start.text)
                 endindex = int(vv.vector().end.text)
 
-            v = self.__createVector(name, ModuleIO, startindex, endindex)
+            v = self.__createVector(name, IONode, startindex, endindex)
 
             self.vectors[name] = v
             self.typeMap[name] = VariableTypes.FLUID
 
-            for item in v.get_items():
-                self.currentModule.add_io(item)
+            m = ModuleIO(name)
+            m.vector_ref = v.get_range()
+            self.currentModule.add_io(m)
 
     def exitExplicitIOBlock(self, ctx: lfrXParser.ExplicitIOBlockContext):
         #  First check the type of the explicit io block
@@ -134,17 +152,18 @@ class LFRCompiler(lfrXListener):
                 if self.EXPLICIT_MODULE_DECLARATION is True:
                     # This is the scenario where all the declaration is done explicitly
                     vec = self.__createVector(
-                        name, ModuleIO, startindex, endindex)
+                        name, IONode, startindex, endindex)
                     self.vectors[name] = vec
                     self.typeMap[name] = VariableTypes.FLUID
-
-                    # Add the declared IO as the module's IO
-                    for item in vec.get_items():
-                        self.currentModule.add_io(item)
 
                     # Go through each of the ios and modify the type
                     for io in vec.get_items():
                         io.type = mode
+
+                    # Create and add a ModuleIO reference
+                    m = ModuleIO(name, mode)
+                    m.vector_ref = vec.get_range()
+                    self.currentModule.add_io(m)
 
                 else:
                     self.compilingErrors.append(
@@ -161,7 +180,7 @@ class LFRCompiler(lfrXListener):
                 startindex = int(declvar.vector().start.text)
                 endindex = int(declvar.vector().end.text)
 
-            v = self.__createVector(name, Fluid, startindex, endindex)
+            v = self.__createVector(name, Flow, startindex, endindex)
 
             for item in v.get_items():
                 self.currentModule.add_fluid(item)
@@ -224,10 +243,6 @@ class LFRCompiler(lfrXListener):
         startindex = 0
         endindex = 0
 
-        if ctx.vector() is not None:
-            startindex = int(ctx.vector().start.text)
-            endindex = int(ctx.vector().end.text)
-
         if name in self.vectors:
             v = self.vectors[name]
             startindex = v.startindex
@@ -235,13 +250,24 @@ class LFRCompiler(lfrXListener):
         else:
             raise Exception("Trying to parse vector variable {} and we couldn't find the vector in itself: Line - {}".format(name, ctx.start.line))
 
+        # Check to see if the slice is present utilize the index
+        if ctx.vector() is not None:
+            startindex = int(ctx.vector().start.text)
+            if ctx.vector().end is not None:
+                endindex = int(ctx.vector().end.text)
+            else:
+                endindex = startindex
+
         vrange = VectorRange(v, startindex, endindex)
 
         self.stack.append(vrange)
 
     def exitConcatenation(self, ctx: lfrXParser.ConcatenationContext):
-
-        item_in_concatenation = len(ctx.vectorvar())
+        if ctx.vectorvar() is not None:
+            item_in_concatenation = len(ctx.vectorvar())
+        else:
+            # TODO - Check if this is right ?
+            item_in_concatenation = 1
         # slice the items out of the stack
         stackslice = self.stack[-(item_in_concatenation):]
         del self.stack[-(item_in_concatenation):]
@@ -270,7 +296,6 @@ class LFRCompiler(lfrXListener):
 
         # TODO: Figure out to do the parsing for the binary, hex and octal
         # numbers. Need to cleave the header for this
-
         if ctx.Decimal_number() is not None:
             n = int(ctx.Decimal_number().getText())
 
@@ -281,7 +306,7 @@ class LFRCompiler(lfrXListener):
             n = int(ctx.Hex_number().getText(), 16)
 
         elif ctx.Binary_number() is not None:
-            n = int(ctx.Binary_number().getText(), 2)
+            n = self.__parseBinaryNumber(ctx.Binary_number().getText())
 
         else:
             n = float(ctx.Real_number().getText())
@@ -334,14 +359,12 @@ class LFRCompiler(lfrXListener):
         stackslice = self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
         del self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
 
-        fluidexpression = FluidExpression(self.currentModule, self.current_performance_constraints)
+        fluidexpression = FluidExpression(self.currentModule)
         # TODO: Figure out how to pass the FIG after this
         result = fluidexpression.process_expression(stackslice, self.binaryoperatorsstack[-1])
         self.stack.append(result)
 
         self.binaryoperatorsstack.pop()
-
-        self.current_performance_constraints.clear()
 
     def enterBracketexpression(self, ctx: lfrXParser.BracketexpressionContext):
         self.__updateMode(ListenerMode.EXPRESS_PARSING_MODE)
@@ -413,19 +436,6 @@ class LFRCompiler(lfrXListener):
             self.success = True
         print(self.currentModule)
 
-    def __validatevariable(self, variable):
-        if variable in self.currentModule.intermediates:
-            return True
-        else:
-            ret = self.currentModule.get_io(variable)
-            if ret is not None:
-                return True
-
-        return False
-
-    def __clearoperatormap(self):
-        self.operatormap.clear()
-
     def __createVector(self, name: str, objecttype, startindex: int, endindex: int) -> Vector:
         v = Vector(name, objecttype, startindex, endindex)
         self.vectors[name] = v
@@ -475,3 +485,11 @@ class LFRCompiler(lfrXListener):
             print(item)
 
         print('---Bottom of Stack---')
+
+    def __parseBinaryNumber(self, text: str) -> BitVector:
+        pattern = r"(\d+)'b(\d+)"
+        matches = re.search(pattern, text)
+        # size = int(matches.group(1))
+        bit_pattern = matches.group(2)
+        n = BitVector(bitstring=bit_pattern)
+        return n
