@@ -1,3 +1,4 @@
+from lfr.netlistgenerator import explicitmapping
 from lfr.fig.fignode import FIGNode
 from lfr.compiler.module import Module
 from typing import Dict, Optional
@@ -57,3 +58,33 @@ class ModuleInstanceListener(DistBlockListener):
             here_vector_ref = variables[i]
             for i in range(len(there_vector_ref)):
                 self._io_mapping[there_vector_ref[i].id] = here_vector_ref[i].id
+
+    # def exitUnorderedioblock(self, ctx: lfrXParser.UnorderedioblockContext):
+    #     num_variables = len(ctx.explicitinstanceiomapping())
+    #     variables = []
+    #     for i in range(num_variables):
+    #         variables.insert(0, self.stack.pop())
+
+    #     module_io_labels = []
+    #     for explicitmapping in ctx.explicitinstanceiomapping():
+    #         module_io_labels.append(explicitmapping.ID().getText())
+
+
+    def exitExplicitinstanceiomapping(self, ctx: lfrXParser.ExplicitinstanceiomappingContext):
+        variable = self.stack.pop()
+        label = ctx.ID().getText()
+
+        # Check if label exists in module_to_import
+        if label not in self._module_to_import.get_all_io():
+            self.compilingErrors.append(LFRError(
+                ErrorType.MODULE_IO_NOT_FOUND, 
+                "Could not find io `{}` in module `{}`".format(
+                    label,
+                    self._module_to_import.name
+                )))
+            return
+
+        io = self._module_to_import.get_io(label)
+        assert(len(io.vector_ref) == len(variable))
+        for i in range(len(variable)):
+            self._io_mapping[io.vector_ref[i].id] = variable[i].id

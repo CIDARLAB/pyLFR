@@ -184,7 +184,7 @@ def serializedATN():
         buf.write("\b\2\2\u0160\u0162\5@!\2\u0161\u015f\3\2\2\2\u0162\u0165")
         buf.write("\3\2\2\2\u0163\u0161\3\2\2\2\u0163\u0164\3\2\2\2\u0164")
         buf.write("?\3\2\2\2\u0165\u0163\3\2\2\2\u0166\u0167\7\26\2\2\u0167")
-        buf.write("\u0168\5\f\7\2\u0168\u0169\7\5\2\2\u0169\u016a\5b\62\2")
+        buf.write("\u0168\7A\2\2\u0168\u0169\7\5\2\2\u0169\u016a\5b\62\2")
         buf.write("\u016a\u016b\7\6\2\2\u016bA\3\2\2\2\u016c\u016d\7A\2\2")
         buf.write("\u016dC\3\2\2\2\u016e\u016f\7A\2\2\u016fE\3\2\2\2\u0170")
         buf.write("\u0175\5J&\2\u0171\u0175\5L\'\2\u0172\u0175\5N(\2\u0173")
@@ -2590,9 +2590,8 @@ class lfrXParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def vectorvar(self):
-            return self.getTypedRuleContext(lfrXParser.VectorvarContext,0)
-
+        def ID(self):
+            return self.getToken(lfrXParser.ID, 0)
 
         def variables(self):
             return self.getTypedRuleContext(lfrXParser.VariablesContext,0)
@@ -2627,7 +2626,7 @@ class lfrXParser ( Parser ):
             self.state = 356
             self.match(lfrXParser.T__19)
             self.state = 357
-            self.vectorvar()
+            self.match(lfrXParser.ID)
             self.state = 358
             self.match(lfrXParser.T__2)
             self.state = 359

@@ -100,7 +100,7 @@ orderedioblock:   vectorvar (',' vectorvar)* ;
 
 unorderedioblock: explicitinstanceiomapping ( ',' explicitinstanceiomapping)*;
 
-explicitinstanceiomapping : '.'vectorvar '('variables')' ;
+explicitinstanceiomapping : '.'ID '('variables')' ;
 
 instancename: ID;
 
