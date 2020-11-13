@@ -22,9 +22,19 @@ class ConstructionGraph(nx.DiGraph):
     def construction_nodes(self) -> List[ConstructionNode]:
         return [v for k, v in self._construction_nodes.items()]
 
+    def get_cn(self, id: str) -> ConstructionNode:
+        if id in self._construction_nodes.keys():
+            return self._construction_nodes[id]
+        else:
+            raise KeyError()
+
     def add_construction_node(self, node: ConstructionNode) -> None:
         self._construction_nodes[node.id] = node
         self.add_node(node.id)
+
+    def delete_node(self, id: str) -> None:
+        self.remove_node(id)
+        del self._construction_nodes[id]
 
     def override_mappings(self, mappings: List[ExplicitMapping]) -> None:
         for mapping in mappings:
@@ -130,28 +140,28 @@ class ConstructionGraph(nx.DiGraph):
 
             # In this case it needs to treat as an empty netlist because a pass through would just connect the neighbours instead
             # TODO - This will potentially get removed later as we might just want to eliminate the construction node later on
-            if isinstance(cn.mapping_options[0], NetworkMappingOption):
-                if cn.mapping_options[0].mapping_type is NetworkMappingOptionType.PASS_THROUGH:
-                    # Figure out what the pass through strategy is for this, find the input
-                    # to this cn and link the outputs to the cn
-                    out_neighbours = self.out_edges(cn_id)
+            # if isinstance(cn.mapping_options[0], NetworkMappingOption):
+            #     if cn.mapping_options[0].mapping_type is NetworkMappingOptionType.PASS_THROUGH:
+            #         # Figure out what the pass through strategy is for this, find the input
+            #         # to this cn and link the outputs to the cn
+            #         out_neighbours = self.out_edges(cn_id)
 
-                    # Add to skip list
-                    skip_list.append(cn_id)
+            #         # Add to skip list
+            #         skip_list.append(cn_id)
 
-                    # If this is pass through, the in edges should be equal to out edges (I think)
-                    assert(len(in_neighbours) == len(out_neighbours))
-                    # TODO - Figure out what to do if this assert fails
-                    for i in range(len(in_neighbours)):
-                        cn_start_id = list(in_neighbours)[i][0]
-                        cn_end_id = list(out_neighbours)[i][1]
+            #         # If this is pass through, the in edges should be equal to out edges (I think)
+            #         assert(len(in_neighbours) == len(out_neighbours))
+            #         # TODO - Figure out what to do if this assert fails
+            #         for i in range(len(in_neighbours)):
+            #             cn_start_id = list(in_neighbours)[i][0]
+            #             cn_end_id = list(out_neighbours)[i][1]
 
-                        self.__create_passthrough_channel(
-                            cn_start_id,
-                            cn_end_id,
-                            name_generator,
-                            device
-                        )
+            #             self.__create_passthrough_channel(
+            #                 cn_start_id,
+            #                 cn_end_id,
+            #                 name_generator,
+            #                 device
+            #             )
 
             # TODO - Figure out if these conditions require any more thought in terms of implementation
             # elif self._mapping_type is NetworkMappingOptionType.COMPONENT_REPLACEMENT:

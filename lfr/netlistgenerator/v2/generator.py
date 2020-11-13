@@ -1,3 +1,4 @@
+from pymint.mintlayer import MINTLayerType
 from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
@@ -14,6 +15,7 @@ from lfr.fig.interaction import FluidIntegerInteraction, FluidNumberInteraction,
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from lfr.compiler.module import Module
 import networkx as nx
+from pymint import MINTLayer
 
 
 # def generate_MARS_library() -> MappingLibrary:
@@ -396,6 +398,9 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
     cur_device = MINTDevice(module.name)
 
+    # Add a MINT Layer so that the device has something to work with
+    cur_device.addLayer('0', 0, MINTLayerType.FLOW)
+
     dummy_strategy = DummyStrategy(construction_graph)
 
     # First go through all the interactions in the design
@@ -474,6 +479,9 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # reduction of path and pipelineing that needs to get done for mars devices
     construction_graph.generate_edges(module.FIG)
 
+    # TODO - Extract all pass through networks
+    eliminate_passthrough_nodes(construction_graph)
+
     # Now since all the mapping options are finalized Extract the netlist necessary
     construction_graph.construct_components(name_generator, cur_device)
 
@@ -492,6 +500,40 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     connect_orphan_IO()
 
     return cur_device
+
+
+def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
+    for node_id in list(construction_graph.nodes):
+        cn = construction_graph.get_cn(node_id)
+        assert(len(cn.mapping_options) == 1)
+        mapping_option = cn.mapping_options[0]
+        if isinstance(mapping_option, NetworkMappingOption):
+            if mapping_option.mapping_type is NetworkMappingOptionType.PASS_THROUGH:
+
+                # First get all the in and out edges
+                in_edges = list(construction_graph.in_edges(node_id))
+                out_edges = list(construction_graph.out_edges(node_id))
+
+                # In Points
+                in_points = [in_edge[0] for in_edge in in_edges]
+                out_points = [out_edge[1] for out_edge in out_edges]
+
+                # Delete the node
+                construction_graph.delete_node(node_id)
+
+                # Create edges for the different cases
+                # Case 1 - 1->1
+                if len(in_points) == 1 and len(out_points) == 1:
+                    construction_graph.add_edge(in_points[0], out_points[0])
+                # Case 2 - n->1
+                # Case 3 - 1->n
+                elif (len(in_points) > 1 and len(out_points) == 1) or (len(in_points) == 1 and len(out_points) > 1):
+                    for in_point in in_points:
+                        for out_point in out_points:
+                            construction_graph.add_edge(in_point, out_point)
+                else:
+                    raise Exception("Pass through network node elimination not implemented \
+                        when n->n edge creation is necessary")
 
 
 def connect_orphan_IO():
@@ -536,8 +578,11 @@ def get_flow_flow_candidates(module: Module, gen_strategy: GenStrategy) -> List[
         sub = fig_original.subgraph(component)
         # TODO - Decide what the mapping type should be. for now assume that we just a single
         # passthrough type scenario where we don't have to do much work
-        assert(len(sub.nodes) == 1)
-        mapping_type = NetworkMappingOptionType.PASS_THROUGH
+        is_passthrough = __check_if_passthrough(sub)
+        if is_passthrough:
+            mapping_type = NetworkMappingOptionType.PASS_THROUGH
+        else:
+            mapping_type = NetworkMappingOptionType.CHANNEL_NETWORK
         nprimitive = NetworkPrimitive(sub, gen_strategy)
         nprimitive.generate_netlist()
         mapping_option = NetworkMappingOption(nprimitive, mapping_type, sub)
@@ -562,3 +607,21 @@ def size_netlist():
     # Size all the Meter/Dilute/Divide nodes based on the value nodes
     # TODO - Talk to Ali about this for strategy
     construction_graph.size_components()
+
+
+def __check_if_passthrough(sub) -> bool:
+    # Return true if its a single chain of flow channels
+    in_count = 0
+    out_count = 0
+    for node in list(sub.nodes):
+        inedges = list(sub.in_edges(node))
+        outedges = list(sub.out_edges(node))
+        if len(inedges) == 0:
+            in_count += 1
+        if len(outedges) == 0:
+            out_count += 1
+
+    if in_count == 1 and out_count == 1:
+        return True
+    else:
+        return False

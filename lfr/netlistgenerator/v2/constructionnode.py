@@ -73,3 +73,6 @@ class ConstructionNode():
             self._loading_options = [copy.copy(c) for c in primitive_ref.loadings]
         if primitive_ref.carriers is not None:
             self._carrier_options = [copy.copy(c) for c in primitive_ref.carriers]
+
+    def __str__(self) -> str:
+        return "Construction Node: {}".format(self.id)

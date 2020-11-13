@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import overload
 
 
 MATCH_STRING_ORDERING = [
@@ -26,6 +27,10 @@ class FIGNode(object):
     @property
     def id(self):
         return self._id
+
+    @property
+    def match_string(self):
+        return "-"
 
     def __str__(self) -> str:
         return self.id
