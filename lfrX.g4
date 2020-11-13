@@ -197,16 +197,15 @@ mappingoperator
     ;
 
 performancedirective 
-   :  '#CONSTRAIN' constraint
+   :  '#CONSTRAIN' '\'' (binary_operator|unary_operator) '\'' constraint (directive_conjuction constraint)*
    ;
 
-constraint
-   : '\'' (binary_operator|unary_operator) '\'' ID operator='=' number unit?
-   | '\'' (binary_operator|unary_operator) '\'' ID operator='>' number unit?
-   | '\'' (binary_operator|unary_operator) '\'' ID operator='<' number unit?
-   | '\'' (binary_operator|unary_operator) '\'' ID operator='>=' number unit?
-   | '\'' (binary_operator|unary_operator) '\'' ID operator='<=' number unit?
-   ;
+directive_conjuction
+    : 'AND'
+    | 'OR'
+    ;
+
+constraint:  ID constraint_operator number unit? ;
 
 unit: ID;
 
@@ -226,6 +225,13 @@ Block_comment
 
 Import_line
    : '`' .*? '\r'? '\n' -> channel (HIDDEN)
+   ;
+
+
+constraint_operator
+   : '='
+   | '<='
+   | '>='
    ;
 
 // Operators - Taken from Verilog2001

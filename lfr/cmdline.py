@@ -1,3 +1,4 @@
+from lfr.postprocessingListener import PostProcessingListener
 from lfr.moduleinstanceListener import ModuleInstanceListener
 from lfr.preprocessor import PreProcessor
 from lfr.distBlockListener import DistBlockListener
@@ -101,6 +102,7 @@ def main():
     if mapping_listener.success:
         # Now Process the Modules Generated
         # V2 generator
+        library = None
         if args.technology == "dropx":
             library = generate_dropx_library()
         elif args.technology == "mars":
@@ -112,6 +114,11 @@ def main():
         else:
             print("Implement Library for whatever else")
             pass
+        # Do the post processing to do the technology mapping
+        tech_mapping_listener = PostProcessingListener(mapping_listener.currentModule, library)
+        walker.walk(tech_mapping_listener, tree)
+
+        exit(1)
 
         unsized_device = generate(mapping_listener.currentModule, library)
 

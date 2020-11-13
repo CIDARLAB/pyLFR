@@ -1,3 +1,4 @@
+from lfr.netlistgenerator.v2.mappingoption import ExplicitMappingOption
 from lfr.netlistgenerator.v2.networkmappingoption import NetworkMappingOption, NetworkMappingOptionType
 from lfr.netlistgenerator.primitive import PrimitiveType
 from pymint.minttarget import MINTTarget
@@ -5,7 +6,7 @@ from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.module import Module
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from typing import Dict, List
-from lfr.netlistgenerator.explicitmapping import ExplicitMapping, ExplicitMappingType
+# from lfr.netlistgenerator.explicitmapping import ExplicitMapping, ExplicitMappingType
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from networkx import nx
 from pymint.mintdevice import MINTDevice
@@ -26,7 +27,7 @@ class ConstructionGraph(nx.DiGraph):
         self._construction_nodes[node.id] = node
         self.add_node(node.id)
 
-    def override_mappings(self, mappings: List[ExplicitMapping]) -> None:
+    def override_mappings(self, mappings: List[ExplicitMappingOption]) -> None:
         for mapping in mappings:
             # First identify the type of the mapping
             if mapping.type is ExplicitMappingType.FLUID_INTERACTION:

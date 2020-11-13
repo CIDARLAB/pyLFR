@@ -1,6 +1,6 @@
 from __future__ import annotations
+from lfr.netlistgenerator.v2.mappingoption import ExplicitMappingOption
 from typing import Dict, List, Optional
-from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from lfr.fig.fignode import FIGNode, IONode, Flow, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.moduleio import ModuleIO
@@ -15,7 +15,7 @@ class Module(object):
         self._io: List[ModuleIO] = []
         self.FIG = FluidInteractionGraph()
         self.fluids = dict()
-        self.mappings: List[ExplicitMapping] = []
+        self.mappings: List[ExplicitMappingOption] = []
 
     @property
     def io(self) -> List[ModuleIO]:

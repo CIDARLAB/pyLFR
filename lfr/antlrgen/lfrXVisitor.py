@@ -304,6 +304,11 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#directive_conjuction.
+    def visitDirective_conjuction(self, ctx:lfrXParser.Directive_conjuctionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#constraint.
     def visitConstraint(self, ctx:lfrXParser.ConstraintContext):
         return self.visitChildren(ctx)
@@ -311,6 +316,11 @@ class lfrXVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by lfrXParser#unit.
     def visitUnit(self, ctx:lfrXParser.UnitContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#constraint_operator.
+    def visitConstraint_operator(self, ctx:lfrXParser.Constraint_operatorContext):
         return self.visitChildren(ctx)
 
 

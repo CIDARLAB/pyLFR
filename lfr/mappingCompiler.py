@@ -1,24 +1,9 @@
 from lfr.compiler.constraints.performanceconstraint import \
     PerformanceConstraintData
 from enum import Enum
-from lfr.netlistgenerator.explicitmapping import ExplicitMapping
+# from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from lfr.lfrbaseListener import LFRBaseListener
 from lfr.antlrgen.lfrXParser import lfrXParser
-
-
-class TechnologyMappingMODE(Enum):
-    NO_MAPPING = 0
-    OPERATOR_MAPPING = 1
-    ASSIGN_MAPPING = 2
-    STORAGE_MAPPING = 3
-
-
-class ConstriantBoundType(Enum):
-    EQUALS = 0
-    LESS_THAN = 1
-    GREATER_THAN = 2
-    LESS_THAN_EQUALS = 3
-    GREATER_THAN_EQUALS = 4
 
 
 class MappingCompiler(LFRBaseListener):

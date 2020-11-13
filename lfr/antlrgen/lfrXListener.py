@@ -539,6 +539,15 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#directive_conjuction.
+    def enterDirective_conjuction(self, ctx:lfrXParser.Directive_conjuctionContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#directive_conjuction.
+    def exitDirective_conjuction(self, ctx:lfrXParser.Directive_conjuctionContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#constraint.
     def enterConstraint(self, ctx:lfrXParser.ConstraintContext):
         pass
@@ -554,6 +563,15 @@ class lfrXListener(ParseTreeListener):
 
     # Exit a parse tree produced by lfrXParser#unit.
     def exitUnit(self, ctx:lfrXParser.UnitContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#constraint_operator.
+    def enterConstraint_operator(self, ctx:lfrXParser.Constraint_operatorContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#constraint_operator.
+    def exitConstraint_operator(self, ctx:lfrXParser.Constraint_operatorContext):
         pass
 
 

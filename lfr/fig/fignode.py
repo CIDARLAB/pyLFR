@@ -30,7 +30,7 @@ class FIGNode(object):
     def __str__(self) -> str:
         return self.id
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other):
         if isinstance(other, FIGNode):
             return self.id == other.id
         else:

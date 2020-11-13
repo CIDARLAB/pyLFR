@@ -38,7 +38,7 @@ class LFRBaseListener(lfrXListener):
 
         print("Initialized the lfrcompiler")
         self.modules = []
-        self.currentModule: Optional[Module] = None
+        self.currentModule: Module = None
         self.lhs = None
         self.rhs = None
         self.operatormap = dict()
@@ -87,7 +87,6 @@ class LFRBaseListener(lfrXListener):
         self.stack = []
         self.statestack = []
         self.binaryoperatorsstack = [[]]
-
 
     def enterIoblock(self, ctx: lfrXParser.IoblockContext):
         # If io block has an explicit declaration set the flag

@@ -1,5 +1,3 @@
-from lfr.netlistgenerator import explicitmapping
-from lfr.fig.fignode import FIGNode
 from lfr.compiler.module import Module
 from typing import Dict, Optional
 from lfr.compiler.lfrerror import ErrorType, LFRError
@@ -58,17 +56,6 @@ class ModuleInstanceListener(DistBlockListener):
             here_vector_ref = variables[i]
             for i in range(len(there_vector_ref)):
                 self._io_mapping[there_vector_ref[i].id] = here_vector_ref[i].id
-
-    # def exitUnorderedioblock(self, ctx: lfrXParser.UnorderedioblockContext):
-    #     num_variables = len(ctx.explicitinstanceiomapping())
-    #     variables = []
-    #     for i in range(num_variables):
-    #         variables.insert(0, self.stack.pop())
-
-    #     module_io_labels = []
-    #     for explicitmapping in ctx.explicitinstanceiomapping():
-    #         module_io_labels.append(explicitmapping.ID().getText())
-
 
     def exitExplicitinstanceiomapping(self, ctx: lfrXParser.ExplicitinstanceiomappingContext):
         variable = self.stack.pop()

@@ -14,6 +14,7 @@ class MappingLibrary:
         self.__technology_process_operators = []
         self.__io_primitives = []
         self._default_IO_primitive = None
+        self._all_primitives = dict()
 
     @property
     def name(self) -> str:
@@ -21,6 +22,7 @@ class MappingLibrary:
 
     def add_io_entry(self, primitive: Primitive) -> None:
         self.__io_primitives.append(primitive)
+        self._all_primitives[primitive.mint] = primitive
 
     def add_operator_entry(self, primitve: Primitive, interaction_type: InteractionType) -> None:
         if interaction_type is InteractionType.MIX:
@@ -35,6 +37,8 @@ class MappingLibrary:
             self.__divide_operators.append(primitve)
         else:
             self.__technology_process_operators.append(primitve)
+
+        self._all_primitives[primitve.mint] = primitve
 
     def get_default_IO(self) -> Primitive:
         if self._default_IO_primitive is None:
@@ -55,3 +59,9 @@ class MappingLibrary:
             return self.__divide_operators
         else:
             return self.__technology_process_operators
+
+    def get_primitive(self, mint: str) -> Primitive:
+        if mint not in self._all_primitives.keys():
+            raise Exception("Primitive '{}' not found !".format(mint))
+
+        return self._all_primitives[mint]
