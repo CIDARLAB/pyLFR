@@ -1,5 +1,4 @@
-from lfr.compiler.constraints.performanceconstraint import \
-    PerformanceConstraintData
+from lfr.compiler.constraints.performanceconstraint import PerformanceConstraintData
 from enum import Enum
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from lfr.lfrbaseListener import LFRBaseListener
@@ -22,30 +21,29 @@ class ConstriantBoundType(Enum):
 
 
 class MappingCompiler(LFRBaseListener):
-
     def __init__(self):
         super().__init__()
         print("Initialing the Technology Mapper")
         self.mappingMode = TechnologyMappingMODE.NO_MAPPING
-        self.currentMappingTechnology = ''
-        self.mappingOperator = ''
+        self.currentMappingTechnology = ""
+        self.mappingOperator = ""
         self.mappingDictionary = dict()
 
     def enterTechnologymappingdirective(self, ctx):
         # Clearing the mapping operator
-        self.mappingOperator = ''
+        self.mappingOperator = ""
         self.currentMappingDictionary = dict()
         # Checking if the mapping is an operator or assign mapping
         if ctx.mappingoperator() is None:
-            print('Need to map for an assign/storage statement and not an operator')
-            if ctx.assignmode == 'assign':
+            print("Need to map for an assign/storage statement and not an operator")
+            if ctx.assignmode == "assign":
                 self.mappingMode = TechnologyMappingMODE.ASSIGN_MAPPING
-            elif ctx.assignmode == 'storage':
+            elif ctx.assignmode == "storage":
                 self.mappingMode = TechnologyMappingMODE.STORAGE_MAPPING
         else:
             self.mappingMode = TechnologyMappingMODE.OPERATOR_MAPPING
             operator = ctx.mappingoperator().getText()
-            technology = ' '.join([id.getText() for id in ctx.ID()])
+            technology = " ".join([id.getText() for id in ctx.ID()])
             self.mappingOperator = operator
             self.currentMappingTechnology = technology
             self.mappingDictionary[operator] = technology
@@ -66,7 +64,10 @@ class MappingCompiler(LFRBaseListener):
                 expression_term = ctx.expression().children[0]
                 if expression_term.unary_operator():
                     # Check if the operator is correct
-                    if expression_term.unary_operator().getText() != self.mappingOperator:
+                    if (
+                        expression_term.unary_operator().getText()
+                        != self.mappingOperator
+                    ):
                         return
                     # Search for the items
                     for variable in ctx.lhs().variables().children:
@@ -81,10 +82,8 @@ class MappingCompiler(LFRBaseListener):
                     for vector in rhs:
                         rhsvectors.append(self.vectors[vector])
 
-                    startlist = [
-                        fluid.id for item in rhsvectors for fluid in item.vec]
-                    endlist = [
-                        fluid.id for item in lhsvectors for fluid in item.vec]
+                    startlist = [fluid.id for item in rhsvectors for fluid in item.vec]
+                    endlist = [fluid.id for item in lhsvectors for fluid in item.vec]
 
                     if len(startlist) == len(endlist):
                         for start, end in zip(startlist, endlist):
@@ -111,13 +110,16 @@ class MappingCompiler(LFRBaseListener):
 
                 else:
                     print(
-                        "Cannot map in scerio where there are no unary operators found or the operator is not a unary operator")
+                        "Cannot map in scerio where there are no unary operators found or the operator is not a unary operator"
+                    )
             else:
                 # TODO: We need to over ride the expression evaulation to effectively map all the things
                 # going on there, however its not going to be easy because we might not know what the exact
                 # graph might turn out to be. Perhaps the start end schema and traversals might do the job
-                print("Cannot map in scenario where there are more than 1 expression terms that need to get" +
-                      "mapped, we currently have no strategy for biary operators")
+                print(
+                    "Cannot map in scenario where there are more than 1 expression terms that need to get"
+                    + "mapped, we currently have no strategy for biary operators"
+                )
 
         elif self.mappingMode is TechnologyMappingMODE.ASSIGN_MAPPING:
             # TODO: When its assign mapping, we can ignore all the interactions and just make the connections between both the vector ranges
@@ -168,7 +170,7 @@ class MappingCompiler(LFRBaseListener):
 
         constraint_data = PerformanceConstraintData(operator)
         constraint_data[param_name] = param_value
-        constraint_data['unit'] = unit
-        constraint_data['bound'] = constraint_bound
+        constraint_data["unit"] = unit
+        constraint_data["bound"] = constraint_bound
 
         self.current_performance_constraints.append(constraint_data)

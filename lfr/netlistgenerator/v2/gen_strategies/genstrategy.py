@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Dict, TYPE_CHECKING
+
 if TYPE_CHECKING:
     from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 
@@ -11,7 +12,6 @@ from pymint.minttarget import MINTTarget
 
 
 class GenStrategy:
-
     def __init__(self, construction_graph: ConstructionGraph) -> None:
         self._construction_graph: ConstructionGraph = construction_graph
         self._fig_netlist_map: Dict[str, str] = dict()
@@ -49,7 +49,7 @@ class GenStrategy:
 
                 sinks.append(MINTTarget("node_{}".format(tar)))
 
-            ret.addConnection(channel_name, "CHANNEL",  params, source, sinks, '0')
+            ret.addConnection(channel_name, "CHANNEL", params, source, sinks, "0")
 
         return ret
 
@@ -63,20 +63,30 @@ class GenStrategy:
         subgraph_inputs = []
         for node in list(subgraph_view.nodes):
             if len(subgraph_view.in_edges(node)) == 0:
-                subgraph_inputs.append(ConnectingOption(self._get_fig_netlist_name(node)))
+                subgraph_inputs.append(
+                    ConnectingOption(self._get_fig_netlist_name(node))
+                )
 
         return subgraph_inputs
 
-    def generate_output_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:
+    def generate_output_connectingoptions(
+        self, subgraph_view
+    ) -> List[ConnectingOption]:
         subgraph_outputs = []
         for node in list(subgraph_view.nodes):
             if len(subgraph_view.out_edges(node)) == 0:
-                subgraph_outputs.append(ConnectingOption(self._get_fig_netlist_name(node)))
+                subgraph_outputs.append(
+                    ConnectingOption(self._get_fig_netlist_name(node))
+                )
 
         return subgraph_outputs
 
-    def generate_carrier_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:
+    def generate_carrier_connectingoptions(
+        self, subgraph_view
+    ) -> List[ConnectingOption]:
         return []
 
-    def generate_loading_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:
+    def generate_loading_connectingoptions(
+        self, subgraph_view
+    ) -> List[ConnectingOption]:
         return []

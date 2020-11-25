@@ -33,7 +33,7 @@ class Primitive:
         carriers: List[ConnectingOption] = [],
         default_netlist: str = None,
         functional_input_params: List[str] = [],
-        output_params: List[str] = []
+        output_params: List[str] = [],
     ) -> None:
 
         self._component_type: PrimitiveType = component_type
@@ -126,11 +126,8 @@ class Primitive:
 
 
 class NetworkPrimitive(Primitive):
-
     def __init__(self, fig_subgraph_view, gen_strategy: GenStrategy) -> None:
-        super().__init__(
-            component_type=PrimitiveType.PROCEDURAL
-        )
+        super().__init__(component_type=PrimitiveType.PROCEDURAL)
 
         self._gen_strategy = gen_strategy
         # Write methods that will utilize the subgraph view to generate the
@@ -139,11 +136,21 @@ class NetworkPrimitive(Primitive):
         self._netlist: MINTDevice = None
 
     def generate_netlist(self) -> None:
-        self._netlist = self._gen_strategy.generate_flow_network(self._fig_subgraph_view)
-        self._inputs = self._gen_strategy.generate_input_connectingoptions(self._fig_subgraph_view)
-        self._outputs = self._gen_strategy.generate_output_connectingoptions(self._fig_subgraph_view)
-        self._carriers = self._gen_strategy.generate_carrier_connectingoptions(self._fig_subgraph_view)
-        self._loadings = self._gen_strategy.generate_loading_connectingoptions(self._fig_subgraph_view)
+        self._netlist = self._gen_strategy.generate_flow_network(
+            self._fig_subgraph_view
+        )
+        self._inputs = self._gen_strategy.generate_input_connectingoptions(
+            self._fig_subgraph_view
+        )
+        self._outputs = self._gen_strategy.generate_output_connectingoptions(
+            self._fig_subgraph_view
+        )
+        self._carriers = self._gen_strategy.generate_carrier_connectingoptions(
+            self._fig_subgraph_view
+        )
+        self._loadings = self._gen_strategy.generate_loading_connectingoptions(
+            self._fig_subgraph_view
+        )
 
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
         # Utilise the subgraph view to decide how you want to generate a netlist

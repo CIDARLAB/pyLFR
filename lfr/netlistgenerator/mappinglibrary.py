@@ -22,7 +22,9 @@ class MappingLibrary:
     def add_io_entry(self, primitive: Primitive) -> None:
         self.__io_primitives.append(primitive)
 
-    def add_operator_entry(self, primitve: Primitive, interaction_type: InteractionType) -> None:
+    def add_operator_entry(
+        self, primitve: Primitive, interaction_type: InteractionType
+    ) -> None:
         if interaction_type is InteractionType.MIX:
             self.__mix_operators.append(primitve)
         elif interaction_type is InteractionType.SIEVE:

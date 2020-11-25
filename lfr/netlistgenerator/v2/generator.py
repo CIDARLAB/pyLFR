@@ -2,7 +2,10 @@ from pymint.mintlayer import MINTLayerType
 from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-from lfr.netlistgenerator.v2.networkmappingoption import NetworkMappingOption, NetworkMappingOptionType
+from lfr.netlistgenerator.v2.networkmappingoption import (
+    NetworkMappingOption,
+    NetworkMappingOptionType,
+)
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 from lfr.fig.fignode import Flow, IOType, ValueNode
 from typing import List
@@ -11,7 +14,11 @@ from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.fig.interaction import FluidIntegerInteraction, FluidNumberInteraction, InteractionType
+from lfr.fig.interaction import (
+    FluidIntegerInteraction,
+    FluidNumberInteraction,
+    InteractionType,
+)
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from lfr.compiler.module import Module
 import networkx as nx
@@ -90,7 +97,7 @@ def generate_dropx_library() -> MappingLibrary:
         None,
         None,
         None,
-        None
+        None,
     )
 
     library.add_io_entry(port)
@@ -187,7 +194,7 @@ def generate_dropx_library() -> MappingLibrary:
             "normalized_oil_inlet",
             "normalized_orifice_length",
             "normalized_water_inlet",
-        ]
+        ],
     )
 
     library.add_operator_entry(droplet_generator, InteractionType.METER)
@@ -302,7 +309,9 @@ def generate_dropx_library() -> MappingLibrary:
         None,
     )
 
-    library.add_operator_entry(droplet_capacitance_sensor, InteractionType.TECHNOLOGY_PROCESS)
+    library.add_operator_entry(
+        droplet_capacitance_sensor, InteractionType.TECHNOLOGY_PROCESS
+    )
 
     # DROPLET FLUORESCENCE SENSOR
 
@@ -330,7 +339,9 @@ def generate_dropx_library() -> MappingLibrary:
         None,
     )
 
-    library.add_operator_entry(droplet_fluorescence_sensor, InteractionType.TECHNOLOGY_PROCESS)
+    library.add_operator_entry(
+        droplet_fluorescence_sensor, InteractionType.TECHNOLOGY_PROCESS
+    )
 
     # DROPLET LUMINESCENCE SENSOR
     droplet_luminescence_sensor_inputs = []
@@ -357,7 +368,9 @@ def generate_dropx_library() -> MappingLibrary:
         None,
     )
 
-    library.add_operator_entry(droplet_luminescence_sensor, InteractionType.TECHNOLOGY_PROCESS)
+    library.add_operator_entry(
+        droplet_luminescence_sensor, InteractionType.TECHNOLOGY_PROCESS
+    )
 
     # DROPLET SPACER
 
@@ -399,7 +412,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     cur_device = MINTDevice(module.name)
 
     # Add a MINT Layer so that the device has something to work with
-    cur_device.addLayer('0', 0, MINTLayerType.FLOW)
+    cur_device.add_layer("0", 0, MINTLayerType.FLOW)
 
     dummy_strategy = DummyStrategy(construction_graph)
 
@@ -422,9 +435,15 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
         for operator_candidate in operator_candidates:
             # TODO: This will change in the future when we can match subgraphs correctly
-            if isinstance(interaction, FluidNumberInteraction) or isinstance(interaction, FluidIntegerInteraction):
+            if isinstance(interaction, FluidNumberInteraction) or isinstance(
+                interaction, FluidIntegerInteraction
+            ):
                 # Basically add the value node id into the subgraph view also
-                node_ids = [module.FIG.get_fignode(edge[0]).id for edge in module.FIG.in_edges(interaction.id) if isinstance(module.FIG.get_fignode(edge[0]), ValueNode)]
+                node_ids = [
+                    module.FIG.get_fignode(edge[0]).id
+                    for edge in module.FIG.in_edges(interaction.id)
+                    if isinstance(module.FIG.get_fignode(edge[0]), ValueNode)
+                ]
                 node_ids.append(interaction.id)
                 sub_graph = module.FIG.subgraph(node_ids)
             else:
@@ -505,7 +524,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
     for node_id in list(construction_graph.nodes):
         cn = construction_graph.get_cn(node_id)
-        assert(len(cn.mapping_options) == 1)
+        assert len(cn.mapping_options) == 1
         mapping_option = cn.mapping_options[0]
         if isinstance(mapping_option, NetworkMappingOption):
             if mapping_option.mapping_type is NetworkMappingOptionType.PASS_THROUGH:
@@ -527,20 +546,26 @@ def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
                     construction_graph.add_edge(in_points[0], out_points[0])
                 # Case 2 - n->1
                 # Case 3 - 1->n
-                elif (len(in_points) > 1 and len(out_points) == 1) or (len(in_points) == 1 and len(out_points) > 1):
+                elif (len(in_points) > 1 and len(out_points) == 1) or (
+                    len(in_points) == 1 and len(out_points) > 1
+                ):
                     for in_point in in_points:
                         for out_point in out_points:
                             construction_graph.add_edge(in_point, out_point)
                 else:
-                    raise Exception("Pass through network node elimination not implemented \
-                        when n->n edge creation is necessary")
+                    raise Exception(
+                        "Pass through network node elimination not implemented \
+                        when n->n edge creation is necessary"
+                    )
 
 
 def connect_orphan_IO():
     print("Implement the orphan io generation system")
 
 
-def get_flow_flow_candidates(module: Module, gen_strategy: GenStrategy) -> List[ConstructionNode]:
+def get_flow_flow_candidates(
+    module: Module, gen_strategy: GenStrategy
+) -> List[ConstructionNode]:
     # TODO - go through all the edges and see which ones are between flow-flow graphs
     # If these connectsions are between flow-flow nodes then we need to figure out
     # which ones are part of the same network/connected graphs with only flow nodes
@@ -558,7 +583,9 @@ def get_flow_flow_candidates(module: Module, gen_strategy: GenStrategy) -> List[
 
     # Step 1. Do a shallow copy of the graph
     fig_original = module.FIG
-    fig_copy = module.FIG.copy()  # Note this does not copy anything besides the nx.DiGraph at the moment
+    fig_copy = (
+        module.FIG.copy()
+    )  # Note this does not copy anything besides the nx.DiGraph at the moment
 
     # Step 2. Remove all the fignodes that are not Flow
     remove_list = []

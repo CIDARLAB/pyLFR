@@ -8,7 +8,6 @@ import numpy as np
 
 
 class StateTable(object):
-
     def __init__(self, signal_list: List[str]) -> None:
         self._headers: List[str] = signal_list
         # TODO - Do a combinatorial explosion for all the states available
@@ -29,7 +28,9 @@ class StateTable(object):
     def get_edge(self, j: int) -> Tuple[str, str]:
         return self._connectivity_edges[self._connectivity_column_headers[j]]
 
-    def convert_to_fullstate_vector(self, signal_list: List[str], state: BitVector) -> BitVector:
+    def convert_to_fullstate_vector(
+        self, signal_list: List[str], state: BitVector
+    ) -> BitVector:
         # Go through the each of the signal and update the specific BitVector value
         full_state_bitvector = BitVector(size=len(self._headers))
         for i in range(len(signal_list)):
@@ -38,7 +39,9 @@ class StateTable(object):
             full_state_bitvector[pos] = state[i]
         return full_state_bitvector
 
-    def save_connectivity(self, state_vector: BitVector, source: str, target: str) -> None:
+    def save_connectivity(
+        self, state_vector: BitVector, source: str, target: str
+    ) -> None:
         if state_vector not in self._connectivity_states.keys():
             self._connectivity_states[state_vector] = nx.DiGraph()
 
@@ -47,11 +50,19 @@ class StateTable(object):
 
         # Add source and target if they are not present
         if source not in list(digraph.nodes):
-            print("Could not find source - {} in state table connectivity graph, adding node".format(source))
+            print(
+                "Could not find source - {} in state table connectivity graph, adding node".format(
+                    source
+                )
+            )
             digraph.add_node(source)
 
         if target not in list(digraph.nodes):
-            print("Could not find target - {} in state table connectivity graph, adding node".format(target))
+            print(
+                "Could not find target - {} in state table connectivity graph, adding node".format(
+                    target
+                )
+            )
             digraph.add_node(target)
 
         # Add the edge to show the connectivity
@@ -106,7 +117,7 @@ class StateTable(object):
             found_flag = False
             if i in skip_list:
                 continue
-            for j in range(i+1, n_cols):
+            for j in range(i + 1, n_cols):
                 if j in skip_list:
                     continue
 
@@ -129,14 +140,18 @@ class StateTable(object):
                 source_node = fig.get_fignode(edge[0])
                 target_node = fig.get_fignode(edge[1])
                 if source_node is None:
-                    raise Exception("Could not find the corresponding nodes {}".format(source_node))
+                    raise Exception(
+                        "Could not find the corresponding nodes {}".format(source_node)
+                    )
                 if target_node is None:
-                    raise Exception("could not find the corresponding nodes {}".format(target_node))
+                    raise Exception(
+                        "could not find the corresponding nodes {}".format(target_node)
+                    )
                 fig.connect_fignodes(source_node, target_node)
 
             origin_nodes = [fig.get_fignode(edge[0]) for edge in candidate]
             print("Added AND annotation on FIG: {}".format(str(origin_nodes)))
-            assert(origin_nodes is not None)
+            assert origin_nodes is not None
             annotation = fig.add_and_annotation(origin_nodes)
             self._and_annotations.append(annotation)
 
@@ -156,7 +171,7 @@ class StateTable(object):
             found_flag = False
             if i in skip_list:
                 continue
-            for j in range(i+1, n_rows):
+            for j in range(i + 1, n_rows):
                 if j in skip_list:
                     continue
                 # Compute XOR and see if the hamming distance is
@@ -228,7 +243,7 @@ class StateTable(object):
             self._or_annotations.append(fig.add_or_annotation(args_for_annotation))
 
     def __hamming_distance(self, vec1, vec2) -> int:
-        assert(vec1.size == vec2.size)
+        assert vec1.size == vec2.size
         # Start with a distance of zero, and count up
         distance = 0
         # Loop over the indices of the string

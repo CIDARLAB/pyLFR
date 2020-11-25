@@ -4,8 +4,7 @@ from typing import List
 import copy
 
 
-class ConstructionNode():
-
+class ConstructionNode:
     def __init__(self, node_id: str) -> None:
         self._id = node_id
         self._mapping_options: List[MappingOption] = []
@@ -57,13 +56,15 @@ class ConstructionNode():
     def add_mapping_option(self, mapping_option: MappingOption) -> None:
         if self._explict_mapping_flag is True:
             # TODO - Add user flag for overwriting explicit mappings
-            print("Warning, cannot update construction graph node {}, since explicit mapping is present")
+            print(
+                "Warning, cannot update construction graph node {}, since explicit mapping is present"
+            )
         else:
             self._mapping_options.append(mapping_option)
 
     def load_connection_options(self) -> None:
         # TODO - Figure out what do do if its a combinatorial design
-        assert(len(self._mapping_options) == 1)
+        assert len(self._mapping_options) == 1
         primitive_ref = self._mapping_options[0].primitive
         if primitive_ref.inputs is not None:
             self._input_options = [copy.copy(c) for c in primitive_ref.inputs]

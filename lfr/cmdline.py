@@ -23,21 +23,39 @@ def load_libraries():
     os.chdir(parameters.LIB_DIR)
     print(" LIB Path : " + str(parameters.LIB_DIR))
     for filename in glob.glob("*.json"):
-        file = open(filename, 'r')
+        file = open(filename, "r")
         lib_object = json.loads(file.read())
-        library[lib_object['name']] = MappingLibrary(lib_object)
+        library[lib_object["name"]] = MappingLibrary(lib_object)
     return library
 
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('input', nargs='+', help="This is the file thats used as the input ")
-    parser.add_argument('--outpath', type=str, default="out/", help="This is the output directory")
-    parser.add_argument('--technology', type=str, default="dropx", help="This is the mapping library you need to use")
-    parser.add_argument('--library', type=str, default="./library", help="This sets the default library where the different technologies sit in")
-    parser.add_argument('--no-mapping', help="Skipping Explicit Mappings")
-    parser.add_argument('--no-gen', action="store_true", help="Force the program to skip the device generation")
+    parser.add_argument(
+        "input", nargs="+", help="This is the file thats used as the input "
+    )
+    parser.add_argument(
+        "--outpath", type=str, default="out/", help="This is the output directory"
+    )
+    parser.add_argument(
+        "--technology",
+        type=str,
+        default="dropx",
+        help="This is the mapping library you need to use",
+    )
+    parser.add_argument(
+        "--library",
+        type=str,
+        default="./library",
+        help="This sets the default library where the different technologies sit in",
+    )
+    parser.add_argument("--no-mapping", help="Skipping Explicit Mappings")
+    parser.add_argument(
+        "--no-gen",
+        action="store_true",
+        help="Force the program to skip the device generation",
+    )
     args = parser.parse_args()
 
     # Utilize the prepreocessor to generate the input file
@@ -115,7 +133,7 @@ def main():
 
         unsized_device = generate(mapping_listener.currentModule, library)
 
-        unsized_device.toMINT()
+        unsized_device.to_MINT()
 
         print_netlist(unsized_device)
         serialize_netlist(unsized_device)

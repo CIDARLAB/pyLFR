@@ -1,11 +1,9 @@
-
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 
 
 class DummyStrategy(GenStrategy):
-
     def __init__(self, construction_graph: ConstructionGraph) -> None:
         super().__init__(construction_graph)
 
@@ -16,7 +14,7 @@ class DummyStrategy(GenStrategy):
         for cn in self._construction_graph.construction_nodes:
             print(len(cn.mapping_options))
             # Remove the extra mappings
-            del cn.mapping_options[1:len(cn.mapping_options)]
+            del cn.mapping_options[1 : len(cn.mapping_options)]
             print(len(cn.mapping_options))
             pass
 

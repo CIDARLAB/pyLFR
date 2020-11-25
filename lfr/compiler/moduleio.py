@@ -1,11 +1,9 @@
-
-
 from lfr.fig.fignode import IOType
 from lfr.compiler.language.vectorrange import VectorRange
 
 
 class ModuleIO:
-    def __init__(self, name: str, iotype: IOType=None):
+    def __init__(self, name: str, iotype: IOType = None):
         self.type = iotype
         self._id = name
         self._vector_ref = None

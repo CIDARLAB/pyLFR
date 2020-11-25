@@ -9,7 +9,7 @@ MATCH_STRING_ORDERING = [
     "STORAGE",
     "SIGNAL",
     "DISTRIBUTE-AND",
-    'DISTRIBUTE-OR'
+    "DISTRIBUTE-OR",
 ]
 
 
@@ -20,7 +20,6 @@ class IOType(Enum):
 
 
 class FIGNode(object):
-
     def __init__(self, id: str) -> None:
         self._id: str = id
 
@@ -46,7 +45,6 @@ class FIGNode(object):
 
 
 class ValueNode(FIGNode):
-
     def __init__(self, id: str, val) -> None:
         super().__init__(id)
         self._value = val
@@ -61,7 +59,6 @@ class ValueNode(FIGNode):
 
 
 class Flow(FIGNode):
-
     def __init__(self, id) -> None:
         super().__init__(id)
 
@@ -71,7 +68,6 @@ class Flow(FIGNode):
 
 
 class IONode(Flow):
-
     def __init__(self, id: str, iotype=None):
         super().__init__(id)
         self._type = iotype
@@ -93,7 +89,6 @@ class IONode(Flow):
 
 
 class Storage(Flow):
-
     def __init__(self, id: str) -> None:
         super().__init__(id)
 
@@ -103,7 +98,6 @@ class Storage(Flow):
 
 
 class Pump(Flow):
-
     def __init__(self, id: str) -> None:
         super().__init__(id)
 
@@ -113,7 +107,6 @@ class Pump(Flow):
 
 
 class Signal(FIGNode):
-
     def __init__(self, id: str) -> None:
         super().__init__(id)
 
@@ -123,13 +116,11 @@ class Signal(FIGNode):
 
 
 class DistributeNode(FIGNode):
-
     def __init__(self, id: str) -> None:
         super().__init__(id)
 
 
 class ANDAnnotation(DistributeNode):
-
     def __init__(self, id: str) -> None:
         super().__init__(id)
 
@@ -139,7 +130,6 @@ class ANDAnnotation(DistributeNode):
 
 
 class ORAnnotation(DistributeNode):
-
     def __init__(self, id: str) -> None:
         super().__init__(id)
 
@@ -149,7 +139,6 @@ class ORAnnotation(DistributeNode):
 
 
 class NOTAnnotation(DistributeNode):
-
     def __init__(self, id: str) -> None:
         super().__init__(id)
 

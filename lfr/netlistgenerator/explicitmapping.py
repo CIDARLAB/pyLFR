@@ -9,12 +9,13 @@ class ExplicitMappingType(Enum):
 
 
 class ExplicitMapping(object):
-
-    def __init__(self, mapping_type: ExplicitMappingType = ExplicitMappingType.FLUID_INTERACTION):
+    def __init__(
+        self, mapping_type: ExplicitMappingType = ExplicitMappingType.FLUID_INTERACTION
+    ):
         self._startlist: List[str] = []
         self._endlist: List[str] = []
-        self._technology: str = ''
-        self._operator: str = ''
+        self._technology: str = ""
+        self._operator: str = ""
         self._mapping_type: ExplicitMappingType = mapping_type
 
     @property
