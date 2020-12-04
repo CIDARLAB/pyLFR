@@ -412,7 +412,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     cur_device = MINTDevice(module.name)
 
     # Add a MINT Layer so that the device has something to work with
-    cur_device.add_layer("0", 0, MINTLayerType.FLOW)
+    cur_device.create_mint_layer("0", 0, MINTLayerType.FLOW)
 
     dummy_strategy = DummyStrategy(construction_graph)
 

@@ -1,11 +1,13 @@
 from typing import List
 from pymint.mintdevice import MINTDevice
-from pymint.antlr.mintLexer import mintLexer
-from pymint.antlr.mintParser import mintParser
+from pymint.antlrgen.mintLexer import mintLexer
+from pymint.antlrgen.mintParser import mintParser
 from pymint.mintcompiler import MINTCompiler
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
 from os import path
 from enum import Enum
+
+from pymint.mintlayer import MINTLayer
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr import parameters
@@ -86,11 +88,13 @@ class Primitive:
     def output_params(self):
         return self._output_params
 
-    def get_default_component(self, name_gen: NameGenerator) -> MINTComponent:
+    def get_default_component(
+        self, name_gen: NameGenerator, layer: MINTLayer
+    ) -> MINTComponent:
         if self.type is not PrimitiveType.COMPONENT:
             raise Exception("Cannot execute this method for this kind of a primitive")
         name = name_gen.generate_name(self.mint)
-        mc = MINTComponent(name, self.mint, dict())
+        mc = MINTComponent(name, self.mint, dict(), [layer])
         return mc
 
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
@@ -99,27 +103,14 @@ class Primitive:
 
         default_mint_file = parameters.LIB_DIR.joinpath(self._default_netlist).resolve()
 
-        if not path.exists(default_mint_file):
-            raise Exception("Default netlist file does not exist")
+        device = MINTDevice.from_mint_file(str(default_mint_file))
 
-        finput = FileStream(default_mint_file)
-
-        lexer = mintLexer(finput)
-
-        stream = CommonTokenStream(lexer)
-
-        parser = mintParser(stream)
-
-        tree = parser.netlist()
-
-        walker = ParseTreeWalker()
-
-        listener = MINTCompiler()
-
-        walker.walk(listener, tree)
-
-        device = listener.current_device
-
+        if device is None:
+            raise Exception(
+                "Unable to parse MINT file: {} for construction node {}".format(
+                    str(default_mint_file), cn_id
+                )
+            )
         name_gen.rename_netlist(cn_id, device)
         # Return the default netlist
         return device

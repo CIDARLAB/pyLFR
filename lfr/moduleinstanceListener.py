@@ -1,5 +1,3 @@
-from lfr.netlistgenerator import explicitmapping
-from lfr.fig.fignode import FIGNode
 from lfr.compiler.module import Module
 from typing import Dict, Optional
 from lfr.compiler.lfrerror import ErrorType, LFRError

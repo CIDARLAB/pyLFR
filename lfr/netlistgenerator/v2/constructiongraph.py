@@ -61,6 +61,8 @@ class ConstructionGraph(nx.DiGraph):
     def construct_components(
         self, name_generator: NameGenerator, device: MINTDevice
     ) -> None:
+        # TODO - Figure out a smart way to get the right layer every single time
+        layer = device.layers[0]
         for cn in self.construction_nodes:
             if len(cn.mapping_options) > 1:
                 # TODO - update for combinatorial design space exploration
@@ -82,7 +84,7 @@ class ConstructionGraph(nx.DiGraph):
                     # Then merge with the larger device
                     # Save the copy of subgraph view of the netlist in the construction node
                     component_to_add = mapping_option.primitive.get_default_component(
-                        name_generator
+                        name_generator, layer
                     )
                     device.add_component(component_to_add)
                     self._component_refs[cn.id] = [component_to_add.ID]
@@ -262,7 +264,7 @@ class ConstructionGraph(nx.DiGraph):
             channel_name = name_generator.generate_name(tech_string)
             source = MINTTarget(src_component_name, None)
             sink = MINTTarget(tar_component_name, end_point.component_port[0])
-            device.add_connection(
+            device.create_mint_connection(
                 channel_name, tech_string, dict(), source, [sink], "0"
             )
         else:
@@ -271,7 +273,7 @@ class ConstructionGraph(nx.DiGraph):
                 source = MINTTarget(src_component_name, component_port)
                 sink = MINTTarget(tar_component_name, end_point.component_port[0])
                 # TODO - Figure out how to make this layer generate automatically
-                device.add_connection(
+                device.create_mint_connection(
                     channel_name, tech_string, dict(), source, [sink], "0"
                 )
 
@@ -338,7 +340,7 @@ class ConstructionGraph(nx.DiGraph):
             channel_name = name_generator.generate_name(tech_string)
             source = MINTTarget(src_component_name, None)
             sink = MINTTarget(tar_component_name, end_point.component_port[0])
-            device.add_connection(
+            device.create_mint_connection(
                 channel_name, tech_string, dict(), source, [sink], "0"
             )
         else:
@@ -347,7 +349,7 @@ class ConstructionGraph(nx.DiGraph):
                 source = MINTTarget(src_component_name, component_port)
                 sink = MINTTarget(tar_component_name, end_point.component_port[0])
                 # TODO - Figure out how to make this layer generate automatically
-                device.add_connection(
+                device.create_mint_connection(
                     channel_name, tech_string, dict(), source, [sink], "0"
                 )
 
