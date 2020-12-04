@@ -98,6 +98,7 @@ class ConstructionGraph(nx.DiGraph):
                         component.ID for component in netlist.components
                     ]
                     device.merge_netlist(netlist)
+                    print(device.components)
                     # TODO - Save the subgraph view reference
                 elif mapping_option.primitive.type is PrimitiveType.PROCEDURAL:
                     netlist = mapping_option.primitive.get_default_netlist(

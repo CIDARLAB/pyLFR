@@ -133,8 +133,6 @@ def main():
 
         unsized_device = generate(mapping_listener.currentModule, library)
 
-        unsized_device.to_MINT()
-
         print_netlist(unsized_device)
         serialize_netlist(unsized_device)
 
