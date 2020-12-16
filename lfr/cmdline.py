@@ -96,6 +96,12 @@ def main():
 
     tree = parser.skeleton()
 
+    syntax_errors = parser.getNumberOfSyntaxErrors()
+
+    if syntax_errors > 0:
+        print("Stopping compiler because of syntax errors")
+        exit(0)
+
     walker = ParseTreeWalker()
 
     mapping_listener = ModuleInstanceListener()
