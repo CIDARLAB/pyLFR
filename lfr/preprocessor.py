@@ -1,6 +1,10 @@
+from lfr.antlrgen.lfrXParser import lfrXParser
+from antlr4.CommonTokenStream import CommonTokenStream
+from lfr.antlrgen.lfrXLexer import lfrXLexer
 from pathlib import Path
 from typing import List
 import re
+from antlr4.FileStream import FileStream
 import networkx as nx
 
 
@@ -32,6 +36,23 @@ class PreProcessor(object):
 
             self.resolved_paths[p.name] = p
             self.full_text[p.name] = all_of_it
+
+    def check_syntax_errors(self) -> bool:
+        syntax_errors = 0
+        for file_path in list(self.resolved_paths.values()):
+            print("File: {}".format(file_path))
+            finput = FileStream(str(file_path))
+
+            lexer = lfrXLexer(finput)
+
+            stream = CommonTokenStream(lexer)
+
+            parser = lfrXParser(stream)
+
+            parser.skeleton()
+            syntax_errors += parser.getNumberOfSyntaxErrors()
+
+        return syntax_errors > 0
 
     def process(self) -> None:
 
@@ -65,8 +86,6 @@ class PreProcessor(object):
             final_dump += "// Dumping File - {}\n\n\n".format(file_handle)
             final_dump += self.full_text[file_handle]
             final_dump += "\n\n\n\n\n"
-
-        print(final_dump)
 
         # Generating the Dump
         file = open("pre_processor_dump.lfr", "w")

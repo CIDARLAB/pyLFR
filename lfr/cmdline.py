@@ -61,6 +61,10 @@ def main():
     # Utilize the prepreocessor to generate the input file
     preprocessor = PreProcessor(args.input)
 
+    if preprocessor.check_syntax_errors():
+        print("Stopping compiler because of syntax errors")
+        exit(0)
+
     preprocessor.process()
 
     print("output dir:", args.outpath)
@@ -95,12 +99,6 @@ def main():
     parser = lfrXParser(stream)
 
     tree = parser.skeleton()
-
-    syntax_errors = parser.getNumberOfSyntaxErrors()
-
-    if syntax_errors > 0:
-        print("Stopping compiler because of syntax errors")
-        exit(0)
 
     walker = ParseTreeWalker()
 
