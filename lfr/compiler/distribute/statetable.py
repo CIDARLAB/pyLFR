@@ -1,10 +1,11 @@
 from __future__ import annotations
-from lfr.fig.fignode import ANDAnnotation, ORAnnotation
+from lfr.fig.fignode import ANDAnnotation, NOTAnnotation, ORAnnotation
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from typing import Dict, List, Tuple
 import networkx as nx
 from lfr.compiler.distribute.BitVector import BitVector
 import numpy as np
+from tabulate import tabulate
 
 
 class StateTable(object):
@@ -20,13 +21,20 @@ class StateTable(object):
         self._connectivity_edges = dict()
         self._and_annotations: List[ANDAnnotation] = []
         self._or_annotations: List[ORAnnotation] = []
+        self._not_annotations: List[NOTAnnotation] = []
+        self._annotated_connectivity_edges: List[Tuple[str, str]] = []
+
+        self._or_column_skip_list: List[int] = []
 
     @property
     def headers(self) -> List[str]:
         return self._headers
 
-    def get_edge(self, j: int) -> Tuple[str, str]:
-        return self._connectivity_edges[self._connectivity_column_headers[j]]
+    def get_connectivity_edge(self, i: int) -> Tuple[str, str]:
+        # Returns the edge from here
+        edge_name = self._connectivity_column_headers[i]
+        edge = self._connectivity_edges[edge_name]
+        return edge
 
     def convert_to_fullstate_vector(
         self, signal_list: List[str], state: BitVector
@@ -113,7 +121,7 @@ class StateTable(object):
         skip_list = []
         for i in range(n_cols):
             candidate = []
-            candidate.append(self.get_fig(i))
+            candidate.append(self.get_connectivity_edge(i))
             found_flag = False
             if i in skip_list:
                 continue
@@ -126,13 +134,32 @@ class StateTable(object):
                 if np.array_equal(col_i, col_j):
                     skip_list.append(i)
                     skip_list.append(j)
-                    candidate.append(self.get_edge(j))
+                    candidate.append(self.get_connectivity_edge(j))
                     found_flag = True
 
             if found_flag is True:
                 all_candidates.append(candidate)
 
+        print("DISTRIBUTE-AND CANDIDATES:")
         print(all_candidates)
+
+        # Populating this skip list is important to make sure
+        # that all the nodes with the AND annotation are zero'ed
+        # This will simplify how the or-compuation can be done
+        for candidate in all_candidates:
+            # Skip the first one and add the rest of
+            # the edges into the skip list
+            for i in range(1, len(candidate)):
+                self.add_to_column_skip_list(candidate[i])
+
+        # Add all the annotated edges to the list that keeps
+        # track of used edges, this way we can ensrue that all
+        # used edges are accounted for when we need to use the
+        # NOTAnnotation
+
+        for candidate in all_candidates:
+            self._annotated_connectivity_edges.extend(candidate)
+
         # Generate all the different AND annotations necessary
         for candidate in all_candidates:
             for edge in candidate:
@@ -157,7 +184,13 @@ class StateTable(object):
 
     def generate_or_annotations(self, fig: FluidInteractionGraph) -> None:
 
-        m = self._connectivity_matrix
+        self.print_connectivity_table()
+        m = np.copy(self._connectivity_matrix)
+        # Zerofill SKIPPED COLUMS
+        print(m)
+        for col in self._or_column_skip_list:
+            m[:, col] = 0
+        print(m)
         shape = m.shape
         n_rows = shape[0]
         # n_cols = shape[1]
@@ -198,7 +231,9 @@ class StateTable(object):
             if found_flag:
                 all_candidates.append(candidate_row_index)
 
+        print("DISTRIBUTE-OR CANDIDATES")
         print(all_candidates)
+
         # Generate all the different OR annotations necessary
 
         # Figure out how to process the candidates:
@@ -214,7 +249,14 @@ class StateTable(object):
                 for i in range(len(row)):
                     if row[i] == 1:
                         # Find the corresponding collumn edge:
-                        edge = self.get_edge(i)
+                        edge = self.get_connectivity_edge(i)
+
+                        # Add all the annotated edges to the list that keeps
+                        # track of used edges, this way we can ensrue that all
+                        # used edges are accounted for when we need to use the
+                        # NOTAnnotation
+                        self._annotated_connectivity_edges.append(edge)
+
                         # First make a connection so that this is taken care or
                         source_node = fig.get_fignode(edge[0])
                         target_node = fig.get_fignode(edge[1])
@@ -242,6 +284,26 @@ class StateTable(object):
 
             self._or_annotations.append(fig.add_or_annotation(args_for_annotation))
 
+    def generate_not_annotations(self, fig: FluidInteractionGraph) -> None:
+        m = self._connectivity_matrix
+        shape = m.shape
+        n_cols = shape[1]
+        annotated_edges = self._annotated_connectivity_edges
+        # Pick whatever single connectivity descriptions are left in this design
+        for i in range(n_cols):
+            edge = self.get_connectivity_edge(i)
+            if edge not in annotated_edges:
+                source_node = fig.get_fignode(edge[0])
+                target_node = fig.get_fignode(edge[1])
+                print(
+                    "Found new NOT-DISTRIBUTE Candidate : {} -> {}".format(
+                        edge[0], edge[1]
+                    )
+                )
+                fig.connect_fignodes(source_node, target_node)
+                annotation = fig.add_not_annotation([source_node, target_node])
+                self._not_annotations.append(annotation)
+
     def __hamming_distance(self, vec1, vec2) -> int:
         assert vec1.size == vec2.size
         # Start with a distance of zero, and count up
@@ -263,7 +325,7 @@ class StateTable(object):
                 ret += 1
         return ret
 
-    def __convert_edge_to_name(self, edge) -> str:
+    def __convert_edge_to_name(self, edge: Tuple[str, str]) -> str:
         return "{}->{}".format(edge[0], edge[1])
 
     def __update_connectivity_matix(self, edge, row, value):
@@ -272,8 +334,16 @@ class StateTable(object):
         column = self._connectivity_column_headers.index(edge_name)
         m[row, column] = value
 
-    def get_fig(self, i: int):
-        # Returns the edge from here
-        edge_name = self._connectivity_column_headers[i]
-        edge = self._connectivity_edges[edge_name]
-        return edge
+    def add_to_column_skip_list(self, edge: Tuple[str, str]):
+        # TODO - add the column to skip edge list to
+        #  prevent double count during xor finding
+        edge_index = self._connectivity_column_headers.index(
+            self.__convert_edge_to_name(edge)
+        )
+        self._or_column_skip_list.append(edge_index)
+
+    def print_connectivity_table(self):
+        m = self._connectivity_matrix
+        headers = self._connectivity_column_headers
+        table = tabulate(m, headers, tablefmt="fancy_grid")
+        print(table)

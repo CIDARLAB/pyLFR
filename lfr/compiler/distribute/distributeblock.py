@@ -16,16 +16,19 @@ class DistributeBlock(object):
         print("Implement the fig generation from this")
         self._state_table.generate_connectivity_table()
 
+        print("Connectivity table for the distribution block")
+        self._state_table.print_connectivity_table()
+
         self._state_table.generate_and_annotations(fig)
 
         self._state_table.generate_or_annotations(fig)
 
+        # TODO - Mark all the single items with no pairs
+        self._state_table.generate_not_annotations(fig)
+
         # TODO - How to map the control mappings for each
         # of the annotations to the control signals
         # self._state_table.compute_control_mapping()
-
-        # TODO - Mark all the single items with no pairs
-        pass
 
     @property
     def state_table(self) -> StateTable:

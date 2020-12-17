@@ -66,6 +66,9 @@ class Flow(FIGNode):
     def match_string(self):
         return "FLOW"
 
+    def __str__(self) -> str:
+        return "FLOW - {}".format(self.id)
+
 
 class IONode(Flow):
     def __init__(self, id: str, iotype=None):
