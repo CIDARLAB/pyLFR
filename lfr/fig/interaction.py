@@ -13,6 +13,9 @@ class InteractionType(Enum):
 
 
 class Interaction(Flow):
+
+    INTERACTION_ID = 0
+
     def __init__(self, id: str, interaction_type: InteractionType) -> None:
         super().__init__(id)
         self._interaction_type: InteractionType = interaction_type
@@ -38,6 +41,8 @@ class Interaction(Flow):
         else:
             id = fluid1.id + "_" + operator_string
 
+        id = id + "_" + str(Interaction.INTERACTION_ID)
+        Interaction.INTERACTION_ID += 1
         return id
 
     @property
