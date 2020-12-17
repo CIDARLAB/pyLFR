@@ -17,6 +17,8 @@ class Vector:
             else:
                 for i in range(len(self)):
                     self.vec.append(vectortype(self.id + "_" + str(i)))
+        else:
+            raise Exception("Cannot Create Vector of Type None")
 
     def __len__(self):
         return abs(self.startindex - self.endindex) + 1
