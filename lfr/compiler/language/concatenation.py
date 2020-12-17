@@ -11,14 +11,12 @@ class Concatenation:
                 name = name + "_" + r.id
             self.id = name
 
-    def __getitem__(self, key: int):
-        # TODO: Check if the logic is correct
-        offset = 0
+    def __getitem__(self, key):
+        temp = []
         for vrange in self.ranges:
-            if key < len(vrange) + offset:
-                return vrange[key - offset]
-            else:
-                offset = offset + len(vrange)
+            temp.extend(vrange)
+
+        return temp[key]
 
     def __iter__(self):
         vec = []

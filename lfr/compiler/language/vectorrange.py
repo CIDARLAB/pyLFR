@@ -15,7 +15,7 @@ class VectorRange:
     def id(self):
         return self.vector.id
 
-    def __getitem__(self, key: int):
+    def __getitem__(self, key):
         return self.vector[self.startindex + key]
 
     def __iter__(self):
