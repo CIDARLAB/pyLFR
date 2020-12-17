@@ -64,8 +64,11 @@ class DistBlockListener(LFRBaseListener):
             v = self.vectors[signal_name]
 
             if signal.vector() is not None:
-                start_index = int(ctx.vector().start.text)
-                end_index = int(ctx.vector().end.text)
+                start_index = int(signal.vector().start.text)
+                if signal.vector().end is not None:
+                    end_index = int(signal.vector().end.text)
+                else:
+                    end_index = start_index
             else:
                 start_index = v.startindex
                 end_index = v.endindex
