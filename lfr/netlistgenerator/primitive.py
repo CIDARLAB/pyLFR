@@ -1,10 +1,6 @@
 from typing import List
 from pymint.mintdevice import MINTDevice
-from pymint.antlrgen.mintLexer import mintLexer
-from pymint.antlrgen.mintParser import mintParser
-from pymint.mintcompiler import MINTCompiler
-from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
-from os import path
+from pymint.mintparams import MINTParams
 from enum import Enum
 
 from pymint.mintlayer import MINTLayer
@@ -36,6 +32,7 @@ class Primitive:
         default_netlist: str = None,
         functional_input_params: List[str] = [],
         output_params: List[str] = [],
+        user_defined_params: MINTParams = None,
     ) -> None:
 
         self._component_type: PrimitiveType = component_type
@@ -51,6 +48,8 @@ class Primitive:
 
         self._functional_input_params = functional_input_params
         self._output_params = output_params
+
+        self._user_defined_params: MINTParams = user_defined_params
 
     @property
     def type(self) -> PrimitiveType:
