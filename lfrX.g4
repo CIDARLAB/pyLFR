@@ -174,17 +174,13 @@ ioassignstat
    ;
 
 technologydirectives
-   :    directive  (('|' | '&') directive)*
-   ;
-
-directive
    :    performancedirective
    |    technologymappingdirective
    |    materialmappingdirective
    ;
 
 technologymappingdirective
-    :   '#MAP'  '\''ID+ '\'' '\''(mappingoperator | assignmode=('assign' | 'storage')) '\''
+    :   '#MAP'  '\'' ID+ '\'' '\''(mappingoperator | assignmode=('assign' | 'storage')) '\''
     ;
 
 materialmappingdirective
@@ -197,15 +193,15 @@ mappingoperator
     ;
 
 performancedirective 
-   :  '#CONSTRAIN' constraint
+   :  '#CONSTRAIN' '\'' mappingoperator '\'' constraint (('AND' | 'OR') constraint)*
    ;
 
 constraint
-   : '\'' (binary_operator|unary_operator) '\'' ID operator='=' number unit?
-   | '\'' (binary_operator|unary_operator) '\'' ID operator='>' number unit?
-   | '\'' (binary_operator|unary_operator) '\'' ID operator='<' number unit?
-   | '\'' (binary_operator|unary_operator) '\'' ID operator='>=' number unit?
-   | '\'' (binary_operator|unary_operator) '\'' ID operator='<=' number unit?
+   :  ID operator='=' number unit?
+   |  ID operator='>' number unit?
+   |  ID operator='<' number unit?
+   |  ID operator='>=' number unit?
+   |  ID operator='<=' number unit?
    ;
 
 unit: ID;
