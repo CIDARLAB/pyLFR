@@ -1,5 +1,5 @@
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
-from lfr.netlistgenerator.v2.mappingoption import ExplicitMappingOption, MappingOption
+from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from typing import List
 import copy
 
@@ -44,7 +44,7 @@ class ConstructionNode:
     def mapping_options(self, options: List[MappingOption]):
         self._mapping_options = options
 
-    def use_explicit_mapping(self, mapping: ExplicitMappingOption) -> None:
+    def use_explicit_mapping(self, mapping: MappingOption) -> None:
         # Set the flag for explicit mapping
         self._explict_mapping_flag = True
         # Delete all the existing mapping options

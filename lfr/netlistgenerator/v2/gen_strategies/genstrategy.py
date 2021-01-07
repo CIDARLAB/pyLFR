@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Dict, TYPE_CHECKING
 
+from pymint.mintlayer import MINTLayerType
+
 if TYPE_CHECKING:
     from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 
@@ -24,6 +26,7 @@ class GenStrategy:
         # TODO - For now just assume that the networks basically are a bunch
         # of nodes with nets/channels connecting them
         ret = MINTDevice("flow_network_temp")
+        ret.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
         for node in fig_subgraph_view.nodes:
             n = MINTNode("node_{}".format(node))
             ret.add_component(n)
@@ -49,7 +52,9 @@ class GenStrategy:
 
                 sinks.append(MINTTarget("node_{}".format(tar)))
 
-            ret.addConnection(channel_name, "CHANNEL", params, source, sinks, "0")
+            ret.create_mint_connection(
+                channel_name, "CHANNEL", params, source, sinks, "0"
+            )
 
         return ret
 

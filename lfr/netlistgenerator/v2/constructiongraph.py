@@ -1,3 +1,4 @@
+from lfr.postprocessor.mapping import NodeMappingTemplate
 from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
@@ -8,7 +9,6 @@ from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.module import Module
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from typing import Dict, List
-from lfr.netlistgenerator.explicitmapping import ExplicitMapping, ExplicitMappingType
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from networkx import nx
 from pymint.mintdevice import MINTDevice
@@ -38,25 +38,31 @@ class ConstructionGraph(nx.DiGraph):
         self.remove_node(id)
         del self._construction_nodes[id]
 
-    def override_mappings(self, mappings: List[ExplicitMapping]) -> None:
-        for mapping in mappings:
-            # First identify the type of the mapping
-            if mapping.type is ExplicitMappingType.FLUID_INTERACTION:
-                # TODO - Identify which construction nodes need to be overridden for this
-                # TODO - Figure out if the mapping will be valid in terms of inputs and
-                # outputs
-                print("Implement mapping override for fluid interaction")
-                pass
-            elif mapping.type is ExplicitMappingType.STORAGE:
-                # TODO - Identify which construction nodes need to be overrridden
-                # TODO - Since the explicit mapping required for this might vary a bit
-                # we need to figure out how multiple mappings can work with storage
-                print("Implement mapping override for storage")
-                pass
-            elif mapping.type is ExplicitMappingType.NETWORK:
-                # TODO - Identify which subgraph need to be replaced here
-                print("Implement mapping override for network")
-                pass
+    def override_mappings(self, mappings: List[NodeMappingTemplate]) -> None:
+        # TODO - Go through the entire set of mappings in the FIG and generate / append the mapping options
+        # Step 1 - Loop through each of the mappingtemplates
+        # Step 2 - Loop through each of the instances in teh mappingtemplate
+        # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
+
+        # for mapping in mappings:
+        #     # First identify the type of the mapping
+        #     if mapping.type is ExplicitMappingType.FLUID_INTERACTION:
+        #         # TODO - Identify which construction nodes need to be overridden for this
+        #         # TODO - Figure out if the mapping will be valid in terms of inputs and
+        #         # outputs
+        #         print("Implement mapping override for fluid interaction")
+        #         pass
+        #     elif mapping.type is ExplicitMappingType.STORAGE:
+        #         # TODO - Identify which construction nodes need to be overrridden
+        #         # TODO - Since the explicit mapping required for this might vary a bit
+        #         # we need to figure out how multiple mappings can work with storage
+        #         print("Implement mapping override for storage")
+        #         pass
+        #     elif mapping.type is ExplicitMappingType.NETWORK:
+        #         # TODO - Identify which subgraph need to be replaced here
+        #         print("Implement mapping override for network")
+        #         pass
+        pass
 
     def construct_components(
         self, name_generator: NameGenerator, device: MINTDevice

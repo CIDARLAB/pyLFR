@@ -1,4 +1,5 @@
 from __future__ import annotations
+from lfr.postprocessor.mapping import NodeMappingTemplate
 from typing import Dict, List, Optional
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from lfr.fig.fignode import FIGNode, Flow, IOType
@@ -23,7 +24,11 @@ class Module(object):
         self._io: List[ModuleIO] = []
         self.FIG = FluidInteractionGraph()
         self.fluids = dict()
-        self.mappings: List[ExplicitMapping] = []
+        self._mappings: List[NodeMappingTemplate] = []
+
+    @property
+    def mappings(self) -> List[NodeMappingTemplate]:
+        return self._mappings
 
     @property
     def io(self) -> List[ModuleIO]:

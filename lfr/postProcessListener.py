@@ -197,6 +197,5 @@ class PostProcessListener(ModuleInstanceListener):
         return [fig.get_fignode(n) for n in nodes_of_interest]
 
     def __clear_mappings(self) -> None:
-        fig = self.currentModule.FIG
-        fig.mappings.extend(self._current_mappings.values())
+        self.currentModule.mappings.extend(self._current_mappings.values())
         self._current_mappings.clear()
