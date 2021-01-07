@@ -67,7 +67,7 @@ def serializedATN():
         buf.write("<\3<\3<\3<\5<\u0243\n<\5<\u0245\n<\3=\3=\3>\3>\3?\3?\3")
         buf.write("@\3@\3A\3A\3B\3B\3B\2\2C\2\4\6\b\n\f\16\20\22\24\26\30")
         buf.write("\32\34\36 \"$&(*,.\60\62\64\668:<>@BDFHJLNPRTVXZ\\^`b")
-        buf.write("dfhjlnprtvxz|~\u0080\u0082\2\t\4\2\31\31\34\34\3\2&\'")
+        buf.write("dfhjlnprtvxz|~\u0080\u0082\2\t\4\2\31\32\34\34\3\2&\'")
         buf.write("\3\2+\65\7\2\25\25(,//\61\61\63C\3\2-\65\7\2//\61\61\63")
         buf.write("\659:=>\3\2IM\2\u025b\2\u0085\3\2\2\2\4\u0089\3\2\2\2")
         buf.write("\6\u008d\3\2\2\2\b\u0099\3\2\2\2\n\u00ad\3\2\2\2\f\u00af")
@@ -4238,11 +4238,11 @@ class lfrXParser ( Parser ):
                 self.state = 522
                 self.mappingoperator()
                 pass
-            elif token in [lfrXParser.T__22, lfrXParser.T__25]:
+            elif token in [lfrXParser.T__22, lfrXParser.T__23, lfrXParser.T__25]:
                 self.state = 523
                 localctx.assignmode = self._input.LT(1)
                 _la = self._input.LA(1)
-                if not(_la==lfrXParser.T__22 or _la==lfrXParser.T__25):
+                if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << lfrXParser.T__22) | (1 << lfrXParser.T__23) | (1 << lfrXParser.T__25))) != 0)):
                     localctx.assignmode = self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)

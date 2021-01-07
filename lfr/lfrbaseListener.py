@@ -59,6 +59,10 @@ class LFRBaseListener(lfrXListener):
         self.statestack = []
         self.binaryoperatorsstack = [[]]
 
+        # TODO - Figure out how to make this more elegant
+        self._lhs_store = None
+        self._rhs_store = None
+
     def enterModule(self, ctx: lfrXParser.ModuleContext):
         if self.currentModule is not None:
             self.modules.append(self.currentModule)
@@ -433,6 +437,10 @@ class LFRBaseListener(lfrXListener):
                 raise Exception("Cannot assign Number to Fluid Variable")
             else:
                 self.vectors[lhs] = rhs
+
+        # Save the nodes as cache
+        self._lhs_store = lhs
+        self._rhs_store = rhs
 
         # Perform the vector assignments
         if len(lhs) == len(rhs):

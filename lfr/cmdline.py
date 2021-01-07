@@ -1,13 +1,11 @@
 from lfr.moduleinstanceListener import ModuleInstanceListener
+from lfr.postProcessListener import PostProcessListener
 from lfr.preprocessor import PreProcessor
-from lfr.distBlockListener import DistBlockListener
-from lfr.lfrbaseListener import LFRBaseListener
 import os
 from pathlib import Path
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
 from lfr.antlrgen.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfrXParser import lfrXParser
-from lfr.mappingCompiler import MappingCompiler
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 import argparse
 import lfr.parameters as parameters
@@ -56,6 +54,11 @@ def main():
         action="store_true",
         help="Force the program to skip the device generation",
     )
+    parser.add_argument(
+        "--no-annotations",
+        action="store_true",
+        help="Force the compiler to skip reading postprocess annotations like #MAP and #CONSTRAIN"
+    )
     args = parser.parse_args()
 
     # Utilize the prepreocessor to generate the input file
@@ -102,7 +105,10 @@ def main():
 
     walker = ParseTreeWalker()
 
-    mapping_listener = ModuleInstanceListener()
+    if args.no_annotations is True:
+        mapping_listener = ModuleInstanceListener()
+    else:
+        mapping_listener = PostProcessListener()    
 
     walker.walk(mapping_listener, tree)
 
@@ -112,9 +118,7 @@ def main():
 
     interactiongraph = mapping_listener.currentModule.FIG
 
-    utils.printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
-
-    printgraph(mapping_listener.currentModule.FIG, mapping_listener.currentModule.name)
+    printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
 
     if args.no_gen is True:
         exit(0)

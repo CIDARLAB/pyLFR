@@ -1,12 +1,14 @@
+from lfr.netlistgenerator.dafdadapter import ConstraintList
+from typing import List
 from pymint.mintcomponent import MINTComponent
 from pymint.mintdevice import MINTDevice
-from typing import List, Optional
 from dafd import DAFD_Interface
 
 
-class DAFDSizingAdapter:
+class DAFDAdapter:
     def __init__(self, device: MINTDevice) -> None:
-        self.__device = device
+        super().__init__()
+        self._device = device
         self.solver = DAFD_Interface()
 
     def size_droplet_generator(self, constriants: ConstraintList) -> None:
@@ -59,7 +61,7 @@ class DAFDSizingAdapter:
         pass
 
     def size_component(self, constriants: ConstraintList) -> None:
-        if constriants.component.entity == "NOZZLE DROPLET GENERATOR":
+        if component.entity == "NOZZLE DROPLET GENERATOR":
             self.size_droplet_generator(constriants)
         else:
             print("Error: {} is not supported".format(constriants.component.entity))

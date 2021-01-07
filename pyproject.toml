@@ -29,7 +29,7 @@ flake8 = "^3.8.3"
 rope = "^0.18.0"
 pymint = {path = "/home/krishna/CIDAR/pymint", develop=true}
 parchmint = {path = "/home/krishna/CIDAR/pyparchmint", develop=true}
-
+dafd = {path = "/home/krishna/CIDAR/dafd", develop=true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0a5"]

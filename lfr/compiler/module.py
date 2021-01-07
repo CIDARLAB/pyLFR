@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Dict, List, Optional
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
-from lfr.fig.fignode import FIGNode, IONode, Flow, IOType
+from lfr.fig.fignode import FIGNode, Flow, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.interaction import (
@@ -102,7 +102,7 @@ class Module(object):
 
     def add_fluid_finteraction_interaction(
         self, fluid1: Flow, finteraction: Interaction, interaction_type: InteractionType
-    ):
+    ) -> Interaction:
         # TODO: Create new factory method for creating this kind of fluid interaction
         new_fluid_interaction = FluidFluidInteraction(
             fluid1, finteraction, interaction_type

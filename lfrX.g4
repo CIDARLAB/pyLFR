@@ -180,7 +180,7 @@ technologydirectives
    ;
 
 technologymappingdirective
-    :   '#MAP'  '\'' ID+ '\'' '\''(mappingoperator | assignmode=('assign' | 'storage')) '\''
+    :   '#MAP'  '\'' ID+ '\'' '\''(mappingoperator | assignmode=('assign' | 'storage' | 'pump')) '\''
     ;
 
 materialmappingdirective

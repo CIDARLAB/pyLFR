@@ -135,6 +135,7 @@ class FluidExpression:
                     element, operator, InteractionType.TECHNOLOGY_PROCESS
                 )
 
+            interaction.operator = operator
             result.append(interaction)
 
         v = Vector.create_from_list_things(operator, result)
@@ -188,7 +189,7 @@ class FluidExpression:
                     "Unsuppored operator on two fluid values: {0}".format(operator)
                 )
 
-            # TODO: Check if the operation here is between two different fluids or a fluid and an fluidinteraction
+            # Check if the operation here is between two different fluids or a fluid and an fluidinteraction
             if isinstance(operand1_element, Interaction) and isinstance(
                 operand2_element, Interaction
             ):
@@ -210,6 +211,7 @@ class FluidExpression:
                     operand1_element, operand2_element, interactiontype
                 )
 
+            result_element.operator = operator
             result.append(result_element)
 
         v = Vector.create_from_list_things(vecname, result)
@@ -256,7 +258,7 @@ class FluidExpression:
                         operator
                     )
                 )
-
+            interaction.operator = operator
             interactions.append(interaction)
 
         v = Vector.create_from_list_things(

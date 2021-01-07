@@ -1,0 +1,105 @@
+from lfr.fig.fignode import FIGNode
+from typing import List, Optional
+from lfr.postprocessor.constraints import Constraint
+
+
+class NodeMappingInstance:
+    def __init__(self) -> None:
+        super().__init__()
+        self._node: Optional[FIGNode] = None
+
+    @property
+    def node(self) -> FIGNode:
+        if self._node is not None:
+            return self._node
+        else:
+            raise Exception("No node assigned to the mapping")
+
+    @node.setter
+    def node(self, value) -> None:
+        self._node = value
+
+
+class FluidicOperatorMapping(NodeMappingInstance):
+    def __init__(self) -> None:
+        super().__init__()
+        self._operator: str = ""
+
+    @property
+    def operator(self) -> str:
+        return self._operator
+
+    @operator.setter
+    def operator(self, value: str) -> None:
+        self._operator = value
+
+
+class StorageMapping(NodeMappingInstance):
+    def __init__(self) -> None:
+        super().__init__()
+
+    @property
+    def storage_node(self) -> FIGNode:
+        if self._node is not None:
+            return self._node
+        else:
+            raise Exception("No Storage FIGNode assigned to mapping")
+
+    @storage_node.setter
+    def storage_node(self, value) -> None:
+        self._node = value
+
+
+class PumpMapping(NodeMappingInstance):
+    def __init__(self) -> None:
+        super().__init__()
+
+    @property
+    def pump_node(self) -> FIGNode:
+        if self._node is not None:
+            return self._node
+        else:
+            raise Exception("No Storage FIGNode assigned to mapping")
+
+    @pump_node.setter
+    def pump_node(self, value) -> None:
+        self._node = value
+
+
+class NetworkMapping(NodeMappingInstance):
+    def __init__(self) -> None:
+        super().__init__()
+        self._input_nodes: List[FIGNode] = []
+        self._output_nodes: List[FIGNode] = []
+
+    @property
+    def input_nodes(self) -> List[FIGNode]:
+        return self._input_nodes
+
+    @property
+    def output_nodes(self) -> List[FIGNode]:
+        return self._output_nodes
+
+
+class NodeMappingTemplate:
+    def __init__(self) -> None:
+        super().__init__()
+        self._technology_string: str = ""
+        self._constraints: List[Constraint] = []
+        self._mapping_instances: List[NodeMappingInstance] = []
+
+    @property
+    def instances(self) -> List[NodeMappingInstance]:
+        return self._mapping_instances
+
+    @property
+    def constraints(self) -> List[Constraint]:
+        return self._constraints
+
+    @property
+    def technology_string(self) -> str:
+        return self._technology_string
+
+    @technology_string.setter
+    def technology_string(self, value):
+        self._technology_string = value

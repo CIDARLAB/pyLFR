@@ -1,4 +1,5 @@
 from __future__ import annotations
+from lfr.postprocessor.mapping import NodeMappingTemplate
 from typing import List, Dict
 from lfr.fig.fignode import (
     ANDAnnotation,
@@ -26,6 +27,11 @@ class FluidInteractionGraph(nx.DiGraph):
         self._fignodes: Dict[str, FIGNode] = dict()
         # self._fluid_interactions = dict()
         self._gen_id = 0
+        self._mappings: List[NodeMappingTemplate] = []
+
+    @property
+    def mappings(self) -> List[NodeMappingTemplate]:
+        return self._mappings
 
     def add_fignode(self, node: FIGNode) -> None:
         self._fignodes[node.id] = node

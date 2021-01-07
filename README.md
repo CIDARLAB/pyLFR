@@ -4,6 +4,14 @@
 
 LFR requires the user to install graphviz onto the system for the pygraphviz dependencies to work correctly. Current the pygraphviz wheels available can partially remedy the issue of not finding graphviz as one of the dependencies.
 
+## ANTLR4
+
+We need ANTLR for generating the listener. Install ANTLR4 from the [website](https://www.antlr.org/index.html)
+
+```
+antlr4 -o ./lfr/antlrgen -listener -visitor -Dlanguage=Python3 -lib . ./lfrX.g4
+```
+
 ### Graphviz
 
 In a pipenv/pip command installing the pygraphviz binary would require the following environment commands.

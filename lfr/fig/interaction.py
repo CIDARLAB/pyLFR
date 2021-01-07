@@ -24,6 +24,14 @@ class Interaction(Flow):
         self._operator: str = ""
 
     @property
+    def operator(self) -> str:
+        return self._operator
+
+    @operator.setter
+    def operator(self, value):
+        self._operator = value
+
+    @property
     def type(self) -> InteractionType:
         return self._interaction_type
 
@@ -125,6 +133,7 @@ class FluidProcessInteraction(Interaction):
         operator_str = Interaction.get_operator_str(
             InteractionType.TECHNOLOGY_PROCESS, process_operator
         )
+        self._operator = process_operator
         id = Interaction.get_id(fluid, operator_string=operator_str)
         super().__init__(id, InteractionType.TECHNOLOGY_PROCESS)
         self._input_fignodes.append(fluid)
