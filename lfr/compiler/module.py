@@ -1,5 +1,11 @@
 from __future__ import annotations
-from lfr.postprocessor.mapping import NodeMappingTemplate
+from lfr.postprocessor.mapping import (
+    FluidicOperatorMapping,
+    NetworkMapping,
+    NodeMappingTemplate,
+    PumpMapping,
+    StorageMapping,
+)
 from typing import Dict, List, Optional
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from lfr.fig.fignode import FIGNode, Flow, IOType
@@ -41,7 +47,7 @@ class Module(object):
     def add_new_import(self, module: Module) -> None:
         self._imported_modules.append(module)
 
-    def get_explicit_mappings(self) -> List[ExplicitMapping]:
+    def get_explicit_mappings(self) -> List[NodeMappingTemplate]:
         return self.mappings
 
     def add_io(self, io: ModuleIO):
@@ -159,9 +165,6 @@ class Module(object):
 
         return finteraction
 
-    def add_mapping(self, mapping: ExplicitMapping):
-        self.mappings.append(mapping)
-
     def __str__(self):
         ret = "Name : " + self.name + "\n"
         for module_io in self._io:
@@ -228,7 +231,47 @@ class Module(object):
             assert source_node is not None
             assert target_node is not None
             self.FIG.connect_fignodes(source_node, target_node)
-        pass
+
+        # TODO - Step 7 - Make copies of all the mappingtemplates for the final FIG.
+        # Since we only utilize mappings based on the assicated fig node it should be
+        # possible to find the corresponding fignodes by ID's
+        for mappingtemplate in module_to_import.mappings:
+            # TODO - Switch this to shallow copy implementation if the scheme needs to
+            # follow python specs correctly
+            mappingtemplate_copy = copy.deepcopy(mappingtemplate)
+            # TODO - Switch out each of the instances here
+            for mapping_instance in mappingtemplate_copy.instances:
+                if (
+                    isinstance(mapping_instance, FluidicOperatorMapping)
+                    or isinstance(mapping_instance, StorageMapping)
+                    or isinstance(mapping_instance, PumpMapping)
+                ):
+                    # Swap the basic node from original to the instance
+                    there_node_id = mapping_instance.node.id
+                    here_node = self.FIG.get_fignode(rename_map[there_node_id])
+                    mapping_instance.node = here_node
+                elif isinstance(mapping_instance, NetworkMapping):
+                    # TODO - Swap the nodes in the inputs and the outputs
+                    # Swap the inputs
+                    nodes_to_switch = mapping_instance.input_nodes
+                    mapping_instance.input_nodes = self.__switch_fignodes_list(
+                        rename_map, nodes_to_switch
+                    )
+
+                    nodes_to_switch = mapping_instance.output_nodes
+                    mapping_instance.output_nodes = self.__switch_fignodes_list(
+                        rename_map, nodes_to_switch
+                    )
+
+            self.mappings.append(mappingtemplate_copy)
+
+    def __switch_fignodes_list(self, rename_map, nodes_to_switch):
+        there_node_ids = [n.id for n in nodes_to_switch]
+        here_nodes = [
+            self.FIG.get_fignode(rename_map[there_node_id])
+            for there_node_id in there_node_ids
+        ]
+        return here_nodes
 
     def __generate_instance_node_name(self, node: str, var_name: str) -> str:
         return "{0}_{1}".format(var_name, node)

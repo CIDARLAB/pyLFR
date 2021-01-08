@@ -509,7 +509,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
     # Finally join all the netlist pieces attached to the construction nodes
     # and the input/output/load/carrier flows
-    # MINIMIZE - carrier / load flows - this might require us to generate
+    # TODO - MINIMIZE - carrier / load flows - this might require us to generate
     # multiple netlist options and pick the best
     construction_graph.generate_flow_cn_edges(module)
 
@@ -575,7 +575,6 @@ def get_flow_flow_candidates(
 
     ret = []
 
-    # TODO-
     # Step 1. Do a shallow copy of the graph
     # Step 2. Remove all the fignodes that are not Flow
     # Step 3. Now get the all the disconnected pieces of the graph
