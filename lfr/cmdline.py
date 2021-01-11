@@ -57,7 +57,7 @@ def main():
     parser.add_argument(
         "--no-annotations",
         action="store_true",
-        help="Force the compiler to skip reading postprocess annotations like #MAP and #CONSTRAIN"
+        help="Force the compiler to skip reading postprocess annotations like #MAP and #CONSTRAIN",
     )
     args = parser.parse_args()
 
@@ -108,7 +108,7 @@ def main():
     if args.no_annotations is True:
         mapping_listener = ModuleInstanceListener()
     else:
-        mapping_listener = PostProcessListener()    
+        mapping_listener = PostProcessListener()
 
     walker.walk(mapping_listener, tree)
 

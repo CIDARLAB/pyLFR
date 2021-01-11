@@ -1,3 +1,4 @@
+from lfr.netlistgenerator.v2.gen_strategies.dropx import DropXStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 from pymint.mintlayer import MINTLayerType
@@ -453,7 +454,14 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     cur_device.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
 
     # TODO - I need to change this DummyStrategy later on
-    dummy_strategy = DummyStrategy(construction_graph)
+    if library.name == "dropx":
+        active_strategy = DropXStrategy(construction_graph, module.FIG)
+    elif library.name == "mars":
+        raise NotImplementedError()
+    elif library.name = "hmlp":
+        raise NotImplementedError()
+    else:
+        active_strategy = DummyStrategy(construction_graph, module.FIG)
 
     # First go through all the interactions in the design
 
@@ -515,7 +523,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
     # TODO - Deal with coverage issues here since we need to figure out what are the flow networks,
     # that we want to match first and then ensure that they're no included on any list
-    cn_nodes = get_flow_flow_candidates(module, dummy_strategy)
+    cn_nodes = get_flow_flow_candidates(module, active_strategy)
     for cn in cn_nodes:
         construction_graph.add_construction_node(cn)
 
@@ -529,7 +537,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
     # Whittle Down the mapping options here to only include the requried single candidates
     # TODO - Check what library is being used and use the required library here
-    dummy_strategy.reduce_mapping_options()
+    active_strategy.reduce_mapping_options()
 
     # TODO - Consider what needs to get done for a combinatorial design space
     # ----------------
@@ -623,7 +631,7 @@ def override_mappings(
                 # loaded from the library, we can add the performance constraints)
                 for mapping_option in cn_mapping_options:
                     # Add all the constraints to the mapping_option
-                    mapping_option.constraints.extend(mapping.constraints)
+                    cn.constraints.extend(mapping.constraints)
 
 
 def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):

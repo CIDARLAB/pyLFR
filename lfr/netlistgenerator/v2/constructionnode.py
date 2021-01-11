@@ -1,3 +1,4 @@
+from lfr.postprocessor.constraints import Constraint
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from typing import List
@@ -15,6 +16,18 @@ class ConstructionNode:
         self._output_options: List[ConnectingOption] = []
         self._loading_options: List[ConnectingOption] = []
         self._carrier_options: List[ConnectingOption] = []
+
+        # Mapping Constraints
+        # These will be all the imported constraints
+        self._constraints: List[Constraint] = []
+
+    @property
+    def constraints(self) -> List[Constraint]:
+        return self._constraints
+
+    @constraints.setter
+    def constraints(self, vals: List[Constraint]) -> None:
+        self._constraints = vals
 
     @property
     def input_options(self) -> List[ConnectingOption]:

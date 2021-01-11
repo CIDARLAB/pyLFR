@@ -16,13 +16,6 @@ class MappingOption:
         # Figure out what computation needs to get done with this
         self._interaction_type: Optional[InteractionType] = None
 
-        # These will be all the imported constraints
-        self._constraints: List[Constraint] = []
-
-    @property
-    def constraints(self):
-        return self._constraints
-
     @property
     def interaction_type(self):
         return self._interaction_type

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from typing import Dict, TYPE_CHECKING
 
 from pymint.mintlayer import MINTLayerType
@@ -7,20 +8,32 @@ if TYPE_CHECKING:
     from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
-from typing import List, overload
+from typing import List
 from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
 from pymint.minttarget import MINTTarget
 
 
 class GenStrategy:
-    def __init__(self, construction_graph: ConstructionGraph) -> None:
+    def __init__(
+        self, construction_graph: ConstructionGraph, fig: FluidInteractionGraph
+    ) -> None:
         self._construction_graph: ConstructionGraph = construction_graph
+        self._fig: FluidInteractionGraph = fig
         self._fig_netlist_map: Dict[str, str] = dict()
 
-    @overload
     def reduce_mapping_options(self) -> None:
-        pass
+        # Dummy strategy
+        for cn in self._construction_graph.construction_nodes:
+            print(len(cn.mapping_options))
+            # Remove the extra mappings
+            print(
+                "Reducing mapping options for Construction node: {} ({})".format(
+                    cn.id, len(cn.mapping_options)
+                )
+            )
+            del cn.mapping_options[1 : len(cn.mapping_options)]
+            print("... -> {}".format(len(cn.mapping_options)))
 
     def generate_flow_network(self, fig_subgraph_view) -> MINTDevice:
         # TODO - For now just assume that the networks basically are a bunch
