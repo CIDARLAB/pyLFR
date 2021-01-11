@@ -1,7 +1,9 @@
+from lfr.postprocessor.constraints import Constraint
 from typing import Optional
 from lfr.fig.interaction import InteractionType
 from lfr.netlistgenerator.mappinglibrary import Primitive
 from networkx import nx
+from typing import List
 
 
 class MappingOption:
@@ -14,6 +16,13 @@ class MappingOption:
         # Figure out what computation needs to get done with this
         self._interaction_type: Optional[InteractionType] = None
 
+        # These will be all the imported constraints
+        self._constraints: List[Constraint] = []
+
+    @property
+    def constraints(self):
+        return self._constraints
+
     @property
     def interaction_type(self):
         return self._interaction_type
@@ -24,13 +33,3 @@ class MappingOption:
 
     def add_subgraph(self, subgraph_view) -> None:
         self.fig_subgraph = subgraph_view
-
-    # @staticmethod
-    # def from_explicit_mapping(
-    #     explicit_mapping: ExplicitMapping, mapping_library: MappingLibrary
-    # ):
-    #     primitive = mapping_library.get_primitive(explicit_mapping.technology)
-    #     # TODO - Figure out how to get the subgraph from the explicit mapping
-    #     sub_graph = explicit_mapping.get_subgraph()
-    #     ret = MappingOption(primitive, sub_graph)
-    #     return ret

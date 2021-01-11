@@ -1,5 +1,4 @@
 from lfr.fig.interaction import FluidProcessInteraction, Interaction
-from networkx.classes.function import nodes
 from lfr.postprocessor.mapping import (
     FluidicOperatorMapping,
     NetworkMapping,
@@ -7,7 +6,7 @@ from lfr.postprocessor.mapping import (
     PumpMapping,
     StorageMapping,
 )
-from lfr.postprocessor.constraints import PerformanceConstraint
+from lfr.postprocessor.constraints import Constraint
 from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.fig.fignode import FIGNode
 from typing import Dict, List
@@ -49,7 +48,7 @@ class PostProcessListener(ModuleInstanceListener):
             else:
                 unit = None
 
-            perf_constraint = PerformanceConstraint()
+            perf_constraint = Constraint()
             perf_constraint.unit = unit
 
             if conditional_operator == "=":

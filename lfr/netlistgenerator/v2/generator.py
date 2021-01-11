@@ -1,9 +1,3 @@
-from lfr.postprocessor.constraints import (
-    FunctionalConstraint,
-    GeometryConstraint,
-    MaterialConstraint,
-    PerformanceConstraint,
-)
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 from pymint.mintlayer import MINTLayerType
@@ -30,7 +24,6 @@ from lfr.fig.interaction import (
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from lfr.compiler.module import Module
 import networkx as nx
-from pymint import MINTLayer
 
 
 # def generate_MARS_library() -> MappingLibrary:
@@ -573,7 +566,7 @@ def override_mappings(
     fig: FluidInteractionGraph,
     construction_graph: ConstructionGraph,
 ) -> None:
-    # TODO - Go through the entire set of mappings in the FIG and generate / append the mapping options
+    # Go through the entire set of mappings in the FIG and generate / append the mapping options
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
     # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
@@ -630,47 +623,7 @@ def override_mappings(
                 # loaded from the library, we can add the performance constraints)
                 for mapping_option in cn_mapping_options:
                     # Add all the constraints to the mapping_option
-                    for constriant in mapping.constraints:
-                        if isinstance(constriant, PerformanceConstraint):
-                            # TODO - Figure out how to add it to the tolerance settings
-                            raise NotImplementedError()
-                        elif isinstance(constriant, GeometryConstraint):
-                            # TODO - Figure out a way to check if the param exists
-                            # for the primitive
-
-                            # TODO - Add the parameter to the user_defined_values
-                            # TODO - Also add them to the Inverse design constraints
-                            raise NotImplementedError()
-                        elif isinstance(constriant, FunctionalConstraint):
-                            # TODO - Check if the parameter exists in the inverse design
-                            # parameters and set up the targets for this
-                            raise NotImplementedError()
-                        elif isinstance(constriant, MaterialConstraint):
-                            # TODO - Add the parameters to the inverse desing constraints
-                            # (if it exists)
-                            # TODO - Figure out how one might want to use the material
-                            # constraints later on
-                            raise NotImplementedError()
-
-    # for mapping in mappings:
-    #     # First identify the type of the mapping
-    #     if mapping.type is ExplicitMappingType.FLUID_INTERACTION:
-    #         # TODO - Identify which construction nodes need to be overridden for this
-    #         # TODO - Figure out if the mapping will be valid in terms of inputs and
-    #         # outputs
-    #         print("Implement mapping override for fluid interaction")
-    #         pass
-    #     elif mapping.type is ExplicitMappingType.STORAGE:
-    #         # TODO - Identify which construction nodes need to be overrridden
-    #         # TODO - Since the explicit mapping required for this might vary a bit
-    #         # we need to figure out how multiple mappings can work with storage
-    #         print("Implement mapping override for storage")
-    #         pass
-    #     elif mapping.type is ExplicitMappingType.NETWORK:
-    #         # TODO - Identify which subgraph need to be replaced here
-    #         print("Implement mapping override for network")
-    #         pass
-    pass
+                    mapping_option.constraints.extend(mapping.constraints)
 
 
 def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
