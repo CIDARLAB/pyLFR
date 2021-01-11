@@ -1,3 +1,11 @@
+from lfr.postprocessor.constraints import (
+    FunctionalConstraint,
+    GeometryConstraint,
+    MaterialConstraint,
+    PerformanceConstraint,
+)
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 from pymint.mintlayer import MINTLayerType
 from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
@@ -254,6 +262,43 @@ def generate_dropx_library() -> MappingLibrary:
 
     library.add_operator_entry(droplet_merger_channel, InteractionType.MIX)
 
+    # MIXER - CONTINOUS FLOW ONE
+
+    cf_mixer_inputs = []
+
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+
+    cf_mixer_outputs = []
+
+    cf_mixer_outputs.append(ConnectingOption(None, [2]))
+
+    cf_mixer_loadings = []
+    cf_mixer_carriers = []
+
+    cf_mixer = Primitive(
+        "MIXER",
+        PrimitiveType.COMPONENT,
+        "MIX",
+        False,
+        False,
+        cf_mixer_inputs,
+        cf_mixer_outputs,
+        cf_mixer_loadings,
+        cf_mixer_carriers,
+        None,
+    )
+
+    library.add_operator_entry(cf_mixer, InteractionType.MIX)
+
     # DROPLET SPLITTER
 
     droplet_splitter_inputs = []
@@ -487,7 +532,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
     # Find all the explicit mappings and override them in the construction graph
     mappings = module.get_explicit_mappings()
-    construction_graph.override_mappings(mappings)
+    override_mappings(mappings, library, module.FIG, construction_graph)
 
     # Whittle Down the mapping options here to only include the requried single candidates
     # TODO - Check what library is being used and use the required library here
@@ -520,6 +565,112 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     connect_orphan_IO()
 
     return cur_device
+
+
+def override_mappings(
+    mappings: List[NodeMappingTemplate],
+    mapping_library: MappingLibrary,
+    fig: FluidInteractionGraph,
+    construction_graph: ConstructionGraph,
+) -> None:
+    # TODO - Go through the entire set of mappings in the FIG and generate / append the mapping options
+    # Step 1 - Loop through each of the mappingtemplates
+    # Step 2 - Loop through each of the instances in teh mappingtemplate
+    # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
+
+    for mapping in mappings:
+        for instance in mapping.instances:
+
+            primitive_to_use = None
+            if mapping.technology_string is not None:
+                # Create a mapping option from the library with the corresponding info
+                primitive_to_use = mapping_library.get_primitive(
+                    mapping.technology_string
+                )
+
+            if isinstance(instance, NetworkMapping):
+                raise NotImplementedError()
+            else:
+                # Find the construction node assicated with the
+                # FIG node and then do the followinging:
+                # Step 1 - If the mappingtemplate has no technology string assiciated
+                # with the mapping, just apply the constraints to the associated mapping
+                # options
+
+                # Step 2 - In there is a string assiciated with the mappingtemplate, we
+                # eliminate all mapping options that dont have a matching string / generate
+                # a mapping option with the corresponding
+
+                # In the case of an Fluid Value interaction put all valuenodes in the subgraph
+                node_ids = [
+                    fig.get_fignode(edge[0]).id
+                    for edge in fig.in_edges(instance.node.id)
+                    if isinstance(fig.get_fignode(edge[0]), ValueNode)
+                ]
+                node_ids.append(instance.node.id)
+                subgraph = fig.subgraph(node_ids)
+
+                # Get the Construction node that has the corresponding subgraph,
+                # and then replace the mapping option
+                cn_mapping_options = []
+                cn = construction_graph.get_subgraph_cn(subgraph)
+                if primitive_to_use is not None:
+                    mapping_option = MappingOption(primitive_to_use, subgraph)
+                    cn.use_explicit_mapping(mapping_option)
+                    cn_mapping_options.append(mapping_option)
+                else:
+                    # Add the constraints to all the mapping options
+                    # This is an example where since no explicit mapping
+                    # was specified, we only add the performance/material
+                    # constraints. This can be ulitized for whittling down
+                    # options later if necessary.
+                    cn_mapping_options.extend(cn.mapping_options)
+
+                # Now that we know what the mapping options are (either explicit
+                # loaded from the library, we can add the performance constraints)
+                for mapping_option in cn_mapping_options:
+                    # Add all the constraints to the mapping_option
+                    for constriant in mapping.constraints:
+                        if isinstance(constriant, PerformanceConstraint):
+                            # TODO - Figure out how to add it to the tolerance settings
+                            raise NotImplementedError()
+                        elif isinstance(constriant, GeometryConstraint):
+                            # TODO - Figure out a way to check if the param exists
+                            # for the primitive
+
+                            # TODO - Add the parameter to the user_defined_values
+                            # TODO - Also add them to the Inverse design constraints
+                            raise NotImplementedError()
+                        elif isinstance(constriant, FunctionalConstraint):
+                            # TODO - Check if the parameter exists in the inverse design
+                            # parameters and set up the targets for this
+                            raise NotImplementedError()
+                        elif isinstance(constriant, MaterialConstraint):
+                            # TODO - Add the parameters to the inverse desing constraints
+                            # (if it exists)
+                            # TODO - Figure out how one might want to use the material
+                            # constraints later on
+                            raise NotImplementedError()
+
+    # for mapping in mappings:
+    #     # First identify the type of the mapping
+    #     if mapping.type is ExplicitMappingType.FLUID_INTERACTION:
+    #         # TODO - Identify which construction nodes need to be overridden for this
+    #         # TODO - Figure out if the mapping will be valid in terms of inputs and
+    #         # outputs
+    #         print("Implement mapping override for fluid interaction")
+    #         pass
+    #     elif mapping.type is ExplicitMappingType.STORAGE:
+    #         # TODO - Identify which construction nodes need to be overrridden
+    #         # TODO - Since the explicit mapping required for this might vary a bit
+    #         # we need to figure out how multiple mappings can work with storage
+    #         print("Implement mapping override for storage")
+    #         pass
+    #     elif mapping.type is ExplicitMappingType.NETWORK:
+    #         # TODO - Identify which subgraph need to be replaced here
+    #         print("Implement mapping override for network")
+    #         pass
+    pass
 
 
 def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):

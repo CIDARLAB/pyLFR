@@ -13,6 +13,7 @@ class MappingLibrary:
         self.__divide_operators = []
         self.__technology_process_operators = []
         self.__io_primitives = []
+        self.__all_primitives: List[Primitive] = []
         self._default_IO_primitive = None
 
     @property
@@ -21,22 +22,29 @@ class MappingLibrary:
 
     def add_io_entry(self, primitive: Primitive) -> None:
         self.__io_primitives.append(primitive)
+        self.__all_primitives.append(primitive)
 
     def add_operator_entry(
-        self, primitve: Primitive, interaction_type: InteractionType
+        self, primitive: Primitive, interaction_type: InteractionType
     ) -> None:
         if interaction_type is InteractionType.MIX:
-            self.__mix_operators.append(primitve)
+            self.__mix_operators.append(primitive)
+            self.__all_primitives.append(primitive)
         elif interaction_type is InteractionType.SIEVE:
-            self.__seive_operators.append(primitve)
+            self.__seive_operators.append(primitive)
+            self.__all_primitives.append(primitive)
         elif interaction_type is InteractionType.DILUTE:
-            self.__dilute_operators.append(primitve)
+            self.__dilute_operators.append(primitive)
+            self.__all_primitives.append(primitive)
         elif interaction_type is InteractionType.METER:
-            self.__meter_operators.append(primitve)
+            self.__meter_operators.append(primitive)
+            self.__all_primitives.append(primitive)
         elif interaction_type is InteractionType.DIVIDE:
-            self.__divide_operators.append(primitve)
+            self.__divide_operators.append(primitive)
+            self.__all_primitives.append(primitive)
         else:
-            self.__technology_process_operators.append(primitve)
+            self.__technology_process_operators.append(primitive)
+            self.__all_primitives.append(primitive)
 
     def get_default_IO(self) -> Primitive:
         if self._default_IO_primitive is None:
@@ -57,3 +65,13 @@ class MappingLibrary:
             return self.__divide_operators
         else:
             return self.__technology_process_operators
+
+    def get_primitive(self, technology_string: str) -> Primitive:
+        for primitive in self.__all_primitives:
+            if primitive.mint == technology_string:
+                return primitive
+        raise Exception(
+            "Primitive with matching technology '{}' not found in library".format(
+                technology_string
+            )
+        )

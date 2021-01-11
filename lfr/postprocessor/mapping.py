@@ -93,7 +93,7 @@ class NetworkMapping(NodeMappingInstance):
 class NodeMappingTemplate:
     def __init__(self) -> None:
         super().__init__()
-        self._technology_string: str = ""
+        self._technology_string: Optional[str] = None
         self._constraints: List[Constraint] = []
         self._mapping_instances: List[NodeMappingInstance] = []
 
@@ -110,7 +110,7 @@ class NodeMappingTemplate:
         return self._constraints
 
     @property
-    def technology_string(self) -> str:
+    def technology_string(self) -> Optional[str]:
         return self._technology_string
 
     @technology_string.setter

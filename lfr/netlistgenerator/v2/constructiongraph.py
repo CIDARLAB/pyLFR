@@ -1,4 +1,3 @@
-from lfr.postprocessor.mapping import NodeMappingTemplate
 from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
@@ -12,12 +11,14 @@ from typing import Dict, List
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from networkx import nx
 from pymint.mintdevice import MINTDevice
+from networkx.algorithms import isomorphism
 
 
 class ConstructionGraph(nx.DiGraph):
     def __init__(self, data=None, val=None, **attr) -> None:
         super(ConstructionGraph, self).__init__()
         self._construction_nodes: Dict[str, ConstructionNode] = dict()
+        # Stores the references for each construction node and component ID's
         self._component_refs: Dict[str, List[str]] = dict()
 
     @property
@@ -37,32 +38,6 @@ class ConstructionGraph(nx.DiGraph):
     def delete_node(self, id: str) -> None:
         self.remove_node(id)
         del self._construction_nodes[id]
-
-    def override_mappings(self, mappings: List[NodeMappingTemplate]) -> None:
-        # TODO - Go through the entire set of mappings in the FIG and generate / append the mapping options
-        # Step 1 - Loop through each of the mappingtemplates
-        # Step 2 - Loop through each of the instances in teh mappingtemplate
-        # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
-
-        # for mapping in mappings:
-        #     # First identify the type of the mapping
-        #     if mapping.type is ExplicitMappingType.FLUID_INTERACTION:
-        #         # TODO - Identify which construction nodes need to be overridden for this
-        #         # TODO - Figure out if the mapping will be valid in terms of inputs and
-        #         # outputs
-        #         print("Implement mapping override for fluid interaction")
-        #         pass
-        #     elif mapping.type is ExplicitMappingType.STORAGE:
-        #         # TODO - Identify which construction nodes need to be overrridden
-        #         # TODO - Since the explicit mapping required for this might vary a bit
-        #         # we need to figure out how multiple mappings can work with storage
-        #         print("Implement mapping override for storage")
-        #         pass
-        #     elif mapping.type is ExplicitMappingType.NETWORK:
-        #         # TODO - Identify which subgraph need to be replaced here
-        #         print("Implement mapping override for network")
-        #         pass
-        pass
 
     def construct_components(
         self, name_generator: NameGenerator, device: MINTDevice
@@ -231,6 +206,33 @@ class ConstructionGraph(nx.DiGraph):
 
         # TODO - I need to figure out how to pipeline the loadings/carriers and other things
         pass
+
+    def get_subgraph_cn(self, subgraph) -> ConstructionNode:
+        """Returns the Construction node matching the subgraph
+
+        Args:
+            subgraph (subgraph_view): Subgraph to match against
+
+        Returns:
+            ConstructionNode: Construction node that contains the
+            same subgraph
+        """
+        subgraph_node_list = list(subgraph.nodes)
+        for cn in list(self._construction_nodes.values()):
+            for mapping_option in cn.mapping_options:
+                cn_subgraph = mapping_option.fig_subgraph
+                cn_subgraph_nodelist = list(cn_subgraph.nodes)
+                if (
+                    str_lists_equal(subgraph_node_list, cn_subgraph_nodelist)
+                    is not True
+                ):
+                    continue
+                graph_matcher = isomorphism.DiGraphMatcher(cn_subgraph, subgraph)
+                is_it_isomorphic = graph_matcher.is_isomorphic()
+                if is_it_isomorphic:
+                    return cn
+
+        raise Exception("Could not find construction node with the same subgraph")
 
     def __create_passthrough_channel(
         self,
@@ -436,3 +438,26 @@ class ConstructionGraph(nx.DiGraph):
         # TODO - Figure what we need for the generating the edges here
         print("Impement ConstructionGrpah:generate_control_cn_edges method stub ")
         pass
+
+
+def str_lists_equal(list_1: List[str], list_2: List[str]) -> bool:
+    """Checks if the two lists of strings are equal or not. It sorts the list
+    and then return true if both of them are equal else returns false
+
+    Args:
+        list_1 (List[str]): First List to compare
+        list_2 (List[str]): Second List to compare
+
+    Returns:
+        bool: Returns True if both the lists are equal or else it returns False
+    """
+    list_1.sort()
+    list_2.sort()
+    if len(list_1) != len(list_2):
+        return False
+
+    for str1, str2 in zip(list_1, list_2):
+        if str1 != str2:
+            return False
+
+    return True
