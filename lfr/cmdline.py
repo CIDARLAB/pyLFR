@@ -11,7 +11,6 @@ import argparse
 import lfr.parameters as parameters
 import glob
 import json
-import lfr.utils as utils
 from lfr.netlistgenerator.v2.generator import generate_dropx_library, generate
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 

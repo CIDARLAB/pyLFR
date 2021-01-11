@@ -42,7 +42,7 @@ import networkx as nx
 
 def generate_dropx_library() -> MappingLibrary:
 
-    library = MappingLibrary("dropX")
+    library = MappingLibrary("dropx")
 
     # PORT
     port_inputs = []
@@ -458,7 +458,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
         active_strategy = DropXStrategy(construction_graph, module.FIG)
     elif library.name == "mars":
         raise NotImplementedError()
-    elif library.name = "hmlp":
+    elif library.name == "hmlp":
         raise NotImplementedError()
     else:
         active_strategy = DummyStrategy(construction_graph, module.FIG)
