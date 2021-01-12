@@ -37,7 +37,8 @@ class Primitive:
 
         self._component_type: PrimitiveType = component_type
         self._match_string: str = match_string
-        if mint == "":
+        # TODO - Cleanup the logic for this later
+        if mint == "" and component_type is not PrimitiveType.PROCEDURAL:
             raise Exception(
                 "Cannot instantiate an Primitive type object if mint sting is not present"
             )
@@ -72,11 +73,11 @@ class Primitive:
         return self._outputs
 
     @property
-    def loadings(self) -> List[ConnectingOption]:
+    def loadings(self) -> Optional[List[ConnectingOption]]:
         return self._loadings
 
     @property
-    def carriers(self) -> List[ConnectingOption]:
+    def carriers(self) -> Optional[List[ConnectingOption]]:
         return self._carriers
 
     @property
@@ -101,6 +102,15 @@ class Primitive:
         return mc
 
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
+        """Returns the default netlist for the primitive
+
+        Args:
+            cn_id (str): ID of the construction node so that we can prefix the id's of all the components that are part of the default netlist
+            name_gen (NameGenerator): A namegenerator instance that is used for the globally for synthesizing the design
+
+        Returns:
+            MINTDevice: Default netlist of whatever the primitive is
+        """
         if self.type is not PrimitiveType.NETLIST:
             raise Exception("Cannot execute this method for this kind of a  primitive")
 
@@ -119,17 +129,131 @@ class Primitive:
         return device
 
 
+class ProceduralPrimitive(Primitive):
+    def __init__(
+        self,
+        mint: str,
+        match_string: str,
+        is_storage: bool,
+        has_storage_control: bool,
+        # inputs: List[ConnectingOption],
+        # outputs: List[ConnectingOption],
+        # loadings: Optional[List[ConnectingOption]],
+        # carriers: Optional[List[ConnectingOption]],
+        default_netlist: Optional[str],
+        functional_input_params: List[str],
+        output_params: List[str],
+        user_defined_params: MINTParams,
+    ) -> None:
+        super().__init__(
+            mint=mint,
+            component_type=PrimitiveType.PROCEDURAL,
+            match_string=match_string,
+            is_storage=is_storage,
+            has_storage_control=has_storage_control,
+            # inputs=inputs,
+            # outputs=outputs,
+            # loadings=loadings,
+            # carriers=carriers,
+            default_netlist=default_netlist,
+            functional_input_params=functional_input_params,
+            output_params=output_params,
+            user_defined_params=user_defined_params,
+        )
+
+    def generate_input_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:
+        """Generates a list of connection options that represent where the inputs can
+        be connected to the primitive
+
+        Args:
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+
+        Raises:
+            NotImplementedError: Raised when its not implemented
+
+        Returns:
+            List[ConnectingOption]: List of options where we can attach connections
+        """
+        raise NotImplementedError()
+
+    def generate_output_connectingoptions(
+        self, subgraph_view
+    ) -> List[ConnectingOption]:
+        """Generates a list of connection options that represent where the outputs can
+        be connected to the primitive
+
+        Args:
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+
+
+        Raises:
+            NotImplementedError: Raised when its not implemented
+
+        Returns:
+            List[ConnectingOption]: List of options where we can attach connections
+        """
+        raise NotImplementedError()
+
+    def generate_carrier_connectingoptions(
+        self, subgraph_view
+    ) -> List[ConnectingOption]:
+        """Generates a list of connection options that represent where the carrier inputs can
+        be connected to the primitive
+
+        Args:
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+
+        Raises:
+            NotImplementedError: Raised when its not implemented
+
+        Returns:
+            List[ConnectingOption]: List of options where we can attach connections
+        """
+        raise NotImplementedError()
+
+    def generate_loading_connectingoptions(
+        self, subgraph_view
+    ) -> List[ConnectingOption]:
+        """Generates a list of connection options that represent where the loading inputs can
+        be connected to the primitive
+
+        Args:
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+
+        Raises:
+            NotImplementedError: Raised when its not implemented
+
+        Returns:
+            List[ConnectingOption]: List of options where we can attach connections
+        """
+        raise NotImplementedError()
+
+
 class NetworkPrimitive(Primitive):
     def __init__(self, fig_subgraph_view, gen_strategy: GenStrategy) -> None:
+        """A Procedural type primtive that can be used only for representing
+        a network, this is usually used when we want the Generation Strategy
+        needs to be used.
+
+        Args:
+            fig_subgraph_view (networkx.Graph.subgraph): Subgraph for which we
+            need to generate the network for
+            gen_strategy (GenStrategy): This is user defined strategy / algorithm
+            that we use for generating the design
+        """
         super().__init__(component_type=PrimitiveType.PROCEDURAL)
 
         self._gen_strategy = gen_strategy
         # Write methods that will utilize the subgraph view to generate the
         # netlist
         self._fig_subgraph_view = fig_subgraph_view
-        self._netlist: MINTDevice = None
+        self._netlist: Optional[MINTDevice] = None
 
     def generate_netlist(self) -> None:
+        """Generates the netlist for the given network primitive, this method generates the flow
+        network, input , output, carriers and loadings into the primitve properties
+        """
+
         self._netlist = self._gen_strategy.generate_flow_network(
             self._fig_subgraph_view
         )
@@ -147,6 +271,22 @@ class NetworkPrimitive(Primitive):
         )
 
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
+        """Returns the default netlist for the primitive
+
+        Args:
+            cn_id (str): ID of the construction node so that we can prefix the id's of all the components that are part of the default netlist
+            name_gen (NameGenerator): A namegenerator instance that is used for the globally for synthesizing the design
+
+        Raises:
+            Exception: Raised when there is no defualt netlist is generated
+
+        Returns:
+            MINTDevice: Default netlist of whatever the primitive is
+        """
+
+        if self._netlist is None:
+            raise Exception("No default netlist present for the primitive")
+
         # Utilise the subgraph view to decide how you want to generate a netlist
         # Load all the inputs and outputs based on that information
         name_gen.rename_netlist(cn_id, self._netlist)
