@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pymint.mintdevice import MINTDevice
 from pymint.mintparams import MINTParams
 from enum import Enum
@@ -20,31 +20,35 @@ class PrimitiveType(Enum):
 class Primitive:
     def __init__(
         self,
-        mint: str = None,
+        mint: str = "",
         component_type: PrimitiveType = PrimitiveType.COMPONENT,
-        match_string: str = None,
+        match_string: str = "",
         is_storage: bool = False,
         has_storage_control: bool = False,
         inputs: List[ConnectingOption] = [],
         outputs: List[ConnectingOption] = [],
-        loadings: List[ConnectingOption] = [],
-        carriers: List[ConnectingOption] = [],
-        default_netlist: str = None,
+        loadings: Optional[List[ConnectingOption]] = [],
+        carriers: Optional[List[ConnectingOption]] = [],
+        default_netlist: Optional[str] = None,
         functional_input_params: List[str] = [],
         output_params: List[str] = [],
-        user_defined_params: MINTParams = None,
+        user_defined_params: MINTParams = MINTParams({}),
     ) -> None:
 
         self._component_type: PrimitiveType = component_type
         self._match_string: str = match_string
+        if mint == "":
+            raise Exception(
+                "Cannot instantiate an Primitive type object if mint sting is not present"
+            )
         self._mint: str = mint
         self._is_storage: bool = is_storage
         self._has_storage_control: bool = has_storage_control
         self._inputs: List[ConnectingOption] = inputs
         self._outputs: List[ConnectingOption] = outputs
-        self._loadings: List[ConnectingOption] = loadings
-        self._carriers: List[ConnectingOption] = carriers
-        self._default_netlist: str = default_netlist
+        self._loadings: Optional[List[ConnectingOption]] = loadings
+        self._carriers: Optional[List[ConnectingOption]] = carriers
+        self._default_netlist: Optional[str] = default_netlist
 
         self._functional_input_params = functional_input_params
         self._output_params = output_params

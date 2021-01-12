@@ -1,3 +1,9 @@
+from lfr.fig.interaction import InteractionType
+from lfr.netlistgenerator.primitive import Primitive, PrimitiveType
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
+
+
 def generate_dropx_library() -> MappingLibrary:
 
     library = MappingLibrary("dropX")

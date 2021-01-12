@@ -1,4 +1,4 @@
-from lfr.netlistgenerator.dafdadapter import ConstraintList
+from lfr.postprocessor.constraints import Constraint
 from typing import List
 from pymint.mintcomponent import MINTComponent
 from pymint.mintdevice import MINTDevice
@@ -11,26 +11,24 @@ class DAFDAdapter:
         self._device = device
         self.solver = DAFD_Interface()
 
-    def size_droplet_generator(self, constriants: ConstraintList) -> None:
+    def size_droplet_generator(
+        self, component: MINTComponent, constriants: List[Constraint]
+    ) -> None:
         # TODO: Check the type of the component and pull info from DAFD Interface
         targets_dict = dict()
         constriants_dict = dict()
 
         for constraint in constriants:
-            if isinstance(constraint, FunctionalConstraint):
-                if constraint.key == "volume":
-                    # r≈0.62035V1/3
-                    volume = constraint.get_target_value()
-                    targets_dict["droplet_size"] = float(volume) ** 0.33 * 0.62035 * 2
-            elif isinstance(constraint, PerformanceConstraint):
-                if constraint.key == "generation_rate":
-                    generate_rate = constraint.get_target_value()
-                    targets_dict["generation_rate"] = generate_rate
-            elif isinstance(constraint, GeometryConstraint):
-                raise Exception("Error: Geometry constraint not defined")
+            if constraint.key == "volume":
+                # r≈0.62035V1/3
+                volume = constraint.get_target_value()
+                targets_dict["droplet_size"] = float(volume) ** 0.33 * 0.62035 * 2
+            elif constraint.key == "generation_rate":
+                generate_rate = constraint.get_target_value()
+                targets_dict["generation_rate"] = generate_rate
+            raise Exception("Error: Geometry constraint not defined")
 
         results = self.solver.runInterp(targets_dict, constriants_dict)
-        component = constriants.component
         if component is None:
             raise Exception("No component attached to the constraints")
 
@@ -56,12 +54,3 @@ class DAFDAdapter:
         component.params.set_param("outputWidth", round(orifice_size * expansion_ratio))
         component.params.set_param("outputLength", 5000)
         component.params.set_param("height", round(orifice_size / aspect_ratio))
-
-        # TODO: Figure out how to propagate the results to the rest of the design. Additionally we need to set all the operation considtions
-        pass
-
-    def size_component(self, constriants: ConstraintList) -> None:
-        if component.entity == "NOZZLE DROPLET GENERATOR":
-            self.size_droplet_generator(constriants)
-        else:
-            print("Error: {} is not supported".format(constriants.component.entity))

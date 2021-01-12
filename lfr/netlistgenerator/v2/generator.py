@@ -1,4 +1,4 @@
-from lfr.netlistgenerator.v2.gen_strategies.dropx import DropXStrategy
+from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 from pymint.mintlayer import MINTLayerType
@@ -564,6 +564,9 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Generate all the unaccounted carriers and waste output lines necessary
     # for this to function
     connect_orphan_IO()
+
+    # Size the component netlist
+    active_strategy.size_netlist(cur_device)
 
     return cur_device
 

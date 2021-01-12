@@ -1,3 +1,4 @@
+from pymint.mintcomponent import MINTComponent
 from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
@@ -100,6 +101,29 @@ class ConstructionGraph(nx.DiGraph):
                 print(
                     "No mappings found to the current construction node {0}".format(cn)
                 )
+
+    def get_component_cn(self, component: MINTComponent) -> ConstructionNode:
+        """Get the Construction Node associated with the given component
+
+        Args:
+            component (MINTComponent): The component whose corresponding
+            construction node is supposed to be returned
+
+        Raises:
+            Exception: If no Construction node is referenced against the
+            component
+
+        Returns:
+            ConstructionNode: The construction node for which this Component
+            was synthesized
+        """
+        for key, component_list in self._component_refs.items():
+            if component.ID in component_list:
+                return self.get_cn(key)
+
+        raise Exception(
+            "Could not find Construction Node for component: {}".format(component.ID)
+        )
 
     def construct_connections(
         self, name_generator: NameGenerator, device: MINTDevice
@@ -272,15 +296,15 @@ class ConstructionGraph(nx.DiGraph):
         if len(start_point.component_port) == 0:
             channel_name = name_generator.generate_name(tech_string)
             source = MINTTarget(src_component_name, None)
-            sink = MINTTarget(tar_component_name, end_point.component_port[0])
+            sink = MINTTarget(tar_component_name, str(end_point.component_port[0]))
             device.create_mint_connection(
                 channel_name, tech_string, dict(), source, [sink], "0"
             )
         else:
             for component_port in start_point.component_port:
                 channel_name = name_generator.generate_name(tech_string)
-                source = MINTTarget(src_component_name, component_port)
-                sink = MINTTarget(tar_component_name, end_point.component_port[0])
+                source = MINTTarget(src_component_name, str(component_port))
+                sink = MINTTarget(tar_component_name, str(end_point.component_port[0]))
                 # TODO - Figure out how to make this layer generate automatically
                 device.create_mint_connection(
                     channel_name, tech_string, dict(), source, [sink], "0"
@@ -348,15 +372,15 @@ class ConstructionGraph(nx.DiGraph):
         if len(start_point.component_port) == 0:
             channel_name = name_generator.generate_name(tech_string)
             source = MINTTarget(src_component_name, None)
-            sink = MINTTarget(tar_component_name, end_point.component_port[0])
+            sink = MINTTarget(tar_component_name, str(end_point.component_port[0]))
             device.create_mint_connection(
                 channel_name, tech_string, dict(), source, [sink], "0"
             )
         else:
             for component_port in start_point.component_port:
                 channel_name = name_generator.generate_name(tech_string)
-                source = MINTTarget(src_component_name, component_port)
-                sink = MINTTarget(tar_component_name, end_point.component_port[0])
+                source = MINTTarget(src_component_name, str(component_port))
+                sink = MINTTarget(tar_component_name, str(end_point.component_port[0]))
                 # TODO - Figure out how to make this layer generate automatically
                 device.create_mint_connection(
                     channel_name, tech_string, dict(), source, [sink], "0"

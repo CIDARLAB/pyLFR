@@ -108,3 +108,6 @@ class GenStrategy:
         self, subgraph_view
     ) -> List[ConnectingOption]:
         return []
+
+    def size_netlist(self, device: MINTDevice) -> None:
+        raise NotImplementedError()

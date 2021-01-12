@@ -1,9 +1,7 @@
-from lfr.postprocessor.constraints import Constraint
 from typing import Optional
 from lfr.fig.interaction import InteractionType
 from lfr.netlistgenerator.mappinglibrary import Primitive
 from networkx import nx
-from typing import List
 
 
 class MappingOption:
