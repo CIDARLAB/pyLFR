@@ -26,7 +26,8 @@ class DAFDAdapter:
             elif constraint.key == "generation_rate":
                 generate_rate = constraint.get_target_value()
                 targets_dict["generation_rate"] = generate_rate
-            raise Exception("Error: Geometry constraint not defined")
+            else:
+                raise Exception("Error: Geometry constraint not defined")
 
         results = self.solver.runInterp(targets_dict, constriants_dict)
         if component is None:

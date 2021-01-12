@@ -10,7 +10,7 @@ from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOptionType,
 )
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.fig.fignode import Flow, IOType, ValueNode
+from lfr.fig.fignode import IOType, ValueNode
 from typing import List
 from pymint.mintdevice import MINTDevice
 from lfr.netlistgenerator.namegenerator import NameGenerator
