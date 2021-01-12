@@ -296,15 +296,15 @@ class ConstructionGraph(nx.DiGraph):
         if len(start_point.component_port) == 0:
             channel_name = name_generator.generate_name(tech_string)
             source = MINTTarget(src_component_name, None)
-            sink = MINTTarget(tar_component_name, str(end_point.component_port[0]))
+            sink = MINTTarget(tar_component_name, end_point.component_port[0])
             device.create_mint_connection(
                 channel_name, tech_string, dict(), source, [sink], "0"
             )
         else:
             for component_port in start_point.component_port:
                 channel_name = name_generator.generate_name(tech_string)
-                source = MINTTarget(src_component_name, str(component_port))
-                sink = MINTTarget(tar_component_name, str(end_point.component_port[0]))
+                source = MINTTarget(src_component_name, component_port)
+                sink = MINTTarget(tar_component_name, end_point.component_port[0])
                 # TODO - Figure out how to make this layer generate automatically
                 device.create_mint_connection(
                     channel_name, tech_string, dict(), source, [sink], "0"
@@ -372,15 +372,15 @@ class ConstructionGraph(nx.DiGraph):
         if len(start_point.component_port) == 0:
             channel_name = name_generator.generate_name(tech_string)
             source = MINTTarget(src_component_name, None)
-            sink = MINTTarget(tar_component_name, str(end_point.component_port[0]))
+            sink = MINTTarget(tar_component_name, end_point.component_port[0])
             device.create_mint_connection(
                 channel_name, tech_string, dict(), source, [sink], "0"
             )
         else:
             for component_port in start_point.component_port:
                 channel_name = name_generator.generate_name(tech_string)
-                source = MINTTarget(src_component_name, str(component_port))
-                sink = MINTTarget(tar_component_name, str(end_point.component_port[0]))
+                source = MINTTarget(src_component_name, component_port)
+                sink = MINTTarget(tar_component_name, end_point.component_port[0])
                 # TODO - Figure out how to make this layer generate automatically
                 device.create_mint_connection(
                     channel_name, tech_string, dict(), source, [sink], "0"

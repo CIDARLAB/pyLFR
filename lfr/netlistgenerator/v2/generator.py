@@ -108,12 +108,12 @@ def generate_dropx_library() -> MappingLibrary:
 
     pico_injector_inputs = []
 
-    pico_injector_inputs.append(ConnectingOption(None, [1]))
-    pico_injector_inputs.append(ConnectingOption(None, [2]))
+    pico_injector_inputs.append(ConnectingOption(None, ["1"]))
+    pico_injector_inputs.append(ConnectingOption(None, ["2"]))
 
     pico_injector_outputs = []
 
-    pico_injector_outputs.append(ConnectingOption(None, [3]))
+    pico_injector_outputs.append(ConnectingOption(None, ["3"]))
 
     pico_injector_loadings = []
     pico_injector_carriers = []
@@ -137,12 +137,12 @@ def generate_dropx_library() -> MappingLibrary:
 
     electrophoresis_merger_inputs = []
 
-    electrophoresis_merger_inputs.append(ConnectingOption(None, [1]))
-    electrophoresis_merger_inputs.append(ConnectingOption(None, [2]))
+    electrophoresis_merger_inputs.append(ConnectingOption(None, ["1"]))
+    electrophoresis_merger_inputs.append(ConnectingOption(None, ["2"]))
 
     electrophoresis_merger_outputs = []
 
-    electrophoresis_merger_outputs.append(ConnectingOption(None, [3]))
+    electrophoresis_merger_outputs.append(ConnectingOption(None, ["3"]))
 
     electrophoresis_merger_loadings = []
     electrophoresis_merger_carriers = []
@@ -166,11 +166,11 @@ def generate_dropx_library() -> MappingLibrary:
 
     droplet_generator_inputs = []
 
-    droplet_generator_inputs.append(ConnectingOption("default_component", [1]))
+    droplet_generator_inputs.append(ConnectingOption("default_component", ["1"]))
 
     droplet_generator_outputs = []
 
-    droplet_generator_outputs.append(ConnectingOption("default_component", [3]))
+    droplet_generator_outputs.append(ConnectingOption("default_component", ["3"]))
 
     droplet_generator_loadings = []
     droplet_generator_carriers = []
@@ -203,12 +203,12 @@ def generate_dropx_library() -> MappingLibrary:
 
     droplet_merger_junction_inputs = []
 
-    droplet_merger_junction_inputs.append(ConnectingOption(None, [1]))
-    droplet_merger_junction_inputs.append(ConnectingOption(None, [2]))
+    droplet_merger_junction_inputs.append(ConnectingOption(None, ["1"]))
+    droplet_merger_junction_inputs.append(ConnectingOption(None, ["2"]))
 
     droplet_merger_junction_outputs = []
 
-    droplet_merger_junction_outputs.append(ConnectingOption(None, [3]))
+    droplet_merger_junction_outputs.append(ConnectingOption(None, ["3"]))
 
     droplet_merger_junction_loadings = []
     droplet_merger_junction_carriers = []
@@ -232,11 +232,11 @@ def generate_dropx_library() -> MappingLibrary:
 
     droplet_merger_channel_inputs = []
 
-    droplet_merger_channel_inputs.append(ConnectingOption(None, [1]))
+    droplet_merger_channel_inputs.append(ConnectingOption(None, ["1"]))
 
     droplet_merger_channel_outputs = []
 
-    droplet_merger_channel_outputs.append(ConnectingOption(None, [2]))
+    droplet_merger_channel_outputs.append(ConnectingOption(None, ["2"]))
 
     droplet_merger_channel_loadings = []
     droplet_merger_channel_carriers = []
@@ -260,20 +260,20 @@ def generate_dropx_library() -> MappingLibrary:
 
     cf_mixer_inputs = []
 
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
-    cf_mixer_inputs.append(ConnectingOption(None, [1]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
 
     cf_mixer_outputs = []
 
-    cf_mixer_outputs.append(ConnectingOption(None, [2]))
+    cf_mixer_outputs.append(ConnectingOption(None, ["2"]))
 
     cf_mixer_loadings = []
     cf_mixer_carriers = []
@@ -297,12 +297,12 @@ def generate_dropx_library() -> MappingLibrary:
 
     droplet_splitter_inputs = []
 
-    droplet_splitter_inputs.append(ConnectingOption(None, [1]))
+    droplet_splitter_inputs.append(ConnectingOption(None, ["1"]))
 
     droplet_splitter_outputs = []
 
-    droplet_splitter_outputs.append(ConnectingOption(None, [2]))
-    droplet_splitter_outputs.append(ConnectingOption(None, [3]))
+    droplet_splitter_outputs.append(ConnectingOption(None, ["2"]))
+    droplet_splitter_outputs.append(ConnectingOption(None, ["3"]))
 
     droplet_splitter_loadings = []
     droplet_splitter_carriers = []
@@ -326,11 +326,11 @@ def generate_dropx_library() -> MappingLibrary:
 
     droplet_capacitance_sensor_inputs = []
 
-    droplet_capacitance_sensor_inputs.append(ConnectingOption(None, [1]))
+    droplet_capacitance_sensor_inputs.append(ConnectingOption(None, ["1"]))
 
     droplet_capacitance_sensor_outputs = []
 
-    droplet_capacitance_sensor_outputs.append(ConnectingOption(None, [2]))
+    droplet_capacitance_sensor_outputs.append(ConnectingOption(None, ["2"]))
 
     droplet_capacitance_sensor_loadings = []
     droplet_capacitance_sensor_carriers = []
@@ -356,11 +356,11 @@ def generate_dropx_library() -> MappingLibrary:
 
     droplet_fluorescence_sensor_inputs = []
 
-    droplet_fluorescence_sensor_inputs.append(ConnectingOption(None, [1]))
+    droplet_fluorescence_sensor_inputs.append(ConnectingOption(None, ["1"]))
 
     droplet_fluorescence_sensor_outputs = []
 
-    droplet_fluorescence_sensor_outputs.append(ConnectingOption(None, [2]))
+    droplet_fluorescence_sensor_outputs.append(ConnectingOption(None, ["2"]))
 
     droplet_fluorescence_sensor_loadings = []
     droplet_fluorescence_sensor_carriers = []
@@ -385,11 +385,11 @@ def generate_dropx_library() -> MappingLibrary:
     # DROPLET LUMINESCENCE SENSOR
     droplet_luminescence_sensor_inputs = []
 
-    droplet_luminescence_sensor_inputs.append(ConnectingOption(None, [1]))
+    droplet_luminescence_sensor_inputs.append(ConnectingOption(None, ["1"]))
 
     droplet_luminescence_sensor_outputs = []
 
-    droplet_luminescence_sensor_outputs.append(ConnectingOption(None, [2]))
+    droplet_luminescence_sensor_outputs.append(ConnectingOption(None, ["2"]))
 
     droplet_luminescence_sensor_loadings = []
     droplet_luminescence_sensor_carriers = []
@@ -415,11 +415,11 @@ def generate_dropx_library() -> MappingLibrary:
 
     droplet_spacer_inputs = []
 
-    droplet_spacer_inputs.append(ConnectingOption("default_component", [1]))
+    droplet_spacer_inputs.append(ConnectingOption("default_component", ["1"]))
 
     droplet_spacer_outputs = []
 
-    droplet_spacer_outputs.append(ConnectingOption("default_component", [2]))
+    droplet_spacer_outputs.append(ConnectingOption("default_component", ["2"]))
 
     droplet_spacer_loadings = []
     droplet_spacer_carriers = []
