@@ -599,8 +599,24 @@ def override_mappings(
                     mapping.technology_string
                 )
 
+            node_ids = []
+            cn = None  # Get the right construction node for doing the stuff
+            cn_mapping_options = []
+
             if isinstance(instance, NetworkMapping):
-                raise NotImplementedError()
+                node_ids.extend(n.id for n in instance.input_nodes)
+                node_ids.extend(n.id for n in instance.output_nodes)
+                subgraph = fig.subgraph(node_ids)
+                cn = construction_graph.get_subgraph_cn(subgraph)
+                mapping_option = NetworkMappingOption(
+                    network_primitive=primitive_to_use,
+                    mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,
+                    subgraph_view=subgraph,
+                )
+                cn.use_explicit_mapping(mapping_option)
+                cn_mapping_options.append(mapping_option)
+                cn_mapping_options.extend(cn.mapping_options)
+
             else:
                 # Find the construction node assicated with the
                 # FIG node and then do the followinging:
@@ -613,17 +629,18 @@ def override_mappings(
                 # a mapping option with the corresponding
 
                 # In the case of an Fluid Value interaction put all valuenodes in the subgraph
-                node_ids = [
-                    fig.get_fignode(edge[0]).id
-                    for edge in fig.in_edges(instance.node.id)
-                    if isinstance(fig.get_fignode(edge[0]), ValueNode)
-                ]
+                node_ids.extend(
+                    [
+                        fig.get_fignode(edge[0]).id
+                        for edge in fig.in_edges(instance.node.id)
+                        if isinstance(fig.get_fignode(edge[0]), ValueNode)
+                    ]
+                )
                 node_ids.append(instance.node.id)
                 subgraph = fig.subgraph(node_ids)
 
                 # Get the Construction node that has the corresponding subgraph,
                 # and then replace the mapping option
-                cn_mapping_options = []
                 cn = construction_graph.get_subgraph_cn(subgraph)
                 if primitive_to_use is not None:
                     mapping_option = MappingOption(primitive_to_use, subgraph)
@@ -637,11 +654,11 @@ def override_mappings(
                     # options later if necessary.
                     cn_mapping_options.extend(cn.mapping_options)
 
-                # Now that we know what the mapping options are (either explicit
-                # loaded from the library, we can add the performance constraints)
-                for mapping_option in cn_mapping_options:
-                    # Add all the constraints to the mapping_option
-                    cn.constraints.extend(mapping.constraints)
+            # Now that we know what the mapping options are (either explicit
+            # loaded from the library, we can add the performance constraints)
+            for mapping_option in cn_mapping_options:
+                # Add all the constraints to the mapping_option
+                cn.constraints.extend(mapping.constraints)
 
 
 def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
