@@ -43,5 +43,6 @@ class DropXStrategy(GenStrategy):
             ).constraints
             if component.entity == "NOZZLE DROPLET GENERATOR":
                 dafd_adapter.size_droplet_generator(component, constraints)
+                # print("Skipping calling DAFD since its crashing everything right now")
             elif component.entity == "PORT":
                 component.params.set_param("portRadius", 2000)

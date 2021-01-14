@@ -1,3 +1,4 @@
+from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
 from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
@@ -438,6 +439,12 @@ def generate_dropx_library() -> MappingLibrary:
     )
 
     library.add_operator_entry(droplet_spacer, InteractionType.TECHNOLOGY_PROCESS)
+
+    # YTREE - This is a procedural primitives
+
+    ytree = YTREE()
+
+    library.add_procedural_entry(ytree)
 
     return library
 

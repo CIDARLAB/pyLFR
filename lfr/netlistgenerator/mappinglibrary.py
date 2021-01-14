@@ -1,4 +1,4 @@
-from lfr.netlistgenerator.primitive import Primitive
+from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 from typing import List
 from lfr.fig.interaction import InteractionType
 
@@ -45,6 +45,9 @@ class MappingLibrary:
         else:
             self.__technology_process_operators.append(primitive)
             self.__all_primitives.append(primitive)
+
+    def add_procedural_entry(self, primitive: ProceduralPrimitive) -> None:
+        self.__all_primitives.append(primitive)
 
     def get_default_IO(self) -> Primitive:
         if self._default_IO_primitive is None:

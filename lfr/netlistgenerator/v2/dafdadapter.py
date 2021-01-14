@@ -2,18 +2,23 @@ from lfr.postprocessor.constraints import Constraint
 from typing import List
 from pymint.mintcomponent import MINTComponent
 from pymint.mintdevice import MINTDevice
-from dafd import DAFD_Interface
 
 
 class DAFDAdapter:
     def __init__(self, device: MINTDevice) -> None:
         super().__init__()
         self._device = device
-        self.solver = DAFD_Interface()
 
     def size_droplet_generator(
         self, component: MINTComponent, constriants: List[Constraint]
     ) -> None:
+        import faulthandler
+
+        faulthandler.enable()
+
+        from dafd import DAFD_Interface
+
+        self.solver = DAFD_Interface()
         # TODO: Check the type of the component and pull info from DAFD Interface
         targets_dict = dict()
         constriants_dict = dict()
