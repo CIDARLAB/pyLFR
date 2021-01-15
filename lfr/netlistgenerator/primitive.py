@@ -161,6 +161,11 @@ class ProceduralPrimitive(Primitive):
             user_defined_params=user_defined_params,
         )
 
+    def get_default_component(
+        self, name_gen: NameGenerator, layer: MINTLayer
+    ) -> MINTComponent:
+        raise NotImplementedError()
+
     def generate_input_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:
         """Generates a list of connection options that represent where the inputs can
         be connected to the primitive

@@ -22,6 +22,10 @@ class ConstructionNode:
         self._constraints: List[Constraint] = []
 
     @property
+    def is_explictly_mapped(self) -> bool:
+        return self._explict_mapping_flag
+
+    @property
     def constraints(self) -> List[Constraint]:
         return self._constraints
 

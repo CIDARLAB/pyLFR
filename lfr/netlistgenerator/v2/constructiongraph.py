@@ -1,3 +1,4 @@
+from lfr.fig.fignode import FIGNode
 from pymint.mintcomponent import MINTComponent
 from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOption,
@@ -59,8 +60,25 @@ class ConstructionGraph(nx.DiGraph):
                         is NetworkMappingOptionType.PASS_THROUGH
                     ):
                         continue
+                    elif (
+                        mapping_option.mapping_type
+                        == NetworkMappingOptionType.COMPONENT_REPLACEMENT
+                    ):
+                        # Create a new component here based on the primitive technology
+                        # and the name generator
+                        # Then merge with the larger device
+                        # Save the copy of subgraph view of the netlist in the construction node
+                        component_to_add = (
+                            mapping_option.primitive.get_default_component(
+                                name_generator, layer
+                            )
+                        )
+                        device.add_component(component_to_add)
+                        self._component_refs[cn.id] = [component_to_add.ID]
+                        # for connecting_option in cn
+                        # TODO - save the subgraph view reference
 
-                if mapping_option.primitive.type is PrimitiveType.COMPONENT:
+                elif mapping_option.primitive.type is PrimitiveType.COMPONENT:
                     # Create a new component here based on the primitive technology
                     # and the name generator
                     # Then merge with the larger device
@@ -101,6 +119,39 @@ class ConstructionGraph(nx.DiGraph):
                 print(
                     "No mappings found to the current construction node {0}".format(cn)
                 )
+
+    def get_fignode_cn(self, fig_node: FIGNode) -> ConstructionNode:
+        for cn in self._construction_nodes.values():
+            for mapping_option in cn.mapping_options:
+                if fig_node.id in mapping_option.fig_subgraph.nodes:
+                    return cn
+
+        raise Exception(
+            "Could not find construction node with an active mappingoption that covers FIG node: {}".format(
+                fig_node.id
+            )
+        )
+
+    def insert_cn(
+        self,
+        cn_to_insert: ConstructionNode,
+        input_cns: List[ConstructionNode],
+        output_cns: List[ConstructionNode],
+    ) -> None:
+        # Delete all the edges between the input nodes and the output nodes
+        for input_cn in input_cns:
+            for output_cn in output_cns:
+                if self.has_edge(input_cn.id, output_cn.id):
+                    self.remove_edge(input_cn.id, output_cn.id)
+
+        # Add the cn
+        self.add_construction_node(cn_to_insert)
+        # Create the connections between the intermediate cn
+        for input_cn in input_cns:
+            self.add_edge(input_cn.id, cn_to_insert.id)
+
+        for output_cn in output_cns:
+            self.add_edge(cn_to_insert.id, output_cn.id)
 
     def get_component_cn(self, component: MINTComponent) -> ConstructionNode:
         """Get the Construction Node associated with the given component
@@ -418,6 +469,22 @@ class ConstructionGraph(nx.DiGraph):
             # combinatorial design space
             assert len(cn.mapping_options) == 1
             for mapping_option in cn.mapping_options:
+
+                # TODO - Figure out how to not explicity check for this scenario'
+                # right now I'm using component replace as a coarse way of ensure
+                # no double takes
+                if (
+                    isinstance(mapping_option, NetworkMappingOption)
+                    and mapping_option.mapping_type
+                    == NetworkMappingOptionType.COMPONENT_REPLACEMENT
+                    and cn.is_explictly_mapped
+                ):
+                    print(
+                        "Skipping creating edge creation reverse map entry for Construction None: {}".format(
+                            cn.id
+                        )
+                    )
+                    continue
                 for node_id in mapping_option.fig_subgraph.nodes:
                     if node_id in fig_nodes_cn_reverse_map.keys():
 

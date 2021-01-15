@@ -512,16 +512,17 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Generate the flow layer IO. These are typically declared explicitly
     # TODO - Figure out how we should generate the construction nodes for control networks
 
-    for io in module.io:
-        if io.type is IOType.CONTROL:
+    for io_ref in module.io:
+        if io_ref.type is IOType.CONTROL:
             continue
-        cn = ConstructionNode(io.id)
-        sub_graph = module.FIG.subgraph(io.id)
-        mapping_candidate = library.get_default_IO()
-        mapping_option = MappingOption(mapping_candidate, sub_graph)
-        cn.add_mapping_option(mapping_option)
+        for io in io_ref.vector_ref:
+            cn = ConstructionNode(io.id)
+            sub_graph = module.FIG.subgraph(io.id)
+            mapping_candidate = library.get_default_IO()
+            mapping_option = MappingOption(mapping_candidate, sub_graph)
+            cn.add_mapping_option(mapping_option)
 
-        construction_graph.add_construction_node(cn)
+            construction_graph.add_construction_node(cn)
 
     # TODO - Go through the different flow-flow edge networks to generate construction nodes
     # specific to these networks, Conditions:
@@ -588,7 +589,7 @@ def override_mappings(
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
     # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
-
+    assign_node_index = 0
     for mapping in mappings:
         for instance in mapping.instances:
 
@@ -607,7 +608,35 @@ def override_mappings(
                 node_ids.extend(n.id for n in instance.input_nodes)
                 node_ids.extend(n.id for n in instance.output_nodes)
                 subgraph = fig.subgraph(node_ids)
-                cn = construction_graph.get_subgraph_cn(subgraph)
+                try:
+                    # TODO - Incase this is a flow-flow candidate, we need to get the
+                    # cn corresponding to this mapping.
+                    # TODO - do we need to have a new flow node constructed
+
+                    cn = construction_graph.get_subgraph_cn(subgraph)
+                except Exception as e:
+                    # Incase we cannot find a corresponding construction node,
+                    # we need to create a new construction node
+                    print(e)
+                    cn = ConstructionNode("assign_{}".format(assign_node_index))
+                    # Increment the index of the assign construction node
+                    assign_node_index += 1
+
+                    # Find the cn's associated with the input nodes
+                    input_cns = []
+                    output_cns = []
+                    for fig_node in instance.input_nodes:
+                        cn_temp = construction_graph.get_fignode_cn(fig_node)
+                        if cn_temp not in input_cns:
+                            input_cns.append(cn_temp)
+                    for fig_node in instance.output_nodes:
+                        cn_temp = construction_graph.get_fignode_cn(fig_node)
+                        if cn_temp not in output_cns:
+                            output_cns.append(cn_temp)
+
+                    # Now insert the node
+                    construction_graph.insert_cn(cn, input_cns, output_cns)
+
                 mapping_option = NetworkMappingOption(
                     network_primitive=primitive_to_use,
                     mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,
