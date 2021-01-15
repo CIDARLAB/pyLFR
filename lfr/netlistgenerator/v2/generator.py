@@ -553,6 +553,9 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # reduction of path and pipelineing that needs to get done for mars devices
     construction_graph.generate_edges(module.FIG)
 
+    # TODO - Validate if this is a legit way to do things
+    override_network_mappings(mappings, library, module.FIG, construction_graph)
+
     # TODO - Extract all pass through networks
     eliminate_passthrough_nodes(construction_graph)
 
@@ -605,48 +608,56 @@ def override_mappings(
             cn_mapping_options = []
 
             if isinstance(instance, NetworkMapping):
-                node_ids.extend(n.id for n in instance.input_nodes)
-                node_ids.extend(n.id for n in instance.output_nodes)
-                subgraph = fig.subgraph(node_ids)
-                try:
-                    # TODO - Incase this is a flow-flow candidate, we need to get the
-                    # cn corresponding to this mapping.
-                    # TODO - do we need to have a new flow node constructed
+                # node_ids.extend(n.id for n in instance.input_nodes)
+                # node_ids.extend(n.id for n in instance.output_nodes)
+                # subgraph = fig.subgraph(node_ids)
+                # try:
+                #     # TODO - Incase this is a flow-flow candidate, we need to get the
+                #     # cn corresponding to this mapping.
+                #     # TODO - do we need to have a new flow node constructed
 
-                    cn = construction_graph.get_subgraph_cn(subgraph)
-                except Exception as e:
-                    # Incase we cannot find a corresponding construction node,
-                    # we need to create a new construction node
-                    print(e)
-                    cn = ConstructionNode("assign_{}".format(assign_node_index))
-                    # Increment the index of the assign construction node
-                    assign_node_index += 1
+                #     cn = construction_graph.get_subgraph_cn(subgraph)
+                # except Exception as e:
+                #     # Incase we cannot find a corresponding construction node,
+                #     # we need to create a new construction node
+                #     print(e)
+                #     cn = ConstructionNode("assign_{}".format(assign_node_index))
+                #     # Increment the index of the assign construction node
+                #     assign_node_index += 1
 
-                    # Find the cn's associated with the input nodes
-                    input_cns = []
-                    output_cns = []
-                    for fig_node in instance.input_nodes:
-                        cn_temp = construction_graph.get_fignode_cn(fig_node)
-                        if cn_temp not in input_cns:
-                            input_cns.append(cn_temp)
-                    for fig_node in instance.output_nodes:
-                        cn_temp = construction_graph.get_fignode_cn(fig_node)
-                        if cn_temp not in output_cns:
-                            output_cns.append(cn_temp)
+                #     # Find the cn's associated with the input nodes
+                #     input_cns = []
+                #     output_cns = []
+                #     for fig_node in instance.input_nodes:
+                #         cn_temp = construction_graph.get_fignode_cn(fig_node)
+                #         if cn_temp not in input_cns:
+                #             input_cns.append(cn_temp)
+                #     for fig_node in instance.output_nodes:
+                #         cn_temp = construction_graph.get_fignode_cn(fig_node)
+                #         if cn_temp not in output_cns:
+                #             output_cns.append(cn_temp)
 
-                    # Now insert the node
-                    construction_graph.insert_cn(cn, input_cns, output_cns)
+                #     # Now insert the node
+                #     construction_graph.insert_cn(cn, input_cns, output_cns)
 
-                mapping_option = NetworkMappingOption(
-                    network_primitive=primitive_to_use,
-                    mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,
-                    subgraph_view=subgraph,
+                # mapping_option = NetworkMappingOption(
+                #     network_primitive=primitive_to_use,
+                #     mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,
+                #     subgraph_view=subgraph,
+                # )
+                # cn.use_explicit_mapping(mapping_option)
+                # cn_mapping_options.append(mapping_option)
+                # cn_mapping_options.extend(cn.mapping_options)
+                print(
+                    "Skipping Network Mapping: \n Input - {} \n Output - {}".format(
+                        ",".join([n.id for n in instance.input_nodes]),
+                        ",".join([n.id for n in instance.output_nodes]),
+                    )
                 )
-                cn.use_explicit_mapping(mapping_option)
-                cn_mapping_options.append(mapping_option)
-                cn_mapping_options.extend(cn.mapping_options)
-
+                continue
             else:
+                print("Applying Network Mapping: \n Nodes - {}".format(instance.node))
+
                 # Find the construction node assicated with the
                 # FIG node and then do the followinging:
                 # Step 1 - If the mappingtemplate has no technology string assiciated
@@ -690,6 +701,123 @@ def override_mappings(
                 cn.constraints.extend(mapping.constraints)
 
 
+def override_network_mappings(
+    mappings: List[NodeMappingTemplate],
+    mapping_library: MappingLibrary,
+    fig: FluidInteractionGraph,
+    construction_graph: ConstructionGraph,
+) -> None:
+    # Go through the entire set of mappings in the FIG and generate / append the mapping options
+    # Step 1 - Loop through each of the mappingtemplates
+    # Step 2 - Loop through each of the instances in teh mappingtemplate
+    # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
+    assign_node_index = 0
+    for mapping in mappings:
+        for instance in mapping.instances:
+
+            primitive_to_use = None
+            if mapping.technology_string is not None:
+                # Create a mapping option from the library with the corresponding info
+                primitive_to_use = mapping_library.get_primitive(
+                    mapping.technology_string
+                )
+
+            node_ids = []
+            cn = None  # Get the right construction node for doing the stuff
+            cn_mapping_options = []
+
+            if isinstance(instance, NetworkMapping):
+                print(
+                    "Applying Network Mapping: \n Input - {} \n Output - {}".format(
+                        ",".join([n.id for n in instance.input_nodes]),
+                        ",".join([n.id for n in instance.output_nodes]),
+                    )
+                )
+
+                node_ids.extend(n.id for n in instance.input_nodes)
+                node_ids.extend(n.id for n in instance.output_nodes)
+                subgraph = fig.subgraph(node_ids)
+                try:
+                    # TODO - Incase this is a flow-flow candidate, we need to get the
+                    # cn corresponding to this mapping.
+                    # TODO - do we need to have a new flow node constructed
+
+                    cn = construction_graph.get_subgraph_cn(subgraph)
+                except Exception as e:
+                    # Incase we cannot find a corresponding construction node,
+                    # we need to create a new construction node
+                    print(e)
+                    cn = ConstructionNode("assign_{}".format(assign_node_index))
+                    # Increment the index of the assign construction node
+                    assign_node_index += 1
+
+                    # Find the cn's associated with the input nodes
+                    input_cns = []
+                    output_cns = []
+                    for fig_node in instance.input_nodes:
+                        cn_temp = construction_graph.get_fignode_cn(fig_node)
+                        if cn_temp not in input_cns:
+                            input_cns.append(cn_temp)
+                    for fig_node in instance.output_nodes:
+                        cn_temp = construction_graph.get_fignode_cn(fig_node)
+                        if cn_temp not in output_cns:
+                            output_cns.append(cn_temp)
+
+                    # Now insert the node
+                    construction_graph.insert_cn(cn, input_cns, output_cns)
+
+                mapping_option = NetworkMappingOption(
+                    network_primitive=primitive_to_use,
+                    mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,
+                    subgraph_view=subgraph,
+                )
+                cn.use_explicit_mapping(mapping_option)
+                cn_mapping_options.append(mapping_option)
+                cn_mapping_options.extend(cn.mapping_options)
+            else:
+                # # Find the construction node assicated with the
+                # # FIG node and then do the followinging:
+                # # Step 1 - If the mappingtemplate has no technology string assiciated
+                # # with the mapping, just apply the constraints to the associated mapping
+                # # options
+
+                # # Step 2 - In there is a string assiciated with the mappingtemplate, we
+                # # eliminate all mapping options that dont have a matching string / generate
+                # # a mapping option with the corresponding
+
+                # # In the case of an Fluid Value interaction put all valuenodes in the subgraph
+                # node_ids.extend(
+                #     [
+                #         fig.get_fignode(edge[0]).id
+                #         for edge in fig.in_edges(instance.node.id)
+                #         if isinstance(fig.get_fignode(edge[0]), ValueNode)
+                #     ]
+                # )
+                # node_ids.append(instance.node.id)
+                # subgraph = fig.subgraph(node_ids)
+
+                # # Get the Construction node that has the corresponding subgraph,
+                # # and then replace the mapping option
+                # cn = construction_graph.get_subgraph_cn(subgraph)
+                # if primitive_to_use is not None:
+                #     mapping_option = MappingOption(primitive_to_use, subgraph)
+                #     cn.use_explicit_mapping(mapping_option)
+                #     cn_mapping_options.append(mapping_option)
+                # else:
+                #     # Add the constraints to all the mapping options
+                #     # This is an example where since no explicit mapping
+                #     # was specified, we only add the performance/material
+                #     # constraints. This can be ulitized for whittling down
+                #     # options later if necessary.
+                #     cn_mapping_options.extend(cn.mapping_options)
+                continue
+            # Now that we know what the mapping options are (either explicit
+            # loaded from the library, we can add the performance constraints)
+            for mapping_option in cn_mapping_options:
+                # Add all the constraints to the mapping_option
+                cn.constraints.extend(mapping.constraints)
+
+
 def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
     for node_id in list(construction_graph.nodes):
         cn = construction_graph.get_cn(node_id)
@@ -697,6 +825,8 @@ def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
         mapping_option = cn.mapping_options[0]
         if isinstance(mapping_option, NetworkMappingOption):
             if mapping_option.mapping_type is NetworkMappingOptionType.PASS_THROUGH:
+
+                print("Eliminating PASS THROUGH construction node = {}".format(cn.id))
 
                 # First get all the in and out edges
                 in_edges = list(construction_graph.in_edges(node_id))

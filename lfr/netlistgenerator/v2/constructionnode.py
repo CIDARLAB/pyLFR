@@ -1,3 +1,4 @@
+from lfr.netlistgenerator.primitive import ProceduralPrimitive
 from lfr.postprocessor.constraints import Constraint
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
@@ -83,14 +84,25 @@ class ConstructionNode:
         # TODO - Figure out what do do if its a combinatorial design
         assert len(self._mapping_options) == 1
         primitive_ref = self._mapping_options[0].primitive
-        if primitive_ref.inputs is not None:
-            self._input_options = [copy.copy(c) for c in primitive_ref.inputs]
-        if primitive_ref.outputs is not None:
-            self._output_options = [copy.copy(c) for c in primitive_ref.outputs]
-        if primitive_ref.loadings is not None:
-            self._loading_options = [copy.copy(c) for c in primitive_ref.loadings]
-        if primitive_ref.carriers is not None:
-            self._carrier_options = [copy.copy(c) for c in primitive_ref.carriers]
+
+        self._input_options = primitive_ref.export_inputs(
+            self._mapping_options[0].fig_subgraph
+        )
+        self._output_options = primitive_ref.export_outputs(
+            self._mapping_options[0].fig_subgraph
+        )
+
+        options = primitive_ref.export_loadings(self._mapping_options[0].fig_subgraph)
+        if options is None:
+            options = []
+
+        self._loading_options = options
+
+        options = primitive_ref.export_carriers(self._mapping_options[0].fig_subgraph)
+        if options is None:
+            options = []
+
+        self._carrier_options = options
 
     def __str__(self) -> str:
         return "Construction Node: {}".format(self.id)

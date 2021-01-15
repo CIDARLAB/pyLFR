@@ -1,3 +1,4 @@
+import copy
 from typing import List, Optional
 from pymint.mintdevice import MINTDevice
 from pymint.mintparams import MINTParams
@@ -64,21 +65,21 @@ class Primitive:
     def mint(self) -> str:
         return self._mint
 
-    @property
-    def inputs(self) -> List[ConnectingOption]:
-        return self._inputs
+    def export_inputs(self, subgraph) -> List[ConnectingOption]:
+        return [copy.copy(c) for c in self._inputs]
 
-    @property
-    def outputs(self) -> List[ConnectingOption]:
-        return self._outputs
+    def export_outputs(self, subgraph) -> List[ConnectingOption]:
+        return [copy.copy(c) for c in self._outputs]
 
-    @property
-    def loadings(self) -> Optional[List[ConnectingOption]]:
-        return self._loadings
+    def export_loadings(self, subgraph) -> Optional[List[ConnectingOption]]:
+        if self._loadings is None:
+            return None
+        return [copy.copy(c) for c in self._loadings]
 
-    @property
-    def carriers(self) -> Optional[List[ConnectingOption]]:
-        return self._carriers
+    def export_carriers(self, subgraph) -> Optional[List[ConnectingOption]]:
+        if self._carriers is None:
+            return None
+        return [copy.copy(c) for c in self._carriers]
 
     @property
     def default_netlist_location(self):
@@ -161,7 +162,24 @@ class ProceduralPrimitive(Primitive):
             user_defined_params=user_defined_params,
         )
 
+    def export_inputs(self, subgraph) -> List[ConnectingOption]:
+        raise NotImplementedError()
+
+    def export_outputs(self, subgraph) -> List[ConnectingOption]:
+        raise NotImplementedError()
+
+    def export_loadings(self, subgraph) -> Optional[List[ConnectingOption]]:
+        raise NotImplementedError()
+
+    def export_carriers(self, subgraph) -> Optional[List[ConnectingOption]]:
+        raise NotImplementedError()
+
     def get_default_component(
+        self, name_gen: NameGenerator, layer: MINTLayer
+    ) -> MINTComponent:
+        raise NotImplementedError()
+
+    def get_procedural_component(
         self, name_gen: NameGenerator, layer: MINTLayer
     ) -> MINTComponent:
         raise NotImplementedError()

@@ -4,7 +4,7 @@ from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
 )
-from lfr.netlistgenerator.primitive import PrimitiveType
+from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
 from pymint.minttarget import MINTTarget
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.module import Module
@@ -68,11 +68,24 @@ class ConstructionGraph(nx.DiGraph):
                         # and the name generator
                         # Then merge with the larger device
                         # Save the copy of subgraph view of the netlist in the construction node
-                        component_to_add = (
-                            mapping_option.primitive.get_default_component(
-                                name_generator, layer
+                        component_to_add = None
+
+                        if (
+                            mapping_option.primitive.type == PrimitiveType.PROCEDURAL
+                            or isinstance(mapping_option.primitive, ProceduralPrimitive)
+                        ):
+                            component_to_add = (
+                                mapping_option.primitive.get_procedural_component(
+                                    name_generator, layer, mapping_option.fig_subgraph
+                                )
                             )
-                        )
+                        else:
+                            component_to_add = (
+                                mapping_option.primitive.get_default_component(
+                                    name_generator, layer
+                                )
+                            )
+
                         device.add_component(component_to_add)
                         self._component_refs[cn.id] = [component_to_add.ID]
                         # for connecting_option in cn
@@ -503,9 +516,15 @@ class ConstructionGraph(nx.DiGraph):
                 src not in fig_nodes_cn_reverse_map.keys()
                 or tar not in fig_nodes_cn_reverse_map.keys()
             ):
-                raise Exception(
-                    "Src or Tar not in the construction graph, under coverage issue"
+                print(
+                    "Warning in generating Construction graph edges ! - Src `{}` or Tar `{}` not in the reverse-mapping of construction , under coverage issue".format(
+                        src, tar
+                    )
                 )
+                # raise Exception(
+                #     "Src or Tar not in the construction graph, under coverage issue"
+                # )
+                continue
             else:
                 # TODO - When the asserts fail, its an overcoverage issue, decide what needs to be done here
                 src_cn = fig_nodes_cn_reverse_map[src]
