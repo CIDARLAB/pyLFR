@@ -1,3 +1,7 @@
+from copy import copy
+from networkx.classes.digraph import DiGraph
+
+from networkx.classes.function import subgraph
 from lfr.fig.fignode import FIGNode
 from pymint.mintcomponent import MINTComponent
 from lfr.netlistgenerator.v2.networkmappingoption import (
@@ -9,7 +13,7 @@ from pymint.minttarget import MINTTarget
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.module import Module
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from typing import Dict, List
+from typing import Dict, List, Set, Tuple
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from networkx import nx
 from pymint.mintdevice import MINTDevice
@@ -22,6 +26,7 @@ class ConstructionGraph(nx.DiGraph):
         self._construction_nodes: Dict[str, ConstructionNode] = dict()
         # Stores the references for each construction node and component ID's
         self._component_refs: Dict[str, List[str]] = dict()
+        self._fixed_edges: List[Tuple[str, str]] = []
 
     @property
     def construction_nodes(self) -> List[ConstructionNode]:
@@ -145,11 +150,60 @@ class ConstructionGraph(nx.DiGraph):
             )
         )
 
+    def split_cn(
+        self,
+        cn_to_split: ConstructionNode,
+        split_groups: List[Set[str]],
+        fig: FluidInteractionGraph,
+    ) -> None:
+        """This method splits the construction node into multiple pieces.
+        This is driven by the lists of strings holding the FIG node id's.
+        It put each list of ID's in the split_groups variable into individual
+        construction nodes.
+
+        WARNING ! - Generates CN edges only between the new CN's
+
+        In addition to splitting up the node, the method also creates edges
+        between all the nodes based on how the FIG subgraph is connected
+
+        Args:
+            cn_to_split (ConstructionNode): Construction node that needs to be split into multiple nodes
+            split_groups (List[List[str]]): A list of lists where each list should contain the FIG node IDs that neet to be in differnt nodes
+        """
+
+        # TODO - create new construction nodes based on lists
+        name = cn_to_split.id
+        fig_nodes = []
+        for nodes in split_groups:
+            fig_nodes.extend(nodes)
+        full_subgraph = fig.subgraph(fig_nodes)
+        for group_index in range(len(split_groups)):
+            split_group = split_groups[group_index]
+            fig_subgraph = fig.subgraph(split_group)
+            cn = ConstructionNode("{}_split_{}".format(name, group_index))
+            # Copy all the mapping options but have a differet fig_subgraph
+            for mapping_option in cn_to_split.mapping_options:
+                # TODO = Figure out what kind of a network mapping I need to get for this
+                mapping_copy = copy(mapping_option)
+                mapping_copy.fig_subgraph = fig_subgraph
+                cn.add_mapping_option(mapping_option)
+
+            self.add_construction_node(cn)
+
+        # Delete the node now
+        self.delete_node(cn_to_split.id)
+
+        # TODO - create connections between the cns based on the figs
+        self.generate_edges(full_subgraph)
+
+        raise NotImplementedError()
+
     def insert_cn(
         self,
         cn_to_insert: ConstructionNode,
         input_cns: List[ConstructionNode],
         output_cns: List[ConstructionNode],
+        fig: FluidInteractionGraph,
     ) -> None:
         # Delete all the edges between the input nodes and the output nodes
         for input_cn in input_cns:
@@ -476,7 +530,7 @@ class ConstructionGraph(nx.DiGraph):
         # (this will account for double coverage cases too)
 
         # TODO - For combinatorial design space, figure out what to do with this
-        fig_nodes_cn_reverse_map: Dict[str, List] = dict()
+        fig_nodes_cn_reverse_map: Dict[str, List[str]] = dict()
         for cn in self.construction_nodes:
             # TODO - Assumption here is that there is only 1 mapping option, else its a
             # combinatorial design space
@@ -486,27 +540,80 @@ class ConstructionGraph(nx.DiGraph):
                 # TODO - Figure out how to not explicity check for this scenario'
                 # right now I'm using component replace as a coarse way of ensure
                 # no double takes
-                if (
-                    isinstance(mapping_option, NetworkMappingOption)
-                    and mapping_option.mapping_type
-                    == NetworkMappingOptionType.COMPONENT_REPLACEMENT
-                    and cn.is_explictly_mapped
-                ):
-                    print(
-                        "Skipping creating edge creation reverse map entry for Construction None: {}".format(
-                            cn.id
-                        )
-                    )
-                    continue
+                # if (
+                #     isinstance(mapping_option, NetworkMappingOption)
+                #     and mapping_option.mapping_type
+                #     == NetworkMappingOptionType.COMPONENT_REPLACEMENT
+                #     and cn.is_explictly_mapped
+                # ):
+                #     print(
+                #         "Skipping creating edge creation reverse map entry for Construction None: {}".format(
+                #             cn.id
+                #         )
+                #     )
+                #     continue
                 for node_id in mapping_option.fig_subgraph.nodes:
                     if node_id in fig_nodes_cn_reverse_map.keys():
 
                         # Make sure there are no repeats here
-                        if node_id not in fig_nodes_cn_reverse_map[cn.id]:
+                        if cn.id not in fig_nodes_cn_reverse_map[node_id]:
                             fig_nodes_cn_reverse_map[node_id].append(cn.id)
                     else:
                         fig_nodes_cn_reverse_map[node_id] = []
                         fig_nodes_cn_reverse_map[node_id].append(cn.id)
+
+        # Step 1.5 - Handle the overcoverage scenarios, currently we assume that
+        # the undercoverage scenarios are only in the case of networkmappings.
+        # In the case of networkmappings, we will see that the fig_subgraph on one of
+        # the construction node would be the subset of another construction node.
+
+        # Overcoverage scenario list:
+        # SCENARIO 1 - Network mapping exists, hence overcoverage. One of the subgraph
+        # is a subset of the other
+        set_relationship_graph = DiGraph()
+
+        for cn_list in list(fig_nodes_cn_reverse_map.values()):
+            over_coverage_scenario_1 = False
+            if not (len(cn_list) > 1):
+                continue
+            for i in range(len(cn_list)):
+                cn_i_id = cn_list[i]
+                cn_i = self.get_cn(cn_i_id)
+                cn_i_subset = set(cn_i.mapping_options[0].fig_subgraph.nodes)
+                for j in range(i + 1, len(cn_list)):
+                    cn_j_id = cn_list[j]
+                    cn_j = self.get_cn(cn_j_id)
+                    cn_j_subset = set(cn_j.mapping_options[0].fig_subgraph)
+                    # Check if one is the subset of the other
+                    if cn_i_subset.issubset(cn_j_subset):
+                        # cn_j is the superset, add to relationship graph
+                        raise Exception("Create Dependency chain")
+                        # Generate edge between the cn's
+                        over_coverage_scenario_1 = True
+                        self.add_edge(cn_i.id, cn_j.id)
+
+                    elif cn_i_subset.issuperset(cn_j_subset):
+                        # cn_i is the superset
+                        raise Exception("Create Dependency chain")
+
+                        # Generate edge between the cn's
+                        over_coverage_scenario_1 = True
+                        self.add_edge(cn_j.id, cn_i.id)
+
+                # This is the sanity check to see if its valid
+                # TODO - if this fails, we need to identify the scenario
+                assert over_coverage_scenario_1
+
+                # Remove all the supersets marked to leave only 1 at the end
+                # this will get flagged in the assert later on
+                # for cn in superset_cn_set:
+                #     cn_list.remove(cn)
+
+                pass
+
+        # Overcoverage Part 2
+        # TODO- Figure out how to handle the overcoverage scenario where are no subset/superset scenarios
+        pass
 
         # Step 2 - Now that we know the mapping, go through each connection in the fig,
         for edge in fig.edges:

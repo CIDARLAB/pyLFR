@@ -1,3 +1,4 @@
+from copy import deepcopy
 from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
 from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
@@ -12,7 +13,7 @@ from lfr.netlistgenerator.v2.networkmappingoption import (
 )
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 from lfr.fig.fignode import IOType, ValueNode
-from typing import List
+from typing import List, Set
 from pymint.mintdevice import MINTDevice
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
@@ -148,8 +149,9 @@ def generate_dropx_library() -> MappingLibrary:
     electrophoresis_merger_loadings = []
     electrophoresis_merger_carriers = []
 
+    # TODO - Modify this later on
     electrophoresis_merger = Primitive(
-        "DROPLET ELECTROPHORESIS MERGER",
+        "DROPLET MERGER",
         PrimitiveType.COMPONENT,
         "MIX",
         False,
@@ -162,6 +164,36 @@ def generate_dropx_library() -> MappingLibrary:
     )
 
     library.add_operator_entry(electrophoresis_merger, InteractionType.MIX)
+
+    # DROPLET SORTER
+
+    droplet_sorter_inputs = []
+
+    droplet_sorter_inputs.append(ConnectingOption(None, ["1"]))
+
+    droplet_sorter_outputs = []
+
+    droplet_sorter_outputs.append(ConnectingOption(None, ["2"]))
+    droplet_sorter_outputs.append(ConnectingOption(None, ["3"]))
+
+    droplet_sorter_loadings = []
+    droplet_sorter_carriers = []
+
+    # TODO - Modify this later on
+    droplet_sorter = Primitive(
+        "DROPLET SORTER",
+        PrimitiveType.COMPONENT,
+        "SIEVE",
+        False,
+        False,
+        droplet_sorter_inputs,
+        droplet_sorter_outputs,
+        droplet_sorter_loadings,
+        droplet_sorter_carriers,
+        None,
+    )
+
+    library.add_operator_entry(droplet_sorter, InteractionType.SIEVE)
 
     # DROPLET GENERATOR
 
@@ -323,6 +355,52 @@ def generate_dropx_library() -> MappingLibrary:
 
     library.add_operator_entry(droplet_splitter, InteractionType.DIVIDE)
 
+    # NORMAL MIXER
+
+    mixer_inputs = []
+
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+
+    mixer_outputs = []
+
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+
+    mixer_loadings = []
+    mixer_carriers = []
+
+    mixer = Primitive(
+        "MIXER",
+        PrimitiveType.COMPONENT,
+        "MIX",
+        False,
+        False,
+        mixer_inputs,
+        mixer_outputs,
+        mixer_loadings,
+        mixer_carriers,
+        None,
+    )
+
+    library.add_operator_entry(mixer, InteractionType.MIX)
+
     # DROPLET CAPACITANCE SENSOR
 
     droplet_capacitance_sensor_inputs = []
@@ -352,6 +430,34 @@ def generate_dropx_library() -> MappingLibrary:
     library.add_operator_entry(
         droplet_capacitance_sensor, InteractionType.TECHNOLOGY_PROCESS
     )
+
+    # FILTER
+
+    filter_inputs = []
+
+    filter_inputs.append(ConnectingOption(None, ["1"]))
+
+    filter_outputs = []
+
+    filter_outputs.append(ConnectingOption(None, ["2"]))
+
+    filter_loadings = []
+    filter_carriers = []
+
+    filter = Primitive(
+        "FILTER",
+        PrimitiveType.COMPONENT,
+        "PROCESS",
+        False,
+        False,
+        filter_inputs,
+        filter_outputs,
+        filter_loadings,
+        filter_carriers,
+        None,
+    )
+
+    library.add_operator_entry(filter, InteractionType.TECHNOLOGY_PROCESS)
 
     # DROPLET FLUORESCENCE SENSOR
 
@@ -524,6 +630,10 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
             construction_graph.add_construction_node(cn)
 
+    # TODO - Validate if this is a legit way to do things
+    mappings = module.get_explicit_mappings()
+    override_network_mappings(mappings, library, module.FIG, construction_graph)
+
     # TODO - Go through the different flow-flow edge networks to generate construction nodes
     # specific to these networks, Conditions:
     # if its a 1-1 flow-flow connection, then create a construction node for the two flow nodes
@@ -540,7 +650,6 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # TODO - Modify Explicit Mapping Data structure
 
     # Find all the explicit mappings and override them in the construction graph
-    mappings = module.get_explicit_mappings()
     override_mappings(mappings, library, module.FIG, construction_graph)
 
     # Whittle Down the mapping options here to only include the requried single candidates
@@ -552,9 +661,6 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Generate edges in the construction graph, these edges will guide the generation/
     # reduction of path and pipelineing that needs to get done for mars devices
     construction_graph.generate_edges(module.FIG)
-
-    # TODO - Validate if this is a legit way to do things
-    override_network_mappings(mappings, library, module.FIG, construction_graph)
 
     # TODO - Extract all pass through networks
     eliminate_passthrough_nodes(construction_graph)
@@ -608,46 +714,6 @@ def override_mappings(
             cn_mapping_options = []
 
             if isinstance(instance, NetworkMapping):
-                # node_ids.extend(n.id for n in instance.input_nodes)
-                # node_ids.extend(n.id for n in instance.output_nodes)
-                # subgraph = fig.subgraph(node_ids)
-                # try:
-                #     # TODO - Incase this is a flow-flow candidate, we need to get the
-                #     # cn corresponding to this mapping.
-                #     # TODO - do we need to have a new flow node constructed
-
-                #     cn = construction_graph.get_subgraph_cn(subgraph)
-                # except Exception as e:
-                #     # Incase we cannot find a corresponding construction node,
-                #     # we need to create a new construction node
-                #     print(e)
-                #     cn = ConstructionNode("assign_{}".format(assign_node_index))
-                #     # Increment the index of the assign construction node
-                #     assign_node_index += 1
-
-                #     # Find the cn's associated with the input nodes
-                #     input_cns = []
-                #     output_cns = []
-                #     for fig_node in instance.input_nodes:
-                #         cn_temp = construction_graph.get_fignode_cn(fig_node)
-                #         if cn_temp not in input_cns:
-                #             input_cns.append(cn_temp)
-                #     for fig_node in instance.output_nodes:
-                #         cn_temp = construction_graph.get_fignode_cn(fig_node)
-                #         if cn_temp not in output_cns:
-                #             output_cns.append(cn_temp)
-
-                #     # Now insert the node
-                #     construction_graph.insert_cn(cn, input_cns, output_cns)
-
-                # mapping_option = NetworkMappingOption(
-                #     network_primitive=primitive_to_use,
-                #     mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,
-                #     subgraph_view=subgraph,
-                # )
-                # cn.use_explicit_mapping(mapping_option)
-                # cn_mapping_options.append(mapping_option)
-                # cn_mapping_options.extend(cn.mapping_options)
                 print(
                     "Skipping Network Mapping: \n Input - {} \n Output - {}".format(
                         ",".join([n.id for n in instance.input_nodes]),
@@ -737,79 +803,82 @@ def override_network_mappings(
                 node_ids.extend(n.id for n in instance.input_nodes)
                 node_ids.extend(n.id for n in instance.output_nodes)
                 subgraph = fig.subgraph(node_ids)
-                try:
-                    # TODO - Incase this is a flow-flow candidate, we need to get the
-                    # cn corresponding to this mapping.
-                    # TODO - do we need to have a new flow node constructed
+                # try:
+                #     # TODO - Incase this is a flow-flow candidate, we need to get the
+                #     # cn corresponding to this mapping.
+                #     # TODO - do we need to have a new flow node constructed
 
-                    cn = construction_graph.get_subgraph_cn(subgraph)
-                except Exception as e:
-                    # Incase we cannot find a corresponding construction node,
-                    # we need to create a new construction node
-                    print(e)
-                    cn = ConstructionNode("assign_{}".format(assign_node_index))
-                    # Increment the index of the assign construction node
-                    assign_node_index += 1
+                #     cn = construction_graph.get_subgraph_cn(subgraph)
+                # except Exception as e:
+                #     # Incase we cannot find a corresponding construction node,
+                #     # we need to create a new construction node
+                #     print(e)
+                #     cn = ConstructionNode("assign_{}".format(assign_node_index))
+                #     # Increment the index of the assign construction node
+                #     assign_node_index += 1
 
-                    # Find the cn's associated with the input nodes
-                    input_cns = []
-                    output_cns = []
-                    for fig_node in instance.input_nodes:
-                        cn_temp = construction_graph.get_fignode_cn(fig_node)
-                        if cn_temp not in input_cns:
-                            input_cns.append(cn_temp)
-                    for fig_node in instance.output_nodes:
-                        cn_temp = construction_graph.get_fignode_cn(fig_node)
-                        if cn_temp not in output_cns:
-                            output_cns.append(cn_temp)
+                #     # Find the cn's associated with the input nodes
+                #     input_cns = []
+                #     output_cns = []
+                #     for fig_node in instance.input_nodes:
+                #         cn_temp = construction_graph.get_fignode_cn(fig_node)
+                #         if cn_temp not in input_cns:
+                #             input_cns.append(cn_temp)
+                #     for fig_node in instance.output_nodes:
+                #         cn_temp = construction_graph.get_fignode_cn(fig_node)
+                #         if cn_temp not in output_cns:
+                #             output_cns.append(cn_temp)
 
-                    # Now insert the node
-                    construction_graph.insert_cn(cn, input_cns, output_cns)
+                #     # split_groups = []
+                #     # # TODO - If we need to split the we first are gonna make a copy
+                #     # # of the subgraph and then delete any edges between the inputs
+                #     # # and the outputs
+                #     # subgraph_copy = deepcopy(subgraph)
+                #     # # Delete any edges between inputs and outputs
+                #     # for input_node in instance.input_nodes:
+                #     #     for output_node in instance.output_nodes:
+                #     #         if subgraph_copy.has_edge(input_node.id, output_node.id):
+                #     #             subgraph_copy.remove_edge(input_node.id, output_node.id)
 
+                #     # components = subgraph_copy.connected_components()
+                #     # for component in components:
+                #     #     split_groups.append(list(component.nodes))
+
+                #     # TODO - If inputcns and output cns are the same, we split them
+                #     for input_cn in input_cns:
+                #         if input_cn in output_cns:
+                #             split_groups = generate_split_groups(
+                #                 input_cn.mapping_options[0].fig_subgraph, instance
+                #             )
+                #             construction_graph.split_cn(input_cn, split_groups, fig)
+                #     # Now insert the node
+                #     construction_graph.insert_cn(cn, input_cns, output_cns)
+
+                # # Check to see if this works or not
+                # cn = construction_graph.get_subgraph_cn(subgraph)
+
+                # Find the cn's associated with the input nodes
+                input_cns = []
+                output_cns = []
+                for fig_node in instance.input_nodes:
+                    cn_temp = construction_graph.get_fignode_cn(fig_node)
+                    if cn_temp not in input_cns:
+                        input_cns.append(cn_temp)
+                for fig_node in instance.output_nodes:
+                    cn_temp = construction_graph.get_fignode_cn(fig_node)
+                    if cn_temp not in output_cns:
+                        output_cns.append(cn_temp)
+
+                cn = ConstructionNode("assign_{}".format(assign_node_index))
+                assign_node_index += 1
                 mapping_option = NetworkMappingOption(
                     network_primitive=primitive_to_use,
                     mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,
                     subgraph_view=subgraph,
                 )
                 cn.use_explicit_mapping(mapping_option)
-                cn_mapping_options.append(mapping_option)
-                cn_mapping_options.extend(cn.mapping_options)
+                construction_graph.insert_cn(cn, input_cns, output_cns, fig)
             else:
-                # # Find the construction node assicated with the
-                # # FIG node and then do the followinging:
-                # # Step 1 - If the mappingtemplate has no technology string assiciated
-                # # with the mapping, just apply the constraints to the associated mapping
-                # # options
-
-                # # Step 2 - In there is a string assiciated with the mappingtemplate, we
-                # # eliminate all mapping options that dont have a matching string / generate
-                # # a mapping option with the corresponding
-
-                # # In the case of an Fluid Value interaction put all valuenodes in the subgraph
-                # node_ids.extend(
-                #     [
-                #         fig.get_fignode(edge[0]).id
-                #         for edge in fig.in_edges(instance.node.id)
-                #         if isinstance(fig.get_fignode(edge[0]), ValueNode)
-                #     ]
-                # )
-                # node_ids.append(instance.node.id)
-                # subgraph = fig.subgraph(node_ids)
-
-                # # Get the Construction node that has the corresponding subgraph,
-                # # and then replace the mapping option
-                # cn = construction_graph.get_subgraph_cn(subgraph)
-                # if primitive_to_use is not None:
-                #     mapping_option = MappingOption(primitive_to_use, subgraph)
-                #     cn.use_explicit_mapping(mapping_option)
-                #     cn_mapping_options.append(mapping_option)
-                # else:
-                #     # Add the constraints to all the mapping options
-                #     # This is an example where since no explicit mapping
-                #     # was specified, we only add the performance/material
-                #     # constraints. This can be ulitized for whittling down
-                #     # options later if necessary.
-                #     cn_mapping_options.extend(cn.mapping_options)
                 continue
             # Now that we know what the mapping options are (either explicit
             # loaded from the library, we can add the performance constraints)
@@ -858,6 +927,26 @@ def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
                     )
 
 
+def generate_split_groups(subgraph, instance) -> List[Set[str]]:
+    split_groups = []
+    # TODO - If we need to split the we first are gonna make a copy
+    # of the subgraph and then delete any edges between the inputs
+    # and the outputs
+    subgraph_copy = deepcopy(subgraph)
+    # Delete delete all the input and output nodes here
+    for input_node in instance.input_nodes:
+        subgraph_copy.remove_node(input_node.id)
+
+    for output_node in instance.output_nodes:
+        subgraph_copy.remove_node(output_node.id)
+
+    components = nx.connected_components(nx.to_undirected(subgraph_copy))
+    for component in components:
+        split_groups.append(component)
+
+    return split_groups
+
+
 def connect_orphan_IO():
     print("Implement the orphan io generation system")
 
@@ -887,11 +976,22 @@ def get_flow_flow_candidates(
 
     # Step 2. Remove all the fignodes that are not Flow
     remove_list = []
+
+    # Remove nodes from the explicit mapping construction nodes
+    for mapping in module.mappings:
+        for instance in mapping.instances:
+            if isinstance(instance, NetworkMapping):
+                remove_list.extend([n.id for n in instance.input_nodes])
+                remove_list.extend([n.id for n in instance.output_nodes])
+            else:
+                remove_list.append(instance.node.id)
+
     for node_id in fig_copy.nodes:
         node = fig_original.get_fignode(node_id)
         if node.match_string != "FLOW":
             remove_list.append(node_id)
 
+    remove_list = list(set(remove_list))
     for node_id in remove_list:
         fig_copy.remove_node(node_id)
 

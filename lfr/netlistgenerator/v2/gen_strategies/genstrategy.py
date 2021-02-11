@@ -39,9 +39,9 @@ class GenStrategy:
         # TODO - For now just assume that the networks basically are a bunch
         # of nodes with nets/channels connecting them
         ret = MINTDevice("flow_network_temp")
-        ret.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
+        mint_layer = ret.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
         for node in fig_subgraph_view.nodes:
-            n = MINTNode("node_{}".format(node))
+            n = MINTNode("node_{}".format(node), mint_layer)
             ret.add_component(n)
             self._store_fig_netlist_name(node, n.ID)
 
