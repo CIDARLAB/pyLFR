@@ -1,4 +1,6 @@
 from copy import deepcopy
+
+from networkx.classes.function import subgraph
 from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
 from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
@@ -12,7 +14,7 @@ from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOptionType,
 )
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.fig.fignode import IOType, ValueNode
+from lfr.fig.fignode import FIGNode, IOType, Pump, Storage, ValueNode
 from typing import List, Set
 from pymint.mintdevice import MINTDevice
 from lfr.netlistgenerator.namegenerator import NameGenerator
@@ -629,6 +631,25 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
             cn.add_mapping_option(mapping_option)
 
             construction_graph.add_construction_node(cn)
+
+    # Map the storage and pump elements to their own individual construction graph nodes
+    for fig_node_id in list(module.FIG.nodes):
+        fig_node = module.FIG.get_fignode(fig_node_id)
+        if isinstance(fig_node, Pump):
+            cn = ConstructionNode(fig_node.id)
+            sub_graph = module.FIG.subgraph(fig_node_id)
+            mapping_candidates = library.get_pump_entries()
+            for mapping_candidate in mapping_candidates:
+                mapping_option = MappingOption(mapping_candidate, sub_graph)
+                cn.add_mapping_option(mapping_option)
+
+        elif isinstance(fig_node, Storage):
+            cn = ConstructionNode(fig_node.id)
+            sub_graph = module.FIG.subgraph(fig_node_id)
+            mapping_candidates = library.get_storage_entries()
+            for mapping_candidate in mapping_candidates:
+                mapping_option = MappingOption(mapping_candidate, sub_graph)
+                cn.add_mapping_option(mapping_option)
 
     # TODO - Validate if this is a legit way to do things
     mappings = module.get_explicit_mappings()
