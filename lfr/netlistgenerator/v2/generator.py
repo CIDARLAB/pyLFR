@@ -1,6 +1,5 @@
 from copy import deepcopy
 
-from networkx.classes.function import subgraph
 from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
 from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
@@ -14,7 +13,7 @@ from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOptionType,
 )
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.fig.fignode import FIGNode, IOType, Pump, Storage, ValueNode
+from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
 from typing import List, Set
 from pymint.mintdevice import MINTDevice
 from lfr.netlistgenerator.namegenerator import NameGenerator
@@ -101,9 +100,7 @@ def generate_dropx_library() -> MappingLibrary:
         port_outputs,
         None,
         None,
-        None,
-        None,
-        None,
+        None
     )
 
     library.add_io_entry(port)
@@ -1042,17 +1039,17 @@ def get_flow_flow_candidates(
     return ret
 
 
-def size_netlist():
-    # Size all the node's netlist components to based on the CONSTRAINTS set
-    # by the postprocessor
-    # TODO - Modify datastructure in library and other places
-    netlist_user_constriants = module.get_user_constriants()
+# def size_netlist():
+#     # Size all the node's netlist components to based on the CONSTRAINTS set
+#     # by the postprocessor
+#     # TODO - Modify datastructure in library and other places
+#     netlist_user_constriants = module.get_user_constriants()
 
-    construction_graph.fix_component_params(netlist_user_constriants)
+#     construction_graph.fix_component_params(netlist_user_constriants)
 
-    # Size all the Meter/Dilute/Divide nodes based on the value nodes
-    # TODO - Talk to Ali about this for strategy
-    construction_graph.size_components()
+#     # Size all the Meter/Dilute/Divide nodes based on the value nodes
+#     # TODO - Talk to Ali about this for strategy
+#     construction_graph.size_components()
 
 
 def __check_if_passthrough(sub) -> bool:
