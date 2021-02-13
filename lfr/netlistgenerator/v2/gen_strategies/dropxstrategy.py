@@ -1,3 +1,4 @@
+from lfr.fig.interaction import Interaction, InteractionType
 from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
@@ -18,16 +19,48 @@ class DropXStrategy(GenStrategy):
         print(figs_in_order)
         # Generate the mapping between fignodes and construction nodes
         fig_cn_map = dict()
-        # TODO - Implement Generalized Ali Strategy 1
-        # Rule 1 - The first level of % should be mapping to a Droplet Generator (TODO - Talk to ali about this or a T junction generator)
-        # Rule 2 – Any +-, distribute nodes before % should be in continuous flow (figure out components for this)
-        # TODO - Go through each of the FIG nodes, if the fig node has
+        input_fignodes = self._fig.get_input_fignodes
+        for fignode_id in self._fig.nodes:
+            fignode = self._fig.get_fignode(fignode_id)
+            # TODO - Implement Generalized Ali Strategy 1
+            # Rule 1 - The first level of % should be mapping to a Droplet Generator (TODO - Talk to ali about this or a T junction generator)
+            # Step 1 - Check if fig node is interaction and of type METER (%) this is the check condition for rule 1
+            if (
+                isinstance(fignode, Interaction)
+                and fignode.type is InteractionType.METER
+            ):
+                is_first_metering_node = True
+                # TODO - Check if DROPLET GENERATOR is one of the mapping options, skip if not
+                # Step 2 - If type is meter then check to see if other it is the first meter operation from inputs to current fignode
+                for sorted_fignode_id in figs_in_order:
+                    if fignode_id == sorted_fignode_id:
+                        # End of checking
+                        if is_first_metering_node is True:
+                            # TODO - Eliminate all options other than Nozzle droplet generator for the associated construction node(s)
+                            pass
+                        else:
+                            raise Exception(
+                                "No scheme for assign METER after initial droplet generation"
+                            )
+                    else:
+                        # get the sorted fignode
+                        sorted_fignode = self._fig.get_fignode(sorted_fignode_id)
+                        if isinstance(sorted_fignode, Interaction):
+                            if sorted_fignode.type is InteractionType.METER:
+                                # check if node is connected to our node of interest
+                                if sorted_fignode_id in self._fig.predecessors(
+                                    fignode_id
+                                ):
+                                    is_first_metering_node = False
 
-        # Rule 3 – Any Remetering (%) should require a droplet breakdown and regeneration (Ask Ali)
-        # Rule 4 – Distribute network post Metering stage should be mapped to different kinds of separator / selection/ storage networks
-        # Rule 5 – If plus is shown between node that has % in pred and non % in pred, then its pico injection
-        # Rule 6 – if plus is sown between two nodes that has % in pred, then its droplet merging
-        # Rule 7 – TBD Rule for droplet splitting
+            # Rule 2 – Any +-, distribute nodes before % should be in continuous flow (figure out components for this)
+            # TODO - Go through each of the FIG nodes, if the fig node has
+
+            # Rule 3 – Any Remetering (%) should require a droplet breakdown and regeneration (Ask Ali)
+            # Rule 4 – Distribute network post Metering stage should be mapped to different kinds of separator / selection/ storage networks
+            # Rule 5 – If plus is shown between node that has % in pred and non % in pred, then its pico injection
+            # Rule 6 – if plus is sown between two nodes that has % in pred, then its droplet merging
+            # Rule 7 – TBD Rule for droplet splitting
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
 

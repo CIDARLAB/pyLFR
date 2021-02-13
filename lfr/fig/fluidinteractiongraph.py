@@ -5,6 +5,7 @@ from lfr.fig.fignode import (
     ANDAnnotation,
     FIGNode,
     IONode,
+    IOType,
     NOTAnnotation,
     ORAnnotation,
     ValueNode,
@@ -166,6 +167,15 @@ class FluidInteractionGraph(nx.DiGraph):
 
         for edge in fig_to_add.edges:
             self.add_edge(edge[0], edge[1])
+
+    def get_input_fignodes(self) -> List[IONode]:
+        ret = []
+        for fignode in self._fignodes.values():
+            if isinstance(fignode, IONode):
+                if fignode.type is IOType.FLOW_INPUT:
+                    ret.append(fignode)
+
+        return ret
 
     def __str__(self):
         return self.edges.__str__()
