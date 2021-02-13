@@ -35,6 +35,14 @@ class GenStrategy:
             del cn.mapping_options[1 : len(cn.mapping_options)]
             print("... -> {}".format(len(cn.mapping_options)))
 
+        print("Printing all final mapping options:")
+        for cn in self._construction_graph.construction_nodes:
+            print("Construction node: {}".format(cn.id))
+            print("Options: ")
+
+            for mapping_option in cn.mapping_options:
+                print(mapping_option.primitive.mint)
+
     def generate_flow_network(self, fig_subgraph_view) -> MINTDevice:
         # TODO - For now just assume that the networks basically are a bunch
         # of nodes with nets/channels connecting them
