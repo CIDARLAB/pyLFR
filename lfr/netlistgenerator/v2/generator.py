@@ -120,7 +120,7 @@ def generate_dropx_library() -> MappingLibrary:
     pico_injector_carriers = []
 
     pico_injector = Primitive(
-        "PICO INJECTOR",
+        "PICOINJECTOR",
         PrimitiveType.COMPONENT,
         "MIX",
         False,
