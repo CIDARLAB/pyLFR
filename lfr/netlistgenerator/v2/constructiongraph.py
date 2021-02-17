@@ -416,7 +416,7 @@ class ConstructionGraph(nx.DiGraph):
             source = MINTTarget(src_component_name, None)
             sink = MINTTarget(tar_component_name, end_point.component_port[0])
             device.create_mint_connection(
-                channel_name, tech_string, dict(), source, [sink], "0"
+                channel_name, tech_string, {"channelWidth": 400}, source, [sink], "0"
             )
         else:
             for component_port in start_point.component_port:
@@ -425,7 +425,12 @@ class ConstructionGraph(nx.DiGraph):
                 sink = MINTTarget(tar_component_name, end_point.component_port[0])
                 # TODO - Figure out how to make this layer generate automatically
                 device.create_mint_connection(
-                    channel_name, tech_string, dict(), source, [sink], "0"
+                    channel_name,
+                    tech_string,
+                    {"channelWidth": 400},
+                    source,
+                    [sink],
+                    "0",
                 )
 
         # TODO - Once we are done creating a path, we need to delete the start and end point options
@@ -492,7 +497,7 @@ class ConstructionGraph(nx.DiGraph):
             source = MINTTarget(src_component_name, None)
             sink = MINTTarget(tar_component_name, end_point.component_port[0])
             device.create_mint_connection(
-                channel_name, tech_string, dict(), source, [sink], "0"
+                channel_name, tech_string, {"channelWidth": 400}, source, [sink], "0"
             )
         else:
             for component_port in start_point.component_port:
@@ -501,7 +506,12 @@ class ConstructionGraph(nx.DiGraph):
                 sink = MINTTarget(tar_component_name, end_point.component_port[0])
                 # TODO - Figure out how to make this layer generate automatically
                 device.create_mint_connection(
-                    channel_name, tech_string, dict(), source, [sink], "0"
+                    channel_name,
+                    tech_string,
+                    {"channelWidth": 400},
+                    source,
+                    [sink],
+                    "0",
                 )
 
         # TODO - Once we are done creating a path, we need to delete the start and end point options
