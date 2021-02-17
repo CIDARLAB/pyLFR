@@ -100,7 +100,7 @@ def generate_dropx_library() -> MappingLibrary:
         port_outputs,
         None,
         None,
-        None
+        None,
     )
 
     library.add_io_entry(port)
@@ -802,9 +802,17 @@ def override_network_mappings(
             primitive_to_use = None
             if mapping.technology_string is not None:
                 # Create a mapping option from the library with the corresponding info
-                primitive_to_use = mapping_library.get_primitive(
-                    mapping.technology_string
-                )
+                try:
+                    primitive_to_use = mapping_library.get_primitive(
+                        mapping.technology_string
+                    )
+                except Exception:
+                    print(
+                        "Could not find primitive with technology: {}".format(
+                            mapping.technology_string
+                        )
+                    )
+                    exit(-100)
 
             node_ids = []
             cn = None  # Get the right construction node for doing the stuff
