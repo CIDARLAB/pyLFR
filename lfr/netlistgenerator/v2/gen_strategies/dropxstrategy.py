@@ -177,22 +177,28 @@ class DropXStrategy(GenStrategy):
     # recursive function do go through all the predecessors
     def __search_predecessors(self, fignode_id, search_type):
         # check if the node has predecessors
+        does_exist = False
+
         if self._fig.predecessors(fignode_id):
             for prednode_id in self._fig.predecessors(fignode_id):
                 prednode = self._fig.get_fignode(prednode_id)
 
                 # if matches with search type, return true
                 if isinstance(prednode, Interaction):
-                    if prednode.type is search_type:
-                        return True
+                    # if true, skip all the process
+                    if does_exist is False:
 
-                    # if not matched, recursive
-                    else:
-                        return self.__search_predecessors(prednode_id, search_type)
+                        if prednode.type is search_type:
+                            does_exist = True
+
+                        # if not matched, recursive
+                        else:
+                            does_exist = self.__search_predecessors(
+                                prednode_id, search_type
+                            )
 
         # if end of pred
-        else:
-            return False
+        return does_exist
 
     def size_netlist(self, device: MINTDevice) -> None:
         """
