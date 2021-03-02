@@ -66,6 +66,10 @@ class Primitive:
     def mint(self) -> str:
         return self._mint
 
+    @property
+    def match_string(self) -> str:
+        return self._match_string
+
     def export_inputs(self, subgraph) -> List[ConnectingOption]:
         return [copy.copy(c) for c in self._inputs]
 
