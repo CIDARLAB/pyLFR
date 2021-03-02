@@ -1,5 +1,5 @@
-from typing import Dict, List
-
+from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
+from typing import Dict, List, Tuple
 from lfr.fig.interaction import InteractionType
 from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 
@@ -93,3 +93,10 @@ class MappingLibrary:
 
     def has_primitive(self, technology_string: str) -> bool:
         return technology_string in self.__all_primitives.keys()
+
+    def get_match_patterns(self) -> List[Tuple[str, str]]:
+        ret = []
+        for primitive in self.__all_primitives.values():
+            ret.append((primitive.mint, primitive.match_string))
+
+        return ret
