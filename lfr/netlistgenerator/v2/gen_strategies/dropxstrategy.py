@@ -146,7 +146,7 @@ class DropXStrategy(GenStrategy):
 
                                 # check mapping options
                                 for cn_part in cn.mapping_options:
-                                    if cn_part.primitive.mint != "PICO INJECTION":
+                                    if cn_part.primitive.mint != "PICOINJECTOR":
                                         # remove if its not [ico injection
                                         cn.mapping_options.remove(cn_part)
 
