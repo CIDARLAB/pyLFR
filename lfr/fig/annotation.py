@@ -23,6 +23,9 @@ class DistributeAnnotation:
     def clear_annotations(self) -> None:
         self._fignodes.clear()
 
+    def __hash__(self) -> int:
+        return hash(self._id)
+
 
 class ANDAnnotation(DistributeAnnotation):
     def __init__(self, id: str) -> None:

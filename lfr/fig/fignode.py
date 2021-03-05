@@ -41,6 +41,9 @@ class FIGNode:
     def rename(self, id: str) -> None:
         self._id = id
 
+    def __hash__(self) -> int:
+        return hash(self._id)
+
 
 class ValueNode(FIGNode):
     def __init__(self, id: str, val: float) -> None:
