@@ -6,14 +6,19 @@ from typing import Dict, List
 import networkx as nx
 
 from lfr.fig.fignode import (
-    ANDAnnotation,
     FIGNode,
     IONode,
     IOType,
-    NOTAnnotation,
-    ORAnnotation,
     ValueNode,
 )
+
+from lfr.fig.annotation import (
+    ANDAnnotation,
+    DistributeAnnotation,
+    NOTAnnotation,
+    ORAnnotation,
+)
+
 from lfr.fig.interaction import (
     FluidFluidInteraction,
     FluidIntegerInteraction,
@@ -22,7 +27,8 @@ from lfr.fig.interaction import (
     Interaction,
     InteractionType,
 )
-from lfr.postprocessor.mapping import NodeMappingTemplate
+
+import uuid
 
 
 class FluidInteractionGraph(nx.DiGraph):
@@ -31,6 +37,7 @@ class FluidInteractionGraph(nx.DiGraph):
         self._fignodes: Dict[str, FIGNode] = {}
         # self._fluid_interactions = dict()
         self._gen_id = 0
+        self._annotations: Dict[FIGNode, List[DistributeAnnotation]] = dict()
 
     def add_fignode(self, node: FIGNode) -> None:
         self._fignodes[node.id] = node
@@ -41,9 +48,8 @@ class FluidInteractionGraph(nx.DiGraph):
             return self._fignodes[id]
         else:
             raise Exception(
-                "Cannot find the node '{}' in the                 FluidInteractionGraph".format(
-                    id
-                )
+                "Cannot find the node '{}' in the                 FluidInteractionGraph"
+                .format(id)
             )
 
     def load_fignodes(self, fig_nodes: List[FIGNode]) -> None:
@@ -125,39 +131,39 @@ class FluidInteractionGraph(nx.DiGraph):
 
     def add_and_annotation(self, nodes: List[FIGNode]) -> ANDAnnotation:
         print("Need to implement the generation of the AND annotations")
-        fig_node_name = "DIST_AND_" + "_".join([node.id for node in nodes])
-        annotation_node = ANDAnnotation(fig_node_name)
-        self.add_fignode(annotation_node)
-        for node in nodes:
-            self.add_edge(annotation_node.id, node.id)
-        return annotation_node
+        fig_node_name = "DIST_AND_" + str(uuid.uuid4())
+        annotation = ANDAnnotation(fig_node_name)
+        for fignode in nodes:
+            annotation.add_fignode(fignode)
+            if fignode in self._annotations.keys():
+                self._annotations[fignode].append(annotation)
+            else:
+                self._annotations[fignode] = [annotation]
+        return annotation
 
     def add_or_annotation(self, nodes: List[FIGNode]) -> ORAnnotation:
         print("Need to implement the generation of the OR annotation")
-        fig_node_name = "DIST_OR_" + "_".join([node.id for node in nodes])
-        annotation_node = ORAnnotation(fig_node_name)
-        self.add_fignode(annotation_node)
-        for node in nodes:
-            self.add_edge(annotation_node.id, node.id)
-        return annotation_node
+        fig_node_name = "DIST_OR_" + str(uuid.uuid4())
+        annotation = ORAnnotation(fig_node_name)
+        for fignode in nodes:
+            annotation.add_fignode(fignode)
+            if fignode in self._annotations.keys():
+                self._annotations[fignode].append(annotation)
+            else:
+                self._annotations[fignode] = [annotation]
+        return annotation
 
     def add_not_annotation(self, nodes: List[FIGNode]) -> NOTAnnotation:
         print("Need to implement the generation of the NOT annotation")
-        fig_node_name = "DIST_NOT_" + "_".join([node.id for node in nodes])
-        annotation_node = NOTAnnotation(fig_node_name)
-        self.add_fignode(annotation_node)
-        for node in nodes:
-            self.add_edge(annotation_node.id, node.id)
-        return annotation_node
-
-    # def generate_match_string(self) -> str:
-    #     # Generate match string that we can use against any kind of a string match system
-    #     ret = ''
-    #     # Start with the inputs
-    #     for ionode in self.get_io():
-    #         ret += ionode.match_string
-
-    #     return ret
+        fig_node_name = "DIST_NOT_" + str(uuid.uuid4())
+        annotation = NOTAnnotation(fig_node_name)
+        for fignode in nodes:
+            annotation.add_fignode(fignode)
+            if fignode in self._annotations.keys():
+                self._annotations[fignode].append(annotation)
+            else:
+                self._annotations[fignode] = [annotation]
+        return annotation
 
     def add_fig(self, fig_to_add: FluidInteractionGraph) -> None:
         # Check if any of the incoming fig nodes
