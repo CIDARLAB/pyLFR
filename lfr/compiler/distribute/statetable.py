@@ -1,5 +1,5 @@
 from __future__ import annotations
-from lfr.fig.fignode import ANDAnnotation, NOTAnnotation, ORAnnotation
+from lfr.fig.annotation import ANDAnnotation, NOTAnnotation, ORAnnotation
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from typing import Dict, List, Tuple
 import networkx as nx
