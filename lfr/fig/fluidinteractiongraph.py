@@ -33,7 +33,14 @@ class FluidInteractionGraph(nx.DiGraph):
         self._fignodes: Dict[str, FIGNode] = dict()
         # self._fluid_interactions = dict()
         self._gen_id = 0
-        self._annotations: Dict[FIGNode, List[DistributeAnnotation]] = dict()
+        self._annotations_reverse_map: Dict[
+            FIGNode, List[DistributeAnnotation]
+        ] = dict()
+        self._annotations: List[DistributeAnnotation] = []
+
+    @property
+    def annotations(self) -> List[DistributeAnnotation]:
+        return self._annotations
 
     def add_fignode(self, node: FIGNode) -> None:
         self._fignodes[node.id] = node
@@ -116,7 +123,7 @@ class FluidInteractionGraph(nx.DiGraph):
         ]
 
     @property
-    def get_io(self) -> List[IONode]:
+    def io(self) -> List[IONode]:
         ret = []
         for key in self._fignodes.keys():
             node = self._fignodes[key]
@@ -125,40 +132,46 @@ class FluidInteractionGraph(nx.DiGraph):
 
         return ret
 
+    def get_annotation(self, fig_node: FIGNode) -> List[DistributeAnnotation]:
+        return self._annotations_reverse_map[fig_node]
+
     def add_and_annotation(self, nodes: List[FIGNode]) -> ANDAnnotation:
         print("Need to implement the generation of the AND annotations")
         fig_node_name = "DIST_AND_" + str(uuid.uuid4())
         annotation = ANDAnnotation(fig_node_name)
+        self._annotations.append(annotation)
         for fignode in nodes:
             annotation.add_fignode(fignode)
-            if fignode in self._annotations.keys():
-                self._annotations[fignode].append(annotation)
+            if fignode in self._annotations_reverse_map.keys():
+                self._annotations_reverse_map[fignode].append(annotation)
             else:
-                self._annotations[fignode] = [annotation]
+                self._annotations_reverse_map[fignode] = [annotation]
         return annotation
 
     def add_or_annotation(self, nodes: List[FIGNode]) -> ORAnnotation:
         print("Need to implement the generation of the OR annotation")
         fig_node_name = "DIST_OR_" + str(uuid.uuid4())
         annotation = ORAnnotation(fig_node_name)
+        self._annotations.append(annotation)
         for fignode in nodes:
             annotation.add_fignode(fignode)
-            if fignode in self._annotations.keys():
-                self._annotations[fignode].append(annotation)
+            if fignode in self._annotations_reverse_map.keys():
+                self._annotations_reverse_map[fignode].append(annotation)
             else:
-                self._annotations[fignode] = [annotation]
+                self._annotations_reverse_map[fignode] = [annotation]
         return annotation
 
     def add_not_annotation(self, nodes: List[FIGNode]) -> NOTAnnotation:
         print("Need to implement the generation of the NOT annotation")
         fig_node_name = "DIST_NOT_" + str(uuid.uuid4())
         annotation = NOTAnnotation(fig_node_name)
+        self._annotations.append(annotation)
         for fignode in nodes:
             annotation.add_fignode(fignode)
-            if fignode in self._annotations.keys():
-                self._annotations[fignode].append(annotation)
+            if fignode in self._annotations_reverse_map.keys():
+                self._annotations_reverse_map[fignode].append(annotation)
             else:
-                self._annotations[fignode] = [annotation]
+                self._annotations_reverse_map[fignode] = [annotation]
         return annotation
 
     def add_fig(self, fig_to_add: FluidInteractionGraph) -> None:
