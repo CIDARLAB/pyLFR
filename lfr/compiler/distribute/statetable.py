@@ -1,5 +1,6 @@
 from __future__ import annotations
-
+from lfr.fig.annotation import ANDAnnotation, NOTAnnotation, ORAnnotation
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from typing import Dict, List, Tuple
 
 import networkx as nx
@@ -62,17 +63,15 @@ class StateTable:
         # Add source and target if they are not present
         if source not in list(digraph.nodes):
             print(
-                "Could not find source - {} in state table connectivity graph, adding node".format(
-                    source
-                )
+                "Could not find source - {} in state table connectivity graph, adding"
+                " node".format(source)
             )
             digraph.add_node(source)
 
         if target not in list(digraph.nodes):
             print(
-                "Could not find target - {} in state table connectivity graph, adding node".format(
-                    target
-                )
+                "Could not find target - {} in state table connectivity graph, adding"
+                " node".format(target)
             )
             digraph.add_node(target)
 

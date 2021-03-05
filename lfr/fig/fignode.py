@@ -114,35 +114,3 @@ class Signal(FIGNode):
     @property
     def match_string(self):
         return "SIGNAL"
-
-
-class DistributeNode(FIGNode):
-    def __init__(self, id: str) -> None:
-        super(DistributeNode, self).__init__(id)
-
-
-class ANDAnnotation(DistributeNode):
-    def __init__(self, id: str) -> None:
-        super(ANDAnnotation, self).__init__(id)
-
-    @property
-    def match_string(self):
-        return "DISTRIBUTE-AND"
-
-
-class ORAnnotation(DistributeNode):
-    def __init__(self, id: str) -> None:
-        super(ORAnnotation, self).__init__(id)
-
-    @property
-    def match_string(self):
-        return "DISTRIBUTE-OR"
-
-
-class NOTAnnotation(DistributeNode):
-    def __init__(self, id: str) -> None:
-        super(NOTAnnotation, self).__init__(id)
-
-    @property
-    def match_string(self):
-        return "DISTRIBUTE-NOT"
