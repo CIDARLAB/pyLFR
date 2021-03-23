@@ -205,14 +205,16 @@ class FluidExpression:
                         operand1_element, operand2_element, interactiontype
                     )
                 )
-            elif isinstance(operand1_element, Interaction):
-                result_element = self.currentmodule.add_fluid_finteraction_interaction(
-                    operand2_element, operand1_element, interactiontype
-                )
-            elif isinstance(operand2_element, Interaction):
-                result_element = self.currentmodule.add_fluid_finteraction_interaction(
-                    operand1_element, operand2_element, interactiontype
-                )
+
+            # # TODO - Figure out how to fix this (or delete this)
+            # elif isinstance(operand1_element, Interaction):
+            #     result_element = self.currentmodule.add_fluid_finteraction_interaction(
+            #         operand2_element, operand1_element, interactiontype
+            #     )
+            # elif isinstance(operand2_element, Interaction):
+            #     result_element = self.currentmodule.add_fluid_finteraction_interaction(
+            #         operand1_element, operand2_element, interactiontype
+            #     )
             else:
                 result_element = self.currentmodule.add_fluid_fluid_interaction(
                     operand1_element, operand2_element, interactiontype

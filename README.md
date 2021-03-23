@@ -64,7 +64,7 @@ optional arguments:
 
 ```
 cd scripts
-./test-script.sh > test-script-log_"`date +"%d-%m-%Y"`".log 2>&1
+./test-script.sh > test-script-log_"`date +"%d-%m-%Y-%T"`".log 2>&1
 ```
 
 

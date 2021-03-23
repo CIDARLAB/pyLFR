@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from lfr.fig.fignode import FIGNode, Flow
 from enum import Enum
 
@@ -20,7 +20,7 @@ class Interaction(Flow):
         super().__init__(id)
         self._interaction_type: InteractionType = interaction_type
         self._input_fignodes: List[FIGNode] = []
-        self._output_fignode: FIGNode = None
+        self._output_fignode: Optional[FIGNode] = None
         self._operator: str = ""
 
     @property
@@ -111,14 +111,6 @@ class FluidFluidInteraction(Interaction):
     @property
     def fluids(self) -> List[FIGNode]:
         return self._input_fignodes
-
-
-class FluidFluidCustomInteraction(FluidFluidInteraction):
-    def __init__(self, fluid1: Flow, fluid2: Flow, custom_operator: str) -> None:
-        id = Interaction.get_id(fluid1, fluid2, operator_string=custom_operator)
-        super().__init__(fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS)
-        self._id = id
-        self._operator = custom_operator
 
 
 class FluidProcessInteraction(Interaction):
