@@ -1,3 +1,4 @@
+from typing import List
 from lfr.compiler.language.vectorrange import VectorRange
 
 
@@ -42,7 +43,7 @@ class Vector:
         return self.vec[key]
 
     @classmethod
-    def create_from_list_things(cls, id: str, list_of_things):
+    def create_from_list_things(cls, id: str, list_of_things: List):
         ret = cls(id)
         ret.vec = list_of_things
         ret.startindex = 0

@@ -59,9 +59,18 @@ optional arguments:
   --no-gen              Force the program to skip the device generation
   ```
 
+
+## Running Benchmark Test Scripts
+
+```
+cd scripts
+./test-script.sh > test-script-log_"`date +"%d-%m-%Y"`".log 2>&1
+```
+
+
 ## License
 
 BSD-3-Clause
 
-Copyright (c) 2020, CIDAR LAB All rights reserved.
+Copyright (c) 2021, CIDAR LAB All rights reserved.
 

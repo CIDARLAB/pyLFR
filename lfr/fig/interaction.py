@@ -90,7 +90,7 @@ class FluidFluidInteraction(Interaction):
         self,
         fluid1: Flow,
         fluid2: Flow,
-        interaction_type: InteractionType = None,
+        interaction_type: InteractionType,
         interaction_data: str = None,
     ) -> None:
         """Creates an interaction between two fluids

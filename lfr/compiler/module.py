@@ -146,7 +146,7 @@ class Module(object):
     def add_fluid_numeric_interaction(
         self,
         fluid1: Flow,
-        number: Optional[int, float],
+        number: float,
         interaction_type: InteractionType,
     ) -> Interaction:
         # finteraction = FluidInteraction(fluid1=fluid1, interactiontype=interaction)

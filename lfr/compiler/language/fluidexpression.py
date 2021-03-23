@@ -1,8 +1,11 @@
 # The operator order has to be correct in the array, if any of the things are off,
 # other things will go off
+from lfr.compiler.language.vectorrange import VectorRange
+from typing import List, Union
 from lfr.fig.interaction import Interaction, InteractionType
 from lfr.compiler.language.utils import is_number
 from lfr.compiler.language.vector import Vector
+from lfr.compiler.module import Module
 
 
 OPERATOR_ORDER = [["*", "/"], ["%"], ["+", "-"]]
@@ -10,14 +13,16 @@ NUMERIC_OPERATOR_ORDER = [["/", "*"], ["%"], ["+", "-"]]
 
 
 class FluidExpression:
-    def __init__(self, module) -> None:
+    def __init__(self, module: Module) -> None:
         self.currentmodule = module
-        self.operatororder = OPERATOR_ORDER
-        self.numericoperatororder = NUMERIC_OPERATOR_ORDER
+        self.operator_order = OPERATOR_ORDER
+        self.numeric_operator_order = NUMERIC_OPERATOR_ORDER
 
-    def process_expression(self, termlist, operatorlist):
+    def process_expression(
+        self, termlist: List[Union[VectorRange, float]], operatorlist: List[str]
+    ):
 
-        # In ste1, we go over and complete all the numeric operations in the precedence of
+        # In step1, we go over and complete all the numeric operations in the precedence of
         # numeric operation order. It is possible that there are no numeric operations going
         # on in the expression. In that case we have the option to go to the next step. It
         # is also possible there are purely numeric operations and hence we only delete terms
@@ -25,7 +30,7 @@ class FluidExpression:
         # find will require us to delete the operator and the term.
 
         # First go over the numeric operator order
-        for operatorset in self.numericoperatororder:
+        for operatorset in self.numeric_operator_order:
             # For each set we start the processing the individual thing
             for operator in operatorset:
                 # search for operators in the operatorlist
@@ -60,7 +65,7 @@ class FluidExpression:
                         ]
 
         # Second go over the fluidic operator order
-        for operatorset in self.operatororder:
+        for operatorset in self.operator_order:
             # For each set we start the processing the individual thing
             for operator in operatorset:
                 # search for operators in the operatorlist
@@ -142,7 +147,9 @@ class FluidExpression:
         ret = v.get_range()
         return ret
 
-    def __evalute_fluid_fluid_operator(self, operand1, operand2, operator):
+    def __evalute_fluid_fluid_operator(
+        self, operand1: VectorRange, operand2: VectorRange, operator: str
+    ) -> VectorRange:
         if len(operand1) is not len(operand2):
             # TODO - Implement Fluidic operators on non equal
             # dimensions of the operands
@@ -218,8 +225,8 @@ class FluidExpression:
         return v.get_range()
 
     def __evaluate_fluid_numeric_operator(
-        self, operand_fluidic, operand_numeric, operator
-    ):
+        self, operand_fluidic: VectorRange, operand_numeric: float, operator: str
+    ) -> VectorRange:
 
         fluid = operand_fluidic[0]
         interactions = []
@@ -268,7 +275,7 @@ class FluidExpression:
         return result
 
     @staticmethod
-    def evaluate_numeric_operator(operand1, operand2, operator):
+    def evaluate_numeric_operator(operand1: float, operand2: float, operator: str):
         result = None
         if operator == "*":
             result = operand1 * operand2
