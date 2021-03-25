@@ -17,16 +17,13 @@ class DropXStrategy(GenStrategy):
     def reduce_mapping_options(self) -> None:
         # Generate a topological order for the FIG to make sure athat we know the order of things
         figs_in_order = list(nx.topological_sort(self._fig))
-        # print(figs_in_order)
         # Generate the mapping between fignodes and construction nodes
-        # fig_cn_map = dict()
         # input_fignodes = self._fig.get_input_fignodes
         for fignode_id in self._fig.nodes:
             fignode = self._fig.get_fignode(fignode_id)
 
             # check if construction node
             if ConstructionNode(fignode.id).is_explictly_mapped:
-                print("this is map")
                 pass
             # TODO - Implement Generalized Ali Strategy 1
             # Rule 1 - The first level of % should be mapping to a Droplet Generator (TODO - Talk to ali about this or a T junction generator)
@@ -74,105 +71,119 @@ class DropXStrategy(GenStrategy):
             # Rule 2 – Any +-, distribute nodes before % should be in continuous flow (figure out components for this)
             # TODO - Go through each of the FIG nodes, if the fig node has
 
-            # Rule 3 – Any Remetering (%) should require a droplet breakdown and regeneration (Ask Ali)
-            # Rule 4 – Distribute network post Metering stage should be mapped to different kinds of separator / selection/ storage networks
-            # Rule 5 – If plus is shown between node that has % in pred and non % in pred, then its pico injection
+        for fignode_id in self._fig.nodes:
+            fignode = self._fig.get_fignode(fignode_id)
 
-            for fignode_id in self._fig.nodes:
-                fignode = self._fig.get_fignode(fignode_id)
+            # check if explicitly mapped
+            if not ConstructionNode(fignode.id).is_explictly_mapped:
+                if isinstance(fignode, Interaction):
+                    if (fignode.type is InteractionType.MIX or fignode.type is InteractionType.SIEVE):
+                        if self.__check_continuous(fignode_id):
+                            # this is NOT continuous
+                            raise Exception("flow before METER is not continuous")
 
-                # check if map
-                if ConstructionNode(fignode.id).is_explictly_mapped:
-                    print("this is map")
-                    pass
-                else:
-                    if isinstance(fignode, Interaction):
-                        # if +
-                        if (
-                            fignode.type is InteractionType.MIX
-                            or fignode.type is InteractionType.SIEVE
-                        ):
-                            # compare predecessors, not successors
-                            # create warning for more than 2 (mix can have more than 2 inputs)
+        # Rule 3 – Any Remetering (%) should require a droplet breakdown and regeneration (Ask Ali)
+        # Rule 4 – Distribute network post Metering stage should be mapped to different kinds of separator / selection/ storage networks
+        # Rule 5 – If plus is shown between node that has % in pred and non % in pred, then its pico injection
 
-                            meter_in_pred = []
+        for fignode_id in self._fig.nodes:
+            fignode = self._fig.get_fignode(fignode_id)
 
-                            # check pred
+            # check if map
+            if not ConstructionNode(fignode.id).is_explictly_mapped:
+                if isinstance(fignode, Interaction):
+                    # if +
+                    if (
+                        fignode.type is InteractionType.MIX
+                        or fignode.type is InteractionType.SIEVE
+                    ):
+                        # compare predecessors, not successors
+                        # create warning for more than 2 (mix can have more than 2 inputs)
 
-                            for prednode_id in self._fig.predecessors(fignode_id):
-                                # check the first pred
+                        meter_in_pred = []
 
-                                meter_in_pred.append(
-                                    self.__search_predecessors(
-                                        prednode_id, InteractionType.METER
-                                    )
+                        # check pred
+
+                        for prednode_id in self._fig.predecessors(fignode_id):
+                            # check the first pred
+
+                            meter_in_pred.append(
+                                self.__search_predecessors(
+                                    prednode_id, InteractionType.METER
                                 )
+                            )
 
-                            numTrue = meter_in_pred.count(True)
+                        numTrue = meter_in_pred.count(True)
 
-                            if fignode.type is InteractionType.MIX:
+                        if fignode.type is InteractionType.MIX:
 
-                                if numTrue == 1:
-                                    # this is a pico injection
-                                    cn = self._construction_graph.get_fignode_cn(
-                                        fignode
-                                    )
-                                    print("***Detect Pico Injector***")
-                                    # check mapping options
+                            if numTrue == 1:
+                                # this is a pico injection
+                                cn = self._construction_graph.get_fignode_cn(
+                                    fignode
+                                )
+                                print("***Detect Pico Injector***")
+                                # check mapping options
+                                while(self.__exist_in_cn(cn, "PICOINJECTOR")):
                                     for cn_part in cn.mapping_options:
+                                        print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "PICOINJECTOR":
                                             # remove if its not [ico injection
                                             cn.mapping_options.remove(cn_part)
+                                    print("after----")
 
-                                # Rule 6
-                                elif numTrue == 2:
-                                    # this is a droplet merging
-                                    cn = self._construction_graph.get_fignode_cn(
-                                        fignode
-                                    )
+                                for cn_part in cn.mapping_options:
+                                    print("-", cn_part.primitive.mint)
 
-                                    print("***Detect Droplet Merger***")
+                            # Rule 6
+                            elif numTrue == 2:
+                                # this is a droplet merging
+                                cn = self._construction_graph.get_fignode_cn(
+                                    fignode
+                                )
+
+                                print("***Detect Droplet Merger***")
+                                while(self.__exist_in_cn(cn, "DROPLET MERGER")):
                                     for cn_part in cn.mapping_options:
+                                        print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "DROPLET MERGER":
                                             cn.mapping_options.remove(cn_part)
-                                    pass  # temp
+                                    print("after----")
 
-                                else:
-                                    print("no device found, mix")
-                                    cn = self._construction_graph.get_fignode_cn(
-                                        fignode
-                                    )
+                                for cn_part in cn.mapping_options:
+                                    print("-", cn_part.primitive.mint)
 
+                            else:
+                                print("***Mixer***")
+                                cn = self._construction_graph.get_fignode_cn(
+                                    fignode
+                                )
+                                while(self.__exist_in_cn(cn, "MIXER")):
                                     for cn_part in cn.mapping_options:
+                                        print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "MIXER":
                                             cn.mapping_options.remove(cn_part)
-                                    pass
 
-                            if (fignode.type is InteractionType.MIX) or (
-                                fignode.type is InteractionType.SIEVE
-                            ):
+                                    print("after------")
+                                for cn_part in cn.mapping_options:
+                                    print("-", cn_part.primitive.mint)    
+                                pass
 
-                                if numTrue == 0:
-                                    # this is continuous
-                                    pass  # temp
-                                else:
-                                    # not continuous
-                                    # for cn_part in cn.mapping_options:
-                                    #     if (cn_part.primitive.mint == "MIXER") or (
-                                    #         cn_part.primitive.mint == "SIEVE"
-                                    #     ):
-                                    #         print("deleting ", cn_part.primitive.mint)
 
-                                    #         cn.mapping_options.remove(cn_part)
-
-                                    print("not continuous")
-                                    pass
-
-            # Rule 6 – if plus is sown between two nodes that has % in pred, then its droplet merging
-            # Rule 7 – TBD Rule for droplet splitting
+        # Rule 6 – if plus is sown between two nodes that has % in pred, then its droplet merging
+        # Rule 7 – TBD Rule for droplet splitting
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
 
+
+    def __exist_in_cn(self, cn, mint_name):
+        for cn_part in cn.mapping_options:
+            if cn_part.primitive.mint != mint_name:
+                return True
+
+        return False
+
+    # this function searches for the specified InteractionType in the predecessors of the specified fignode_id
     def __search_predecessors(self, fignode_id, search_type):
         fignode = self._fig.get_fignode(fignode_id)
 
@@ -190,6 +201,22 @@ class DropXStrategy(GenStrategy):
         if isinstance(fignode, Interaction):
             if fignode.type is search_type:
                 return True
+
+        return False
+
+    # this function checks if the predecessors before METER has METER or not. If not, continuous. 
+    def __check_continuous(self, fignode_id):
+        fignode = self._fig.get_fignode(fignode_id)
+
+        if self.__check_if_type(fignode, InteractionType.METER):
+            for prednode_id in self._fig.predecessors(fignode_id):
+                if self.__search_predecessors(prednode_id, InteractionType.METER):
+                    return True
+        
+        else:
+            for other_pred_id in self._fig.predecessors(fignode_id):
+                if self.__check_continuous(other_pred_id):
+                    return True
 
         return False
 
