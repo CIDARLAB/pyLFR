@@ -95,40 +95,24 @@ class DropXStrategy(GenStrategy):
                             # compare predecessors, not successors
                             # create warning for more than 2 (mix can have more than 2 inputs)
 
-                            meter_in_pred1 = False
-                            meter_in_pred2 = False
-
-                            count = 0
+                            meter_in_pred = []
 
                             # check pred
 
                             for prednode_id in self._fig.predecessors(fignode_id):
                                 # check the first pred
-                                if count == 0:
-                                    if self.__search_predecessors(
+
+                                meter_in_pred.append(
+                                    self.__search_predecessors(
                                         prednode_id, InteractionType.METER
-                                    ):
-                                        meter_in_pred1 = True
+                                    )
+                                )
 
-                                    count += 1
-
-                                # check the second pred
-                                elif count == 1:
-                                    if self.__search_predecessors(
-                                        prednode_id, InteractionType.METER
-                                    ):
-                                        meter_in_pred2 = True
-
-                                    count += 1
-
-                                else:
-                                    print("more than two inputs")
+                            numTrue = meter_in_pred.count(True)
 
                             if fignode.type is InteractionType.MIX:
 
-                                if (meter_in_pred1 and not meter_in_pred2) or (
-                                    not meter_in_pred1 and meter_in_pred2
-                                ):
+                                if numTrue == 1:
                                     # this is a pico injection
                                     cn = self._construction_graph.get_fignode_cn(
                                         fignode
@@ -141,7 +125,7 @@ class DropXStrategy(GenStrategy):
                                             cn.mapping_options.remove(cn_part)
 
                                 # Rule 6
-                                elif meter_in_pred1 and meter_in_pred2:
+                                elif numTrue == 2:
                                     # this is a droplet merging
                                     cn = self._construction_graph.get_fignode_cn(
                                         fignode
@@ -168,7 +152,7 @@ class DropXStrategy(GenStrategy):
                                 fignode.type is InteractionType.SIEVE
                             ):
 
-                                if not meter_in_pred1 and not meter_in_pred2:
+                                if numTrue == 0:
                                     # this is continuous
                                     pass  # temp
                                 else:
@@ -189,33 +173,25 @@ class DropXStrategy(GenStrategy):
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
 
-    # recursive function do go through all the predecessors
     def __search_predecessors(self, fignode_id, search_type):
-        # check if the node has predecessors
-        does_exist = False
+        fignode = self._fig.get_fignode(fignode_id)
 
-        if self._fig.predecessors(fignode_id):
+        if self.__check_if_type(fignode, search_type):
+            return True
+
+        else:
             for prednode_id in self._fig.predecessors(fignode_id):
-                prednode = self._fig.get_fignode(prednode_id)
+                if self.__search_predecessors(prednode_id, search_type):
+                    return True
 
-                # if matches with search type, return true
-                if isinstance(prednode, Interaction):
-                    # if true, skip all the process
-                    if not does_exist:
+        return False
 
-                        if prednode.type is search_type:
-                            does_exist = True
+    def __check_if_type(self, fignode, search_type):
+        if isinstance(fignode, Interaction):
+            if fignode.type is search_type:
+                return True
 
-                if not does_exist:
-                    for pred_of_pred in self._fig.predecessors(prednode_id):
-                        does_exist = self.__search_predecessors(
-                            pred_of_pred, search_type
-                        )
-                        if does_exist:
-                            break
-
-        # if end of pred
-        return does_exist
+        return False
 
     def size_netlist(self, device: MINTDevice) -> None:
         """
