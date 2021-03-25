@@ -177,14 +177,32 @@ class DropXStrategy(GenStrategy):
 
 
     def __exist_in_cn(self, cn, mint_name):
+        """helper function to check if the construction node contains undesired mints. 
+
+        Args:
+            cn (ConstructionNode): ConstructionNode to be checked
+            mint_name (string): mint name to check
+
+        Returns:
+            Bool: if mint names other than the specified mint_name is found, returns true. Else false.
+        """
         for cn_part in cn.mapping_options:
             if cn_part.primitive.mint != mint_name:
                 return True
 
         return False
 
-    # this function searches for the specified InteractionType in the predecessors of the specified fignode_id
+
     def __search_predecessors(self, fignode_id, search_type):
+        """recursive function searches for the specified InteractionType in the predecessors of the specified fignode_id
+
+        Args:
+            fignode_id (elements in self._fig.nodes): Starting node to find the predecessors
+            search_type (InteractionType): Interaction type to find in the predecessors
+
+        Returns:
+            Bool: If found, returns true. Else false
+        """
         fignode = self._fig.get_fignode(fignode_id)
 
         if self.__check_if_type(fignode, search_type):
@@ -198,6 +216,15 @@ class DropXStrategy(GenStrategy):
         return False
 
     def __check_if_type(self, fignode, search_type):
+        """helper function for __search_predecessors and __check_continuous. Check if the specified search_type matches to the fignode.type
+
+        Args:
+            fignode (FIGNode): fignode that contains InteractionType as type
+            search_type ([type]): desired type to check
+
+        Returns:
+            Bool: if fignode.type matches to search_type, returns true. Else false
+        """
         if isinstance(fignode, Interaction):
             if fignode.type is search_type:
                 return True
@@ -206,6 +233,14 @@ class DropXStrategy(GenStrategy):
 
     # this function checks if the predecessors before METER has METER or not. If not, continuous. 
     def __check_continuous(self, fignode_id):
+        """recursive function to check if the flow before METER is continuous at MIX or SIEVE
+
+        Args:
+            fignode_id (elements in self._fig.nodes): Starting node to find predecessors
+
+        Returns:
+            Bool: if METER is found in the predecessors of METER, returns true (not continuous), Else false
+        """
         fignode = self._fig.get_fignode(fignode_id)
 
         if self.__check_if_type(fignode, InteractionType.METER):
