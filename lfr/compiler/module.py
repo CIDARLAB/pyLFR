@@ -12,7 +12,6 @@ from lfr.fig.fignode import FIGNode, Flow, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.interaction import (
-    FluidFluidCustomInteraction,
     FluidFluidInteraction,
     FluidIntegerInteraction,
     FluidNumberInteraction,
@@ -95,12 +94,12 @@ class Module(object):
         self.FIG.add_interaction(finteraction)
         return finteraction
 
-    def add_fluid_custominteraction(
-        self, fluid1: Flow, fluid2: Flow, interaction: str
-    ) -> Interaction:
-        finteraction = FluidFluidCustomInteraction(fluid1, fluid2, interaction)
-        self.FIG.add_interaction(finteraction)
-        return finteraction
+    # def add_fluid_custominteraction(
+    #     self, fluid1: Flow, fluid2: Flow, interaction: str
+    # ) -> Interaction:
+    #     finteraction = FluidFluidCustomInteraction(fluid1, fluid2, interaction)
+    #     self.FIG.add_interaction(finteraction)
+    #     return finteraction
 
     def add_fluid_fluid_interaction(
         self, fluid1: Flow, fluid2: Flow, interaction_type: InteractionType
@@ -146,7 +145,7 @@ class Module(object):
     def add_fluid_numeric_interaction(
         self,
         fluid1: Flow,
-        number: Optional[int, float],
+        number: float,
         interaction_type: InteractionType,
     ) -> Interaction:
         # finteraction = FluidInteraction(fluid1=fluid1, interactiontype=interaction)

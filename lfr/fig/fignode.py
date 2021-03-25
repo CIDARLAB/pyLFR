@@ -44,8 +44,8 @@ class FIGNode(object):
 
 
 class ValueNode(FIGNode):
-    def __init__(self, id: str, val) -> None:
-        super().__init__(id)
+    def __init__(self, id: str, val: float) -> None:
+        super(ValueNode, self).__init__(id)
         self._value = val
 
     @property
@@ -59,7 +59,7 @@ class ValueNode(FIGNode):
 
 class Flow(FIGNode):
     def __init__(self, id) -> None:
-        super().__init__(id)
+        super(Flow, self).__init__(id)
 
     @property
     def match_string(self):
@@ -71,7 +71,7 @@ class Flow(FIGNode):
 
 class IONode(Flow):
     def __init__(self, id: str, iotype=None):
-        super().__init__(id)
+        super(IONode, self).__init__(id)
         self._type = iotype
 
     @property
@@ -92,7 +92,7 @@ class IONode(Flow):
 
 class Storage(Flow):
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(Storage, self).__init__(id)
 
     @property
     def match_string(self):
@@ -101,7 +101,7 @@ class Storage(Flow):
 
 class Pump(Flow):
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(Pump, self).__init__(id)
 
     @property
     def match_string(self) -> str:
@@ -110,7 +110,7 @@ class Pump(Flow):
 
 class Signal(FIGNode):
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(Signal, self).__init__(id)
 
     @property
     def match_string(self):
@@ -119,12 +119,12 @@ class Signal(FIGNode):
 
 class DistributeNode(FIGNode):
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(DistributeNode, self).__init__(id)
 
 
 class ANDAnnotation(DistributeNode):
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(ANDAnnotation, self).__init__(id)
 
     @property
     def match_string(self):
@@ -133,7 +133,7 @@ class ANDAnnotation(DistributeNode):
 
 class ORAnnotation(DistributeNode):
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(ORAnnotation, self).__init__(id)
 
     @property
     def match_string(self):
@@ -142,7 +142,7 @@ class ORAnnotation(DistributeNode):
 
 class NOTAnnotation(DistributeNode):
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(NOTAnnotation, self).__init__(id)
 
     @property
     def match_string(self):
