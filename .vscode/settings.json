@@ -4,5 +4,6 @@
   "python.linting.flake8Args": ["--max-line-length=300"],
   "python.formatting.provider": "black",
   "editor.formatOnSave": true,
-  "python.linting.pylintEnabled": false
+  "python.linting.pylintEnabled": false,
+  "python.pythonPath": "/home/krishna/.cache/pypoetry/virtualenvs/lfr-FQa9NuUG-py3.8/bin/python"
 }

@@ -1,9 +1,7 @@
-from lfr.netlistgenerator.primitive import ProceduralPrimitive
 from lfr.postprocessor.constraints import Constraint
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from typing import List
-import copy
 
 
 class ConstructionNode:
@@ -70,6 +68,7 @@ class ConstructionNode:
         # Now that we have overwritten all the netlist options here
         # we basically cherry pick the one little bit that we want to attach here
         self._mapping_options.append(mapping)
+        self.load_connection_options()
 
     def add_mapping_option(self, mapping_option: MappingOption) -> None:
         if self._explict_mapping_flag is True:

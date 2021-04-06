@@ -146,7 +146,7 @@ class Module(object):
     def add_fluid_numeric_interaction(
         self,
         fluid1: Flow,
-        number: Optional[int, float],
+        number: float,
         interaction_type: InteractionType,
     ) -> Interaction:
         # finteraction = FluidInteraction(fluid1=fluid1, interactiontype=interaction)
@@ -206,7 +206,14 @@ class Module(object):
         for node in list(fig_copy.nodes):
             rename_map[node] = self.__generate_instance_node_name(node, var_name)
 
+        # Step 4.1 - Relabel all the annotations with the prefix defined by var_name
+        for annotation in list(fig_copy.annotations):
+            rename_map[annotation.id] = self.__generate_instance_node_name(
+                annotation.id, var_name
+            )
+
         fig_copy.rename_nodes(rename_map)
+        fig_copy.rename_annotations(rename_map)
 
         # Step 5 - Stitch together tall the io newly formed io nodes into
         # current fig

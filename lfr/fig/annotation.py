@@ -1,30 +1,34 @@
-from typing import List
+from __future__ import annotations
+from typing import List, Union
 from lfr.fig.fignode import FIGNode
 
 
 class DistributeAnnotation:
     def __init__(self, id: str) -> None:
         self._id = id
-        self._fignodes = []
+        self._annotated_items: List[Union[FIGNode, DistributeAnnotation]] = []
 
     @property
     def id(self) -> str:
         return self._id
 
-    def add_fignode(self, fignode: FIGNode) -> None:
-        self._fignodes.append(fignode)
+    def rename(self, new_id: str) -> None:
+        self._id = new_id
 
-    def remove_fignode(self, fignode: FIGNode) -> None:
-        self._fignodes.remove(fignode)
+    def add_annotated_item(self, item: Union[FIGNode, DistributeAnnotation]) -> None:
+        self._annotated_items.append(item)
 
-    def get_annotations(self) -> List[FIGNode]:
-        return self._fignodes
+    def remove_item(self, item: Union[FIGNode, DistributeAnnotation]) -> None:
+        self._annotated_items.remove(item)
 
-    def clear_annotations(self) -> None:
-        self._fignodes.clear()
+    def get_items(self) -> List[Union[FIGNode, DistributeAnnotation]]:
+        return self._annotated_items
+
+    def clear_fignodes(self) -> None:
+        self._annotated_items.clear()
 
     def __hash__(self) -> int:
-        return hash(self._id)
+        return hash(hex(id(self)))
 
 
 class ANDAnnotation(DistributeAnnotation):
