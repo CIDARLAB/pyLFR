@@ -1,13 +1,16 @@
 import sys
 from copy import deepcopy
 from typing import List, Set
+import networkx as nx
+
+from pymint.mintdevice import MINTDevice
+from lfr.graphmatch.interface import get_fig_matches
 
 from pymint.mintlayer import MINTLayerType
 from pymint import MINTDevice
 
 from lfr.compiler.module import Module
 from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.fig.interaction import (
     FluidIntegerInteraction,
     FluidNumberInteraction,
@@ -19,7 +22,6 @@ from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, Primitiv
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.v2.gen_strategies.marsstrategy import MarsStrategy
@@ -28,8 +30,6 @@ from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
 )
-from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
-from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 
 # def generate_MARS_library() -> MappingLibrary:
 #     # TODO - Programatically create each of the items necessary for the MARS primitive library,
@@ -332,7 +332,9 @@ def generate_dropx_library() -> MappingLibrary:
     port = Primitive(
         "PORT",
         PrimitiveType.COMPONENT,
-        "IO",
+        r"""{
+            v1:IO
+        }""",
         False,
         False,
         port_inputs,
@@ -361,7 +363,9 @@ def generate_dropx_library() -> MappingLibrary:
     pico_injector = Primitive(
         "PICOINJECTOR",
         PrimitiveType.COMPONENT,
-        "MIX",
+        r"""{
+            v1:MIX
+        }""",
         False,
         False,
         pico_injector_inputs,
@@ -391,7 +395,9 @@ def generate_dropx_library() -> MappingLibrary:
     electrophoresis_merger = Primitive(
         "DROPLET MERGER",
         PrimitiveType.COMPONENT,
-        "MIX",
+        r"""{
+            v1:MIX
+        }""",
         False,
         False,
         electrophoresis_merger_inputs,
@@ -421,7 +427,9 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_sorter = Primitive(
         "DROPLET SORTER",
         PrimitiveType.COMPONENT,
-        "SIEVE",
+        r"""{
+            v1:SIEVE
+        }""",
         False,
         False,
         droplet_sorter_inputs,
@@ -449,7 +457,9 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_generator = Primitive(
         "NOZZLE DROPLET GENERATOR",
         PrimitiveType.NETLIST,
-        "METER",
+        r"""{
+            v1:METER
+        }""",
         False,
         False,
         droplet_generator_inputs,
@@ -487,7 +497,9 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_merger_junction = Primitive(
         "DROPLET MERGER JUNCTION",
         PrimitiveType.COMPONENT,
-        "MIX",
+        r"""{
+            v1:MIX
+        }""",
         False,
         False,
         droplet_merger_junction_inputs,
@@ -515,7 +527,9 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_merger_channel = Primitive(
         "DROPLET MERGER CHANNEL",
         PrimitiveType.COMPONENT,
-        "MIX",
+        r"""{
+            v1:MIX
+        }""",
         False,
         False,
         droplet_merger_channel_inputs,
@@ -552,7 +566,9 @@ def generate_dropx_library() -> MappingLibrary:
     cf_mixer = Primitive(
         "MIXER",
         PrimitiveType.COMPONENT,
-        "MIX",
+        r"""{
+            v1:MIX
+        }""",
         False,
         False,
         cf_mixer_inputs,
@@ -581,7 +597,9 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_splitter = Primitive(
         "DROPLET SPLITTER",
         PrimitiveType.COMPONENT,
-        "DIVIDE",
+        r"""{
+            v1:DIVIDE
+        }""",
         False,
         False,
         droplet_splitter_inputs,
@@ -627,7 +645,9 @@ def generate_dropx_library() -> MappingLibrary:
     mixer = Primitive(
         "MIXER",
         PrimitiveType.COMPONENT,
-        "MIX",
+        r"""{
+            v1:MIX
+        }""",
         False,
         False,
         mixer_inputs,
@@ -655,7 +675,9 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_capacitance_sensor = Primitive(
         "DROPLET CAPACITANCE SENSOR",
         PrimitiveType.COMPONENT,
-        "PROCESS",
+        r"""{
+            v1:PROCESS
+        }""",
         False,
         False,
         droplet_capacitance_sensor_inputs,
@@ -685,7 +707,9 @@ def generate_dropx_library() -> MappingLibrary:
     filter = Primitive(
         "FILTER",
         PrimitiveType.COMPONENT,
-        "PROCESS",
+        r"""{
+            v1:PROCESS
+        }""",
         False,
         False,
         filter_inputs,
@@ -713,7 +737,9 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_fluorescence_sensor = Primitive(
         "DROPLET FLUORESCENCE SENSOR",
         PrimitiveType.COMPONENT,
-        "PROCESS",
+        r"""{
+            v1:PROCESS
+        }""",
         False,
         False,
         droplet_fluorescence_sensor_inputs,
@@ -740,9 +766,11 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_luminescence_sensor_carriers = []
 
     droplet_luminescence_sensor = Primitive(
-        "DROPLET CAPACITANCE SENSOR",
+        "DROPLET LUMINESCENCE SENSOR",
         PrimitiveType.COMPONENT,
-        "PROCESS",
+        r"""{
+            v1:PROCESS
+        }""",
         False,
         False,
         droplet_luminescence_sensor_inputs,
@@ -772,7 +800,9 @@ def generate_dropx_library() -> MappingLibrary:
     droplet_spacer = Primitive(
         "DROPLET SPACER",
         PrimitiveType.NETLIST,
-        "PROCESS",
+        r"""{
+            v1:PROCESS
+        }""",
         False,
         False,
         droplet_spacer_inputs,
@@ -823,9 +853,14 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     #
     # FUTURE WORK
     #
-    # Do the regex matching to find the mapping options
+    # Do the reggie matching to find the mapping options
     # This means that we might need to have a forest of construction of graphs
     # as there would be alternatives for each type of mapping
+    matches = get_fig_matches(module.FIG, library)
+    for match in matches:
+        print(match)
+
+    # Map the interactions in the fig to individual library options
     for interaction in module.FIG.get_interactions():
         operator_candidates = library.get_operators(interaction_type=interaction.type)
         cn = ConstructionNode(interaction.id)
@@ -855,7 +890,8 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Generate all ports necessary for the Explicitly declared IO
     # -------
     # Generate the flow layer IO. These are typically declared explicitly
-    # TODO - Figure out how we should generate the construction nodes for control networks
+    # TODO - Figure out how we should generate the construction nodes for control
+    # networks
 
     for io_ref in module.io:
         if io_ref.type is IOType.CONTROL:
@@ -892,10 +928,12 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     mappings = module.get_explicit_mappings()
     override_network_mappings(mappings, library, module.FIG, construction_graph)
 
-    # TODO - Go through the different flow-flow edge networks to generate construction nodes
-    # specific to these networks, Conditions:
-    # if its a 1-1 flow-flow connection, then create a construction node for the two flow nodes
-    # if its a 1-n / n-1 / n-n construction nodes, then create a construction node capturing the whole network
+    # TODO - Go through the different flow-flow edge networks to generate construction
+    # nodes specific to these networks, Conditions:
+    # if its a 1-1 flow-flow connection, then create a construction node for the two
+    # flow nodes
+    # if its a 1-n / n-1 / n-n construction nodes, then create a construction node
+    # capturing the whole network
 
     # TODO - Deal with coverage issues here since we need to figure out what are the flow networks,
     # that we want to match first and then ensure that they're no included on any list
@@ -910,7 +948,8 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Find all the explicit mappings and override them in the construction graph
     override_mappings(mappings, library, module.FIG, construction_graph)
 
-    # Whittle Down the mapping options here to only include the requried single candidates
+    # Whittle Down the mapping options here to only include the requried single
+    # candidates
     # TODO - Check what library is being used and use the required library here
     active_strategy.reduce_mapping_options()
 
@@ -952,10 +991,12 @@ def override_mappings(
     fig: FluidInteractionGraph,
     construction_graph: ConstructionGraph,
 ) -> None:
-    # Go through the entire set of mappings in the FIG and generate / append the mapping options
+    # Go through the entire set of mappings in the FIG and generate / append the
+    # mapping options
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
-    # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
+    # Step 3 - Find the cn associated with each of the fig nodes and override the
+    # explicit mapping if mappingtemplate has an associated technology string
     for mapping in mappings:
         for instance in mapping.instances:
 
@@ -988,10 +1029,11 @@ def override_mappings(
                 # options
 
                 # Step 2 - In there is a string assiciated with the mappingtemplate, we
-                # eliminate all mapping options that dont have a matching string / generate
-                # a mapping option with the corresponding
+                # eliminate all mapping options that dont have a matching string /
+                # generate a mapping option with the corresponding
 
-                # In the case of an Fluid Value interaction put all valuenodes in the subgraph
+                # In the case of an Fluid Value interaction put all valuenodes in the
+                # subgraph
                 node_ids.extend(
                     [
                         fig.get_fignode(edge[0]).id
@@ -1030,10 +1072,12 @@ def override_network_mappings(
     fig: FluidInteractionGraph,
     construction_graph: ConstructionGraph,
 ) -> None:
-    # Go through the entire set of mappings in the FIG and generate / append the mapping options
+    # Go through the entire set of mappings in the FIG and generate / append the
+    # mapping options
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
-    # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
+    # Step 3 - Find the cn associated with each of the fig nodes and override the
+    # explicit mapping if mappingtemplate has an associated technology string
     assign_node_index = 0
     for mapping in mappings:
         for instance in mapping.instances:
@@ -1174,18 +1218,19 @@ def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
                 in_points = [in_edge[0] for in_edge in in_edges]
                 out_points = [out_edge[1] for out_edge in out_edges]
 
-                # Delete the node
-                construction_graph.delete_node(node_id)
-
                 # Create edges for the different cases
                 # Case 1 - 1->1
                 if len(in_points) == 1 and len(out_points) == 1:
+                    # Delete the node
+                    construction_graph.delete_node(node_id)
                     construction_graph.add_edge(in_points[0], out_points[0])
                 # Case 2 - n->1
                 # Case 3 - 1->n
                 elif (len(in_points) > 1 and len(out_points) == 1) or (
                     len(in_points) == 1 and len(out_points) > 1
                 ):
+                    # Delete the node
+                    construction_graph.delete_node(node_id)
                     for in_point in in_points:
                         for out_point in out_points:
                             construction_graph.add_edge(in_point, out_point)
@@ -1239,8 +1284,8 @@ def get_flow_flow_candidates(
 
     # Step 1. Do a shallow copy of the graph
     fig_original = module.FIG
-    fig_copy = (
-        module.FIG.copy()
+    fig_copy = module.FIG.copy(
+        as_view=False
     )  # Note this does not copy anything besides the nx.DiGraph at the moment
 
     # Step 2. Remove all the fignodes that are not Flow
@@ -1270,8 +1315,8 @@ def get_flow_flow_candidates(
         print("Flow candidate")
         print(component)
         sub = fig_original.subgraph(component)
-        # TODO - Decide what the mapping type should be. for now assume that we just a single
-        # passthrough type scenario where we don't have to do much work
+        # TODO - Decide what the mapping type should be. for now assume that we just a
+        # single passthrough type scenario where we don't have to do much work
         is_passthrough = __check_if_passthrough(sub)
         if is_passthrough:
             mapping_type = NetworkMappingOptionType.PASS_THROUGH
