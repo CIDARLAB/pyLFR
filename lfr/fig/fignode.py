@@ -42,7 +42,7 @@ class FIGNode:
         self._id = id
 
     def __hash__(self) -> int:
-        return hash(self._id)
+        return hash(hex(id(self)))
 
 
 class ValueNode(FIGNode):
@@ -57,6 +57,9 @@ class ValueNode(FIGNode):
     @property
     def match_string(self):
         return "VALUE"
+
+    def __str__(self) -> str:
+        return "VALUE - {}".format(self._value)
 
 
 class Flow(FIGNode):
