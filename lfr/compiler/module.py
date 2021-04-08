@@ -7,8 +7,7 @@ from lfr.postprocessor.mapping import (
     StorageMapping,
 )
 from typing import Dict, List, Optional
-from lfr.netlistgenerator.explicitmapping import ExplicitMapping
-from lfr.fig.fignode import FIGNode, Flow, IOType
+from lfr.fig.fignode import FIGNode, Flow, IONode, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.interaction import (
@@ -157,6 +156,7 @@ class Module(object):
         elif interaction_type is InteractionType.DILUTE:
             finteraction = FluidNumberInteraction(fluid1, number, interaction_type)
         elif interaction_type is InteractionType.DIVIDE:
+            assert isinstance(number, int)
             finteraction = FluidIntegerInteraction(fluid1, number, interaction_type)
         else:
             raise Exception("Unsupported Numeric Operator")
@@ -189,6 +189,7 @@ class Module(object):
         for there_node_key in io_mapping.keys():
             fignode = fig_copy.get_fignode(there_node_key)
             # Skip if its a control type one
+            assert isinstance(fignode, IONode)
             if fignode.type is IOType.CONTROL:
                 continue
             # Convert this node into a flow node
@@ -226,6 +227,7 @@ class Module(object):
             there_check_node = module_to_import.FIG.get_fignode(there_id)
             there_node = self.FIG.get_fignode(rename_map[there_id])
             here_node = self.FIG.get_fignode(here_id)
+            assert isinstance(there_check_node, IONode)
             if there_check_node.type is IOType.FLOW_INPUT:
                 source_node = here_node
                 target_node = there_node

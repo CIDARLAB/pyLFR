@@ -1,4 +1,3 @@
-from lfr.fig.fignode import FIGNode
 from typing import Dict
 from networkx.algorithms.isomorphism import DiGraphMatcher
 from networkx.classes import digraph
