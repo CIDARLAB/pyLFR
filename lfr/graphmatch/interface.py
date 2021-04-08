@@ -1,4 +1,3 @@
-from networkx.classes.digraph import DiGraph
 from lfr.graphmatch.figmappingmatcher import FIGMappingMatcher
 from typing import Dict
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary

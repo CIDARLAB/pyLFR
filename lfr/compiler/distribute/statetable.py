@@ -187,14 +187,19 @@ class StateTable(object):
                     )
                 fig.connect_fignodes(source_node, target_node)
 
-            origin_nodes = [fig.get_fignode(edge[0]) for edge in candidate]
+            # origin_nodes = [fig.get_fignode(edge[0]) for edge in candidate]
+            tuple_names = [self.__convert_edge_to_name(edge) for edge in candidate]
             print(
                 "Added AND annotation on FIG: {}".format(
-                    convert_list_to_str(origin_nodes)
+                    convert_list_to_str(tuple_names)
                 )
             )
-            assert origin_nodes is not None
-            annotation = fig.add_and_annotation(origin_nodes)
+
+            fignode_tuples = [
+                (fig.get_fignode(edge[0]), fig.get_fignode(edge[1]))
+                for edge in candidate
+            ]
+            annotation = fig.add_and_annotation(fignode_tuples)
             self._and_annotations.append(annotation)
 
     def generate_or_annotations(self, fig: FluidInteractionGraph) -> None:
@@ -317,7 +322,7 @@ class StateTable(object):
                     )
                 )
                 fig.connect_fignodes(source_node, target_node)
-                annotation = fig.add_not_annotation([source_node, target_node])
+                annotation = fig.add_not_annotation((source_node, target_node))
                 self._not_annotations.append(annotation)
 
     def compute_control_mapping(self) -> None:
@@ -346,6 +351,14 @@ class StateTable(object):
         return ret
 
     def __convert_edge_to_name(self, edge: Tuple[str, str]) -> str:
+        """Generate the name of the edge to a string for printing purposes
+
+        Args:
+            edge (Tuple[str, str]): This is the networkx edge that we want to convert
+
+        Returns:
+            str: String representation of edge for printing
+        """
         return "{}->{}".format(edge[0], edge[1])
 
     def __update_connectivity_matix(self, edge, row, value):
