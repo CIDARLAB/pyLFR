@@ -13,8 +13,6 @@ import numpy as np
 from tabulate import tabulate
 
 from lfr.compiler.distribute.BitVector import BitVector
-from lfr.fig.fignode import ANDAnnotation, NOTAnnotation, ORAnnotation
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 
 
 class StateTable:
@@ -105,7 +103,7 @@ class StateTable:
         column_size = len(list(full_connectivity_graph.edges))
 
         for edge in list(full_connectivity_graph.edges):
-            edge_name = self.__convert_edge_to_name(edge)
+            edge_name = self.convert_edge_to_name(edge)
             connectivy_column_headers.append(edge_name)
             self._connectivity_edges[edge_name] = edge
 
@@ -189,14 +187,19 @@ class StateTable:
                     )
                 fig.connect_fignodes(source_node, target_node)
 
-            origin_nodes = [fig.get_fignode(edge[0]) for edge in candidate]
+            # origin_nodes = [fig.get_fignode(edge[0]) for edge in candidate]
+            tuple_names = [self.convert_edge_to_name(edge) for edge in candidate]
             print(
                 "Added AND annotation on FIG: {}".format(
-                    convert_list_to_str(origin_nodes)
+                    convert_list_to_str(tuple_names)
                 )
             )
-            assert origin_nodes is not None
-            annotation = fig.add_and_annotation(origin_nodes)
+
+            fignode_tuples = [
+                (fig.get_fignode(edge[0]), fig.get_fignode(edge[1]))
+                for edge in candidate
+            ]
+            annotation = fig.add_and_annotation(fignode_tuples)
             self._and_annotations.append(annotation)
 
     def generate_or_annotations(self, fig: FluidInteractionGraph) -> None:
@@ -319,7 +322,7 @@ class StateTable:
                     )
                 )
                 fig.connect_fignodes(source_node, target_node)
-                annotation = fig.add_not_annotation([source_node, target_node])
+                annotation = fig.add_not_annotation((source_node, target_node))
                 self._not_annotations.append(annotation)
 
     def compute_control_mapping(self) -> None:
@@ -350,11 +353,19 @@ class StateTable:
         return ret
 
     @staticmethod
-    def __convert_edge_to_name(edge: Tuple[str, str]) -> str:
+    def convert_edge_to_name(edge: Tuple[str, str]) -> str:
+        """Generate the name of the edge to a string for printing purposes
+
+        Args:
+            edge (Tuple[str, str]): This is the networkx edge that we want to convert
+
+        Returns:
+            str: String representation of edge for printing
+        """
         return "{}->{}".format(edge[0], edge[1])
 
     def __update_connectivity_matix(self, edge, row, value):
-        edge_name = self.__convert_edge_to_name(edge)
+        edge_name = self.convert_edge_to_name(edge)
         m = self._connectivity_matrix
         column = self._connectivity_column_headers.index(edge_name)
         m[row, column] = value
@@ -368,7 +379,7 @@ class StateTable:
         # TODO - add the column to skip edge list to
         #  prevent double count during xor finding
         edge_index = self._connectivity_column_headers.index(
-            self.__convert_edge_to_name(edge)
+            self.convert_edge_to_name(edge)
         )
         self._or_column_skip_list.append(edge_index)
 
