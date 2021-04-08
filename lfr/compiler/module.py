@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import copy
 from typing import Dict, List, Optional
-
 from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.fignode import FIGNode, Flow, IONode, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
@@ -163,6 +162,7 @@ class Module:
         elif interaction_type is InteractionType.DILUTE:
             finteraction = FluidNumberInteraction(fluid1, number, interaction_type)
         elif interaction_type is InteractionType.DIVIDE:
+            assert isinstance(number, int)
             finteraction = FluidIntegerInteraction(fluid1, number, interaction_type)
         else:
             raise Exception("Unsupported Numeric Operator")
@@ -195,6 +195,7 @@ class Module:
         for there_node_key in io_mapping.keys():
             fignode = fig_copy.get_fignode(there_node_key)
             # Skip if its a control type one
+            assert isinstance(fignode, IONode)
             if fignode.type is IOType.CONTROL:
                 continue
             # Convert this node into a flow node
