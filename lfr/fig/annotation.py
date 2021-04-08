@@ -1,12 +1,14 @@
 from __future__ import annotations
-from typing import List, Union
+from typing import List, Tuple, Union
 from lfr.fig.fignode import FIGNode
 
 
 class DistributeAnnotation:
     def __init__(self, id: str) -> None:
         self._id = id
-        self._annotated_items: List[Union[FIGNode, DistributeAnnotation]] = []
+        self._annotated_items: List[
+            Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]
+        ] = []
 
     @property
     def id(self) -> str:
@@ -15,13 +17,17 @@ class DistributeAnnotation:
     def rename(self, new_id: str) -> None:
         self._id = new_id
 
-    def add_annotated_item(self, item: Union[FIGNode, DistributeAnnotation]) -> None:
+    def add_annotated_item(
+        self, item: Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]
+    ) -> None:
         self._annotated_items.append(item)
 
-    def remove_item(self, item: Union[FIGNode, DistributeAnnotation]) -> None:
+    def remove_item(
+        self, item: Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]
+    ) -> None:
         self._annotated_items.remove(item)
 
-    def get_items(self) -> List[Union[FIGNode, DistributeAnnotation]]:
+    def get_items(self) -> List[Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]]:
         return self._annotated_items
 
     def clear_fignodes(self) -> None:
