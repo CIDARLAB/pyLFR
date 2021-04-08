@@ -5,7 +5,7 @@ import copy
 import networkx as nx
 
 from lfr.compiler.distribute.statetable import StateTable
-from typing import List, Dict, Union
+from typing import List, Dict, Tuple, Union
 from lfr.fig.fignode import (
     FIGNode,
     IONode,
@@ -77,7 +77,11 @@ class FluidInteractionGraph(nx.DiGraph):
         self._annotations.extend(annotations)
         for annotation in self._annotations:
             for item in annotation.get_items():
-                self.__add_to_reverse_map(item, annotation)
+                if isinstance(item, DistributeAnnotation):
+                    self.__add_to_reverse_map(item, annotation)
+                else:
+                    self.__add_to_reverse_map(item[0], annotation)
+                    self.__add_to_reverse_map(item[1], annotation)
 
     def contains_fignode(self, fluid_object: FIGNode) -> bool:
         return fluid_object.id in self._fignodes.keys()
@@ -163,51 +167,60 @@ class FluidInteractionGraph(nx.DiGraph):
     def get_fig_annotations(self, fig_node: FIGNode) -> List[DistributeAnnotation]:
         return self._annotations_reverse_map[fig_node]
 
-    def add_and_annotation(self, nodes: List[FIGNode]) -> ANDAnnotation:
+    def add_and_annotation(
+        self, fignode_tuples: List[Tuple[FIGNode, FIGNode]]
+    ) -> ANDAnnotation:
         annotation_name = "DIST_AND_" + str(uuid.uuid4())
-        print(
-            "Adding DIST-AND annotation '{}' for fig nodes {}".format(
-                annotation_name, ", ".join([node.id for node in nodes])
-            )
-        )
+        print("Adding DIST-AND annotation '{}' for fig nodes:".format(annotation_name))
+        for item in fignode_tuples:
+            print("{}->{}".format(item[0], item[1]))
         annotation = ANDAnnotation(annotation_name)
         self._annotations.append(annotation)
         self._annotations_reverse_map[annotation] = []
-        for fignode in nodes:
-            annotation.add_annotated_item(fignode)
-            self.__add_to_reverse_map(fignode, annotation)
+        for fignode_tuple in fignode_tuples:
+            annotation.add_annotated_item(fignode_tuple)
+            self.__add_to_reverse_map(fignode_tuple[0], annotation)
+            self.__add_to_reverse_map(fignode_tuple[1], annotation)
         return annotation
 
     def add_or_annotation(
-        self, constrained_items: List[Union[FIGNode, DistributeAnnotation]]
+        self,
+        constrained_items: List[Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]],
     ) -> ORAnnotation:
         annotation_name = "DIST_OR_" + str(uuid.uuid4())
-        print(
-            "Adding DIST-OR annotation '{}' for fig nodes {}".format(
-                annotation_name, ", ".join([node.id for node in constrained_items])
-            )
-        )
+        print("Adding DIST-OR annotation '{}' for fig nodes:".format(annotation_name))
+        for item in constrained_items:
+            if isinstance(item, DistributeAnnotation):
+                print("{} (Annotation)".format(item.id))
+            else:
+                print("{}->{}".format(item[0], item[1]))
+
         annotation = ORAnnotation(annotation_name)
         self._annotations.append(annotation)
         self._annotations_reverse_map[annotation] = []
         for item in constrained_items:
             annotation.add_annotated_item(item)
-            self.__add_to_reverse_map(item, annotation)
+            if isinstance(item, DistributeAnnotation):
+                pass
+            else:
+                self.__add_to_reverse_map(item[0], annotation)
+                self.__add_to_reverse_map(item[1], annotation)
+
         return annotation
 
-    def add_not_annotation(self, nodes: List[FIGNode]) -> NOTAnnotation:
+    def add_not_annotation(
+        self, fignode_tuple: Tuple[FIGNode, FIGNode]
+    ) -> NOTAnnotation:
         annotation_name = "DIST_NOT_" + str(uuid.uuid4())
-        print(
-            "Adding DIST-AND annotation '{}' for fig nodes {}".format(
-                annotation_name, ", ".join([node.id for node in nodes])
-            )
-        )
+        print("Adding DIST-AND annotation '{}' for fig nodes:".format(annotation_name))
+        print("{}->{}".format(fignode_tuple[0], fignode_tuple[1]))
+
         annotation = NOTAnnotation(annotation_name)
         self._annotations.append(annotation)
         self._annotations_reverse_map[annotation] = []
-        for fignode in nodes:
-            annotation.add_annotated_item(fignode)
-            self.__add_to_reverse_map(fignode, annotation)
+        annotation.add_annotated_item(fignode_tuple)
+        self.__add_to_reverse_map(fignode_tuple[0], annotation)
+        self.__add_to_reverse_map(fignode_tuple[1], annotation)
         return annotation
 
     def add_fig(self, fig_to_add: FluidInteractionGraph) -> None:
@@ -248,23 +261,50 @@ class FluidInteractionGraph(nx.DiGraph):
         if existing is not not_there:
             print("ALREADY COPIED TO", repr(existing))
             return existing
-        fignodes_copy = copy.deepcopy(
-            [self._fignodes[key] for key in self._fignodes], memo
-        )
+
+        fignodes_copy = []
+
+        # Map old_fignode <-> new_fignode
+        fignodes_copy_map: Dict[FIGNode, FIGNode] = dict()
+
+        for fignode in self._fignodes.values():
+            fignode_copy = copy.copy(fignode)
+            fignodes_copy.append(fignode_copy)
+            fignodes_copy_map[fignode] = fignode_copy
 
         fig_copy = self.copy(as_view=False)
         fig_copy.__class__ = FluidInteractionGraph
+        assert isinstance(fig_copy, FluidInteractionGraph)
         fig_copy.load_fignodes(fignodes_copy)
 
-        # Now since all the annotations are loaded up, copy the right cloned references to fig nodes for the constriants
+        # Now since all the annotations are loaded up, copy the right cloned
+        # references to fig nodes for the constriants
         figannotations_copy = []
 
+        # Map old_annotatin <-> new_annotation
+        figannotations_copy_map: Dict[
+            DistributeAnnotation, DistributeAnnotation
+        ] = dict()
+
+        # Copy the annotations into the new fig copy
         for current_annotation in self._annotations:
-            for current_fignode in current_annotation.get_items():
-                copy_fignode = fig_copy.get_fignode(current_fignode.id)
-                copy_annotation = copy.copy(current_annotation)
-                copy_annotation.add_annotated_item(copy_fignode)
-                figannotations_copy.append(copy_annotation)
+            copy_annotation = copy.copy(current_annotation)
+            figannotations_copy.append(copy_annotation)
+            figannotations_copy_map[current_annotation] = copy_annotation
+
+        # TODO - Copy the annotations items
+        for current_annotation in self._annotations:
+            copy_annotation = figannotations_copy_map[current_annotation]
+            for annotation_item in current_annotation.get_items():
+                if isinstance(annotation_item, DistributeAnnotation):
+                    item_to_add = figannotations_copy_map[annotation_item]
+                    copy_annotation.add_annotated_item(item_to_add)
+                else:
+                    item_to_add = (
+                        fignodes_copy_map[annotation_item[0]],
+                        fignodes_copy_map[annotation_item[1]],
+                    )
+                    copy_annotation.add_annotated_item(item_to_add)
 
         fig_copy.load_annotations(figannotations_copy)
         return fig_copy
@@ -279,13 +319,16 @@ class FluidInteractionGraph(nx.DiGraph):
         if self._annotations_reverse_map is None:
             self._annotations_reverse_map = dict()
 
-        if item in self._annotations_reverse_map.keys():
-            self._annotations_reverse_map[item].append(annotation)
+        if isinstance(item, DistributeAnnotation):
+            self.__add_to_reverse_map(item, annotation)
         else:
-            if annotation in self._annotations_reverse_map[item]:
-                raise Exception("Annotation already present in the reverse map !")
+            if item in self._annotations_reverse_map.keys():
+                self._annotations_reverse_map[item].append(annotation)
+            else:
+                if annotation in self._annotations_reverse_map[item]:
+                    raise Exception("Annotation already present in the reverse map !")
 
-            self._annotations_reverse_map[item] = [annotation]
+                self._annotations_reverse_map[item] = [annotation]
 
     def __get_val_node_id(self) -> str:
         self._gen_id += 1
