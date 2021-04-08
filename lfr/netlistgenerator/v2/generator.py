@@ -1228,8 +1228,8 @@ def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
                             construction_graph.add_edge(in_point, out_point)
                 else:
                     raise Exception(
-                        "Pass through network node elimination not implemented \
-                        when n->n edge creation is necessary"
+                        "Pass through network node elimination not implemented         "
+                        "                when n->n edge creation is necessary"
                     )
 
 
