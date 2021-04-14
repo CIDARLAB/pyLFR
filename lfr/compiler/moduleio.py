@@ -14,6 +14,7 @@ class ModuleIO:
 
     @property
     def vector_ref(self) -> VectorRange:
+        assert self._vector_ref is not None
         return self._vector_ref
 
     @vector_ref.setter
