@@ -2,6 +2,7 @@ from typing import List
 
 from lfr.compiler.distribute.BitVector import BitVector
 from lfr.compiler.distribute.statetable import StateTable
+from typing import List, Optional
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 
@@ -10,7 +11,7 @@ class DistributeBlock:
     def __init__(self) -> None:
         self._sensitivity_list: List[VectorRange] = []
         # self._state_header: List[str] = None
-        self._state_table: StateTable = None
+        self._state_table: Optional[StateTable] = None
 
     def generate_fig(self, fig: FluidInteractionGraph) -> None:
         # TODO - Create the fig based on the given distribute logic shown here
@@ -37,6 +38,7 @@ class DistributeBlock:
 
     @property
     def state_table(self) -> StateTable:
+        assert self._state_table is not None
         return self._state_table
 
     @property
@@ -88,7 +90,7 @@ class DistributeBlock:
             i += 1
 
         ret = self._state_table.convert_to_fullstate_vector(
-            individual_signal_list, individual_value_list
+            signal_list=individual_signal_list, state=individual_value_list
         )
         return ret
 
