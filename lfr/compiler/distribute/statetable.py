@@ -45,7 +45,7 @@ class StateTable:
         return edge
 
     def convert_to_fullstate_vector(
-        self, signal_list: List[str], state: BitVector
+        self, signal_list: List[str], state: List[bool]
     ) -> BitVector:
         # Go through the each of the signal and update the specific BitVector value
         full_state_bitvector = BitVector(size=len(self._headers))

@@ -79,6 +79,7 @@ class Module:
     def add_fluid_custom_interaction(
         self, item: Flow, operator: str, interaction_type: InteractionType
     ) -> Interaction:
+        # TODO - Figure out why the interaction_type is not being used here
         # Check if the item exists
         finteraction = FluidProcessInteraction(item, operator)
         self.FIG.add_interaction(finteraction)
