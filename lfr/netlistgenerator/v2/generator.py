@@ -184,14 +184,17 @@ def generate_mars_library() -> MappingLibrary:
 
     meter_inputs = []
 
-    meter_inputs.append(ConnectingOption("default_component", ["1"]))
-
     meter_outputs = []
 
-    meter_outputs.append(ConnectingOption("default_component", ["3"]))
+    meter_outputs.append(ConnectingOption("default_component", ["1"]))
 
     meter_loadings = []
+
+    meter_loadings.append(ConnectingOption("default_component", ["2"]))
+
     meter_carriers = []
+
+    meter_carriers.append(ConnectingOption("default_component", ["3"]))
 
     meter = Primitive(
         "METER",
