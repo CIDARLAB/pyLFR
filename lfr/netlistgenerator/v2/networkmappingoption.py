@@ -10,8 +10,12 @@ class NetworkMappingOptionType(Enum):
 
 
 class NetworkMappingOption(MappingOption):
-
-    def __init__(self, network_primitive: NetworkPrimitive, mapping_type: NetworkMappingOptionType, subgraph_view) -> None:
+    def __init__(
+        self,
+        network_primitive: NetworkPrimitive,
+        mapping_type: NetworkMappingOptionType,
+        subgraph_view,
+    ) -> None:
         super().__init__(primitive=network_primitive, subgraph_view=subgraph_view)
         self._mapping_type: NetworkMappingOptionType = mapping_type
 

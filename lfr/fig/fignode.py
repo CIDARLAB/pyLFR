@@ -8,7 +8,7 @@ MATCH_STRING_ORDERING = [
     "STORAGE",
     "SIGNAL",
     "DISTRIBUTE-AND",
-    'DISTRIBUTE-OR'
+    "DISTRIBUTE-OR",
 ]
 
 
@@ -19,7 +19,6 @@ class IOType(Enum):
 
 
 class FIGNode(object):
-
     def __init__(self, id: str) -> None:
         self._id: str = id
 
@@ -27,10 +26,14 @@ class FIGNode(object):
     def id(self):
         return self._id
 
+    @property
+    def match_string(self):
+        return "-"
+
     def __str__(self) -> str:
         return self.id
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other):
         if isinstance(other, FIGNode):
             return self.id == other.id
         else:
@@ -41,9 +44,8 @@ class FIGNode(object):
 
 
 class ValueNode(FIGNode):
-
-    def __init__(self, id: str, val) -> None:
-        super().__init__(id)
+    def __init__(self, id: str, val: float) -> None:
+        super(ValueNode, self).__init__(id)
         self._value = val
 
     @property
@@ -56,19 +58,20 @@ class ValueNode(FIGNode):
 
 
 class Flow(FIGNode):
-
     def __init__(self, id) -> None:
-        super().__init__(id)
+        super(Flow, self).__init__(id)
 
     @property
     def match_string(self):
         return "FLOW"
 
+    def __str__(self) -> str:
+        return "FLOW - {}".format(self.id)
+
 
 class IONode(Flow):
-
     def __init__(self, id: str, iotype=None):
-        super().__init__(id)
+        super(IONode, self).__init__(id)
         self._type = iotype
 
     @property
@@ -88,9 +91,8 @@ class IONode(Flow):
 
 
 class Storage(Flow):
-
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(Storage, self).__init__(id)
 
     @property
     def match_string(self):
@@ -98,9 +100,8 @@ class Storage(Flow):
 
 
 class Pump(Flow):
-
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(Pump, self).__init__(id)
 
     @property
     def match_string(self) -> str:
@@ -108,9 +109,8 @@ class Pump(Flow):
 
 
 class Signal(FIGNode):
-
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(Signal, self).__init__(id)
 
     @property
     def match_string(self):
@@ -118,15 +118,13 @@ class Signal(FIGNode):
 
 
 class DistributeNode(FIGNode):
-
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(DistributeNode, self).__init__(id)
 
 
 class ANDAnnotation(DistributeNode):
-
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(ANDAnnotation, self).__init__(id)
 
     @property
     def match_string(self):
@@ -134,9 +132,8 @@ class ANDAnnotation(DistributeNode):
 
 
 class ORAnnotation(DistributeNode):
-
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(ORAnnotation, self).__init__(id)
 
     @property
     def match_string(self):
@@ -144,9 +141,8 @@ class ORAnnotation(DistributeNode):
 
 
 class NOTAnnotation(DistributeNode):
-
     def __init__(self, id: str) -> None:
-        super().__init__(id)
+        super(NOTAnnotation, self).__init__(id)
 
     @property
     def match_string(self):

@@ -11,7 +11,7 @@ def printgraph(G, filename: str) -> None:
     print("output:", tt)
     nx.nx_agraph.to_agraph(G).write(tt)
 
-    os.system('dot -Tpdf {} -o {}.pdf'.format(tt, tt))
+    os.system("dot -Tpdf {} -o {}.pdf".format(tt, tt))
 
 
 def get_ouput_path(filename: str) -> str:
@@ -29,7 +29,7 @@ def serialize_netlist(device: MINTDevice) -> None:
 
 def print_netlist(device: MINTDevice) -> None:
     # Generate the MINT file from the pyparchmint device
-    minttext = device.toMINT()
+    minttext = device.to_MINT()
     mint_file = open(get_ouput_path(device.name + ".mint"), "wt")
     mint_file.write(minttext)
     mint_file.close()

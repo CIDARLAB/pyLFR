@@ -1,4 +1,4 @@
-# Generated from /Volumes/krishna/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
+# Generated from ./lfrX.g4 by ANTLR 4.9.1
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .lfrXParser import lfrXParser
@@ -276,11 +276,6 @@ class lfrXVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by lfrXParser#technologydirectives.
     def visitTechnologydirectives(self, ctx:lfrXParser.TechnologydirectivesContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by lfrXParser#directive.
-    def visitDirective(self, ctx:lfrXParser.DirectiveContext):
         return self.visitChildren(ctx)
 
 

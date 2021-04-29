@@ -1,8 +1,11 @@
+from typing import List
 from lfr.compiler.language.vectorrange import VectorRange
 
 
 class Vector:
-    def __init__(self, id: str, vectortype=None, startindex: int = 0, endindex: int = 0):
+    def __init__(
+        self, id: str, vectortype=None, startindex: int = 0, endindex: int = 0
+    ):
         self.id = id
         self.startindex = startindex
         self.endindex = endindex
@@ -15,9 +18,11 @@ class Vector:
             else:
                 for i in range(len(self)):
                     self.vec.append(vectortype(self.id + "_" + str(i)))
+        else:
+            print("Creating a vector of type [None]")
 
     def __len__(self):
-        return abs(self.startindex - self.endindex)+1
+        return abs(self.startindex - self.endindex) + 1
 
     def get_items(self) -> list:
         return self.vec
@@ -38,7 +43,7 @@ class Vector:
         return self.vec[key]
 
     @classmethod
-    def create_from_list_things(cls, id: str, list_of_things):
+    def create_from_list_things(cls, id: str, list_of_things: List):
         ret = cls(id)
         ret.vec = list_of_things
         ret.startindex = 0

@@ -6,7 +6,6 @@ from lfr.compiler.distribute.BitVector import BitVector
 
 
 class DistributeBlock(object):
-
     def __init__(self) -> None:
         self._sensitivity_list: List[VectorRange] = []
         # self._state_header: List[str] = None
@@ -17,16 +16,19 @@ class DistributeBlock(object):
         print("Implement the fig generation from this")
         self._state_table.generate_connectivity_table()
 
+        print("Connectivity table for the distribution block")
+        self._state_table.print_connectivity_table()
+
         self._state_table.generate_and_annotations(fig)
 
         self._state_table.generate_or_annotations(fig)
 
+        # TODO - Mark all the single items with no pairs
+        self._state_table.generate_not_annotations(fig)
+
         # TODO - How to map the control mappings for each
         # of the annotations to the control signals
         # self._state_table.compute_control_mapping()
-
-        # TODO - Mark all the single items with no pairs
-        pass
 
     @property
     def state_table(self) -> StateTable:
@@ -39,8 +41,10 @@ class DistributeBlock(object):
     @sensitivity_list.setter
     def sensitivity_list(self, signal_list: List[VectorRange]) -> None:
         if self._state_table is not None:
-            raise Exception("Cannot update the sensitivity list since \
-                state table has already been generated !")
+            raise Exception(
+                "Cannot update the sensitivity list since \
+                state table has already been generated !"
+            )
         self._sensitivity_list = signal_list
         # self._state_header = self.__generate_state_header()
         self._state_table = StateTable(self.__generate_state_header(signal_list))
@@ -63,7 +67,9 @@ class DistributeBlock(object):
 
         return ret
 
-    def generate_state_vector(self, signal_list: List[VectorRange], value_list: List[bool]) -> BitVector:
+    def generate_state_vector(
+        self, signal_list: List[VectorRange], value_list: List[bool]
+    ) -> BitVector:
         # self._state_table.convert_to_fullstate_vector()
         individual_signal_list = []
         individual_value_list = []
@@ -77,8 +83,7 @@ class DistributeBlock(object):
             i += 1
 
         ret = self._state_table.convert_to_fullstate_vector(
-            individual_signal_list,
-            individual_value_list
+            individual_signal_list, individual_value_list
         )
         return ret
 

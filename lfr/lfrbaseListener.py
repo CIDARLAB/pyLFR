@@ -33,7 +33,6 @@ class VariableTypes(Enum):
 
 
 class LFRBaseListener(lfrXListener):
-
     def __init__(self):
 
         print("Initialized the lfrcompiler")
@@ -59,6 +58,10 @@ class LFRBaseListener(lfrXListener):
         self.stack = []
         self.statestack = []
         self.binaryoperatorsstack = [[]]
+
+        # TODO - Figure out how to make this more elegant
+        self._lhs_store = None
+        self._rhs_store = None
 
     def enterModule(self, ctx: lfrXParser.ModuleContext):
         if self.currentModule is not None:
@@ -88,7 +91,6 @@ class LFRBaseListener(lfrXListener):
         self.statestack = []
         self.binaryoperatorsstack = [[]]
 
-
     def enterIoblock(self, ctx: lfrXParser.IoblockContext):
         # If io block has an explicit declaration set the flag
         if ctx.explicitIOBlock() is not None:
@@ -116,11 +118,11 @@ class LFRBaseListener(lfrXListener):
         #  First check the type of the explicit io block
         decltype = ctx.start.text
         mode = None
-        if decltype == 'finput':
+        if decltype == "finput":
             mode = IOType.FLOW_INPUT
-        elif decltype == 'foutput':
+        elif decltype == "foutput":
             mode = IOType.FLOW_OUTPUT
-        elif decltype == 'control':
+        elif decltype == "control":
             mode = IOType.CONTROL
 
         for declvar in ctx.declvar():
@@ -142,8 +144,13 @@ class LFRBaseListener(lfrXListener):
                 # First check if the size is the same or not, if not give an error
                 if len(vec) is not (abs(startindex - endindex) + 1):
                     self.compilingErrors.append(
-                        LFRError(ErrorType.VECTOR_SIZE_MISMATCH,
-                                 "explicit i/o:{0} definition not same size as module definition".format(name)))
+                        LFRError(
+                            ErrorType.VECTOR_SIZE_MISMATCH,
+                            "explicit i/o:{0} definition not same size as module definition".format(
+                                name
+                            ),
+                        )
+                    )
 
                 # Go through each of the ios and modify the type
                 for io in vec.get_items():
@@ -151,8 +158,7 @@ class LFRBaseListener(lfrXListener):
             else:
                 if self.EXPLICIT_MODULE_DECLARATION is True:
                     # This is the scenario where all the declaration is done explicitly
-                    vec = self.__createVector(
-                        name, IONode, startindex, endindex)
+                    vec = self.__createVector(name, IONode, startindex, endindex)
                     self.vectors[name] = vec
                     self.typeMap[name] = VariableTypes.FLUID
 
@@ -167,7 +173,11 @@ class LFRBaseListener(lfrXListener):
 
                 else:
                     self.compilingErrors.append(
-                        LFRError(ErrorType.MODULE_IO_NOT_FOUND, "i/o:{0} not declared in module".format(name)))
+                        LFRError(
+                            ErrorType.MODULE_IO_NOT_FOUND,
+                            "i/o:{0} not declared in module".format(name),
+                        )
+                    )
 
     def enterFluiddeclstat(self, ctx: lfrXParser.FluiddeclstatContext):
         self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
@@ -271,7 +281,11 @@ class LFRBaseListener(lfrXListener):
             startindex = v.startindex
             endindex = v.endindex
         else:
-            raise Exception("Trying to parse vector variable {} and we couldn't find the vector in itself: Line - {}".format(name, ctx.start.line))
+            raise Exception(
+                "Trying to parse vector variable {} and we couldn't find the vector in itself: Line - {}".format(
+                    name, ctx.start.line
+                )
+            )
 
         # Check to see if the slice is present utilize the index
         if ctx.vector() is not None:
@@ -303,9 +317,13 @@ class LFRBaseListener(lfrXListener):
         endindex = len(c) - 1
         if ctx.vector() is not None:
             self.compilingErrors.append(
-                LFRError(ErrorType.COMPILER_NOT_IMPLEMENTED,
-                         "Selecting range from compiler has not been implemented, ignoring range for concatenation on line {0} column{1}".format(
-                             ctx.start.getLine(), ctx.start.getCharPositionInLine())))
+                LFRError(
+                    ErrorType.COMPILER_NOT_IMPLEMENTED,
+                    "Selecting range from compiler has not been implemented, ignoring range for concatenation on line {0} column{1}".format(
+                        ctx.start.getLine(), ctx.start.getCharPositionInLine()
+                    ),
+                )
+            )
 
         v = c.get_range(startindex, endindex)
         self.stack.append(v)
@@ -365,7 +383,9 @@ class LFRBaseListener(lfrXListener):
 
             elif ctx.number() is not None:
                 # TODO: Figure out how one needs to process the number with a unary operator
-                raise Exception("Implement method to evaluate number with unary operator")
+                raise Exception(
+                    "Implement method to evaluate number with unary operator"
+                )
 
     def enterBinary_operator(self, ctx: lfrXParser.Binary_operatorContext):
         op = ctx.getText()
@@ -379,12 +399,14 @@ class LFRBaseListener(lfrXListener):
         self.__revertMode()
 
         # TODO: Pull all the operators and expression terms
-        stackslice = self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
-        del self.stack[-(len(self.binaryoperatorsstack[-1])+1):]
+        stackslice = self.stack[-(len(self.binaryoperatorsstack[-1]) + 1) :]
+        del self.stack[-(len(self.binaryoperatorsstack[-1]) + 1) :]
 
         fluidexpression = FluidExpression(self.currentModule)
         # TODO: Figure out how to pass the FIG after this
-        result = fluidexpression.process_expression(stackslice, self.binaryoperatorsstack[-1])
+        result = fluidexpression.process_expression(
+            stackslice, self.binaryoperatorsstack[-1]
+        )
         self.stack.append(result)
 
         self.binaryoperatorsstack.pop()
@@ -415,6 +437,10 @@ class LFRBaseListener(lfrXListener):
                 raise Exception("Cannot assign Number to Fluid Variable")
             else:
                 self.vectors[lhs] = rhs
+
+        # Save the nodes as cache
+        self._lhs_store = lhs
+        self._rhs_store = rhs
 
         # Perform the vector assignments
         if len(lhs) == len(rhs):
@@ -459,7 +485,9 @@ class LFRBaseListener(lfrXListener):
             self.success = True
         print(self.currentModule)
 
-    def __createVector(self, name: str, objecttype, startindex: int, endindex: int) -> Vector:
+    def __createVector(
+        self, name: str, objecttype, startindex: int, endindex: int
+    ) -> Vector:
         v = Vector(name, objecttype, startindex, endindex)
         self.vectors[name] = v
         self.typeMap[name] = VariableTypes.FLUID
@@ -483,8 +511,14 @@ class LFRBaseListener(lfrXListener):
 
         return v
 
-    def __performUnaryOperation(self, operator: str, operand: VectorRange) -> FluidExpression:
-        print("Performing unary operation - Operator: {0} \n Operand: {1}".format(operator, operand))
+    def __performUnaryOperation(
+        self, operator: str, operand: VectorRange
+    ) -> FluidExpression:
+        print(
+            "Performing unary operation - Operator: {0} \n Operand: {1}".format(
+                operator, operand
+            )
+        )
         # TODO: Return the vector range result of unary operator
         fluidexpression = FluidExpression(self.currentModule)
         result = fluidexpression.process_unary_operation(operand, operator)
@@ -500,14 +534,14 @@ class LFRBaseListener(lfrXListener):
 
     def print_variables(self):
         for key in self.vectors.keys():
-            print('{0} - {1}'.format(key, self.vectors[key]))
+            print("{0} - {1}".format(key, self.vectors[key]))
 
     def print_stack(self):
-        print('---Top of Stack---')
+        print("---Top of Stack---")
         for item in self.stack:
             print(item)
 
-        print('---Bottom of Stack---')
+        print("---Bottom of Stack---")
 
     def __parseBinaryNumber(self, text: str) -> BitVector:
         pattern = r"(\d+)'b(\d+)"

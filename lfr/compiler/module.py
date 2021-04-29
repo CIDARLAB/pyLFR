@@ -1,10 +1,24 @@
 from __future__ import annotations
+from lfr.postprocessor.mapping import (
+    FluidicOperatorMapping,
+    NetworkMapping,
+    NodeMappingTemplate,
+    PumpMapping,
+    StorageMapping,
+)
 from typing import Dict, List, Optional
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
-from lfr.fig.fignode import FIGNode, IONode, Flow, IOType
+from lfr.fig.fignode import FIGNode, Flow, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.moduleio import ModuleIO
-from lfr.fig.interaction import FluidFluidCustomInteraction, FluidFluidInteraction, FluidIntegerInteraction, FluidNumberInteraction, FluidProcessInteraction, Interaction, InteractionType
+from lfr.fig.interaction import (
+    FluidFluidInteraction,
+    FluidIntegerInteraction,
+    FluidNumberInteraction,
+    FluidProcessInteraction,
+    Interaction,
+    InteractionType,
+)
 import copy
 
 
@@ -15,7 +29,11 @@ class Module(object):
         self._io: List[ModuleIO] = []
         self.FIG = FluidInteractionGraph()
         self.fluids = dict()
-        self.mappings: List[ExplicitMapping] = []
+        self._mappings: List[NodeMappingTemplate] = []
+
+    @property
+    def mappings(self) -> List[NodeMappingTemplate]:
+        return self._mappings
 
     @property
     def io(self) -> List[ModuleIO]:
@@ -28,7 +46,7 @@ class Module(object):
     def add_new_import(self, module: Module) -> None:
         self._imported_modules.append(module)
 
-    def get_explicit_mappings(self) -> List[ExplicitMapping]:
+    def get_explicit_mappings(self) -> List[NodeMappingTemplate]:
         return self.mappings
 
     def add_io(self, io: ModuleIO):
@@ -58,13 +76,17 @@ class Module(object):
         target = self.FIG.get_fignode(item2id)
         self.FIG.connect_fignodes(source, target)
 
-    def add_fluid_custom_interaction(self, item: Flow, operator: str, interaction_type: InteractionType) -> Interaction:
+    def add_fluid_custom_interaction(
+        self, item: Flow, operator: str, interaction_type: InteractionType
+    ) -> Interaction:
         # Check if the item exists
         finteraction = FluidProcessInteraction(item, operator)
         self.FIG.add_interaction(finteraction)
         return finteraction
 
-    def add_finteraction_custom_interaction(self, item: Interaction, operator: str, interaction_type: InteractionType) -> Interaction:
+    def add_finteraction_custom_interaction(
+        self, item: Interaction, operator: str, interaction_type: InteractionType
+    ) -> Interaction:
         # Check if the item exists
         # TODO: create finteraction factory method and FluidInteraction
         # finteraction = FluidInteraction(fluid1=item, interactiontype=interaction_type, custominteraction= operator)
@@ -72,32 +94,46 @@ class Module(object):
         self.FIG.add_interaction(finteraction)
         return finteraction
 
-    def add_fluid_custominteraction(self, fluid1: Flow, fluid2: Flow, interaction: str) -> Interaction:
-        finteraction = FluidFluidCustomInteraction(
-            fluid1, fluid2, interaction)
-        self.FIG.add_interaction(finteraction)
-        return finteraction
+    # def add_fluid_custominteraction(
+    #     self, fluid1: Flow, fluid2: Flow, interaction: str
+    # ) -> Interaction:
+    #     finteraction = FluidFluidCustomInteraction(fluid1, fluid2, interaction)
+    #     self.FIG.add_interaction(finteraction)
+    #     return finteraction
 
-    def add_fluid_fluid_interaction(self, fluid1: Flow, fluid2: Flow, interaction_type: InteractionType) -> Interaction:
+    def add_fluid_fluid_interaction(
+        self, fluid1: Flow, fluid2: Flow, interaction_type: InteractionType
+    ) -> Interaction:
 
         fluid_interaction = FluidFluidInteraction(fluid1, fluid2, interaction_type)
         self.FIG.add_interaction(fluid_interaction)
 
         return fluid_interaction
 
-    def add_fluid_finteraction_interaction(self, fluid1: Flow, finteraction: Interaction, interaction_type: InteractionType):
+    def add_fluid_finteraction_interaction(
+        self, fluid1: Flow, finteraction: Interaction, interaction_type: InteractionType
+    ) -> Interaction:
         # TODO: Create new factory method for creating this kind of fluid interaction
-        new_fluid_interaction = FluidFluidInteraction(fluid1, finteraction, interaction_type)
+        new_fluid_interaction = FluidFluidInteraction(
+            fluid1, finteraction, interaction_type
+        )
 
         # self.FIG.add_fluid_finteraction_interaction(fluid1, finteraction, new_fluid_interaction)
         self.FIG.add_interaction(new_fluid_interaction)
 
         return new_fluid_interaction
 
-    def add_finteraction_finteraction_interaction(self, f_interaction1: Interaction, f_interaction2: Interaction, interaction_type: InteractionType) -> Interaction:
+    def add_finteraction_finteraction_interaction(
+        self,
+        f_interaction1: Interaction,
+        f_interaction2: Interaction,
+        interaction_type: InteractionType,
+    ) -> Interaction:
         # TODO - Revisit this to fix the fluid data mappings
 
-        new_fluid_interaction = FluidFluidInteraction(f_interaction1, f_interaction2, interaction_type)
+        new_fluid_interaction = FluidFluidInteraction(
+            f_interaction1, f_interaction2, interaction_type
+        )
 
         self.FIG.add_interaction(new_fluid_interaction)
 
@@ -106,7 +142,12 @@ class Module(object):
     def add_interaction_output(self, output: Flow, interaction: Interaction):
         self.FIG.connect_fignodes(output, interaction)
 
-    def add_fluid_numeric_interaction(self, fluid1: Flow, number: Optional[int, float], interaction_type: InteractionType) -> Interaction:
+    def add_fluid_numeric_interaction(
+        self,
+        fluid1: Flow,
+        number: float,
+        interaction_type: InteractionType,
+    ) -> Interaction:
         # finteraction = FluidInteraction(fluid1=fluid1, interactiontype=interaction)
         finteraction = None
 
@@ -123,9 +164,6 @@ class Module(object):
 
         return finteraction
 
-    def add_mapping(self, mapping: ExplicitMapping):
-        self.mappings.append(mapping)
-
     def __str__(self):
         ret = "Name : " + self.name + "\n"
         for module_io in self._io:
@@ -133,7 +171,9 @@ class Module(object):
             ret += "\n"
         return ret
 
-    def instantiate_module(self, type_id: str, var_name: str, io_mapping: Dict[str, str]) -> None:
+    def instantiate_module(
+        self, type_id: str, var_name: str, io_mapping: Dict[str, str]
+    ) -> None:
         # Step 1 - Find the corresponding module from the imports
         module_to_import = None
         for module_check in self.imported_modules:
@@ -152,7 +192,9 @@ class Module(object):
                 continue
             # Convert this node into a flow node
             # Sanity check to see if its flow input/output
-            assert(fignode.type is IOType.FLOW_INPUT or fignode.type is IOType.FLOW_OUTPUT)
+            assert (
+                fignode.type is IOType.FLOW_INPUT or fignode.type is IOType.FLOW_OUTPUT
+            )
             # Replace
             new_fignode = Flow(fignode.id)
             fig_copy.switch_fignode(fignode, new_fignode)
@@ -185,10 +227,50 @@ class Module(object):
             else:
                 source_node = here_node
                 target_node = there_node
-            assert(source_node is not None)
-            assert(target_node is not None)
+            assert source_node is not None
+            assert target_node is not None
             self.FIG.connect_fignodes(source_node, target_node)
-        pass
+
+        # TODO - Step 7 - Make copies of all the mappingtemplates for the final FIG.
+        # Since we only utilize mappings based on the assicated fig node it should be
+        # possible to find the corresponding fignodes by ID's
+        for mappingtemplate in module_to_import.mappings:
+            # TODO - Switch this to shallow copy implementation if the scheme needs to
+            # follow python specs correctly
+            mappingtemplate_copy = copy.deepcopy(mappingtemplate)
+            # TODO - Switch out each of the instances here
+            for mapping_instance in mappingtemplate_copy.instances:
+                if (
+                    isinstance(mapping_instance, FluidicOperatorMapping)
+                    or isinstance(mapping_instance, StorageMapping)
+                    or isinstance(mapping_instance, PumpMapping)
+                ):
+                    # Swap the basic node from original to the instance
+                    there_node_id = mapping_instance.node.id
+                    here_node = self.FIG.get_fignode(rename_map[there_node_id])
+                    mapping_instance.node = here_node
+                elif isinstance(mapping_instance, NetworkMapping):
+                    # TODO - Swap the nodes in the inputs and the outputs
+                    # Swap the inputs
+                    nodes_to_switch = mapping_instance.input_nodes
+                    mapping_instance.input_nodes = self.__switch_fignodes_list(
+                        rename_map, nodes_to_switch
+                    )
+
+                    nodes_to_switch = mapping_instance.output_nodes
+                    mapping_instance.output_nodes = self.__switch_fignodes_list(
+                        rename_map, nodes_to_switch
+                    )
+
+            self.mappings.append(mappingtemplate_copy)
+
+    def __switch_fignodes_list(self, rename_map, nodes_to_switch):
+        there_node_ids = [n.id for n in nodes_to_switch]
+        here_nodes = [
+            self.FIG.get_fignode(rename_map[there_node_id])
+            for there_node_id in there_node_ids
+        ]
+        return here_nodes
 
     def __generate_instance_node_name(self, node: str, var_name: str) -> str:
         return "{0}_{1}".format(var_name, node)

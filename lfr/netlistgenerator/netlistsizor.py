@@ -2,7 +2,6 @@ from lfr.fig.interaction import InteractionType
 
 
 class NetlistSizor:
-
     def __init__(self, netlist_generator):
         super().__init__()
         self.device = netlist_generator.device
@@ -12,7 +11,13 @@ class NetlistSizor:
         self.blacklist_map = netlist_generator.blacklist_map
 
     def size_netlist(self):
-        from .dafdadapter import DAFDSizingAdapter, PerformanceConstraint, FunctionalConstraint, GeometryConstraint, ConstraintList 
+        from .dafdadapter import (
+            DAFDSizingAdapter,
+            PerformanceConstraint,
+            FunctionalConstraint,
+            GeometryConstraint,
+            ConstraintList,
+        )
 
         print("Sizing the device...")
         # TODO: Make this general
@@ -22,7 +27,7 @@ class NetlistSizor:
         print("Sizing the Fluidic Operations...")
         # 1.1: First go through each of the operators to size them for functionality
         for interaction in self.fig.get_interactions():
-            component = self.device.getComponent(self.blacklist_map[interaction.id]) 
+            component = self.device.get_component(self.blacklist_map[interaction.id])
             constraint_list = ConstraintList(component)
             print("Interaction Type: ", interaction.interactionType)
             print("Interaction Data: ", interaction.interaction_data)
@@ -30,7 +35,9 @@ class NetlistSizor:
             # TODO: Check for each of the different interaction types
             if interaction.interactionType is InteractionType.METER:
                 volume_constraint = FunctionalConstraint()
-                volume_constraint.add_target_value('volume', interaction.interaction_data['value'])
+                volume_constraint.add_target_value(
+                    "volume", interaction.interaction_data["value"]
+                )
                 constraint_list.add_constraint(volume_constraint)
                 # dummy dafd call
                 droplet_adapter.size_component(constraint_list)

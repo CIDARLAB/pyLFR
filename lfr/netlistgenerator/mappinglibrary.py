@@ -1,5 +1,5 @@
-from lfr.netlistgenerator.primitive import Primitive
-from typing import List
+from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
+from typing import Dict, List
 from lfr.fig.interaction import InteractionType
 
 
@@ -12,7 +12,11 @@ class MappingLibrary:
         self.__dilute_operators = []
         self.__divide_operators = []
         self.__technology_process_operators = []
+        self.__storage_primitives = []
+        self.__pump_primitives = []
         self.__io_primitives = []
+        self.__all_primitives: Dict[str, Primitive] = dict()
+        self.__procedural_primitves: List[ProceduralPrimitive] = []
         self._default_IO_primitive = None
 
     @property
@@ -21,20 +25,47 @@ class MappingLibrary:
 
     def add_io_entry(self, primitive: Primitive) -> None:
         self.__io_primitives.append(primitive)
+        self.__all_primitives[primitive.mint] = primitive
 
-    def add_operator_entry(self, primitve: Primitive, interaction_type: InteractionType) -> None:
+    def add_operator_entry(
+        self, primitive: Primitive, interaction_type: InteractionType
+    ) -> None:
         if interaction_type is InteractionType.MIX:
-            self.__mix_operators.append(primitve)
+            self.__mix_operators.append(primitive)
+            self.__all_primitives[primitive.mint] = primitive
         elif interaction_type is InteractionType.SIEVE:
-            self.__seive_operators.append(primitve)
+            self.__seive_operators.append(primitive)
+            self.__all_primitives[primitive.mint] = primitive
         elif interaction_type is InteractionType.DILUTE:
-            self.__dilute_operators.append(primitve)
+            self.__dilute_operators.append(primitive)
+            self.__all_primitives[primitive.mint] = primitive
         elif interaction_type is InteractionType.METER:
-            self.__meter_operators.append(primitve)
+            self.__meter_operators.append(primitive)
+            self.__all_primitives[primitive.mint] = primitive
         elif interaction_type is InteractionType.DIVIDE:
-            self.__divide_operators.append(primitve)
+            self.__divide_operators.append(primitive)
+            self.__all_primitives[primitive.mint] = primitive
         else:
-            self.__technology_process_operators.append(primitve)
+            self.__technology_process_operators.append(primitive)
+            self.__all_primitives[primitive.mint] = primitive
+
+    def add_procedural_entry(self, primitive: ProceduralPrimitive) -> None:
+        self.__procedural_primitves.append(primitive)
+        self.__all_primitives[primitive.mint] = primitive
+
+    def add_storage_entry(self, primitive: Primitive) -> None:
+        self.__storage_primitives.append(primitive)
+        self.__all_primitives[primitive.mint] = primitive
+
+    def add_pump_entry(self, primitive: Primitive) -> None:
+        self.__pump_primitives.append(primitive)
+        self.__all_primitives[primitive.mint] = primitive
+
+    def get_storage_entries(self) -> List[Primitive]:
+        return self.__storage_primitives
+
+    def get_pump_entries(self) -> List[Primitive]:
+        return self.__pump_primitives
 
     def get_default_IO(self) -> Primitive:
         if self._default_IO_primitive is None:
@@ -55,3 +86,9 @@ class MappingLibrary:
             return self.__divide_operators
         else:
             return self.__technology_process_operators
+
+    def get_primitive(self, technology_string: str) -> Primitive:
+        return self.__all_primitives[technology_string]
+
+    def has_primitive(self, technology_string: str) -> bool:
+        return technology_string in self.__all_primitives.keys()

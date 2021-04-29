@@ -1,4 +1,4 @@
-# Generated from /Volumes/krishna/CIDAR/pylfr/lfrX.g4 by ANTLR 4.8
+# Generated from ./lfrX.g4 by ANTLR 4.9.1
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .lfrXParser import lfrXParser
@@ -491,15 +491,6 @@ class lfrXListener(ParseTreeListener):
 
     # Exit a parse tree produced by lfrXParser#technologydirectives.
     def exitTechnologydirectives(self, ctx:lfrXParser.TechnologydirectivesContext):
-        pass
-
-
-    # Enter a parse tree produced by lfrXParser#directive.
-    def enterDirective(self, ctx:lfrXParser.DirectiveContext):
-        pass
-
-    # Exit a parse tree produced by lfrXParser#directive.
-    def exitDirective(self, ctx:lfrXParser.DirectiveContext):
         pass
 
 

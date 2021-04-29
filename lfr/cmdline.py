@@ -1,19 +1,16 @@
 from lfr.moduleinstanceListener import ModuleInstanceListener
+from lfr.postProcessListener import PostProcessListener
 from lfr.preprocessor import PreProcessor
-from lfr.distBlockListener import DistBlockListener
-from lfr.lfrbaseListener import LFRBaseListener
 import os
 from pathlib import Path
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
 from lfr.antlrgen.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfrXParser import lfrXParser
-from lfr.mappingCompiler import MappingCompiler
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 import argparse
 import lfr.parameters as parameters
 import glob
 import json
-import lfr.utils as utils
 from lfr.netlistgenerator.v2.generator import generate_dropx_library, generate
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 
@@ -23,25 +20,52 @@ def load_libraries():
     os.chdir(parameters.LIB_DIR)
     print(" LIB Path : " + str(parameters.LIB_DIR))
     for filename in glob.glob("*.json"):
-        file = open(filename, 'r')
+        file = open(filename, "r")
         lib_object = json.loads(file.read())
-        library[lib_object['name']] = MappingLibrary(lib_object)
+        library[lib_object["name"]] = MappingLibrary(lib_object)
     return library
 
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('input', nargs='+', help="This is the file thats used as the input ")
-    parser.add_argument('--outpath', type=str, default="out/", help="This is the output directory")
-    parser.add_argument('--technology', type=str, default="dropx", help="This is the mapping library you need to use")
-    parser.add_argument('--library', type=str, default="./library", help="This sets the default library where the different technologies sit in")
-    parser.add_argument('--no-mapping', help="Skipping Explicit Mappings")
-    parser.add_argument('--no-gen', action="store_true", help="Force the program to skip the device generation")
+    parser.add_argument(
+        "input", nargs="+", help="This is the file thats used as the input "
+    )
+    parser.add_argument(
+        "--outpath", type=str, default="out/", help="This is the output directory"
+    )
+    parser.add_argument(
+        "--technology",
+        type=str,
+        default="dropx",
+        help="This is the mapping library you need to use",
+    )
+    parser.add_argument(
+        "--library",
+        type=str,
+        default="./library",
+        help="This sets the default library where the different technologies sit in",
+    )
+    parser.add_argument("--no-mapping", help="Skipping Explicit Mappings")
+    parser.add_argument(
+        "--no-gen",
+        action="store_true",
+        help="Force the program to skip the device generation",
+    )
+    parser.add_argument(
+        "--no-annotations",
+        action="store_true",
+        help="Force the compiler to skip reading postprocess annotations like #MAP and #CONSTRAIN",
+    )
     args = parser.parse_args()
 
     # Utilize the prepreocessor to generate the input file
     preprocessor = PreProcessor(args.input)
+
+    if preprocessor.check_syntax_errors():
+        print("Stopping compiler because of syntax errors")
+        exit(0)
 
     preprocessor.process()
 
@@ -80,7 +104,10 @@ def main():
 
     walker = ParseTreeWalker()
 
-    mapping_listener = ModuleInstanceListener()
+    if args.no_annotations is True:
+        mapping_listener = ModuleInstanceListener()
+    else:
+        mapping_listener = PostProcessListener()
 
     walker.walk(mapping_listener, tree)
 
@@ -90,9 +117,7 @@ def main():
 
     interactiongraph = mapping_listener.currentModule.FIG
 
-    utils.printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
-
-    printgraph(mapping_listener.currentModule.FIG, mapping_listener.currentModule.name)
+    printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
 
     if args.no_gen is True:
         exit(0)
@@ -114,8 +139,6 @@ def main():
             pass
 
         unsized_device = generate(mapping_listener.currentModule, library)
-
-        unsized_device.toMINT()
 
         print_netlist(unsized_device)
         serialize_netlist(unsized_device)
