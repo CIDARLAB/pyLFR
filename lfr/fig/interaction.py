@@ -1,19 +1,19 @@
-from typing import List
-from lfr.fig.fignode import FIGNode, Flow
 from enum import Enum
+from typing import List
+
+from lfr.fig.fignode import FIGNode, Flow
 
 
 class InteractionType(Enum):
-    TECHNOLOGY_PROCESS = 1      # Explicit Mapped operators
-    MIX = 2                     # +
-    SIEVE = 3                   # -
-    METER = 4                   # %
-    DILUTE = 5                  # *
-    DIVIDE = 6                  # /
+    TECHNOLOGY_PROCESS = 1  # Explicit Mapped operators
+    MIX = 2  # +
+    SIEVE = 3  # -
+    METER = 4  # %
+    DILUTE = 5  # *
+    DIVIDE = 6  # /
 
 
 class Interaction(Flow):
-
     def __init__(self, id: str, interaction_type: InteractionType) -> None:
         super().__init__(id)
         self._interaction_type: InteractionType = interaction_type
@@ -26,7 +26,9 @@ class Interaction(Flow):
         return self._interaction_type
 
     @staticmethod
-    def get_id(fluid1: FIGNode = None, fluid2: FIGNode = None, operator_string: str = '') -> str:
+    def get_id(
+        fluid1: FIGNode = None, fluid2: FIGNode = None, operator_string: str = ""
+    ) -> str:
         id = None
 
         if fluid2 is not None:
@@ -56,7 +58,7 @@ class Interaction(Flow):
             return "PROCESS"
 
     @staticmethod
-    def get_operator_str(interaction_type: InteractionType, process_operator='') -> str:
+    def get_operator_str(interaction_type: InteractionType, process_operator="") -> str:
         if interaction_type is InteractionType.DILUTE:
             return "DILUTE_(*)"
         elif interaction_type is InteractionType.DIVIDE:
@@ -72,8 +74,13 @@ class Interaction(Flow):
 
 
 class FluidFluidInteraction(Interaction):
-
-    def __init__(self, fluid1: Flow, fluid2: Flow, interaction_type: InteractionType = None, interaction_data: str = None) -> None:
+    def __init__(
+        self,
+        fluid1: Flow,
+        fluid2: Flow,
+        interaction_type: InteractionType = None,
+        interaction_data: str = None,
+    ) -> None:
         """Creates an interaction between two fluids
 
         Args:
@@ -82,7 +89,9 @@ class FluidFluidInteraction(Interaction):
             interaction_type (InteractionType, optional): [description]. Defaults to None.
             interaction_data (str, optional): [description]. Defaults to None.
         """
-        id = Interaction.get_id(fluid1, fluid2, Interaction.get_operator_str(interaction_type))
+        id = Interaction.get_id(
+            fluid1, fluid2, Interaction.get_operator_str(interaction_type)
+        )
         super().__init__(id, interaction_type)
         self._input_fignodes.append(fluid1)
         self._input_fignodes.append(fluid2)
@@ -93,7 +102,6 @@ class FluidFluidInteraction(Interaction):
 
 
 class FluidFluidCustomInteraction(FluidFluidInteraction):
-
     def __init__(self, fluid1: Flow, fluid2: Flow, custom_operator: str) -> None:
         id = Interaction.get_id(fluid1, fluid2, operator_string=custom_operator)
         super().__init__(fluid1, fluid2, InteractionType.TECHNOLOGY_PROCESS)
@@ -102,7 +110,6 @@ class FluidFluidCustomInteraction(FluidFluidInteraction):
 
 
 class FluidProcessInteraction(Interaction):
-
     def __init__(self, fluid: Flow, process_operator: str) -> None:
         """Creates an instance of a Fluidic Interaction that shows the process
         is happening on the fluid using a custom operator (typically unary)
@@ -111,7 +118,9 @@ class FluidProcessInteraction(Interaction):
             fluid (FIGNode): [description]
             process_operator (str): [description]
         """
-        operator_str = Interaction.get_operator_str(InteractionType.TECHNOLOGY_PROCESS, process_operator)
+        operator_str = Interaction.get_operator_str(
+            InteractionType.TECHNOLOGY_PROCESS, process_operator
+        )
         id = Interaction.get_id(fluid, operator_string=operator_str)
         super().__init__(id, InteractionType.TECHNOLOGY_PROCESS)
         self._input_fignodes.append(fluid)
@@ -122,8 +131,9 @@ class FluidProcessInteraction(Interaction):
 
 
 class FluidNumberInteraction(Interaction):
-
-    def __init__(self, fluid: Flow, value: float, interaction_type: InteractionType) -> None:
+    def __init__(
+        self, fluid: Flow, value: float, interaction_type: InteractionType
+    ) -> None:
         """Creates an instance of a fluidic interactions shows that a fluid is
         interacting with a real number
 
@@ -149,8 +159,9 @@ class FluidNumberInteraction(Interaction):
 
 
 class FluidIntegerInteraction(Interaction):
-
-    def __init__(self, fluid: Flow, value: int, interaction_type: InteractionType) -> None:
+    def __init__(
+        self, fluid: Flow, value: int, interaction_type: InteractionType
+    ) -> None:
         """Creates an instance of a fluidic interactions between integers and fluids
 
         Args:
@@ -158,7 +169,9 @@ class FluidIntegerInteraction(Interaction):
             value (int): [description]
             interaction_type (InteractionType): [description]
         """
-        id = Interaction.get_id(fluid1=fluid, operator_string=Interaction.get_operator_str(interaction_type))
+        id = Interaction.get_id(
+            fluid1=fluid, operator_string=Interaction.get_operator_str(interaction_type)
+        )
         super().__init__(id, interaction_type)
         self._input_fignodes.append(fluid)
         self._value: int = value

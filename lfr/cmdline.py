@@ -1,20 +1,22 @@
-from lfr.moduleinstanceListener import ModuleInstanceListener
-from lfr.preprocessor import PreProcessor
-from lfr.distBlockListener import DistBlockListener
-from lfr.lfrbaseListener import LFRBaseListener
-import os
-from pathlib import Path
-from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
-from lfr.antlrgen.lfrXLexer import lfrXLexer
-from lfr.antlrgen.lfrXParser import lfrXParser
-from lfr.mappingCompiler import MappingCompiler
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 import argparse
-import lfr.parameters as parameters
 import glob
 import json
+import os
+from pathlib import Path
+
+from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+
+import lfr.parameters as parameters
 import lfr.utils as utils
-from lfr.netlistgenerator.v2.generator import generate_dropx_library, generate
+from lfr.antlrgen.lfrXLexer import lfrXLexer
+from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.distBlockListener import DistBlockListener
+from lfr.lfrbaseListener import LFRBaseListener
+from lfr.mappingCompiler import MappingCompiler
+from lfr.moduleinstanceListener import ModuleInstanceListener
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
+from lfr.netlistgenerator.v2.generator import generate, generate_dropx_library
+from lfr.preprocessor import PreProcessor
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 
 
@@ -23,21 +25,39 @@ def load_libraries():
     os.chdir(parameters.LIB_DIR)
     print(" LIB Path : " + str(parameters.LIB_DIR))
     for filename in glob.glob("*.json"):
-        file = open(filename, 'r')
+        file = open(filename, "r")
         lib_object = json.loads(file.read())
-        library[lib_object['name']] = MappingLibrary(lib_object)
+        library[lib_object["name"]] = MappingLibrary(lib_object)
     return library
 
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('input', nargs='+', help="This is the file thats used as the input ")
-    parser.add_argument('--outpath', type=str, default="out/", help="This is the output directory")
-    parser.add_argument('--technology', type=str, default="dropx", help="This is the mapping library you need to use")
-    parser.add_argument('--library', type=str, default="./library", help="This sets the default library where the different technologies sit in")
-    parser.add_argument('--no-mapping', help="Skipping Explicit Mappings")
-    parser.add_argument('--no-gen', action="store_true", help="Force the program to skip the device generation")
+    parser.add_argument(
+        "input", nargs="+", help="This is the file thats used as the input "
+    )
+    parser.add_argument(
+        "--outpath", type=str, default="out/", help="This is the output directory"
+    )
+    parser.add_argument(
+        "--technology",
+        type=str,
+        default="dropx",
+        help="This is the mapping library you need to use",
+    )
+    parser.add_argument(
+        "--library",
+        type=str,
+        default="./library",
+        help="This sets the default library where the different technologies sit in",
+    )
+    parser.add_argument("--no-mapping", help="Skipping Explicit Mappings")
+    parser.add_argument(
+        "--no-gen",
+        action="store_true",
+        help="Force the program to skip the device generation",
+    )
     args = parser.parse_args()
 
     # Utilize the prepreocessor to generate the input file

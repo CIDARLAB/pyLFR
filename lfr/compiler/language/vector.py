@@ -2,7 +2,9 @@ from lfr.compiler.language.vectorrange import VectorRange
 
 
 class Vector:
-    def __init__(self, id: str, vectortype=None, startindex: int = 0, endindex: int = 0):
+    def __init__(
+        self, id: str, vectortype=None, startindex: int = 0, endindex: int = 0
+    ):
         self.id = id
         self.startindex = startindex
         self.endindex = endindex
@@ -17,7 +19,7 @@ class Vector:
                     self.vec.append(vectortype(self.id + "_" + str(i)))
 
     def __len__(self):
-        return abs(self.startindex - self.endindex)+1
+        return abs(self.startindex - self.endindex) + 1
 
     def get_items(self) -> list:
         return self.vec

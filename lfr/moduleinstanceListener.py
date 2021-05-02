@@ -1,21 +1,23 @@
-from lfr.netlistgenerator import explicitmapping
-from lfr.fig.fignode import FIGNode
-from lfr.compiler.module import Module
 from typing import Dict, Optional
-from lfr.compiler.lfrerror import ErrorType, LFRError
+
 from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.compiler.lfrerror import ErrorType, LFRError
+from lfr.compiler.module import Module
 from lfr.distBlockListener import DistBlockListener
+from lfr.fig.fignode import FIGNode
+from lfr.netlistgenerator import explicitmapping
 
 
 class ModuleInstanceListener(DistBlockListener):
-
     def __init__(self) -> None:
         super().__init__()
         self._module_to_import: Optional[Module] = None
         # There Ref -> Here Ref
         self._io_mapping: Dict[str, str] = dict()
 
-    def enterModuleinstantiationstat(self, ctx: lfrXParser.ModuleinstantiationstatContext):
+    def enterModuleinstantiationstat(
+        self, ctx: lfrXParser.ModuleinstantiationstatContext
+    ):
         # Check if the type exists in current compiler memory
         type_id = ctx.moduletype().getText()
         module_to_import = None
@@ -23,7 +25,11 @@ class ModuleInstanceListener(DistBlockListener):
             if module_to_check.name == type_id:
                 module_to_import = module_to_check
         if module_to_import is None:
-            self.compilingErrors.append(LFRError(ErrorType.MODULE_NOT_FOUND, "Could find type {}".format(type_id)))
+            self.compilingErrors.append(
+                LFRError(
+                    ErrorType.MODULE_NOT_FOUND, "Could find type {}".format(type_id)
+                )
+            )
             return
         self._io_mapping = dict()
         self.currentModule.add_new_import(module_to_import)
@@ -31,7 +37,9 @@ class ModuleInstanceListener(DistBlockListener):
         # Save the reference in the class
         self._module_to_import = module_to_import
 
-    def exitModuleinstantiationstat(self, ctx: lfrXParser.ModuleinstantiationstatContext):
+    def exitModuleinstantiationstat(
+        self, ctx: lfrXParser.ModuleinstantiationstatContext
+    ):
         # Create new instance of the import the type
         type_id = ctx.moduletype().getText()
         io_mapping = self._io_mapping
@@ -47,10 +55,10 @@ class ModuleInstanceListener(DistBlockListener):
 
         # now go through the different connections in the module to import
         module_io = self._module_to_import.io
-        assert(len(module_io) == num_variables)
+        assert len(module_io) == num_variables
 
         for i in range(num_variables):
-            assert(len(module_io[i].vector_ref) == len(variables[i]))
+            assert len(module_io[i].vector_ref) == len(variables[i])
             # Since both the lengths are the same, just make 1-1 connections here
             # REDO - Use this if we need to vector range level mapping
             # self._io_mapping[module_io[i].id] = variables[i].id
@@ -69,22 +77,25 @@ class ModuleInstanceListener(DistBlockListener):
     #     for explicitmapping in ctx.explicitinstanceiomapping():
     #         module_io_labels.append(explicitmapping.ID().getText())
 
-
-    def exitExplicitinstanceiomapping(self, ctx: lfrXParser.ExplicitinstanceiomappingContext):
+    def exitExplicitinstanceiomapping(
+        self, ctx: lfrXParser.ExplicitinstanceiomappingContext
+    ):
         variable = self.stack.pop()
         label = ctx.ID().getText()
 
         # Check if label exists in module_to_import
         if label not in self._module_to_import.get_all_io():
-            self.compilingErrors.append(LFRError(
-                ErrorType.MODULE_IO_NOT_FOUND, 
-                "Could not find io `{}` in module `{}`".format(
-                    label,
-                    self._module_to_import.name
-                )))
+            self.compilingErrors.append(
+                LFRError(
+                    ErrorType.MODULE_IO_NOT_FOUND,
+                    "Could not find io `{}` in module `{}`".format(
+                        label, self._module_to_import.name
+                    ),
+                )
+            )
             return
 
         io = self._module_to_import.get_io(label)
-        assert(len(io.vector_ref) == len(variable))
+        assert len(io.vector_ref) == len(variable)
         for i in range(len(variable)):
             self._io_mapping[io.vector_ref[i].id] = variable[i].id
