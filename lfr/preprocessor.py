@@ -1,14 +1,13 @@
+import re
 from pathlib import Path
 from typing import List
-import re
-import networkx as nx
 
+import networkx as nx
 
 IMPORT_FILE_PATTERN = r"(`import\s+\"(\w+.lfr)\")"
 
 
 class PreProcessor(object):
-
     def __init__(self, file_list: List[str]) -> None:
         self.resolved_paths = dict()
         self.full_text = dict()
@@ -16,14 +15,14 @@ class PreProcessor(object):
         for file_path in file_list:
 
             extension = Path(file_path).suffix
-            if extension != '.lfr':
+            if extension != ".lfr":
                 print("Unrecognized file Extension")
                 exit()
 
             p = Path(file_path).resolve()
             print("Input Path: {0}".format(p))
             # Open a file: file
-            file = open(p, mode='r')
+            file = open(p, mode="r")
 
             # read all lines at once
             all_of_it = file.read()

@@ -1,6 +1,7 @@
-from lfr.netlistgenerator.primitive import Primitive
 from typing import List
+
 from lfr.fig.interaction import InteractionType
+from lfr.netlistgenerator.primitive import Primitive
 
 
 class MappingLibrary:
@@ -22,7 +23,9 @@ class MappingLibrary:
     def add_io_entry(self, primitive: Primitive) -> None:
         self.__io_primitives.append(primitive)
 
-    def add_operator_entry(self, primitve: Primitive, interaction_type: InteractionType) -> None:
+    def add_operator_entry(
+        self, primitve: Primitive, interaction_type: InteractionType
+    ) -> None:
         if interaction_type is InteractionType.MIX:
             self.__mix_operators.append(primitve)
         elif interaction_type is InteractionType.SIEVE:

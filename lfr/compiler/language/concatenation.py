@@ -34,7 +34,7 @@ class Concatenation:
 
     def get_range(self, startindex: int = None, endindex: int = None) -> VectorRange:
         start = startindex if startindex is not None else 0
-        end = endindex if endindex is not None else len(self)-1
+        end = endindex if endindex is not None else len(self) - 1
         # vec = []
         # for r in self.ranges:
         #     vec.extend(r)

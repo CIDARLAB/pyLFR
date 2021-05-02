@@ -1,16 +1,18 @@
+from enum import Enum
+from os import path
 from typing import List
-from pymint.mintdevice import MINTDevice
+
+from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
 from pymint.antlr.mintLexer import mintLexer
 from pymint.antlr.mintParser import mintParser
 from pymint.mintcompiler import MINTCompiler
-from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
-from os import path
-from enum import Enum
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from pymint.mintcomponent import MINTComponent
+from pymint.mintdevice import MINTDevice
+
 from lfr import parameters
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from pymint.mintcomponent import MINTComponent
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
 
 class PrimitiveType(Enum):
@@ -33,7 +35,7 @@ class Primitive:
         carriers: List[ConnectingOption] = [],
         default_netlist: str = None,
         functional_input_params: List[str] = [],
-        output_params: List[str] = []
+        output_params: List[str] = [],
     ) -> None:
 
         self._component_type: PrimitiveType = component_type
@@ -126,11 +128,8 @@ class Primitive:
 
 
 class NetworkPrimitive(Primitive):
-
     def __init__(self, fig_subgraph_view, gen_strategy: GenStrategy) -> None:
-        super().__init__(
-            component_type=PrimitiveType.PROCEDURAL
-        )
+        super().__init__(component_type=PrimitiveType.PROCEDURAL)
 
         self._gen_strategy = gen_strategy
         # Write methods that will utilize the subgraph view to generate the
@@ -139,11 +138,21 @@ class NetworkPrimitive(Primitive):
         self._netlist: MINTDevice = None
 
     def generate_netlist(self) -> None:
-        self._netlist = self._gen_strategy.generate_flow_network(self._fig_subgraph_view)
-        self._inputs = self._gen_strategy.generate_input_connectingoptions(self._fig_subgraph_view)
-        self._outputs = self._gen_strategy.generate_output_connectingoptions(self._fig_subgraph_view)
-        self._carriers = self._gen_strategy.generate_carrier_connectingoptions(self._fig_subgraph_view)
-        self._loadings = self._gen_strategy.generate_loading_connectingoptions(self._fig_subgraph_view)
+        self._netlist = self._gen_strategy.generate_flow_network(
+            self._fig_subgraph_view
+        )
+        self._inputs = self._gen_strategy.generate_input_connectingoptions(
+            self._fig_subgraph_view
+        )
+        self._outputs = self._gen_strategy.generate_output_connectingoptions(
+            self._fig_subgraph_view
+        )
+        self._carriers = self._gen_strategy.generate_carrier_connectingoptions(
+            self._fig_subgraph_view
+        )
+        self._loadings = self._gen_strategy.generate_loading_connectingoptions(
+            self._fig_subgraph_view
+        )
 
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
         # Utilise the subgraph view to decide how you want to generate a netlist

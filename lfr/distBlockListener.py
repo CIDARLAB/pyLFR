@@ -1,14 +1,14 @@
-from typing import List, Tuple, Optional
-from lfr.compiler.lfrerror import ErrorType, LFRError
-from lfr.compiler.distribute.distributeblock import DistributeBlock
+from typing import List, Optional, Tuple
+
 from lfr.antlrgen.lfrXParser import lfrXParser
-from lfr.lfrbaseListener import LFRBaseListener, ListenerMode
-from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.distribute.BitVector import BitVector
+from lfr.compiler.distribute.distributeblock import DistributeBlock
+from lfr.compiler.language.vectorrange import VectorRange
+from lfr.compiler.lfrerror import ErrorType, LFRError
+from lfr.lfrbaseListener import LFRBaseListener, ListenerMode
 
 
 class DistBlockListener(LFRBaseListener):
-
     def __init__(self) -> None:
         super().__init__()
         self._current_dist_block: Optional[DistributeBlock] = None
@@ -32,9 +32,9 @@ class DistBlockListener(LFRBaseListener):
         # TODO - We only have a very limited range of validation right now
         # this needs to be extended to work with all kinds of conditions
         # not just 1 variable and the values of 0 or 1.
-        assert(len(lhs) == 1)
-        assert(rhs == 0 or rhs == 1)
-        assert(relation_operator == '==')
+        assert len(lhs) == 1
+        assert rhs == 0 or rhs == 1
+        assert relation_operator == "=="
 
         state_vector = self._current_dist_block.generate_state_vector([lhs], [rhs == 1])
         self._current_state = state_vector
@@ -57,7 +57,7 @@ class DistBlockListener(LFRBaseListener):
                 self.compilingErrors.append(
                     LFRError(
                         ErrorType.SIGNAL_NOT_FOUND,
-                        "Cannot find signal - {}".format(signal_name)
+                        "Cannot find signal - {}".format(signal_name),
                     )
                 )
                 continue
@@ -81,7 +81,9 @@ class DistBlockListener(LFRBaseListener):
         # TODO - Generate the fig from the distribute block
         self._current_dist_block.generate_fig(self.currentModule.FIG)
 
-    def enterDistributionassignstat(self, ctx: lfrXParser.DistributionassignstatContext):
+    def enterDistributionassignstat(
+        self, ctx: lfrXParser.DistributionassignstatContext
+    ):
         print("Entering the dis assign stat")
         self.listermode = ListenerMode.DISTRIBUTE_ASSIGN_STAT_MODE
         pass
@@ -129,7 +131,9 @@ class DistBlockListener(LFRBaseListener):
         self._accumulated_states.append(self._current_state)
         dist_block = self._current_dist_block
         for connectivity in self._current_connectivities:
-            dist_block.set_connectivity(self._current_state, connectivity[0], connectivity[1])
+            dist_block.set_connectivity(
+                self._current_state, connectivity[0], connectivity[1]
+            )
 
     def exitElseIfBlock(self, ctx: lfrXParser.ElseIfBlockContext):
         # We need to go through all the current connectivities
@@ -137,16 +141,22 @@ class DistBlockListener(LFRBaseListener):
         self._accumulated_states.append(self._current_state)
         dist_block = self._current_dist_block
         for connectivity in self._current_connectivities:
-            dist_block.set_connectivity(self._current_state, connectivity[0], connectivity[1])
+            dist_block.set_connectivity(
+                self._current_state, connectivity[0], connectivity[1]
+            )
 
     def enterElseBlock(self, ctx: lfrXParser.ElseBlockContext):
         self._current_connectivities = []
 
     def exitElseBlock(self, ctx: lfrXParser.ElseBlockContext):
-        remaining_states = self._current_dist_block.get_remaining_states(self._accumulated_states)
+        remaining_states = self._current_dist_block.get_remaining_states(
+            self._accumulated_states
+        )
         for state in remaining_states:
             for connectivity in self._current_connectivities:
-                self._current_dist_block.set_connectivity(state, connectivity[0], connectivity[1])
+                self._current_dist_block.set_connectivity(
+                    state, connectivity[0], connectivity[1]
+                )
 
     def enterCaseBlock(self, ctx: lfrXParser.CaseBlockContext):
         self._accumulated_states = []
@@ -161,7 +171,7 @@ class DistBlockListener(LFRBaseListener):
 
     def exitCasestat(self, ctx: lfrXParser.CasestatContext):
         rhs = self.stack.pop()
-        assert(isinstance(rhs, BitVector))
+        assert isinstance(rhs, BitVector)
         lhs = self._current_lhs
         dist_block = self._current_dist_block
         rhs_list = [rhs[i] == 1 for i in range(len(rhs))]
@@ -169,4 +179,6 @@ class DistBlockListener(LFRBaseListener):
         self._current_state = state_vector
 
         for connectivity in self._current_connectivities:
-            dist_block.set_connectivity(self._current_state, connectivity[0], connectivity[1])
+            dist_block.set_connectivity(
+                self._current_state, connectivity[0], connectivity[1]
+            )

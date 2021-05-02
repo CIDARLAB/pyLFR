@@ -1,5 +1,6 @@
-import lfr
 import pathlib
+
+import lfr
 
 # Global Variables
 LFR_DIR = pathlib.Path(lfr.__file__).parent.parent.absolute()

@@ -1,20 +1,24 @@
-from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-from lfr.netlistgenerator.v2.networkmappingoption import NetworkMappingOption, NetworkMappingOptionType
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.fig.fignode import Flow, IOType, ValueNode
 from typing import List
-from pymint.mintdevice import MINTDevice
-from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.fig.interaction import FluidIntegerInteraction, FluidNumberInteraction, InteractionType
-from lfr.netlistgenerator.v2.mappingoption import MappingOption
-from lfr.compiler.module import Module
-import networkx as nx
 
+import networkx as nx
+from pymint.mintdevice import MINTDevice
+
+from lfr.compiler.module import Module
+from lfr.fig.fignode import Flow, IOType, ValueNode
+from lfr.fig.interaction import (FluidIntegerInteraction,
+                                 FluidNumberInteraction, InteractionType)
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
+from lfr.netlistgenerator.namegenerator import NameGenerator
+from lfr.netlistgenerator.primitive import (NetworkPrimitive, Primitive,
+                                            PrimitiveType)
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.v2.mappingoption import MappingOption
+from lfr.netlistgenerator.v2.networkmappingoption import (
+    NetworkMappingOption, NetworkMappingOptionType)
 
 # def generate_MARS_library() -> MappingLibrary:
 #     # TODO - Programatically create each of the items necessary for the MARS primitive library,
@@ -88,7 +92,7 @@ def generate_dropx_library() -> MappingLibrary:
         None,
         None,
         None,
-        None
+        None,
     )
 
     library.add_io_entry(port)
@@ -185,7 +189,7 @@ def generate_dropx_library() -> MappingLibrary:
             "normalized_oil_inlet",
             "normalized_orifice_length",
             "normalized_water_inlet",
-        ]
+        ],
     )
 
     library.add_operator_entry(droplet_generator, InteractionType.METER)
@@ -300,7 +304,9 @@ def generate_dropx_library() -> MappingLibrary:
         None,
     )
 
-    library.add_operator_entry(droplet_capacitance_sensor, InteractionType.TECHNOLOGY_PROCESS)
+    library.add_operator_entry(
+        droplet_capacitance_sensor, InteractionType.TECHNOLOGY_PROCESS
+    )
 
     # DROPLET FLUORESCENCE SENSOR
 
@@ -328,7 +334,9 @@ def generate_dropx_library() -> MappingLibrary:
         None,
     )
 
-    library.add_operator_entry(droplet_fluorescence_sensor, InteractionType.TECHNOLOGY_PROCESS)
+    library.add_operator_entry(
+        droplet_fluorescence_sensor, InteractionType.TECHNOLOGY_PROCESS
+    )
 
     # DROPLET LUMINESCENCE SENSOR
     droplet_luminescence_sensor_inputs = []
@@ -355,7 +363,9 @@ def generate_dropx_library() -> MappingLibrary:
         None,
     )
 
-    library.add_operator_entry(droplet_luminescence_sensor, InteractionType.TECHNOLOGY_PROCESS)
+    library.add_operator_entry(
+        droplet_luminescence_sensor, InteractionType.TECHNOLOGY_PROCESS
+    )
 
     # DROPLET SPACER
 
@@ -417,9 +427,15 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
         for operator_candidate in operator_candidates:
             # TODO: This will change in the future when we can match subgraphs correctly
-            if isinstance(interaction, FluidNumberInteraction) or isinstance(interaction, FluidIntegerInteraction):
+            if isinstance(interaction, FluidNumberInteraction) or isinstance(
+                interaction, FluidIntegerInteraction
+            ):
                 # Basically add the value node id into the subgraph view also
-                node_ids = [module.FIG.get_fignode(edge[0]).id for edge in module.FIG.in_edges(interaction.id) if isinstance(module.FIG.get_fignode(edge[0]), ValueNode)]
+                node_ids = [
+                    module.FIG.get_fignode(edge[0]).id
+                    for edge in module.FIG.in_edges(interaction.id)
+                    if isinstance(module.FIG.get_fignode(edge[0]), ValueNode)
+                ]
                 node_ids.append(interaction.id)
                 sub_graph = module.FIG.subgraph(node_ids)
             else:
@@ -498,7 +514,9 @@ def connect_orphan_IO():
     print("Implement the orphan io generation system")
 
 
-def get_flow_flow_candidates(module: Module, gen_strategy: GenStrategy) -> List[ConstructionNode]:
+def get_flow_flow_candidates(
+    module: Module, gen_strategy: GenStrategy
+) -> List[ConstructionNode]:
     # TODO - go through all the edges and see which ones are between flow-flow graphs
     # If these connectsions are between flow-flow nodes then we need to figure out
     # which ones are part of the same network/connected graphs with only flow nodes
@@ -516,7 +534,9 @@ def get_flow_flow_candidates(module: Module, gen_strategy: GenStrategy) -> List[
 
     # Step 1. Do a shallow copy of the graph
     fig_original = module.FIG
-    fig_copy = module.FIG.copy()  # Note this does not copy anything besides the nx.DiGraph at the moment
+    fig_copy = (
+        module.FIG.copy()
+    )  # Note this does not copy anything besides the nx.DiGraph at the moment
 
     # Step 2. Remove all the fignodes that are not Flow
     remove_list = []
@@ -536,7 +556,7 @@ def get_flow_flow_candidates(module: Module, gen_strategy: GenStrategy) -> List[
         sub = fig_original.subgraph(component)
         # TODO - Decide what the mapping type should be. for now assume that we just a single
         # passthrough type scenario where we don't have to do much work
-        assert(len(sub.nodes) == 1)
+        assert len(sub.nodes) == 1
         mapping_type = NetworkMappingOptionType.PASS_THROUGH
         nprimitive = NetworkPrimitive(sub, gen_strategy)
         nprimitive.generate_netlist()

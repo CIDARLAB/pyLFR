@@ -1,9 +1,9 @@
 from typing import Dict
-from pymint import MINTConnection, MINTComponent, MINTDevice
+
+from pymint import MINTComponent, MINTConnection, MINTDevice
 
 
 class NameGenerator(object):
-
     def __init__(self) -> None:
         self.dictionary = dict()
         # Key - Old NAme, Value - new name
@@ -62,7 +62,9 @@ class NameGenerator(object):
         connection.overwrite_id(new_name)
 
         # Rename source
-        connection.source.component = self.get_cn_name(cn_id, connection.source.component)
+        connection.source.component = self.get_cn_name(
+            cn_id, connection.source.component
+        )
 
         # Rename sinks
         for sink in connection.sinks:
@@ -92,7 +94,11 @@ class NameGenerator(object):
 
         # Print a warning incase of rewrite
         if old_name in self._cn_rename_map[cn_id].keys():
-            print("Warning! - Rewriting entry '{}' in Construction Node - {}".format(old_name, cn_id.id))
+            print(
+                "Warning! - Rewriting entry '{}' in Construction Node - {}".format(
+                    old_name, cn_id.id
+                )
+            )
         self._cn_rename_map[cn_id][old_name] = new_name
 
     def get_cn_name(self, cn_id: str, old_name: str) -> str:
