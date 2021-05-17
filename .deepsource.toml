@@ -1,0 +1,18 @@
+version = 1
+
+exclude_patterns = ["**/antlrgen/*"]
+
+[[analyzers]]
+name = "python"
+enabled = true
+
+  [analyzers.meta]
+  runtime_version = "3.x.x"
+
+[[transformers]]
+name = "isort"
+enabled = true
+
+[[transformers]]
+name = "black"
+enabled = true
