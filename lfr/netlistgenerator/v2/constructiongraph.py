@@ -1,23 +1,22 @@
 from copy import copy
-from networkx.classes.digraph import DiGraph
-
-from networkx.classes.function import subgraph
-from lfr.fig.fignode import FIGNode
-from pymint.mintcomponent import MINTComponent
-from lfr.netlistgenerator.v2.networkmappingoption import (
-    NetworkMappingOption,
-    NetworkMappingOptionType,
-)
-from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
-from pymint.minttarget import MINTTarget
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.compiler.module import Module
-from lfr.netlistgenerator.namegenerator import NameGenerator
 from typing import Dict, List, Set, Tuple
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+
 from networkx import nx
-from pymint.mintdevice import MINTDevice
 from networkx.algorithms import isomorphism
+from networkx.classes.digraph import DiGraph
+from networkx.classes.function import subgraph
+from pymint.mintcomponent import MINTComponent
+from pymint.mintdevice import MINTDevice
+from pymint.minttarget import MINTTarget
+
+from lfr.compiler.module import Module
+from lfr.fig.fignode import FIGNode
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.netlistgenerator.namegenerator import NameGenerator
+from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
+from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+from lfr.netlistgenerator.v2.networkmappingoption import (
+    NetworkMappingOption, NetworkMappingOptionType)
 
 
 class ConstructionGraph(nx.DiGraph):

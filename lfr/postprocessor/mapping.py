@@ -1,6 +1,7 @@
 import copy
-from lfr.fig.fignode import FIGNode
 from typing import List, Optional
+
+from lfr.fig.fignode import FIGNode
 from lfr.postprocessor.constraints import Constraint
 
 

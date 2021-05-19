@@ -1,5 +1,6 @@
 from typing import Dict
-from pymint import MINTConnection, MINTComponent, MINTDevice
+
+from pymint import MINTComponent, MINTConnection, MINTDevice
 
 
 class NameGenerator(object):

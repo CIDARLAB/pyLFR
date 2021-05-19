@@ -1,11 +1,14 @@
 from __future__ import annotations
-from lfr.fig.fignode import ANDAnnotation, NOTAnnotation, ORAnnotation
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+
 from typing import Dict, List, Tuple
+
 import networkx as nx
-from lfr.compiler.distribute.BitVector import BitVector
 import numpy as np
 from tabulate import tabulate
+
+from lfr.compiler.distribute.BitVector import BitVector
+from lfr.fig.fignode import ANDAnnotation, NOTAnnotation, ORAnnotation
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 
 
 class StateTable(object):

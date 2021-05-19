@@ -1,15 +1,16 @@
 import copy
-from typing import List, Optional
-from pymint.mintdevice import MINTDevice
-from pymint.mintparams import MINTParams
 from enum import Enum
+from typing import List, Optional
 
+from pymint.mintcomponent import MINTComponent
+from pymint.mintdevice import MINTDevice
 from pymint.mintlayer import MINTLayer
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from pymint.mintparams import MINTParams
+
 from lfr import parameters
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from pymint.mintcomponent import MINTComponent
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
 
 class PrimitiveType(Enum):

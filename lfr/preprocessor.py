@@ -1,12 +1,13 @@
-from lfr.antlrgen.lfrXParser import lfrXParser
-from antlr4.CommonTokenStream import CommonTokenStream
-from lfr.antlrgen.lfrXLexer import lfrXLexer
+import re
 from pathlib import Path
 from typing import List
-import re
-from antlr4.FileStream import FileStream
-import networkx as nx
 
+import networkx as nx
+from antlr4.CommonTokenStream import CommonTokenStream
+from antlr4.FileStream import FileStream
+
+from lfr.antlrgen.lfrXLexer import lfrXLexer
+from lfr.antlrgen.lfrXParser import lfrXParser
 
 IMPORT_FILE_PATTERN = r"(`import\s+\"(\w+.lfr)\")"
 

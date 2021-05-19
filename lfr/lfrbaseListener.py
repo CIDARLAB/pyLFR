@@ -1,4 +1,10 @@
-from lfr.fig.fignode import IOType, Flow, IONode, Storage, Signal, Pump
+import re
+from enum import Enum
+from typing import List, Optional
+
+from lfr.antlrgen.lfrXListener import lfrXListener
+from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.compiler.distribute.BitVector import BitVector
 from lfr.compiler.language.concatenation import Concatenation
 from lfr.compiler.language.fluidexpression import FluidExpression
 from lfr.compiler.language.utils import is_number
@@ -7,12 +13,7 @@ from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
 from lfr.compiler.moduleio import ModuleIO
-from enum import Enum
-from typing import List, Optional
-from lfr.compiler.distribute.BitVector import BitVector
-import re
-from lfr.antlrgen.lfrXListener import lfrXListener
-from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.fig.fignode import Flow, IONode, IOType, Pump, Signal, Storage
 
 
 class ListenerMode(Enum):
