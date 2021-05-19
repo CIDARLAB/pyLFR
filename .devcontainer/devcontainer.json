@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.166.1/containers/ubuntu
 {
-  "name": "pLFR - Ubuntu",
+  "name": "pyLFR - Ubuntu",
   "build": {
     "dockerfile": "Dockerfile",
     // Update 'VARIANT' to pick an Ubuntu version: focal, bionic
@@ -14,7 +14,7 @@
   },
 
   // Add the IDs of extensions you want installed when the container is created.
-  "extensions": ["ms-python.vscode-pylance", "ms-python.python","njpwerner.autodocstring", "rkrishnasanka.lfr", "rkrishnasanka.uf"]
+  "extensions": ["ms-python.vscode-pylance", "ms-python.python","njpwerner.autodocstring","bungcip.better-toml", "rkrishnasanka.lfr", "rkrishnasanka.uf"]
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
