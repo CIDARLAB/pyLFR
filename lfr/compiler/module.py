@@ -6,15 +6,22 @@ from typing import Dict, List, Optional
 from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.fignode import FIGNode, Flow, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.fig.interaction import (FluidFluidInteraction,
-                                 FluidIntegerInteraction,
-                                 FluidNumberInteraction,
-                                 FluidProcessInteraction, Interaction,
-                                 InteractionType)
+from lfr.fig.interaction import (
+    FluidFluidInteraction,
+    FluidIntegerInteraction,
+    FluidNumberInteraction,
+    FluidProcessInteraction,
+    Interaction,
+    InteractionType,
+)
 from lfr.netlistgenerator.explicitmapping import ExplicitMapping
-from lfr.postprocessor.mapping import (FluidicOperatorMapping, NetworkMapping,
-                                       NodeMappingTemplate, PumpMapping,
-                                       StorageMapping)
+from lfr.postprocessor.mapping import (
+    FluidicOperatorMapping,
+    NetworkMapping,
+    NodeMappingTemplate,
+    PumpMapping,
+    StorageMapping,
+)
 
 
 class Module:
@@ -80,7 +87,10 @@ class Module:
         return finteraction
 
     def add_finteraction_custom_interaction(
-        self, item: Interaction, operator: str, interaction_type: InteractionType
+        self,
+        item: Interaction,
+        operator: str,
+        interaction_type: InteractionType,
     ) -> Interaction:
         # Check if the item exists
         # TODO: create finteraction factory method and FluidInteraction
@@ -106,7 +116,10 @@ class Module:
         return fluid_interaction
 
     def add_fluid_finteraction_interaction(
-        self, fluid1: Flow, finteraction: Interaction, interaction_type: InteractionType
+        self,
+        fluid1: Flow,
+        finteraction: Interaction,
+        interaction_type: InteractionType,
     ) -> Interaction:
         # TODO: Create new factory method for creating this kind of fluid interaction
         new_fluid_interaction = FluidFluidInteraction(

@@ -38,10 +38,8 @@ class FluidInteractionGraph(nx.DiGraph):
             return self._fignodes[id]
         else:
             raise Exception(
-                "Cannot find the node '{}' in the \
-                FluidInteractionGraph".format(
-                    id
-                )
+                "Cannot find the node '{}' in the                 FluidInteractionGraph"
+                .format(id)
             )
 
     def load_fignodes(self, fig_nodes: List[FIGNode]) -> None:

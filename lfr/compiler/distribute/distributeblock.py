@@ -43,8 +43,8 @@ class DistributeBlock:
     def sensitivity_list(self, signal_list: List[VectorRange]) -> None:
         if self._state_table is not None:
             raise Exception(
-                "Cannot update the sensitivity list since \
-                state table has already been generated !"
+                "Cannot update the sensitivity list since                 state table"
+                " has already been generated !"
             )
         self._sensitivity_list = signal_list
         # self._state_header = self.__generate_state_header()

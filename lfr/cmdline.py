@@ -56,7 +56,10 @@ def main():
     parser.add_argument(
         "--no-annotations",
         action="store_true",
-        help="Force the compiler to skip reading postprocess annotations like #MAP and #CONSTRAIN",
+        help=(
+            "Force the compiler to skip reading postprocess annotations like #MAP and"
+            " #CONSTRAIN"
+        ),
     )
     args = parser.parse_args()
 

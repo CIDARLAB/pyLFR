@@ -75,7 +75,8 @@ class ConstructionNode:
         if self._explict_mapping_flag is True:
             # TODO - Add user flag for overwriting explicit mappings
             print(
-                "Warning, cannot update construction graph node {}, since explicit mapping is present"
+                "Warning, cannot update construction graph node {}, since explicit"
+                " mapping is present"
             )
         else:
             self._mapping_options.append(mapping_option)

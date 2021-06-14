@@ -16,7 +16,9 @@ from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from lfr.netlistgenerator.v2.networkmappingoption import (
-    NetworkMappingOption, NetworkMappingOptionType)
+    NetworkMappingOption,
+    NetworkMappingOptionType,
+)
 
 
 class ConstructionGraph(nx.DiGraph):
@@ -144,9 +146,8 @@ class ConstructionGraph(nx.DiGraph):
                     return cn
 
         raise Exception(
-            "Could not find construction node with an active mappingoption that covers FIG node: {}".format(
-                fig_node.id
-            )
+            "Could not find construction node with an active mappingoption that covers"
+            " FIG node: {}".format(fig_node.id)
         )
 
     def split_cn(
@@ -366,12 +367,16 @@ class ConstructionGraph(nx.DiGraph):
                     is not True
                 ):
                     continue
-                graph_matcher = isomorphism.DiGraphMatcher(cn_subgraph, netlist_subgraph)
+                graph_matcher = isomorphism.DiGraphMatcher(
+                    cn_subgraph, netlist_subgraph
+                )
                 is_it_isomorphic = graph_matcher.is_isomorphic()
                 if is_it_isomorphic:
                     return cn
 
-        raise Exception("Could not find construction node with the same netlist subgraph")
+        raise Exception(
+            "Could not find construction node with the same netlist subgraph"
+        )
 
     def __create_passthrough_channel(
         self,
@@ -631,9 +636,9 @@ class ConstructionGraph(nx.DiGraph):
                 or tar not in fig_nodes_cn_reverse_map.keys()
             ):
                 print(
-                    "Warning in generating Construction graph edges ! - Src `{}` or Tar `{}` not in the reverse-mapping of construction , under coverage issue".format(
-                        src, tar
-                    )
+                    "Warning in generating Construction graph edges ! - Src `{}` or Tar"
+                    " `{}` not in the reverse-mapping of construction , under coverage"
+                    " issue".format(src, tar)
                 )
                 # raise Exception(
                 #     "Src or Tar not in the construction graph, under coverage issue"

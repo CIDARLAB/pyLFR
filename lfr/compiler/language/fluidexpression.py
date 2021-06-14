@@ -87,18 +87,16 @@ class FluidExpression:
                         raise Exception("Cannot do fluidic operation on two numbers")
                     elif is_number(operand1):
                         print(
-                            "Performing the operation: \n Operator - {2} \n Number - {0} \n Fluid - {1}".format(
-                                operand1, operand2, operator
-                            )
+                            "Performing the operation: \n Operator - {2} \n Number -"
+                            " {0} \n Fluid - {1}".format(operand1, operand2, operator)
                         )
                         result = self.__evaluate_fluid_numeric_operator(
                             operand2, operand1, operator
                         )
                     elif is_number(operand2):
                         print(
-                            "Performing the operation: \n Operator - {2} \n Number - {1} \n Fluid - {0}".format(
-                                operand1, operand2, operator
-                            )
+                            "Performing the operation: \n Operator - {2} \n Number -"
+                            " {1} \n Fluid - {0}".format(operand1, operand2, operator)
                         )
                         result = self.__evaluate_fluid_numeric_operator(
                             operand1, operand2, operator

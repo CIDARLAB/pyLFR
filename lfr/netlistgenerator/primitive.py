@@ -41,7 +41,8 @@ class Primitive:
         # TODO - Cleanup the logic for this later
         if mint == "" and component_type is not PrimitiveType.PROCEDURAL:
             raise Exception(
-                "Cannot instantiate an Primitive type object if mint sting is not present"
+                "Cannot instantiate an Primitive type object if mint sting is not"
+                " present"
             )
         self._mint: str = mint
         self._is_storage: bool = is_storage

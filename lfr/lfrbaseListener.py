@@ -146,9 +146,8 @@ class LFRBaseListener(lfrXListener):
                     self.compilingErrors.append(
                         LFRError(
                             ErrorType.VECTOR_SIZE_MISMATCH,
-                            "explicit i/o:{0} definition not same size as module definition".format(
-                                name
-                            ),
+                            "explicit i/o:{0} definition not same size as module"
+                            " definition".format(name),
                         )
                     )
 
@@ -282,9 +281,8 @@ class LFRBaseListener(lfrXListener):
             endindex = v.endindex
         else:
             raise Exception(
-                "Trying to parse vector variable {} and we couldn't find the vector in itself: Line - {}".format(
-                    name, ctx.start.line
-                )
+                "Trying to parse vector variable {} and we couldn't find the vector in"
+                " itself: Line - {}".format(name, ctx.start.line)
             )
 
         # Check to see if the slice is present utilize the index
@@ -319,7 +317,8 @@ class LFRBaseListener(lfrXListener):
             self.compilingErrors.append(
                 LFRError(
                     ErrorType.COMPILER_NOT_IMPLEMENTED,
-                    "Selecting range from compiler has not been implemented, ignoring range for concatenation on line {0} column{1}".format(
+                    "Selecting range from compiler has not been implemented, ignoring"
+                    " range for concatenation on line {0} column{1}".format(
                         ctx.start.getLine(), ctx.start.getCharPositionInLine()
                     ),
                 )
