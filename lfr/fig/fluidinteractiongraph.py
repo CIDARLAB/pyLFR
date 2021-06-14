@@ -1,25 +1,18 @@
 from __future__ import annotations
-from lfr.postprocessor.mapping import NodeMappingTemplate
-from typing import List, Dict
-from lfr.fig.fignode import (
-    ANDAnnotation,
-    FIGNode,
-    IONode,
-    IOType,
-    NOTAnnotation,
-    ORAnnotation,
-    ValueNode,
-)
-from lfr.fig.interaction import (
-    Interaction,
-    FluidFluidInteraction,
-    FluidProcessInteraction,
-    FluidNumberInteraction,
-    FluidIntegerInteraction,
-    InteractionType,
-)
-import networkx as nx
+
 import copy
+from typing import Dict, List
+
+import networkx as nx
+
+from lfr.fig.fignode import (ANDAnnotation, FIGNode, IONode, IOType,
+                             NOTAnnotation, ORAnnotation, ValueNode)
+from lfr.fig.interaction import (FluidFluidInteraction,
+                                 FluidIntegerInteraction,
+                                 FluidNumberInteraction,
+                                 FluidProcessInteraction, Interaction,
+                                 InteractionType)
+from lfr.postprocessor.mapping import NodeMappingTemplate
 
 
 class FluidInteractionGraph(nx.DiGraph):
