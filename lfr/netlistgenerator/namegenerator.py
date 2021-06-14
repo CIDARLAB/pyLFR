@@ -6,17 +6,19 @@ from pymint import MINTComponent, MINTConnection, MINTDevice
 class NameGenerator:
     """Helps Generate new names
 
-    Has a dictionary and helper functions that help user to to generate new names
-    and keeps track of the new new names being generated for specific MINT technology strings.
+    Has a dictionary and helper functions that help user to to generate new
+    names and keeps track of the new new names being generated for specific
+    MINT technology strings.
 
-    Has a whole bunch of functions that will let the user rename all the components in a device.
+    Has a whole bunch of functions that will let the user rename all the
+    components in a device.
     """
 
     def __init__(self) -> None:
-        self._counter_dictionary = dict()
+        self._counter_dictionary = {}
         # Key - Old NAme, Value - new name
-        self._cn_rename_map: Dict[str, Dict[str, str]] = dict()
-        self._rename_map: Dict[str, str] = dict()
+        self._cn_rename_map: Dict[str, Dict[str, str]] = {}
+        self._rename_map: Dict[str, str] = {}
 
     def generate_name(self, technology_string: str) -> str:
         """Generates a new name for the given technology string
@@ -27,7 +29,7 @@ class NameGenerator:
         Eg. for args: MIXER -> output mixer_1
 
         Args:
-            technology_string (str): MINT Technology type to generate names for
+            technology_string (str): MINT Technology type to generate names
 
         Returns:
             str: [description]
@@ -65,7 +67,8 @@ class NameGenerator:
     def rename_cn_component(self, cn_id: str, component: MINTComponent) -> str:
         """Renames the Construction Node related component
 
-        Also stores what the corresponding rename map against the construciton node id
+        Also stores what the corresponding rename map against the construction
+        node id
 
         Args:
             cn_id (str): ConstructionNode ID
