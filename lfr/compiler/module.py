@@ -1,25 +1,20 @@
 from __future__ import annotations
-from lfr.postprocessor.mapping import (
-    FluidicOperatorMapping,
-    NetworkMapping,
-    NodeMappingTemplate,
-    PumpMapping,
-    StorageMapping,
-)
+
+import copy
 from typing import Dict, List, Optional
-from lfr.netlistgenerator.explicitmapping import ExplicitMapping
+
+from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.fignode import FIGNode, Flow, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.compiler.moduleio import ModuleIO
-from lfr.fig.interaction import (
-    FluidFluidInteraction,
-    FluidIntegerInteraction,
-    FluidNumberInteraction,
-    FluidProcessInteraction,
-    Interaction,
-    InteractionType,
-)
-import copy
+from lfr.fig.interaction import (FluidFluidInteraction,
+                                 FluidIntegerInteraction,
+                                 FluidNumberInteraction,
+                                 FluidProcessInteraction, Interaction,
+                                 InteractionType)
+from lfr.netlistgenerator.explicitmapping import ExplicitMapping
+from lfr.postprocessor.mapping import (FluidicOperatorMapping, NetworkMapping,
+                                       NodeMappingTemplate, PumpMapping,
+                                       StorageMapping)
 
 
 class Module:

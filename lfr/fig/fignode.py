@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 MATCH_STRING_ORDERING = [
     "IO",
     "FLOW",
