@@ -346,7 +346,7 @@ class ConstructionGraph(nx.DiGraph):
         # TODO - I need to figure out how to pipeline the loadings/carriers and other things
         pass
 
-    def get_subgraph_cn(self, subgraph) -> ConstructionNode:
+    def get_subgraph_cn(self, netlist_subgraph) -> ConstructionNode:
         """Returns the Construction node matching the subgraph
 
         Args:
@@ -356,7 +356,7 @@ class ConstructionGraph(nx.DiGraph):
             ConstructionNode: Construction node that contains the
             same subgraph
         """
-        subgraph_node_list = list(subgraph.nodes)
+        subgraph_node_list = list(netlist_subgraph.nodes)
         for cn in list(self._construction_nodes.values()):
             for mapping_option in cn.mapping_options:
                 cn_subgraph = mapping_option.fig_subgraph
@@ -366,12 +366,12 @@ class ConstructionGraph(nx.DiGraph):
                     is not True
                 ):
                     continue
-                graph_matcher = isomorphism.DiGraphMatcher(cn_subgraph, subgraph)
+                graph_matcher = isomorphism.DiGraphMatcher(cn_subgraph, netlist_subgraph)
                 is_it_isomorphic = graph_matcher.is_isomorphic()
                 if is_it_isomorphic:
                     return cn
 
-        raise Exception("Could not find construction node with the same subgraph")
+        raise Exception("Could not find construction node with the same netlist subgraph")
 
     def __create_passthrough_channel(
         self,
