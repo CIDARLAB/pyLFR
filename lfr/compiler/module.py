@@ -22,7 +22,7 @@ from lfr.fig.interaction import (
 import copy
 
 
-class Module(object):
+class Module:
     def __init__(self, name):
         self.name = name
         self._imported_modules: List[Module] = []

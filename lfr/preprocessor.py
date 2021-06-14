@@ -11,7 +11,7 @@ import networkx as nx
 IMPORT_FILE_PATTERN = r"(`import\s+\"(\w+.lfr)\")"
 
 
-class PreProcessor(object):
+class PreProcessor:
     def __init__(self, file_list: List[str]) -> None:
         self.resolved_paths = dict()
         self.full_text = dict()

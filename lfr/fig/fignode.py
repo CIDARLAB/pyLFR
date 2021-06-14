@@ -18,7 +18,7 @@ class IOType(Enum):
     CONTROL = 3
 
 
-class FIGNode(object):
+class FIGNode:
     def __init__(self, id: str) -> None:
         self._id: str = id
 

@@ -2,7 +2,7 @@ from typing import Dict
 from pymint import MINTConnection, MINTComponent, MINTDevice
 
 
-class NameGenerator(object):
+class NameGenerator:
     def __init__(self) -> None:
         self.dictionary = dict()
         # Key - Old NAme, Value - new name
