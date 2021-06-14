@@ -1,5 +1,4 @@
 from __future__ import annotations
-from lfr.postprocessor.mapping import NodeMappingTemplate
 from typing import List, Dict
 from lfr.fig.fignode import (
     ANDAnnotation,

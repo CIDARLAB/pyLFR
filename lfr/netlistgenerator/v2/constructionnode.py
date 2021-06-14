@@ -1,9 +1,7 @@
-from lfr.netlistgenerator.primitive import ProceduralPrimitive
 from lfr.postprocessor.constraints import Constraint
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from typing import List
-import copy
 
 
 class ConstructionNode:
