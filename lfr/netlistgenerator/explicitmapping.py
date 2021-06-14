@@ -8,7 +8,7 @@ class ExplicitMappingType(Enum):
     NETWORK = 2
 
 
-class ExplicitMapping(object):
+class ExplicitMapping:
     def __init__(
         self, mapping_type: ExplicitMappingType = ExplicitMappingType.FLUID_INTERACTION
     ):

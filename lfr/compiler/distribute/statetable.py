@@ -8,7 +8,7 @@ import numpy as np
 from tabulate import tabulate
 
 
-class StateTable(object):
+class StateTable:
     def __init__(self, signal_list: List[str]) -> None:
         self._headers: List[str] = signal_list
         # TODO - Do a combinatorial explosion for all the states available

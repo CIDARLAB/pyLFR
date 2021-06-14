@@ -5,7 +5,7 @@ from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.compiler.distribute.BitVector import BitVector
 
 
-class DistributeBlock(object):
+class DistributeBlock:
     def __init__(self) -> None:
         self._sensitivity_list: List[VectorRange] = []
         # self._state_header: List[str] = None

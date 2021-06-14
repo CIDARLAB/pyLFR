@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 
-class ConnectingOption(object):
+class ConnectingOption:
     def __init__(
         self,
         component_name: Optional[str] = None,
