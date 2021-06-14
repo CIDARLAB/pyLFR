@@ -170,8 +170,6 @@ class ConstructionGraph(nx.DiGraph):
             cn_to_split (ConstructionNode): Construction node that needs to be split into multiple nodes
             split_groups (List[List[str]]): A list of lists where each list should contain the FIG node IDs that neet to be in differnt nodes
         """
-
-        # TODO - create new construction nodes based on lists
         name = cn_to_split.id
         fig_nodes = []
         for nodes in split_groups:

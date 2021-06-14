@@ -276,7 +276,6 @@ class NetworkPrimitive(Primitive):
         """Generates the netlist for the given network primitive, this method generates the flow
         network, input , output, carriers and loadings into the primitve properties
         """
-
         self._netlist = self._gen_strategy.generate_flow_network(
             self._fig_subgraph_view
         )
@@ -306,7 +305,6 @@ class NetworkPrimitive(Primitive):
         Returns:
             MINTDevice: Default netlist of whatever the primitive is
         """
-
         if self._netlist is None:
             raise Exception("No default netlist present for the primitive")
 
