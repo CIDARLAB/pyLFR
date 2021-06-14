@@ -26,15 +26,27 @@ class Primitive:
         match_string: str = "",
         is_storage: bool = False,
         has_storage_control: bool = False,
-        inputs: List[ConnectingOption] = [],
-        outputs: List[ConnectingOption] = [],
-        loadings: Optional[List[ConnectingOption]] = [],
-        carriers: Optional[List[ConnectingOption]] = [],
+        inputs: List[ConnectingOption] = None,
+        outputs: List[ConnectingOption] = None,
+        loadings: Optional[List[ConnectingOption]] = None,
+        carriers: Optional[List[ConnectingOption]] = None,
         default_netlist: Optional[str] = None,
-        functional_input_params: List[str] = [],
-        output_params: List[str] = [],
+        functional_input_params: List[str] = None,
+        output_params: List[str] = None,
         user_defined_params: MINTParams = MINTParams({}),
     ) -> None:
+        if inputs is None:
+            inputs = []
+        if outputs is None:
+            outputs = []
+        if loadings is None:
+            loadings = []
+        if carriers is None:
+            carriers = []
+        if functional_input_params is None:
+            functional_input_params = []
+        if output_params is None:
+            output_params = []
 
         self._component_type: PrimitiveType = component_type
         self._match_string: str = match_string

@@ -5,8 +5,10 @@ class ConnectingOption:
     def __init__(
         self,
         component_name: Optional[str] = None,
-        component_port: List[Optional[str]] = [],
+        component_port: List[Optional[str]] = None,
     ) -> None:
+        if component_port is None:
+            component_port = []
         self._component_name: Optional[str] = component_name
         self._component_port: List[Optional[str]] = component_port
 

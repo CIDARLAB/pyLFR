@@ -180,7 +180,9 @@ class FluidInteractionGraph(nx.DiGraph):
     def __str__(self):
         return self.edges.__str__()
 
-    def __deepcopy__(self, memo={}):
+    def __deepcopy__(self, memo=None):
+        if memo is None:
+            memo = {}
         not_there = []
         existing = memo.get(self, not_there)
         if existing is not not_there:
