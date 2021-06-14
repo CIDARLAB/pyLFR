@@ -366,12 +366,16 @@ class ConstructionGraph(nx.DiGraph):
                     is not True
                 ):
                     continue
-                graph_matcher = isomorphism.DiGraphMatcher(cn_subgraph, netlist_subgraph)
+                graph_matcher = isomorphism.DiGraphMatcher(
+                    cn_subgraph, netlist_subgraph
+                )
                 is_it_isomorphic = graph_matcher.is_isomorphic()
                 if is_it_isomorphic:
                     return cn
 
-        raise Exception("Could not find construction node with the same netlist subgraph")
+        raise Exception(
+            "Could not find construction node with the same netlist subgraph"
+        )
 
     def __create_passthrough_channel(
         self,
