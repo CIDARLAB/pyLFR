@@ -1,23 +1,22 @@
 from copy import copy
-from networkx.classes.digraph import DiGraph
-
-from networkx.classes.function import subgraph
-from lfr.fig.fignode import FIGNode
-from pymint.mintcomponent import MINTComponent
-from lfr.netlistgenerator.v2.networkmappingoption import (
-    NetworkMappingOption,
-    NetworkMappingOptionType,
-)
-from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
-from pymint.minttarget import MINTTarget
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.compiler.module import Module
-from lfr.netlistgenerator.namegenerator import NameGenerator
 from typing import Dict, List, Set, Tuple
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+
 from networkx import nx
-from pymint.mintdevice import MINTDevice
 from networkx.algorithms import isomorphism
+from networkx.classes.digraph import DiGraph
+from networkx.classes.function import subgraph
+from pymint.mintcomponent import MINTComponent
+from pymint.mintdevice import MINTDevice
+from pymint.minttarget import MINTTarget
+
+from lfr.compiler.module import Module
+from lfr.fig.fignode import FIGNode
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.netlistgenerator.namegenerator import NameGenerator
+from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
+from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+from lfr.netlistgenerator.v2.networkmappingoption import (
+    NetworkMappingOption, NetworkMappingOptionType)
 
 
 class ConstructionGraph(nx.DiGraph):
@@ -170,8 +169,6 @@ class ConstructionGraph(nx.DiGraph):
             cn_to_split (ConstructionNode): Construction node that needs to be split into multiple nodes
             split_groups (List[List[str]]): A list of lists where each list should contain the FIG node IDs that neet to be in differnt nodes
         """
-
-        # TODO - create new construction nodes based on lists
         name = cn_to_split.id
         fig_nodes = []
         for nodes in split_groups:
@@ -349,7 +346,7 @@ class ConstructionGraph(nx.DiGraph):
         # TODO - I need to figure out how to pipeline the loadings/carriers and other things
         pass
 
-    def get_subgraph_cn(self, subgraph) -> ConstructionNode:
+    def get_subgraph_cn(self, netlist_subgraph) -> ConstructionNode:
         """Returns the Construction node matching the subgraph
 
         Args:
@@ -359,7 +356,7 @@ class ConstructionGraph(nx.DiGraph):
             ConstructionNode: Construction node that contains the
             same subgraph
         """
-        subgraph_node_list = list(subgraph.nodes)
+        subgraph_node_list = list(netlist_subgraph.nodes)
         for cn in list(self._construction_nodes.values()):
             for mapping_option in cn.mapping_options:
                 cn_subgraph = mapping_option.fig_subgraph
@@ -369,12 +366,16 @@ class ConstructionGraph(nx.DiGraph):
                     is not True
                 ):
                     continue
-                graph_matcher = isomorphism.DiGraphMatcher(cn_subgraph, subgraph)
+                graph_matcher = isomorphism.DiGraphMatcher(
+                    cn_subgraph, netlist_subgraph
+                )
                 is_it_isomorphic = graph_matcher.is_isomorphic()
                 if is_it_isomorphic:
                     return cn
 
-        raise Exception("Could not find construction node with the same subgraph")
+        raise Exception(
+            "Could not find construction node with the same netlist subgraph"
+        )
 
     def __create_passthrough_channel(
         self,
