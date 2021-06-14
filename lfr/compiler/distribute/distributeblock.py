@@ -1,8 +1,9 @@
-from lfr.compiler.distribute.statetable import StateTable
 from typing import List
+
+from lfr.compiler.distribute.BitVector import BitVector
+from lfr.compiler.distribute.statetable import StateTable
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.compiler.distribute.BitVector import BitVector
 
 
 class DistributeBlock:
