@@ -37,3 +37,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 lfr-compile = "lfr.cmdline:main"
+
+[tool.black]
+line-length = 88
