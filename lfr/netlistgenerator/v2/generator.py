@@ -1,34 +1,30 @@
 from copy import deepcopy
-
-from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
-from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
-from pymint.mintlayer import MINTLayerType
-from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-from lfr.netlistgenerator.v2.networkmappingoption import (
-    NetworkMappingOption,
-    NetworkMappingOptionType,
-)
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
 from typing import List, Set
-from pymint.mintdevice import MINTDevice
-from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.fig.interaction import (
-    FluidIntegerInteraction,
-    FluidNumberInteraction,
-    InteractionType,
-)
-from lfr.netlistgenerator.v2.mappingoption import MappingOption
-from lfr.compiler.module import Module
-import networkx as nx
 
+import networkx as nx
+from pymint.mintdevice import MINTDevice
+from pymint.mintlayer import MINTLayerType
+
+from lfr.compiler.module import Module
+from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.fig.interaction import (FluidIntegerInteraction,
+                                 FluidNumberInteraction, InteractionType)
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
+from lfr.netlistgenerator.namegenerator import NameGenerator
+from lfr.netlistgenerator.primitive import (NetworkPrimitive, Primitive,
+                                            PrimitiveType)
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
+from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.v2.mappingoption import MappingOption
+from lfr.netlistgenerator.v2.networkmappingoption import (
+    NetworkMappingOption, NetworkMappingOptionType)
+from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
+from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 
 # def generate_MARS_library() -> MappingLibrary:
 #     # TODO - Programatically create each of the items necessary for the MARS primitive library,
@@ -594,7 +590,9 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
         for operator_candidate in operator_candidates:
             # TODO: This will change in the future when we can match subgraphs correctly
-            if isinstance(interaction, (FluidNumberInteraction, FluidIntegerInteraction)):
+            if isinstance(
+                interaction, (FluidNumberInteraction, FluidIntegerInteraction)
+            ):
                 # Basically add the value node id into the subgraph view also
                 node_ids = [
                     module.FIG.get_fignode(edge[0]).id

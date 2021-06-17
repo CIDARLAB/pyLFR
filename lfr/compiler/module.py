@@ -235,7 +235,10 @@ class Module:
             mappingtemplate_copy = copy.deepcopy(mappingtemplate)
             # TODO - Switch out each of the instances here
             for mapping_instance in mappingtemplate_copy.instances:
-                if isinstance(mapping_instance, (FluidicOperatorMapping, StorageMapping, PumpMapping)):
+                if isinstance(
+                    mapping_instance,
+                    (FluidicOperatorMapping, StorageMapping, PumpMapping),
+                ):
                     # Swap the basic node from original to the instance
                     there_node_id = mapping_instance.node.id
                     here_node = self.FIG.get_fignode(rename_map[there_node_id])

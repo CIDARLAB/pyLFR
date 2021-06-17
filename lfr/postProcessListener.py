@@ -1,16 +1,13 @@
-from lfr.fig.interaction import FluidProcessInteraction, Interaction
-from lfr.postprocessor.mapping import (
-    FluidicOperatorMapping,
-    NetworkMapping,
-    NodeMappingTemplate,
-    PumpMapping,
-    StorageMapping,
-)
-from lfr.postprocessor.constraints import Constraint
+from typing import Dict, List
+
 from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.fig.fignode import FIGNode
-from typing import Dict, List
+from lfr.fig.interaction import FluidProcessInteraction, Interaction
 from lfr.moduleinstanceListener import ModuleInstanceListener
+from lfr.postprocessor.constraints import Constraint
+from lfr.postprocessor.mapping import (FluidicOperatorMapping, NetworkMapping,
+                                       NodeMappingTemplate, PumpMapping,
+                                       StorageMapping)
 
 
 class PostProcessListener(ModuleInstanceListener):
