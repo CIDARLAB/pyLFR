@@ -59,10 +59,10 @@ class PreProcessor:
 
         dep_graph = nx.DiGraph()
         # add the nodes in the dep graph
-        for file_handle in self.full_text.keys():
+        for file_handle in self.full_text:
             dep_graph.add_node(file_handle)
 
-        for file_handle in self.full_text.keys():
+        for file_handle in self.full_text:
             # Find all imports and generate the edges
             text = self.full_text[file_handle]
             find_results = re.findall(IMPORT_FILE_PATTERN, text)
