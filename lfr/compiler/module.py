@@ -235,10 +235,9 @@ class Module:
             mappingtemplate_copy = copy.deepcopy(mappingtemplate)
             # TODO - Switch out each of the instances here
             for mapping_instance in mappingtemplate_copy.instances:
-                if (
-                    isinstance(mapping_instance, FluidicOperatorMapping)
-                    or isinstance(mapping_instance, StorageMapping)
-                    or isinstance(mapping_instance, PumpMapping)
+                if isinstance(
+                    mapping_instance,
+                    (FluidicOperatorMapping, StorageMapping, PumpMapping),
                 ):
                     # Swap the basic node from original to the instance
                     there_node_id = mapping_instance.node.id
