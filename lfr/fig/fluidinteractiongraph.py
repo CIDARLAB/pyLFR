@@ -100,14 +100,14 @@ class FluidInteractionGraph(nx.DiGraph):
     def get_interactions(self) -> List[Interaction]:
         return [
             self._fignodes[key]
-            for key in self._fignodes.keys()
+            for key in self._fignodes
             if isinstance(self._fignodes[key], Interaction)
         ]
 
     @property
     def get_io(self) -> List[IONode]:
         ret = []
-        for key in self._fignodes.keys():
+        for key in self._fignodes:
             node = self._fignodes[key]
             if isinstance(node, IONode):
                 ret.append(node)
@@ -182,7 +182,7 @@ class FluidInteractionGraph(nx.DiGraph):
             print("ALREADY COPIED TO", repr(existing))
             return existing
         fignodes_copy = copy.deepcopy(
-            [self._fignodes[key] for key in self._fignodes.keys()], memo
+            [self._fignodes[key] for key in self._fignodes], memo
         )
         fig_copy = self.copy(as_view=False)
         fig_copy.__class__ = FluidInteractionGraph

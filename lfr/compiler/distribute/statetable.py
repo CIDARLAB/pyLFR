@@ -87,7 +87,7 @@ class StateTable:
         # First setup the dimensions for the matrix
         row_size = len(self._connectivity_states.keys())
         full_connectivity_graph = nx.DiGraph()
-        for state in self._connectivity_states.keys():
+        for state in self._connectivity_states:
             graph = self._connectivity_states[state]
             for node in list(graph.nodes):
                 if node not in connectivy_column_headers:
@@ -107,7 +107,7 @@ class StateTable:
         self._connectivity_matrix = np.zeros((row_size, column_size), dtype=int)
 
         i = 0
-        for state in self._connectivity_states.keys():
+        for state in self._connectivity_states:
             graph = self._connectivity_states[state]
             for edge in list(graph.edges):
                 self.__update_connectivity_matix(edge, i, 1)

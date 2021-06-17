@@ -533,7 +533,7 @@ class LFRBaseListener(lfrXListener):
         self.listermode = self.statestack.pop()
 
     def print_variables(self):
-        for key in self.vectors.keys():
+        for key in self.vectors:
             print("{0} - {1}".format(key, self.vectors[key]))
 
     def print_stack(self):
