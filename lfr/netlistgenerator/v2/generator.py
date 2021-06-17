@@ -594,9 +594,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
 
         for operator_candidate in operator_candidates:
             # TODO: This will change in the future when we can match subgraphs correctly
-            if isinstance(interaction, FluidNumberInteraction) or isinstance(
-                interaction, FluidIntegerInteraction
-            ):
+            if isinstance(interaction, (FluidNumberInteraction, FluidIntegerInteraction)):
                 # Basically add the value node id into the subgraph view also
                 node_ids = [
                     module.FIG.get_fignode(edge[0]).id

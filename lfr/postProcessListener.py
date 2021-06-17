@@ -163,9 +163,7 @@ class PostProcessListener(ModuleInstanceListener):
         if len(nodes_of_interest) > 0:
             for node in nodes_of_interest:
                 print(node.__class__)
-                if isinstance(node, FluidProcessInteraction) or isinstance(
-                    node, Interaction
-                ):
+                if isinstance(node, (FluidProcessInteraction, Interaction)):
                     print(node.operator)
                     # Look for mapping with the corresponding operator
                     if node.operator in self._current_mappings.keys():
