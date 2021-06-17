@@ -1,5 +1,11 @@
 from __future__ import annotations
+from lfr.fig.interaction import Interaction
+
+from networkx.generators.degree_seq import directed_configuration_model
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
+from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+
 from typing import Dict, TYPE_CHECKING
 
 from pymint.mintlayer import MINTLayerType
@@ -14,7 +20,7 @@ from pymint.mintnode import MINTNode
 from pymint.minttarget import MINTTarget
 
 
-class GenStrategy:
+class MarsStrategy:
     def __init__(
         self, construction_graph: ConstructionGraph, fig: FluidInteractionGraph
     ) -> None:
@@ -24,28 +30,39 @@ class GenStrategy:
 
     def reduce_mapping_options(self) -> None:
         # Dummy strategy
-        for cn in self._construction_graph.construction_nodes:
-            # print(len(cn.mapping_options))
-            # clean this
-            # Remove the extra mappings
-            print(
-                "Reducing mapping options for Construction node: {} from {} to {}".format(
-                    cn.id, len(cn.mapping_options), 1
-                ),
-            )
-            if len(cn.mapping_options) > 1:
-                for option in cn.mapping_options:
-                    print("     -{}".format(option.primitive.mint))
-            del cn.mapping_options[1 : len(cn.mapping_options)]
-            # print("... -> {}".format(len(cn.mapping_options)))
+        for fignode_id in self._fig.nodes:
+            fignode = self._fig.get_fignode(fignode_id)
 
-        print("Printing all final mapping options:")
-        for cn in self._construction_graph.construction_nodes:
-            print("Construction node: {}".format(cn.id))
-            print("Options: ")
+            if ConstructionNode(fignode_id).is_explictly_mapped:
+                pass
+            else:
+                if isinstance(fignode, Interaction):
+                    cn = self._construction_graph.get_fignode_cn(fignode)
 
-            for mapping_option in cn.mapping_options:
-                print(mapping_option.primitive.mint)
+                    del cn.mapping_options[1 : len(cn.mapping_options)]
+
+        # for cn in self._construction_graph.construction_nodes:
+        #     # print(len(cn.mapping_options))
+        #     # clean this
+        #     # Remove the extra mappings
+        #     print(
+        #         "Reducing mapping options for Construction node: {} from {} to {}".format(
+        #             cn.id, len(cn.mapping_options), 1
+        #         ),
+        #     )
+        #     if len(cn.mapping_options) > 1:
+        #         for option in cn.mapping_options:
+        #             print("     -{}".format(option.primitive.mint))
+        #     del cn.mapping_options[1 : len(cn.mapping_options)]
+        #     # print("... -> {}".format(len(cn.mapping_options)))
+
+        # print("Printing all final mapping options:")
+        # for cn in self._construction_graph.construction_nodes:
+        #     print("Construction node: {}".format(cn.id))
+        #     print("Options: ")
+
+        #     for mapping_option in cn.mapping_options:
+        #         print(mapping_option.primitive.mint)
 
     def generate_flow_network(self, fig_subgraph_view) -> MINTDevice:
         # TODO - For now just assume that the networks basically are a bunch
@@ -122,4 +139,17 @@ class GenStrategy:
         return []
 
     def size_netlist(self, device: MINTDevice) -> None:
-        raise NotImplementedError()
+        """
+        Sizes the device based on either lookup tables, inverse design algorithms, etc.
+        """
+        dafd_adapter = DAFDAdapter(device)
+        # Default size for PORT is 2000 um
+        for component in device.components:
+            constraints = self._construction_graph.get_component_cn(
+                component
+            ).constraints
+            if component.entity == "NOZZLE DROPLET GENERATOR":
+                # dafd_adapter.size_droplet_generator(component, constraints)
+                print("Skipping calling DAFD since its crashing everything right now")
+            elif component.entity == "PORT":
+                component.params.set_param("portRadius", 2000)

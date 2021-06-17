@@ -2,6 +2,7 @@ from copy import deepcopy
 
 from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
 from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
+from lfr.netlistgenerator.v2.gen_strategies.marsstrategy import MarsStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 from pymint.mintlayer import MINTLayerType
@@ -41,6 +42,244 @@ import networkx as nx
 
 #     # mix_primitive.add
 #     pass
+
+
+def generate_mars_library() -> MappingLibrary:
+
+    library = MappingLibrary("mars")
+
+    # PORT
+    port_inputs = []
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+
+    port_outputs = []
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+
+    port = Primitive(
+        "PORT",
+        PrimitiveType.COMPONENT,
+        "IO",
+        False,
+        False,
+        port_inputs,
+        port_outputs,
+        None,
+        None,
+        None,
+    )
+
+    library.add_io_entry(port)
+
+    # NORMAL MIXER
+
+    mixer_inputs = []
+
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+    mixer_inputs.append(ConnectingOption(None, ["1"]))
+
+    mixer_outputs = []
+
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+    mixer_outputs.append(ConnectingOption(None, ["2"]))
+
+    mixer_loadings = []
+    mixer_carriers = []
+
+    mixer = Primitive(
+        "MIXER",
+        PrimitiveType.COMPONENT,
+        "MIX",
+        False,
+        False,
+        mixer_inputs,
+        mixer_outputs,
+        mixer_loadings,
+        mixer_carriers,
+        None,
+    )
+
+    library.add_operator_entry(mixer, InteractionType.MIX)
+
+    # DIAMOND CHAMBER
+
+    diamond_chamber_inputs = []
+
+    diamond_chamber_inputs.append(ConnectingOption("default_component", ["1"]))
+
+    diamond_chamber_outputs = []
+
+    diamond_chamber_outputs.append(ConnectingOption("default_component", ["2"]))
+
+    diamond_chamber_loadings = []
+    diamond_chamber_carriers = []
+
+    diamond_chamber = Primitive(
+        "DIAMOND CHAMBER",
+        PrimitiveType.COMPONENT,
+        "PROCESS",
+        False,
+        False,
+        diamond_chamber_inputs,
+        diamond_chamber_outputs,
+        diamond_chamber_loadings,
+        diamond_chamber_carriers,
+        None,
+    )
+
+    library.add_operator_entry(diamond_chamber, InteractionType.TECHNOLOGY_PROCESS)
+
+    # METER
+
+    meter_inputs = []
+
+    meter_outputs = []
+
+    meter_outputs.append(ConnectingOption("default_component", ["1"]))
+
+    meter_loadings = []
+
+    meter_loadings.append(ConnectingOption("default_component", ["2"]))
+
+    meter_carriers = []
+
+    meter_carriers.append(ConnectingOption("default_component", ["3"]))
+
+    meter = Primitive(
+        "METER",
+        PrimitiveType.NETLIST,
+        "METER",
+        False,
+        False,
+        meter_inputs,
+        meter_outputs,
+        meter_loadings,
+        meter_carriers,
+        "default-netlists/dropletgenerator.mint",
+        ["droplet_size", "generation_rate"],
+        [
+            "orifice_size",
+            "aspect_ratio",
+            "capillary_number",
+            "expansion_ratio",
+            "flow_rate_ratio",
+            "normalized_oil_inlet",
+            "normalized_orifice_length",
+            "normalized_water_inlet",
+        ],
+    )
+
+    library.add_operator_entry(meter, InteractionType.METER)
+
+    # Incubator
+
+    incubator_inputs = []
+
+    incubator_inputs.append(ConnectingOption("default_component", ["1"]))
+
+    incubator_outputs = []
+
+    incubator_outputs.append(ConnectingOption("default_component", ["1"]))
+
+    incubator_loadings = []
+    incubator_carriers = []
+
+    incubator = Primitive(
+        "INCUBATOR",
+        PrimitiveType.COMPONENT,
+        "PROCESS",
+        False,
+        False,
+        incubator_inputs,
+        incubator_outputs,
+        incubator_loadings,
+        incubator_carriers,
+    )
+
+    library.add_operator_entry(incubator, InteractionType.TECHNOLOGY_PROCESS)
+
+    # SORTER
+
+    sorter_inputs = []
+
+    sorter_inputs.append(ConnectingOption(None, ["1"]))
+
+    sorter_outputs = []
+
+    sorter_outputs.append(ConnectingOption(None, ["2"]))
+    sorter_outputs.append(ConnectingOption(None, ["3"]))
+
+    sorter_loadings = []
+    sorter_carriers = []
+
+    # TODO - Modify this later on
+    sorter = Primitive(
+        "DROPLET SORTER",
+        PrimitiveType.COMPONENT,
+        "SIEVE",
+        False,
+        False,
+        sorter_inputs,
+        sorter_outputs,
+        sorter_loadings,
+        sorter_carriers,
+        None,
+    )
+
+    library.add_operator_entry(sorter, InteractionType.SIEVE)
+
+    return library
 
 
 def generate_dropx_library() -> MappingLibrary:
@@ -569,7 +808,8 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     if library.name == "dropx":
         active_strategy = DropXStrategy(construction_graph, module.FIG)
     elif library.name == "mars":
-        raise NotImplementedError()
+        # raise NotImplementedError()
+        active_strategy = MarsStrategy(construction_graph, module.FIG)
     elif library.name == "hmlp":
         raise NotImplementedError()
     else:

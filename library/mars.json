@@ -1,118 +1,98 @@
-
 {
-    "name":"mars",
-    "device-fluidic-operation-data":{
-        "pressure":{
-            "max":"10000",
-            "unit":"Pascals"
+    "name": "mars",
+    "device-fluidic-operation-data": {
+        "pressure": {
+            "max": "10000",
+            "unit": "Pascals"
         },
-        "flow-rate":{
-            "start-point":"100",
-            "min":"1",
-            "max":"1000",
-            "unit":"micro-litre-per-hour"
+        "flow-rate": {
+            "start-point": "100",
+            "min": "1",
+            "max": "1000",
+            "unit": "micro-litre-per-hour"
         }
     },
-    "io":{
-        "mint":"PORT"
+    "io": {
+        "mint": "PORT"
     },
-    "operators":
-        {
-            "MIX":[
-                {
-                    "mint":"MIXER",
-                    "component-type": "primitive",
-                    "is-storage": false,
-                    "inputs":[[1]],
-                    "outputs":[[2]],
-                    "default-netlist": null
-                }
-            ],
-            "SEIVE":[
-                {
-                    "mint":"MASS SEPARATOR",
-                    "component-type": "primitive",
-                    "is-storage": false,
-                    "inputs":[[1]],
-                    "outputs":[[3],[2, 4]],
-                    "default-netlist": null
-                }
-            ],
-            "METER":[
-                {
-                    "mint":"METER CHAMBER",
-                    "component-type": "primitive",
-                    "is-storage": true,
-                    "inputs":[[1]],
-                    "outputs":[[2]],
-                    "default-netlist": null
-                }
-            ],
-            "DILUTE":[
-                {
-                    "mint":"DILUTION TREE",
-                    "component-type": "procedural",
-                    "is-storage": false,
-                    "inputs":[1, 2],
-                    "outputs":[3],
-                    "default-netlist":null
-                },
-                {
-                    "mint":"DROPLET MERGER JUNCTION",
-                    "component-type": "primitive",
-                    "is-storage": "false",
-                    "inputs":[1, 2],
-                    "outputs":[3],
-                    "default-netlist":null
-                },
-                {
-                    "mint":"DROPLET MERGER CHANNEL",
-                    "component-type": "primitive",
-                    "is-storage": "false",
-                    "inputs":[1],
-                    "outputs":[2],
-                    "default-netlist":null
-                }
-            ],
-            "DIVIDE":[
-                {
-                    "mint":"DROPLET SPLITTER",
-                    "component-type": "primitive",
-                    "is-storage": "false",
-                    "inputs":[1],
-                    "outputs":[2, 3],
-                    "default-netlist":null
-                }
-            ],
-            "TECHNOLOGY_PROCESS":[
-                {
-                    "mint":"DROPLET CAPACITANCE SENSOR",
-                    "component-type": "primitive",
-                    "is-storage": "false",
-                    "inputs":[1],
-                    "outputs":[2],
-                    "default-netlist":null
-                },
-                {
-                    "mint":"DROPLET FLUORESCENCE SENSOR",
-                    "component-type": "primitive",
-                    "is-storage": "false",
-                    "inputs":[1],
-                    "outputs":[2],
-                    "default-netlist":null
-                },
-                {
-                    "mint":"DROPLET LUMINESCENCE SENSOR",
-                    "component-type": "primitive",
-                    "is-storage": "false",
-                    "inputs":[1],
-                    "outputs":[2],
-                    "default-netlist":null
-                }
-            ]
-
-        },
-    "network":[
-
-    ]
+    "operators": {
+        "MIX": [
+            {
+                "mint": "MIXER",
+                "component-type": "primitive",
+                "is-storage": false,
+                "inputs": [
+                    [
+                        1
+                    ]
+                ],
+                "outputs": [
+                    [
+                        2
+                    ]
+                ],
+                "default-netlist": null
+            }
+        ],
+        "METER": [
+            {
+                "mint": "METER",
+                "component-type": "primitive",
+                "is-storage": true,
+                "inputs": [
+                    [
+                        1
+                    ]
+                ],
+                "outputs": [
+                    [
+                        2
+                    ]
+                ],
+                "default-netlist": null
+            }
+        ],
+        "SEIVE": [
+            {
+                "mint": "SORTER",
+                "component-type": "primitive",
+                "is-storage": false,
+                "inputs": [
+                    1
+                ],
+                "outputs": [
+                    2,
+                    3
+                ],
+                "default-netlist": null
+            }
+        ],
+        "TECHNOLOGY_PROCESS": [
+            {
+                "mint": "INCUBATOR",
+                "component-type": "primitive",
+                "is-storage": "false",
+                "inputs": [
+                    1
+                ],
+                "outputs": [
+                    2
+                ],
+                "default-netlist": null
+            },
+            {
+                "mint": "DIAMOND CHAMBER",
+                "component-type": "primitive",
+                "is-storage": "false",
+                "inputs": [
+                    1
+                ],
+                "outputs": [
+                    2
+                ],
+                "default-netlist": null
+            }
+        ]
+    },
+    "network": []
 }
