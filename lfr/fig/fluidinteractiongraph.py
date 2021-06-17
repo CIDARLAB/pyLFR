@@ -1,25 +1,18 @@
 from __future__ import annotations
-from lfr.postprocessor.mapping import NodeMappingTemplate
-from typing import List, Dict
-from lfr.fig.fignode import (
-    ANDAnnotation,
-    FIGNode,
-    IONode,
-    IOType,
-    NOTAnnotation,
-    ORAnnotation,
-    ValueNode,
-)
-from lfr.fig.interaction import (
-    Interaction,
-    FluidFluidInteraction,
-    FluidProcessInteraction,
-    FluidNumberInteraction,
-    FluidIntegerInteraction,
-    InteractionType,
-)
-import networkx as nx
+
 import copy
+from typing import Dict, List
+
+import networkx as nx
+
+from lfr.fig.fignode import (ANDAnnotation, FIGNode, IONode, IOType,
+                             NOTAnnotation, ORAnnotation, ValueNode)
+from lfr.fig.interaction import (FluidFluidInteraction,
+                                 FluidIntegerInteraction,
+                                 FluidNumberInteraction,
+                                 FluidProcessInteraction, Interaction,
+                                 InteractionType)
+from lfr.postprocessor.mapping import NodeMappingTemplate
 
 
 class FluidInteractionGraph(nx.DiGraph):
@@ -180,7 +173,9 @@ class FluidInteractionGraph(nx.DiGraph):
     def __str__(self):
         return self.edges.__str__()
 
-    def __deepcopy__(self, memo={}):
+    def __deepcopy__(self, memo=None):
+        if memo is None:
+            memo = {}
         not_there = []
         existing = memo.get(self, not_there)
         if existing is not not_there:
