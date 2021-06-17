@@ -12,9 +12,15 @@ from lfr.antlrgen.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.moduleinstanceListener import ModuleInstanceListener
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-from lfr.netlistgenerator.v2.generator import generate, generate_dropx_library
-from lfr.postProcessListener import PostProcessListener
-from lfr.preprocessor import PreProcessor
+import argparse
+import lfr.parameters as parameters
+import glob
+import json
+from lfr.netlistgenerator.v2.generator import (
+    generate_dropx_library,
+    generate,
+    generate_mars_library,
+)
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 
 
@@ -41,7 +47,8 @@ def main():
     parser.add_argument(
         "--technology",
         type=str,
-        default="dropx",
+        # default="dropx",
+        default="mars",
         help="This is the mapping library you need to use",
     )
     parser.add_argument(
@@ -135,8 +142,7 @@ def main():
         if args.technology == "dropx":
             library = generate_dropx_library()
         elif args.technology == "mars":
-            print("Implement Library for MARS")
-            pass
+            library = generate_mars_library()
         elif args.technology == "mlsi":
             print("Implement Library for MLSI")
             pass

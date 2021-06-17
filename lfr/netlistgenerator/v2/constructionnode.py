@@ -37,6 +37,7 @@ class ConstructionNode:
 
     @property
     def input_options(self) -> List[ConnectingOption]:
+        # return self.mapping_options.[0].primitive.input_options....
         return self._input_options
 
     @property
