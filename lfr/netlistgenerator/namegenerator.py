@@ -100,6 +100,10 @@ class NameGenerator:
             str: New name of the connection
         """
         old_name = connection.name
+        if old_name is None:
+            raise ValueError()
+        if connection.entity is None:
+            raise ValueError()
         new_name = self.generate_name(connection.entity)
         self._rename_map[old_name] = new_name
         connection.name = new_name
@@ -128,6 +132,10 @@ class NameGenerator:
             str: New name of the connection
         """
         old_name = connection.name
+        if old_name is None:
+            raise ValueError()
+        if connection.entity is None:
+            raise ValueError()
         new_name = self.generate_name(connection.entity)
         # self._rename_map[old_name] = new_name
         self.store_cn_name(cn_id, old_name, new_name)

@@ -956,7 +956,6 @@ def override_mappings(
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
     # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
-    assign_node_index = 0
     for mapping in mappings:
         for instance in mapping.instances:
 
@@ -1137,6 +1136,10 @@ def override_network_mappings(
 
                 cn = ConstructionNode("assign_{}".format(assign_node_index))
                 assign_node_index += 1
+                if isinstance(primitive_to_use, NetworkPrimitive) is not True:
+                    raise TypeError()
+                if primitive_to_use is None:
+                    raise ValueError()
                 mapping_option = NetworkMappingOption(
                     network_primitive=primitive_to_use,
                     mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,

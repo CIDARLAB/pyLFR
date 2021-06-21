@@ -1,4 +1,3 @@
-from typing import overload
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
