@@ -1,3 +1,9 @@
+from lfr.postprocessor.constraints import (
+    ConstraintList,
+    FunctionalConstraint,
+    GeometryConstraint,
+    PerformanceConstraint,
+)
 from pymint.mintdevice import MINTDevice
 from dafd import DAFD_Interface
 
@@ -17,6 +23,7 @@ class DAFDSizingAdapter:
                 if constraint.key == "volume":
                     # r≈0.62035V1/3
                     volume = constraint.get_target_value()
+                    assert volume is not None
                     targets_dict["droplet_size"] = float(volume) ** 0.33 * 0.62035 * 2
             elif isinstance(constraint, PerformanceConstraint):
                 if constraint.key == "generation_rate":
