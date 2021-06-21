@@ -52,6 +52,7 @@ class ConstructionGraph(nx.DiGraph):
     ) -> None:
         # TODO - Figure out a smart way to get the right layer every single time
         layer = device.layers[0]
+
         for cn in self.construction_nodes:
             if len(cn.mapping_options) > 1:
                 # TODO - update for combinatorial design space exploration
@@ -131,9 +132,8 @@ class ConstructionGraph(nx.DiGraph):
                     raise Exception(
                         "Does not work with any known option for primitive type"
                     )
-
-                cn.load_connection_options()
-
+                # comment this out
+                # cn.load_connection_options()
             else:
                 print(
                     "No mappings found to the current construction node {0}".format(cn)
