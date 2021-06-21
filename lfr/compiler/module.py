@@ -4,7 +4,7 @@ import copy
 from typing import Dict, List, Optional
 
 from lfr.compiler.moduleio import ModuleIO
-from lfr.fig.fignode import FIGNode, Flow, IOType
+from lfr.fig.fignode import FIGNode, Flow, IONode, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.fig.interaction import (
     FluidFluidInteraction,
@@ -14,7 +14,6 @@ from lfr.fig.interaction import (
     Interaction,
     InteractionType,
 )
-from lfr.netlistgenerator.explicitmapping import ExplicitMapping
 from lfr.postprocessor.mapping import (
     FluidicOperatorMapping,
     NetworkMapping,
@@ -226,10 +225,16 @@ class Module:
             there_check_node = module_to_import.FIG.get_fignode(there_id)
             there_node = self.FIG.get_fignode(rename_map[there_id])
             here_node = self.FIG.get_fignode(here_id)
-            if there_check_node.type is IOType.FLOW_INPUT:
+            if (
+                isinstance(there_check_node, IONode)
+                and there_check_node.type is IOType.FLOW_INPUT
+            ):
                 source_node = here_node
                 target_node = there_node
-            elif there_check_node.type is IOType.FLOW_OUTPUT:
+            elif (
+                isinstance(there_check_node, IONode)
+                and there_check_node.type is IOType.FLOW_OUTPUT
+            ):
                 source_node = there_node
                 target_node = here_node
             else:
