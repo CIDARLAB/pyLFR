@@ -94,11 +94,6 @@ def main():
         path = Path(parameters.OUTPUT_DIR)
         path.mkdir(parents=True)
 
-    library_name = args.technology
-    # libraries = load_libraries()
-    # if library_name not in libraries.keys():
-    #     raise Exception("Could not find mapping library")
-
     library = None
     # library = libraries[library_name]
 

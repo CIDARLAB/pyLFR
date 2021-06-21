@@ -1,8 +1,12 @@
-from typing import List, Optional
-
+from lfr.postprocessor.constraints import (
+    ConstraintList,
+    FunctionalConstraint,
+    GeometryConstraint,
+    PerformanceConstraint,
+)
+from pymint.mintdevice import MINTDevice
 from dafd import DAFD_Interface
 from pymint.mintcomponent import MINTComponent
-from pymint.mintdevice import MINTDevice
 
 
 class DAFDSizingAdapter:
@@ -20,6 +24,7 @@ class DAFDSizingAdapter:
                 if constraint.key == "volume":
                     # r≈0.62035V1/3
                     volume = constraint.get_target_value()
+                    assert volume is not None
                     targets_dict["droplet_size"] = float(volume) ** 0.33 * 0.62035 * 2
             elif isinstance(constraint, PerformanceConstraint):
                 if constraint.key == "generation_rate":
@@ -56,7 +61,8 @@ class DAFDSizingAdapter:
         component.params.set_param("outputLength", 5000)
         component.params.set_param("height", round(orifice_size / aspect_ratio))
 
-        # TODO: Figure out how to propagate the results to the rest of the design. Additionally we need to set all the operation considtions
+        # TODO: Figure out how to propagate the results to the rest of the design.
+        # Additionally we need to set all the operation considtions
         pass
 
     def size_component(self, constriants: ConstraintList) -> None:
