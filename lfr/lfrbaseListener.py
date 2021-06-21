@@ -402,6 +402,9 @@ class LFRBaseListener(lfrXListener):
         stackslice = self.stack[-(len(self.binaryoperatorsstack[-1]) + 1) :]
         del self.stack[-(len(self.binaryoperatorsstack[-1]) + 1) :]
 
+        if self.currentModule is None:
+            raise Exception("Null found for current module found")
+
         fluidexpression = FluidExpression(self.currentModule)
         # TODO: Figure out how to pass the FIG after this
         result = fluidexpression.process_expression(

@@ -19,7 +19,7 @@ class StateTable:
         # state table into flow annotations using z3
         self._connectivity_states: Dict[BitVector, nx.DiGraph] = {}
         # self._colored_graph: nx.DiGraph = None
-        self._connectivity_matrix: np.array = None
+        self._connectivity_matrix = None
         self._connectivity_column_headers = None
         self._connectivity_edges = {}
         self._and_annotations: List[ANDAnnotation] = []

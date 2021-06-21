@@ -50,7 +50,8 @@ class PostProcessListener(ModuleInstanceListener):
                 unit = None
 
             perf_constraint = Constraint()
-            perf_constraint.unit = unit
+            if unit is not None:
+                perf_constraint.unit = unit
 
             if conditional_operator == "=":
                 perf_constraint.add_target_value(param_name, value)

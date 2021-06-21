@@ -150,6 +150,10 @@ def main():
             print("Implement Library for whatever else")
             pass
 
+        if mapping_listener.currentModule is None:
+            raise ValueError()
+        if library is None:
+            raise ValueError()
         unsized_device = generate(mapping_listener.currentModule, library)
 
         print_netlist(unsized_device)
