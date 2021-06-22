@@ -1,4 +1,4 @@
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List, Optional
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
 from pymint import MINTComponent, MINTLayer

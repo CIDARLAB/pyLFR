@@ -1,5 +1,5 @@
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 
 
 class MARSStrategy(GenStrategy):

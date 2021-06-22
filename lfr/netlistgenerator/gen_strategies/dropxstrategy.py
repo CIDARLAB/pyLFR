@@ -1,9 +1,9 @@
 from lfr.fig.interaction import Interaction, InteractionType
-from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
+from lfr.netlistgenerator.dafdadapter import DAFDAdapter
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 import networkx as nx
 from pymint import MINTDevice
 

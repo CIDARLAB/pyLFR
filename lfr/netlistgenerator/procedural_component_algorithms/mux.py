@@ -1,12 +1,12 @@
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
 
 
-class TREE(ProceduralPrimitive):
+class MUX(ProceduralPrimitive):
     def __init__(self) -> None:
         super().__init__(
-            mint="TREE",
+            mint="MUX",
             is_storage=False,
             has_storage_control=False,
             default_netlist=None,

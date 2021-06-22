@@ -1,12 +1,12 @@
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
 
 
-class TRANSPOSER(ProceduralPrimitive):
+class MUX3D(ProceduralPrimitive):
     def __init__(self) -> None:
         super().__init__(
-            mint="TRANSPOSER",
+            mint="MUX3D",
             is_storage=False,
             has_storage_control=False,
             default_netlist=None,

@@ -1,6 +1,6 @@
 from lfr.fig.interaction import InteractionType
 from lfr.netlistgenerator.primitive import Primitive, PrimitiveType
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 
 

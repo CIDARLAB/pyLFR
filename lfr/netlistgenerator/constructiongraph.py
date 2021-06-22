@@ -14,8 +14,8 @@ from lfr.fig.fignode import FIGNode
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.networkmappingoption import (
+from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
 )

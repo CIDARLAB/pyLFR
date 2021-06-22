@@ -1,29 +1,29 @@
-from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
-from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
+from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
+from lfr.netlistgenerator.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 from pymint.mintlayer import MINTLayerType
 from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-from lfr.netlistgenerator.v2.networkmappingoption import (
+from lfr.netlistgenerator.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
 )
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 from lfr.fig.fignode import IOType, ValueNode
 from typing import List
 from pymint.mintdevice import MINTDevice
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.gen_strategies.dummy import DummyStrategy
+from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.constructiongraph import ConstructionGraph
 from lfr.fig.interaction import (
     FluidIntegerInteraction,
     FluidNumberInteraction,
     InteractionType,
 )
-from lfr.netlistgenerator.v2.mappingoption import MappingOption
+from lfr.netlistgenerator.mappingoption import MappingOption
 from lfr.compiler.module import Module
 import networkx as nx
 
@@ -853,8 +853,8 @@ def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
                             construction_graph.add_edge(in_point, out_point)
                 else:
                     raise Exception(
-                        "Pass through network node elimination not implemented \
-                        when n->n edge creation is necessary"
+                        "Pass through network node elimination not implemented         "
+                        "                when n->n edge creation is necessary"
                     )
 
 

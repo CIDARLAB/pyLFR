@@ -5,8 +5,8 @@ from pymint.mintparams import MINTParams
 from enum import Enum
 
 from pymint.mintlayer import MINTLayer
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr import parameters
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from pymint.mintcomponent import MINTComponent

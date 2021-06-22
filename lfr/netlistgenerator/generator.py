@@ -1,33 +1,33 @@
 from copy import deepcopy
 from lfr.graphmatch.interface import get_fig_matches
 
-from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
-from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
-from lfr.netlistgenerator.v2.gen_strategies.marsstrategy import MarsStrategy
+from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
+from lfr.netlistgenerator.gen_strategies.dropxstrategy import DropXStrategy
+from lfr.netlistgenerator.gen_strategies.marsstrategy import MarsStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 from pymint.mintlayer import MINTLayerType
 from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-from lfr.netlistgenerator.v2.networkmappingoption import (
+from lfr.netlistgenerator.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
 )
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
 from typing import List, Set
 from pymint.mintdevice import MINTDevice
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.gen_strategies.dummy import DummyStrategy
+from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.constructiongraph import ConstructionGraph
 from lfr.fig.interaction import (
     FluidIntegerInteraction,
     FluidNumberInteraction,
     InteractionType,
 )
-from lfr.netlistgenerator.v2.mappingoption import MappingOption
+from lfr.netlistgenerator.mappingoption import MappingOption
 from lfr.compiler.module import Module
 import networkx as nx
 

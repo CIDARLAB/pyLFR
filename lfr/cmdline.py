@@ -11,7 +11,7 @@ import argparse
 import lfr.parameters as parameters
 import glob
 import json
-from lfr.netlistgenerator.v2.generator import (
+from lfr.netlistgenerator.generator import (
     generate_dropx_library,
     generate,
     generate_mars_library,
