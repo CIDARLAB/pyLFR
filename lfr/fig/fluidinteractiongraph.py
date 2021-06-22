@@ -62,8 +62,7 @@ class FluidInteractionGraph(nx.DiGraph):
             return self._fignodes[id]
         else:
             raise Exception(
-                "Cannot find the node '{}' in the                 FluidInteractionGraph"
-                .format(id)
+                "Cannot find the node '{}' in the FluidInteractionGraph".format(id)
             )
 
     def load_fignodes(self, fig_nodes: List[FIGNode]) -> None:
@@ -106,14 +105,11 @@ class FluidInteractionGraph(nx.DiGraph):
 
     def add_interaction(self, interaction: Interaction):
         if interaction.id not in self._fignodes.keys():
-            self._fignodes[interaction.id] = interaction
+            self.add_fignode(interaction)
         else:
             raise Exception(
                 "Interaction already present in the FIG: {0}".format(interaction.id)
             )
-
-        # Initialize this for the interaction
-        self._annotations_reverse_map[interaction] = []
 
         if isinstance(interaction, FluidFluidInteraction):
             self.__add_fluid_fluid_interaction(interaction)
@@ -389,7 +385,7 @@ class FluidInteractionGraph(nx.DiGraph):
 
         # Create new Value node
         val_node = ValueNode(self.__get_val_node_id(), interaction.value)
-        self._fignodes[val_node.id] = val_node
+        self.add_fignode(val_node)
 
         self.add_node(interaction.id)
         self.add_edge(interaction.fluid.id, interaction.id)
@@ -407,7 +403,7 @@ class FluidInteractionGraph(nx.DiGraph):
 
         # Create new Value node
         val_node = ValueNode(self.__get_val_node_id(), interaction.value)
-        self._fignodes[val_node.id] = val_node
+        self.add_fignode(val_node)
 
         self.add_node(interaction.id)
         self.add_edge(interaction.fluid.id, interaction.id)

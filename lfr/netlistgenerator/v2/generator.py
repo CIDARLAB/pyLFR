@@ -965,6 +965,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Now since all the mapping options are finalized Extract the netlist necessary
     construction_graph.construct_components(name_generator, cur_device)
 
+    # TODO - Rewrite this whole thing !!!
     construction_graph.construct_connections(name_generator, cur_device)
 
     # Finally join all the netlist pieces attached to the construction nodes
