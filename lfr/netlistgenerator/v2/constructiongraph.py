@@ -451,6 +451,7 @@ class ConstructionGraph(nx.DiGraph):
         )
         cn_end.input_options.remove(end_point)
 
+    # TODO - Rewrite intercn channel implementatino
     def __create_intercn_channel(
         self,
         src_id: str,

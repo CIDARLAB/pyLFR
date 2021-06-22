@@ -2,8 +2,8 @@ from lfr.graphmatch.figmappingmatcher import FIGMappingMatcher
 from typing import Dict
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from reggie import MatchPattern
-from reggie import NodeFilter
+from lfr.graphmatch.matchpattern import MatchPattern
+from lfr.graphmatch.nodefilter import NodeFilter
 
 
 def match_node_constraints(
