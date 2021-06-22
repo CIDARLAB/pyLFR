@@ -1,4 +1,4 @@
-# LFR
+# LFR <img align="right" src="LFR-Logo-01.png" width="250">
 
 ## Dependencies 
 
@@ -8,8 +8,16 @@ LFR requires the user to install graphviz onto the system for the pygraphviz dep
 
 We need ANTLR for generating the listener. Install ANTLR4 from the [website](https://www.antlr.org/index.html)
 
+### LFR Grammar
+
 ```
-antlr4 -o ./lfr/antlrgen -listener -visitor -Dlanguage=Python3 -lib . ./lfrX.g4
+antlr4 -o ./lfr/antlrgen/lfr -listener -visitor -Dlanguage=Python3 -lib . ./lfrX.g4
+```
+
+### Reggie(Graph Match) Grammar
+
+```
+antlr4 -o ./lfr/antlrgen/reggie -listener -visitor -Dlanguage=Python3 -lib . ./reggie.g4
 ```
 
 ### Graphviz
