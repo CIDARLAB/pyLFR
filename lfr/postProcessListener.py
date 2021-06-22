@@ -7,7 +7,7 @@ from lfr.postprocessor.mapping import (
     StorageMapping,
 )
 from lfr.postprocessor.constraints import Constraint
-from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.fig.fignode import FIGNode
 from typing import Dict, List
 from lfr.moduleinstanceListener import ModuleInstanceListener

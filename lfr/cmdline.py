@@ -4,8 +4,8 @@ from lfr.preprocessor import PreProcessor
 import os
 from pathlib import Path
 from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
-from lfr.antlrgen.lfrXLexer import lfrXLexer
-from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.antlrgen.lfr.lfrXLexer import lfrXLexer
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 import argparse
 import lfr.parameters as parameters

@@ -11,8 +11,8 @@ from enum import Enum
 from typing import List, Optional
 from lfr.compiler.distribute.BitVector import BitVector
 import re
-from lfr.antlrgen.lfrXListener import lfrXListener
-from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.antlrgen.lfr.lfrXListener import lfrXListener
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 
 
 class ListenerMode(Enum):

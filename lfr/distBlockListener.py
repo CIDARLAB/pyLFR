@@ -1,7 +1,7 @@
 from typing import List, Tuple, Optional
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.distribute.distributeblock import DistributeBlock
-from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.lfrbaseListener import LFRBaseListener, ListenerMode
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.distribute.BitVector import BitVector
