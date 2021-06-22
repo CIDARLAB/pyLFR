@@ -1,13 +1,13 @@
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List
 
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 
 
-class TREE(ProceduralPrimitive):
+class GRADIENTGENERATOR(ProceduralPrimitive):
     def __init__(self) -> None:
         super().__init__(
-            mint="TREE",
+            mint="GRADIENT GENERATOR",
             is_storage=False,
             has_storage_control=False,
             default_netlist=None,
@@ -18,7 +18,8 @@ class TREE(ProceduralPrimitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+            Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented
@@ -35,7 +36,8 @@ class TREE(ProceduralPrimitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+            Interaction Graph
 
 
         Raises:
@@ -53,7 +55,8 @@ class TREE(ProceduralPrimitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+            Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented
@@ -70,7 +73,8 @@ class TREE(ProceduralPrimitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+            Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented

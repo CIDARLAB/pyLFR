@@ -1,12 +1,11 @@
+from lfr.fig.interaction import Interaction, InteractionType
+from lfr.netlistgenerator.dafdadapter import DAFDAdapter
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 import networkx as nx
 from pymint import MINTDevice
-
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.fig.interaction import Interaction, InteractionType
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
 
 class DropXStrategy(GenStrategy):
@@ -27,19 +26,25 @@ class DropXStrategy(GenStrategy):
             if ConstructionNode(fignode.id).is_explictly_mapped:
                 pass
             # TODO - Implement Generalized Ali Strategy 1
-            # Rule 1 - The first level of % should be mapping to a Droplet Generator (TODO - Talk to ali about this or a T junction generator)
-            # Step 1 - Check if fig node is interaction and of type METER (%) this is the check condition for rule 1
+            # Rule 1 - The first level of % should be mapping to a Droplet Generator
+            # (TODO - Talk to ali about this or a T junction generator)
+            # Step 1 - Check if fig node is interaction and of type METER (%) this is t
+            # he check condition for rule 1
             else:
                 if isinstance(fignode, Interaction):
                     if fignode.type is InteractionType.METER:
                         is_first_metering_node = True
-                        # TODO - Check if DROPLET GENERATOR is one of the mapping options, skip if not
-                        # Step 2 - If type is meter then check to see if other it is the first meter operation from inputs to current fignode
+                        # TODO - Check if DROPLET GENERATOR is one of the mapping
+                        # options, skip if not
+                        # Step 2 - If type is meter then check to see if other it is
+                        # the first meter operation from inputs to current fignode
                         for sorted_fignode_id in figs_in_order:
                             if fignode_id == sorted_fignode_id:
                                 # End of checking
                                 if is_first_metering_node is True:
-                                    # TODO - Eliminate all options other than Nozzle droplet generator for the associated construction node(s)
+                                    # TODO - Eliminate all options other than Nozzle
+                                    # droplet generator for the associated construction
+                                    # node(s)
                                     cn = self._construction_graph.get_fignode_cn(
                                         fignode
                                     )
@@ -64,13 +69,15 @@ class DropXStrategy(GenStrategy):
                                 )
                                 if isinstance(sorted_fignode, Interaction):
                                     if sorted_fignode.type is InteractionType.METER:
-                                        # check if node is connected to our node of interest
+                                        # check if node is connected to our node of
+                                        # interest
                                         if sorted_fignode_id in self._fig.predecessors(
                                             fignode_id
                                         ):
                                             is_first_metering_node = False
 
-            # Rule 2 – Any +-, distribute nodes before % should be in continuous flow (figure out components for this)
+            # Rule 2 – Any +-, distribute nodes before % should be in continuous flow
+            # (figure out components for this)
             # TODO - Go through each of the FIG nodes, if the fig node has
 
         for fignode_id in self._fig.nodes:
@@ -87,9 +94,12 @@ class DropXStrategy(GenStrategy):
                             # this is NOT continuous
                             raise Exception("flow before METER is not continuous")
 
-        # Rule 3 – Any Remetering (%) should require a droplet breakdown and regeneration (Ask Ali)
-        # Rule 4 – Distribute network post Metering stage should be mapped to different kinds of separator / selection/ storage networks
-        # Rule 5 – If plus is shown between node that has % in pred and non % in pred, then its pico injection
+        # Rule 3 – Any Remetering (%) should require a droplet breakdown and
+        # regeneration (Ask Ali)
+        # Rule 4 – Distribute network post Metering stage should be mapped to different
+        # kinds of separator / selection/ storage networks
+        # Rule 5 – If plus is shown between node that has % in pred and non % in pred, t
+        # hen its pico injection
 
         for fignode_id in self._fig.nodes:
             fignode = self._fig.get_fignode(fignode_id)
@@ -168,7 +178,8 @@ class DropXStrategy(GenStrategy):
                                     print("-", cn_part.primitive.mint)
                                 pass
 
-        # Rule 6 – if plus is sown between two nodes that has % in pred, then its droplet merging
+        # Rule 6 – if plus is sown between two nodes that has % in pred, then its
+        # droplet merging
         # Rule 7 – TBD Rule for droplet splitting
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
@@ -191,10 +202,12 @@ class DropXStrategy(GenStrategy):
         return False
 
     def __search_predecessors(self, fignode_id, search_type):
-        """recursive function searches for the specified InteractionType in the predecessors of the specified fignode_id
+        """recursive function searches for the specified InteractionType in the
+        predecessors of the specified fignode_id
 
         Args:
-            fignode_id (elements in self._fig.nodes): Starting node to find the predecessors
+            fignode_id (elements in self._fig.nodes): Starting node to find the
+            predecessors
             search_type (InteractionType): Interaction type to find in the predecessors
 
         Returns:
@@ -214,7 +227,8 @@ class DropXStrategy(GenStrategy):
 
     @staticmethod
     def __check_if_type(fignode, search_type):
-        """helper function for __search_predecessors and __check_continuous. Check if the specified search_type matches to the fignode.type
+        """helper function for __search_predecessors and __check_continuous. Check if
+        the specified search_type matches to the fignode.type
 
         Args:
             fignode (FIGNode): fignode that contains InteractionType as type
@@ -229,7 +243,8 @@ class DropXStrategy(GenStrategy):
 
         return False
 
-    # this function checks if the predecessors before METER has METER or not. If not, continuous.
+    # this function checks if the predecessors before METER has METER or not. If not,
+    # continuous.
     def __check_continuous(self, fignode_id):
         """recursive function to check if the flow before METER is continuous at MIX or SIEVE
 
@@ -237,7 +252,8 @@ class DropXStrategy(GenStrategy):
             fignode_id (elements in self._fig.nodes): Starting node to find predecessors
 
         Returns:
-            Bool: if METER is found in the predecessors of METER, returns true (not continuous), Else false
+            Bool: if METER is found in the predecessors of METER, returns true
+            (not continuous), Else false
         """
         fignode = self._fig.get_fignode(fignode_id)
 

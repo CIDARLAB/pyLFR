@@ -13,14 +13,14 @@ from lfr.moduleinstanceListener import ModuleInstanceListener
 from lfr.antlrgen.lfr.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-from lfr.netlistgenerator.v2.generator import (
+from lfr.netlistgenerator.generator import (
+    generate_dropx_library,
     generate,
     generate_dropx_library,
     generate_mars_library,
 )
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 from lfr.preprocessor import PreProcessor
-from lfr.postProcessListener import PostProcessListener
 
 
 def load_libraries():

@@ -1,8 +1,7 @@
-from typing import List
-
-from lfr.netlistgenerator.v2.mappingoption import MappingOption
-from lfr.netlistgenerator.v2.networkmappingoption import NetworkMappingOption
 from lfr.postprocessor.constraints import Constraint
+from typing import List
+from lfr.netlistgenerator.mappingoption import MappingOption
+from lfr.netlistgenerator.networkmappingoption import NetworkMappingOption
 
 
 class ExplicitMappingOption:

@@ -7,10 +7,10 @@ from pymint.mintdevice import MINTDevice
 from pymint.mintlayer import MINTLayer
 from pymint.mintparams import MINTParams
 
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr import parameters
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
 
 class PrimitiveType(Enum):
@@ -124,8 +124,10 @@ class Primitive:
         """Returns the default netlist for the primitive
 
         Args:
-            cn_id (str): ID of the construction node so that we can prefix the id's of all the components that are part of the default netlist
-            name_gen (NameGenerator): A namegenerator instance that is used for the globally for synthesizing the design
+            cn_id (str): ID of the construction node so that we can prefix the id's of
+            all the components that are part of the default netlist
+            name_gen (NameGenerator): A namegenerator instance that is used for the
+            globally for synthesizing the design
 
         Returns:
             MINTDevice: Default netlist of whatever the primitive is
@@ -207,7 +209,8 @@ class ProceduralPrimitive(Primitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+            Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented
@@ -224,7 +227,8 @@ class ProceduralPrimitive(Primitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+            Interaction Graph
 
 
         Raises:
@@ -242,7 +246,8 @@ class ProceduralPrimitive(Primitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+            Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented
@@ -259,7 +264,8 @@ class ProceduralPrimitive(Primitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+            Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented
@@ -314,8 +320,10 @@ class NetworkPrimitive(Primitive):
         """Returns the default netlist for the primitive
 
         Args:
-            cn_id (str): ID of the construction node so that we can prefix the id's of all the components that are part of the default netlist
-            name_gen (NameGenerator): A namegenerator instance that is used for the globally for synthesizing the design
+            cn_id (str): ID of the construction node so that we can prefix the id's of
+            all the components that are part of the default netlist
+            name_gen (NameGenerator): A namegenerator instance that is used for the
+            globally for synthesizing the design
 
         Raises:
             Exception: Raised when there is no defualt netlist is generated

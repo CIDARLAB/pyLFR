@@ -1,10 +1,10 @@
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List, Optional
 
 from pymint import MINTComponent, MINTLayer
 
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 
 
 class YTREE(ProceduralPrimitive):

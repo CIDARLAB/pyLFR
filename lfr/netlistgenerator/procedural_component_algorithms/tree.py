@@ -1,13 +1,13 @@
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List
 
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 
 
-class TRANSPOSER(ProceduralPrimitive):
+class TREE(ProceduralPrimitive):
     def __init__(self) -> None:
         super().__init__(
-            mint="TRANSPOSER",
+            mint="TREE",
             is_storage=False,
             has_storage_control=False,
             default_netlist=None,
