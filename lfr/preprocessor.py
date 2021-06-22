@@ -7,8 +7,8 @@ import networkx as nx
 from antlr4.CommonTokenStream import CommonTokenStream
 from antlr4.FileStream import FileStream
 
-from lfr.antlrgen.lfrXLexer import lfrXLexer
-from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.antlrgen.lfr.lfrXLexer import lfrXLexer
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 
 IMPORT_FILE_PATTERN = r"(`import\s+\"(\w+.lfr)\")"
 

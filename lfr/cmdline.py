@@ -1,6 +1,7 @@
 import argparse
 import glob
 import json
+from lfr.postProcessListener import PostProcessListener
 import os
 import sys
 from pathlib import Path
@@ -8,9 +9,9 @@ from pathlib import Path
 from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
 
 import lfr.parameters as parameters
-from lfr.antlrgen.lfrXLexer import lfrXLexer
-from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.moduleinstanceListener import ModuleInstanceListener
+from lfr.antlrgen.lfr.lfrXLexer import lfrXLexer
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.netlistgenerator.v2.generator import (
     generate,

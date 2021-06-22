@@ -1,6 +1,5 @@
 from typing import Dict, List
 
-from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.fig.fignode import FIGNode
 from lfr.fig.interaction import FluidProcessInteraction, Interaction
 from lfr.moduleinstanceListener import ModuleInstanceListener
@@ -12,6 +11,7 @@ from lfr.postprocessor.mapping import (
     PumpMapping,
     StorageMapping,
 )
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 
 
 class PostProcessListener(ModuleInstanceListener):

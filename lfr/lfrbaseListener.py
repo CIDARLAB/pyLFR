@@ -2,8 +2,6 @@ import re
 from enum import Enum
 from typing import List, Optional
 
-from lfr.antlrgen.lfrXListener import lfrXListener
-from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.compiler.distribute.BitVector import BitVector
 from lfr.compiler.language.concatenation import Concatenation
 from lfr.compiler.language.fluidexpression import FluidExpression
@@ -14,6 +12,8 @@ from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
 from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.fignode import Flow, IONode, IOType, Pump, Signal, Storage
+from lfr.antlrgen.lfr.lfrXListener import lfrXListener
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 
 
 class ListenerMode(Enum):

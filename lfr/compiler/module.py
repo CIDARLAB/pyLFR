@@ -27,7 +27,7 @@ class Module:
         self.name = name
         self._imported_modules: List[Module] = []
         self._io: List[ModuleIO] = []
-        self.FIG = FluidInteractionGraph()
+        self.FIG: FluidInteractionGraph = FluidInteractionGraph()
         self.fluids = {}
         self._mappings: List[NodeMappingTemplate] = []
 
