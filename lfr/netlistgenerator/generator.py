@@ -939,8 +939,9 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # if its a 1-n / n-1 / n-n construction nodes, then create a construction node
     # capturing the whole network
 
-    # TODO - Deal with coverage issues here since we need to figure out what are the flow networks,
-    # that we want to match first and then ensure that they're no included on any list
+    # TODO - Deal with coverage issues here since we need to figure out what are the
+    # flow networks, that we want to match first and then ensure that they're no
+    # included on any list
     cn_nodes = get_flow_flow_candidates(module, active_strategy)
     for cn in cn_nodes:
         construction_graph.add_construction_node(cn)
@@ -1000,8 +1001,8 @@ def override_mappings(
     # mapping options
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
-    # Step 3 - Find the cn associated with each of the fig nodes and override the
-    # explicit mapping if mappingtemplate has an associated technology string
+    # Step 3 - Find the cn associated with each of the fig nodes and override
+    # the explicit mapping if mappingtemplate has an associated technology string
     for mapping in mappings:
         for instance in mapping.instances:
 
@@ -1082,7 +1083,7 @@ def override_network_mappings(
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
     # Step 3 - Find the cn associated with each of the fig nodes and override the
-    # explicit mapping if mappingtemplate has an associated technology string
+    #  explicit mapping if mappingtemplate has an associated technology string
     assign_node_index = 0
     for mapping in mappings:
         for instance in mapping.instances:
@@ -1273,6 +1274,15 @@ def connect_orphan_IO():
 def get_flow_flow_candidates(
     module: Module, gen_strategy: GenStrategy
 ) -> List[ConstructionNode]:
+    """Get canddiates where it its a "flow" only sub graph
+
+    Args:
+        module (Module): the module we want to check
+        gen_strategy (GenStrategy): the generation strategy we want to use
+
+    Returns:
+        List[ConstructionNode]: List of all the construction nodes
+    """
     # TODO - go through all the edges and see which ones are between flow-flow graphs
     # If these connectsions are between flow-flow nodes then we need to figure out
     # which ones are part of the same network/connected graphs with only flow nodes
@@ -1340,21 +1350,15 @@ def get_flow_flow_candidates(
     return ret
 
 
-# def size_netlist():
-#     # Size all the node's netlist components to based on the CONSTRAINTS set
-#     # by the postprocessor
-#     # TODO - Modify datastructure in library and other places
-#     netlist_user_constriants = module.get_user_constriants()
-
-#     construction_graph.fix_component_params(netlist_user_constriants)
-
-#     # Size all the Meter/Dilute/Divide nodes based on the value nodes
-#     # TODO - Talk to Ali about this for strategy
-#     construction_graph.size_components()
-
-
 def __check_if_passthrough(sub) -> bool:
-    # Return true if its a single chain of flow channels
+    """Checks if its a passthrough chain
+
+    Args:
+        sub (subgraph): subgraph
+
+    Returns:
+        bool: Return true if its a single chain of flow channels
+    """
     in_count = 0
     out_count = 0
     for node in list(sub.nodes):

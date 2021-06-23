@@ -4,7 +4,6 @@ from typing import Dict, List, Set, Tuple
 from networkx import nx
 from networkx.algorithms import isomorphism
 from networkx.classes.digraph import DiGraph
-from networkx.classes.function import subgraph
 from pymint.mintcomponent import MINTComponent
 from pymint.mintdevice import MINTDevice
 from pymint.minttarget import MINTTarget
@@ -74,7 +73,8 @@ class ConstructionGraph(nx.DiGraph):
                         # Create a new component here based on the primitive technology
                         # and the name generator
                         # Then merge with the larger device
-                        # Save the copy of subgraph view of the netlist in the construction node
+                        # Save the copy of subgraph view of the netlist in the
+                        # construction node
                         component_to_add = None
 
                         if (
@@ -102,7 +102,8 @@ class ConstructionGraph(nx.DiGraph):
                     # Create a new component here based on the primitive technology
                     # and the name generator
                     # Then merge with the larger device
-                    # Save the copy of subgraph view of the netlist in the construction node
+                    # Save the copy of subgraph view of the netlist in the construction
+                    # node
                     component_to_add = mapping_option.primitive.get_default_component(
                         name_generator, layer
                     )
@@ -167,8 +168,10 @@ class ConstructionGraph(nx.DiGraph):
         between all the nodes based on how the FIG subgraph is connected
 
         Args:
-            cn_to_split (ConstructionNode): Construction node that needs to be split into multiple nodes
-            split_groups (List[List[str]]): A list of lists where each list should contain the FIG node IDs that neet to be in differnt nodes
+            cn_to_split (ConstructionNode): Construction node that needs to be split
+                into multiple nodes
+            split_groups (List[List[str]]): A list of lists where each list should
+                contain the FIG node IDs that neet to be in differnt nodes
         """
         name = cn_to_split.id
         fig_nodes = []
@@ -181,7 +184,7 @@ class ConstructionGraph(nx.DiGraph):
             cn = ConstructionNode("{}_split_{}".format(name, group_index))
             # Copy all the mapping options but have a differet fig_subgraph
             for mapping_option in cn_to_split.mapping_options:
-                # TODO = Figure out what kind of a network mapping I need to get for this
+                # TODO = Figure out what kind of a network mapping I need to get
                 mapping_copy = copy(mapping_option)
                 mapping_copy.fig_subgraph = fig_subgraph
                 cn.add_mapping_option(mapping_option)
@@ -251,30 +254,36 @@ class ConstructionGraph(nx.DiGraph):
         #     src = self._construction_nodes[edge[0]]
         #     tar = self._construction_nodes[edge[1]]
 
-        # Step 2 - Get the output requirement from src mapping option and the input mapping
-        # option and make a simple channel between them (I guess no parameters right now)
+        # Step 2 - Get the output requirement from src mapping option and the input
+        # mapping option and make a simple channel between them (I guess no parameters
+        # right now)
         # TODO - Modify this based on what mapping option is enabled here later on
 
         # src.load_connection_options()
         # tar.load_connection_options()
 
-        # Step 3 - Loop through all the nodes and start filling out this input/output requirements
-        # This exploration could be using the reverse DFS traversal this way we can probably fill out
-        # the entire set of flows that way.
+        # Step 3 - Loop through all the nodes and start filling out this input/output
+        # requirements
+        #
+        # This exploration could be using the reverse DFS traversal this way we can
+        # probably fill out the entire set of flows that way.
         # -----------------------
-        # TODO - This could probably be converted into network flow problems. Since this an extension
-        # of bipartitie matching at every step, I think that can be converted into a max flow problem
-        # However, what needs to be determined is what factor becomes the capacity, weight, etc.
-        # The only constraints that are known is that everything will have infinite capacity,
-        # Technically every node might be an edge and every edge might be a node, that way we can
-        # take the input / output capacities and treat them as. This needs to eb thought through a little
+        # TODO - This could probably be converted into network flow problems. Since
+        # this an extension of bipartitie matching at every step, I think that can be
+        # converted into a max flow problem However, what needs to be determined is
+        # what factor becomes the capacity, weight, etc. The only constraints that are
+        # known is that everything will have infinite capacity, Technically every node
+        # might be an edge and every edge might be a node, that way we can take the
+        # input / output capacities and treat them as. This needs to eb thought
+        # through a little
 
-        # We first do the channel creation for the pass throughs so that we don't finish up the input
-        # output resources.
+        # We first do the channel creation for the pass throughs so that we don't
+        # finish up the input output resources.
         skip_list = []
         for cn_id in self.nodes:
-            # Step 3.1 - Check to see if there are as many input options are there are incoming edges
-            # if its n->n or n->1, it'll be easy otherwise we need to figure out something else
+            # Step 3.1 - Check to see if there are as many input options are there are
+            # incoming edges if its n->n or n->1, it'll be easy otherwise we need to
+            # figure out something else
             in_neighbours = self.in_edges(cn_id)
             cn = self._construction_nodes[cn_id]
 
@@ -282,11 +291,15 @@ class ConstructionGraph(nx.DiGraph):
                 continue
 
             # TODO - Go through netlist and then figure out what needs to get done
-            # based on the strategy we need to do different things. This is the requirement for when its a
+            # based on the strategy we need to do different things. This is the
+            # requirement for when its a
             # FLOW-FLOW-CONSTRUCTION-NODE
 
-            # In this case it needs to treat as an empty netlist because a pass through would just connect the neighbours instead
-            # TODO - This will potentially get removed later as we might just want to eliminate the construction node later on
+            # In this case it needs to treat as an empty netlist because a pass through
+            # would just connect the neighbours instead
+            # TODO - This will potentially get removed later as we might just want to
+            # eliminate the construction node later on
+
             # if isinstance(cn.mapping_options[0], NetworkMappingOption):
             #     if cn.mapping_options[0].mapping_type is NetworkMappingOptionType.PASS_THROUGH:
             #         # Figure out what the pass through strategy is for this, find the input
@@ -310,7 +323,9 @@ class ConstructionGraph(nx.DiGraph):
             #                 device
             #             )
 
-            # TODO - Figure out if these conditions require any more thought in terms of implementation
+            # TODO - Figure out if these conditions require any more thought in terms
+            # of implementation
+
             # elif self._mapping_type is NetworkMappingOptionType.COMPONENT_REPLACEMENT:
             #     # TODO - In this case it needs to be an component with the corresponding
             #     # input and output options loaded into the placeholder primitive
@@ -326,12 +341,15 @@ class ConstructionGraph(nx.DiGraph):
             if cn_id in skip_list:
                 continue
 
-            # Step 3.1 - Check to see if there are as many input options are there are incoming edges
-            # if its n->n or n->1, it'll be easy otherwise we need to figure out something else
+            # Step 3.1 - Check to see if there are as many input options are there are
+            # incoming edges
+            # if its n->n or n->1, it'll be easy otherwise we need to figure out
+            # something else
             in_neighbours = self.in_edges(cn_id)
             cn = self._construction_nodes[cn_id]
 
-            # Check if any inputs are left to deal with , skip if there are no more inputs left
+            # Check if any inputs are left to deal with , skip if there are no
+            # more inputs left
             if len(cn.input_options) == 0:
                 continue
 
@@ -435,8 +453,8 @@ class ConstructionGraph(nx.DiGraph):
                     "0",
                 )
 
-        # TODO - Once we are done creating a path, we need to delete the start and end point options
-        # from their respective construction nodes.
+        # TODO - Once we are done creating a path, we need to delete the start and end
+        # point options from their respective construction nodes.
         print(
             "Updated the connectionoptions in {} - Removing {}".format(
                 cn_start, start_point
@@ -517,8 +535,8 @@ class ConstructionGraph(nx.DiGraph):
                     "0",
                 )
 
-        # TODO - Once we are done creating a path, we need to delete the start and end point options
-        # from their respective construction nodes.
+        # TODO - Once we are done creating a path, we need to delete the start and end
+        # point options from their respective construction nodes.
         print(
             "Updated the connectionoptions in {} - Removing {}".format(src, start_point)
         )
@@ -529,18 +547,18 @@ class ConstructionGraph(nx.DiGraph):
 
     def generate_edges(self, fig: FluidInteractionGraph) -> None:
         # Look at the mapping options for each of the constructionnodes,
-        # Figure out which other subgraphs are they connected to based on the original fig
-        # connectivity make the constructionnode based on which other cn subgraphs they are
-        # connected to
+        # Figure out which other subgraphs are they connected to based on the original
+        # fig connectivity make the constructionnode based on which other cn subgraphs
+        # they are connected to
 
-        # Step 1 - create a map for each fig element and see what all cn's they're present in
-        # (this will account for double coverage cases too)
+        # Step 1 - create a map for each fig element and see what all cn's they're
+        # present in (this will account for double coverage cases too)
         # Step 2 - Now that we know the mapping, go through each connection in the fig,
-        # Step 3 - if both source and target are in the same cn, skip, create an edge between
-        # the cn's
+        # Step 3 - if both source and target are in the same cn, skip, create an edge
+        # between the cn's
 
-        # Step 1 - create a map for each fig element and see what all cn's they're present in
-        # (this will account for double coverage cases too)
+        # Step 1 - create a map for each fig element and see what all cn's they're
+        # present in (this will account for double coverage cases too)
 
         # TODO - For combinatorial design space, figure out what to do with this
         fig_nodes_cn_reverse_map: Dict[str, List[str]] = {}
@@ -646,13 +664,16 @@ class ConstructionGraph(nx.DiGraph):
                 # )
                 continue
             else:
-                # TODO - When the asserts fail, its an overcoverage issue, decide what needs to be done here
+                # TODO - When the asserts fail, its an overcoverage issue, decide what
+                # needs to be done here
                 src_cn = fig_nodes_cn_reverse_map[src]
                 assert len(src_cn) == 1
                 tar_cn = fig_nodes_cn_reverse_map[tar]
                 assert len(tar_cn) == 1
 
-                # Step 3 - now check to see if both are in the same cn or not, if they're not create an cn_edge
+                # Step 3 - now check to see if both are in the same cn or not, if
+                # they're not create an cn_edge
+
                 # TODO - implement list search/edge creation incase there are multiple cn's associated
                 if src_cn[0] != tar_cn[0]:
                     self.add_edge(src_cn[0], tar_cn[0])

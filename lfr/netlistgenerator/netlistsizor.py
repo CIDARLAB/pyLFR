@@ -11,8 +11,7 @@ class NetlistSizor:
         self.blacklist_map = netlist_generator.blacklist_map
 
     def size_netlist(self):
-        from .dafdadapter import (
-            ConstraintList,
+        from lfr.netlistgenerator.dafdadapter import (
             DAFDSizingAdapter,
             FunctionalConstraint,
             GeometryConstraint,

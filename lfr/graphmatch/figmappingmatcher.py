@@ -56,7 +56,9 @@ class FIGMappingMatcher(DiGraphMatcher):
         should consider multigraphs.
         """
 
-        # Get the semantic information from here and then use it to figure out if its right type of node or not
+        # Get the semantic information from here and then use it to figure out if
+        # its right type of node or not
+
         # Figure out if G1 or G2 is the pattern graph
         g1_fig_info = self._fig.get_fignode(G1_node)
         g2_semantic_info = self._semantic_information[G2_node]

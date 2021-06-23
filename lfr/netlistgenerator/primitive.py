@@ -114,6 +114,22 @@ class Primitive:
     def get_default_component(
         self, name_gen: NameGenerator, layer: MINTLayer
     ) -> MINTComponent:
+        """Gets the default component for the primitive
+
+        Utilizes the NameGenerator instance to generate a new component instance of
+        the corresponding MINT type
+
+        Args:
+            name_gen (NameGenerator): NameGenerator instance that will generate the
+                new name for the component
+            layer (MINTLayer): Layer object in which the component exists
+
+        Raises:
+            Exception: Raises an exception when the entry is not of the type COMPONENT
+
+        Returns:
+            MINTComponent: New component object
+        """
         if self.type is not PrimitiveType.COMPONENT:
             raise Exception("Cannot execute this method for this kind of a primitive")
         name = name_gen.generate_name(self.mint)
@@ -125,16 +141,20 @@ class Primitive:
 
         Args:
             cn_id (str): ID of the construction node so that we can prefix the id's of
-            all the components that are part of the default netlist
+                all the components that are part of the default netlist
             name_gen (NameGenerator): A namegenerator instance that is used for the
-            globally for synthesizing the design
+                globally for synthesizing the design
 
         Returns:
             MINTDevice: Default netlist of whatever the primitive is
         """
         if self.type is not PrimitiveType.NETLIST:
             raise Exception("Cannot execute this method for this kind of a  primitive")
-
+        if self._default_netlist is None:
+            raise Exception(
+                "Cannot parse MINT file for primitive {} since default netlist"
+                " parameter is set to None".format(self.mint)
+            )
         default_mint_file = parameters.LIB_DIR.joinpath(self._default_netlist).resolve()
 
         device = MINTDevice.from_mint_file(str(default_mint_file))
@@ -206,17 +226,21 @@ class ProceduralPrimitive(Primitive):
 
     def generate_input_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:
         """Generates a list of connection options that represent where the inputs can
-        be connected to the primitive
+                be connected to the primitive
 
-        Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
-            Interaction Graph
+                Args:
+                    subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+        <<<<<<< HEAD
+                    Interaction Graph
+        =======
+                        Interaction Graph
+        >>>>>>> Updating the code to reduce problems from pylance
 
-        Raises:
-            NotImplementedError: Raised when its not implemented
+                Raises:
+                    NotImplementedError: Raised when its not implemented
 
-        Returns:
-            List[ConnectingOption]: List of options where we can attach connections
+                Returns:
+                    List[ConnectingOption]: List of options where we can attach connections
         """
         raise NotImplementedError()
 
@@ -224,18 +248,22 @@ class ProceduralPrimitive(Primitive):
         self, subgraph_view
     ) -> List[ConnectingOption]:
         """Generates a list of connection options that represent where the outputs can
-        be connected to the primitive
+                be connected to the primitive
 
-        Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
-            Interaction Graph
+                Args:
+                    subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+        <<<<<<< HEAD
+                    Interaction Graph
+        =======
+                        Interaction Graph
+        >>>>>>> Updating the code to reduce problems from pylance
 
 
-        Raises:
-            NotImplementedError: Raised when its not implemented
+                Raises:
+                    NotImplementedError: Raised when its not implemented
 
-        Returns:
-            List[ConnectingOption]: List of options where we can attach connections
+                Returns:
+                    List[ConnectingOption]: List of options where we can attach connections
         """
         raise NotImplementedError()
 
@@ -243,17 +271,21 @@ class ProceduralPrimitive(Primitive):
         self, subgraph_view
     ) -> List[ConnectingOption]:
         """Generates a list of connection options that represent where the carrier inputs can
-        be connected to the primitive
+                be connected to the primitive
 
-        Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
-            Interaction Graph
+                Args:
+                    subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+        <<<<<<< HEAD
+                    Interaction Graph
+        =======
+                        Interaction Graph
+        >>>>>>> Updating the code to reduce problems from pylance
 
-        Raises:
-            NotImplementedError: Raised when its not implemented
+                Raises:
+                    NotImplementedError: Raised when its not implemented
 
-        Returns:
-            List[ConnectingOption]: List of options where we can attach connections
+                Returns:
+                    List[ConnectingOption]: List of options where we can attach connections
         """
         raise NotImplementedError()
 
@@ -261,17 +293,21 @@ class ProceduralPrimitive(Primitive):
         self, subgraph_view
     ) -> List[ConnectingOption]:
         """Generates a list of connection options that represent where the loading inputs can
-        be connected to the primitive
+                be connected to the primitive
 
-        Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
-            Interaction Graph
+                Args:
+                    subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+        <<<<<<< HEAD
+                    Interaction Graph
+        =======
+                        Interaction Graph
+        >>>>>>> Updating the code to reduce problems from pylance
 
-        Raises:
-            NotImplementedError: Raised when its not implemented
+                Raises:
+                    NotImplementedError: Raised when its not implemented
 
-        Returns:
-            List[ConnectingOption]: List of options where we can attach connections
+                Returns:
+                    List[ConnectingOption]: List of options where we can attach connections
         """
         raise NotImplementedError()
 
@@ -297,8 +333,9 @@ class NetworkPrimitive(Primitive):
         self._netlist: Optional[MINTDevice] = None
 
     def generate_netlist(self) -> None:
-        """Generates the netlist for the given network primitive, this method generates the flow
-        network, input , output, carriers and loadings into the primitve properties
+        """Generates the netlist for the given network primitive, this method generates
+        the flow network, input , output, carriers and loadings into the primitve
+        properties
         """
         self._netlist = self._gen_strategy.generate_flow_network(
             self._fig_subgraph_view
@@ -319,17 +356,23 @@ class NetworkPrimitive(Primitive):
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
         """Returns the default netlist for the primitive
 
-        Args:
-            cn_id (str): ID of the construction node so that we can prefix the id's of
-            all the components that are part of the default netlist
-            name_gen (NameGenerator): A namegenerator instance that is used for the
-            globally for synthesizing the design
+                Args:
+                    cn_id (str): ID of the construction node so that we can prefix the id's of
+        <<<<<<< HEAD
+                    all the components that are part of the default netlist
+                    name_gen (NameGenerator): A namegenerator instance that is used for the
+                    globally for synthesizing the design
+        =======
+                        all the components that are part of the default netlist
+                    name_gen (NameGenerator): A namegenerator instance that is used for the
+                        globally for synthesizing the design
+        >>>>>>> Updating the code to reduce problems from pylance
 
-        Raises:
-            Exception: Raised when there is no defualt netlist is generated
+                Raises:
+                    Exception: Raised when there is no defualt netlist is generated
 
-        Returns:
-            MINTDevice: Default netlist of whatever the primitive is
+                Returns:
+                    MINTDevice: Default netlist of whatever the primitive is
         """
         if self._netlist is None:
             raise Exception("No default netlist present for the primitive")

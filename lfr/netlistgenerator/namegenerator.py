@@ -1,5 +1,4 @@
 from typing import Dict
-
 from pymint import MINTComponent, MINTConnection, MINTDevice
 
 

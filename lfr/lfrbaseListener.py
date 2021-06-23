@@ -382,7 +382,8 @@ class LFRBaseListener(lfrXListener):
                 self.stack.append(output)
 
             elif ctx.number() is not None:
-                # TODO: Figure out how one needs to process the number with a unary operator
+                # TODO: Figure out how one needs to process the number with a unary
+                # operator
                 raise Exception(
                     "Implement method to evaluate number with unary operator"
                 )
@@ -424,6 +425,8 @@ class LFRBaseListener(lfrXListener):
 
             operator = ctx.unary_operator().getText()
             term = self.stack.pop()
+            if self.currentModule is None:
+                raise ValueError()
             fluidexpession = FluidExpression(self.currentModule)
             result = fluidexpession.process_unary_operation(term, operator)
             self.stack.append(result)
@@ -468,7 +471,8 @@ class LFRBaseListener(lfrXListener):
     def exitLiteralassignstat(self, ctx: lfrXParser.LiteralassignstatContext):
         rhs = self.stack.pop()
         lhs = ctx.ID().getText()
-        # TODO: Check all error conditions and if the right kinds of variables are being assigned here
+        # TODO: Check all error conditions and if the right kinds of variables are
+        # being assigned here
         # self.vectors[lhs] = rhs
 
         if self.listermode is ListenerMode.VARIABLE_DECLARATION_MODE:
@@ -523,6 +527,8 @@ class LFRBaseListener(lfrXListener):
             )
         )
         # TODO: Return the vector range result of unary operator
+        if self.currentModule is None:
+            raise ValueError()
         fluidexpression = FluidExpression(self.currentModule)
         result = fluidexpression.process_unary_operation(operand, operator)
 
