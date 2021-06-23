@@ -47,7 +47,8 @@ def get_fig_matches(fig: FluidInteractionGraph, library: MappingLibrary):
     ret = []
 
     # TODO - Retrun the networkx subgraph views of the of the FIG
-    # Step 1 - Generate the match candidates by running the subgraph isomerism for all the items stored in the library
+    # Step 1 - Generate the match candidates by running the subgraph isomerism for all
+    # the items stored in the library
     for (mint, match_pattern_string) in library.get_match_patterns():
         if match_pattern_string == "" or match_pattern_string is None:
             print("Warning ! - Missing match string for mint- {}".format(mint))
@@ -59,11 +60,14 @@ def get_fig_matches(fig: FluidInteractionGraph, library: MappingLibrary):
         GM = FIGMappingMatcher(fig, structural_template, semantic_information)
 
         for subgraph in GM.subgraph_isomorphisms_iter():
-            # Work with these subgraphs at the end and then push them through the constraint checking phase
+            # Work with these subgraphs at the end and then push them through the
+            # constraint checking phase
+
             # This would be a match, figure out how to get the mapping from GM.mapping
 
             # Loop through each of the candates
-            # TODO - Compare the constraints on all the nodes for this for subgraph to confirm the match
+            # TODO - Compare the constraints on all the nodes for this for subgraph to
+            # confirm the match
             if match_node_constraints(
                 fig, structural_template, semantic_information, subgraph, GM.mapping
             ):

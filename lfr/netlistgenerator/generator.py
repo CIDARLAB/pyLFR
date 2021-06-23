@@ -928,13 +928,16 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     mappings = module.get_explicit_mappings()
     override_network_mappings(mappings, library, module.FIG, construction_graph)
 
-    # TODO - Go through the different flow-flow edge networks to generate construction nodes
-    # specific to these networks, Conditions:
-    # if its a 1-1 flow-flow connection, then create a construction node for the two flow nodes
-    # if its a 1-n / n-1 / n-n construction nodes, then create a construction node capturing the whole network
+    # TODO - Go through the different flow-flow edge networks to generate construction
+    # nodes specific to these networks, Conditions:
+    # if its a 1-1 flow-flow connection, then create a construction node for the two
+    # flow nodes
+    # if its a 1-n / n-1 / n-n construction nodes, then create a construction node
+    # capturing the whole network
 
-    # TODO - Deal with coverage issues here since we need to figure out what are the flow networks,
-    # that we want to match first and then ensure that they're no included on any list
+    # TODO - Deal with coverage issues here since we need to figure out what are the
+    # flow networks, that we want to match first and then ensure that they're no
+    # included on any list
     cn_nodes = get_flow_flow_candidates(module, active_strategy)
     for cn in cn_nodes:
         construction_graph.add_construction_node(cn)
@@ -946,7 +949,8 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Find all the explicit mappings and override them in the construction graph
     override_mappings(mappings, library, module.FIG, construction_graph)
 
-    # Whittle Down the mapping options here to only include the requried single candidates
+    # Whittle Down the mapping options here to only include the requried single
+    # candidates
     # TODO - Check what library is being used and use the required library here
     active_strategy.reduce_mapping_options()
 
@@ -989,10 +993,12 @@ def override_mappings(
     fig: FluidInteractionGraph,
     construction_graph: ConstructionGraph,
 ) -> None:
-    # Go through the entire set of mappings in the FIG and generate / append the mapping options
+    # Go through the entire set of mappings in the FIG and generate / append the
+    # mapping options
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
-    # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
+    # Step 3 - Find the cn associated with each of the fig nodes and override
+    # the explicit mapping if mappingtemplate has an associated technology string
     for mapping in mappings:
         for instance in mapping.instances:
 
@@ -1025,10 +1031,11 @@ def override_mappings(
                 # options
 
                 # Step 2 - In there is a string assiciated with the mappingtemplate, we
-                # eliminate all mapping options that dont have a matching string / generate
-                # a mapping option with the corresponding
+                # eliminate all mapping options that dont have a matching string /
+                # generate a mapping option with the corresponding
 
-                # In the case of an Fluid Value interaction put all valuenodes in the subgraph
+                # In the case of an Fluid Value interaction put all valuenodes in the
+                # subgraph
                 node_ids.extend(
                     [
                         fig.get_fignode(edge[0]).id
@@ -1067,10 +1074,12 @@ def override_network_mappings(
     fig: FluidInteractionGraph,
     construction_graph: ConstructionGraph,
 ) -> None:
-    # Go through the entire set of mappings in the FIG and generate / append the mapping options
+    # Go through the entire set of mappings in the FIG and generate / append the
+    # mapping options
     # Step 1 - Loop through each of the mappingtemplates
     # Step 2 - Loop through each of the instances in teh mappingtemplate
-    # Step 3 - Find the cn associated with each of the fig nodes and override the explicit mapping if mappingtemplate has an associated technology string
+    # Step 3 - Find the cn associated with each of the fig nodes and override the
+    #  explicit mapping if mappingtemplate has an associated technology string
     assign_node_index = 0
     for mapping in mappings:
         for instance in mapping.instances:
@@ -1261,6 +1270,15 @@ def connect_orphan_IO():
 def get_flow_flow_candidates(
     module: Module, gen_strategy: GenStrategy
 ) -> List[ConstructionNode]:
+    """Get canddiates where it its a "flow" only sub graph
+
+    Args:
+        module (Module): the module we want to check
+        gen_strategy (GenStrategy): the generation strategy we want to use
+
+    Returns:
+        List[ConstructionNode]: List of all the construction nodes
+    """
     # TODO - go through all the edges and see which ones are between flow-flow graphs
     # If these connectsions are between flow-flow nodes then we need to figure out
     # which ones are part of the same network/connected graphs with only flow nodes
@@ -1308,8 +1326,8 @@ def get_flow_flow_candidates(
         print("Flow candidate")
         print(component)
         sub = fig_original.subgraph(component)
-        # TODO - Decide what the mapping type should be. for now assume that we just a single
-        # passthrough type scenario where we don't have to do much work
+        # TODO - Decide what the mapping type should be. for now assume that we just a
+        # single passthrough type scenario where we don't have to do much work
         is_passthrough = __check_if_passthrough(sub)
         if is_passthrough:
             mapping_type = NetworkMappingOptionType.PASS_THROUGH
@@ -1328,21 +1346,15 @@ def get_flow_flow_candidates(
     return ret
 
 
-# def size_netlist():
-#     # Size all the node's netlist components to based on the CONSTRAINTS set
-#     # by the postprocessor
-#     # TODO - Modify datastructure in library and other places
-#     netlist_user_constriants = module.get_user_constriants()
-
-#     construction_graph.fix_component_params(netlist_user_constriants)
-
-#     # Size all the Meter/Dilute/Divide nodes based on the value nodes
-#     # TODO - Talk to Ali about this for strategy
-#     construction_graph.size_components()
-
-
 def __check_if_passthrough(sub) -> bool:
-    # Return true if its a single chain of flow channels
+    """Checks if its a passthrough chain
+
+    Args:
+        sub (subgraph): subgraph
+
+    Returns:
+        bool: Return true if its a single chain of flow channels
+    """
     in_count = 0
     out_count = 0
     for node in list(sub.nodes):

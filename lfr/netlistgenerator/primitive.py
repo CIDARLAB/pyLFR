@@ -101,6 +101,22 @@ class Primitive:
     def get_default_component(
         self, name_gen: NameGenerator, layer: MINTLayer
     ) -> MINTComponent:
+        """Gets the default component for the primitive
+
+        Utilizes the NameGenerator instance to generate a new component instance of
+        the corresponding MINT type
+
+        Args:
+            name_gen (NameGenerator): NameGenerator instance that will generate the
+                new name for the component
+            layer (MINTLayer): Layer object in which the component exists
+
+        Raises:
+            Exception: Raises an exception when the entry is not of the type COMPONENT
+
+        Returns:
+            MINTComponent: New component object
+        """
         if self.type is not PrimitiveType.COMPONENT:
             raise Exception("Cannot execute this method for this kind of a primitive")
         name = name_gen.generate_name(self.mint)
@@ -111,15 +127,21 @@ class Primitive:
         """Returns the default netlist for the primitive
 
         Args:
-            cn_id (str): ID of the construction node so that we can prefix the id's of all the components that are part of the default netlist
-            name_gen (NameGenerator): A namegenerator instance that is used for the globally for synthesizing the design
+            cn_id (str): ID of the construction node so that we can prefix the id's of
+                all the components that are part of the default netlist
+            name_gen (NameGenerator): A namegenerator instance that is used for the
+                globally for synthesizing the design
 
         Returns:
             MINTDevice: Default netlist of whatever the primitive is
         """
         if self.type is not PrimitiveType.NETLIST:
             raise Exception("Cannot execute this method for this kind of a  primitive")
-
+        if self._default_netlist is None:
+            raise Exception(
+                "Cannot parse MINT file for primitive {} since default netlist"
+                " parameter is set to None".format(self.mint)
+            )
         default_mint_file = parameters.LIB_DIR.joinpath(self._default_netlist).resolve()
 
         device = MINTDevice.from_mint_file(str(default_mint_file))
@@ -194,7 +216,8 @@ class ProceduralPrimitive(Primitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+                Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented
@@ -211,7 +234,8 @@ class ProceduralPrimitive(Primitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+                Interaction Graph
 
 
         Raises:
@@ -229,7 +253,8 @@ class ProceduralPrimitive(Primitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+                Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented
@@ -246,7 +271,8 @@ class ProceduralPrimitive(Primitive):
         be connected to the primitive
 
         Args:
-            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid Interaction Graph
+            subgraph_view (networkx.Graph.subgraph): A subgraph view of the Fluid
+                Interaction Graph
 
         Raises:
             NotImplementedError: Raised when its not implemented
@@ -278,8 +304,9 @@ class NetworkPrimitive(Primitive):
         self._netlist: Optional[MINTDevice] = None
 
     def generate_netlist(self) -> None:
-        """Generates the netlist for the given network primitive, this method generates the flow
-        network, input , output, carriers and loadings into the primitve properties
+        """Generates the netlist for the given network primitive, this method generates
+        the flow network, input , output, carriers and loadings into the primitve
+        properties
         """
         self._netlist = self._gen_strategy.generate_flow_network(
             self._fig_subgraph_view
@@ -301,8 +328,10 @@ class NetworkPrimitive(Primitive):
         """Returns the default netlist for the primitive
 
         Args:
-            cn_id (str): ID of the construction node so that we can prefix the id's of all the components that are part of the default netlist
-            name_gen (NameGenerator): A namegenerator instance that is used for the globally for synthesizing the design
+            cn_id (str): ID of the construction node so that we can prefix the id's of
+                all the components that are part of the default netlist
+            name_gen (NameGenerator): A namegenerator instance that is used for the
+                globally for synthesizing the design
 
         Raises:
             Exception: Raised when there is no defualt netlist is generated
