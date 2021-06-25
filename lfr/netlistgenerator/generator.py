@@ -1214,7 +1214,7 @@ def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
         if isinstance(mapping_option, NetworkMappingOption):
             if mapping_option.mapping_type is NetworkMappingOptionType.PASS_THROUGH:
 
-                print("Eliminating PASS THROUGH construction node = {}".format(cn.id))
+                print("Eliminating PASS THROUGH construction node = {}".format(cn.ID))
 
                 # First get all the in and out edges
                 in_edges = list(construction_graph.in_edges(node_id))

@@ -33,7 +33,7 @@ class GenStrategy:
             # Remove the extra mappings
             print(
                 "Reducing mapping options for Construction node: {} from {} to {}"
-                .format(cn.id, len(cn.mapping_options), 1),
+                .format(cn.ID, len(cn.mapping_options), 1),
             )
             if len(cn.mapping_options) > 1:
                 for option in cn.mapping_options:
@@ -43,7 +43,7 @@ class GenStrategy:
 
         print("Printing all final mapping options:")
         for cn in self._construction_graph.construction_nodes:
-            print("Construction node: {}".format(cn.id))
+            print("Construction node: {}".format(cn.ID))
             print("Options: ")
 
             for mapping_option in cn.mapping_options:
