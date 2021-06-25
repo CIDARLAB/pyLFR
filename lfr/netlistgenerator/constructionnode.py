@@ -43,25 +43,57 @@ class ConstructionNode:
 
     @property
     def loading_options(self) -> List[ConnectingOption]:
+        """Returns the list of loading options for the mapption option candidate
+
+        Returns:
+            List[ConnectingOption]: List of loading options
+        """
         return self._loading_options
 
     @property
     def carrier_options(self) -> List[ConnectingOption]:
+        """Returns the list of carrier options set for the construction node
+
+        Returns:
+            List[ConnectingOption]: List of carrier options
+        """
         return self._carrier_options
 
     @property
-    def id(self) -> str:
+    def ID(self) -> str:
+        """Returns the id of the construction node
+
+        Returns:
+            str: ID of the construction node
+        """
         return self._id
 
     @property
     def mapping_options(self) -> List[MappingOption]:
+        """Returns the list connecting options on the
+        construction node
+
+        Returns:
+            List[MappingOption]: Mapping options available for the construction node
+        """
         return self._mapping_options
 
     @mapping_options.setter
     def mapping_options(self, options: List[MappingOption]):
+        """Sets the mapping options
+
+        Args:
+            options (List[MappingOption]): MappingOptions
+        """
         self._mapping_options = options
 
     def use_explicit_mapping(self, mapping: MappingOption) -> None:
+        """Uses the explicit mapping option passed as the parameter
+
+        Args:
+            mapping (MappingOption): MappingOption that needs to set
+                here explicitly
+        """
         # Set the flag for explicit mapping
         self._explict_mapping_flag = True
         # Delete all the existing mapping options
@@ -82,7 +114,15 @@ class ConstructionNode:
             self._mapping_options.append(mapping_option)
 
     def load_connection_options(self) -> None:
+        """Loads the corresponding different connecting options into
+        the construction node
+        """
         # TODO - Figure out what do do if its a combinatorial design
+        if len(self._mapping_options) != 1:
+            raise Exception(
+                "More than one mapping options present for construction node, cannot"
+                " load connecting options"
+            )
         assert len(self._mapping_options) == 1
         primitive_ref = self._mapping_options[0].primitive
 
@@ -105,5 +145,21 @@ class ConstructionNode:
 
         self._carrier_options = options
 
+    def merge_construction_node(self, construction_node: "ConstructionNode") -> None:
+        """Merges the construction node passed as an arugment into the this
+        construction node.
+
+        This will let us handle the scenario where we might want to merge
+        construction nodes that have undercoverage and help support the future
+        combinatorial generation options
+
+
+        Args:
+            construction_node (ConstructionNode): [description]
+        """
+        raise NotImplementedError(
+            "Implement this when we are trying to make combinatorial operations work"
+        )
+
     def __str__(self) -> str:
-        return "Construction Node: {}".format(self.id)
+        return "Construction Node: {}".format(self.ID)
