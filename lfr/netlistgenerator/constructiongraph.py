@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 from networkx import nx
 from networkx.algorithms import isomorphism
@@ -21,6 +21,12 @@ from lfr.netlistgenerator.networkmappingoption import (
 
 
 class ConstructionGraph(nx.DiGraph):
+    """Construction Graph is the proxy datastructure that we use for representing the
+    loose connections between the fluid interaction graph and the real hardware
+    design primitives that would be pieced together.
+
+    """
+
     def __init__(self, data=None, val=None, **attr) -> None:
         super(ConstructionGraph, self).__init__()
         self._construction_nodes: Dict[str, ConstructionNode] = dict()
@@ -28,8 +34,35 @@ class ConstructionGraph(nx.DiGraph):
         self._component_refs: Dict[str, List[str]] = dict()
         self._fixed_edges: List[Tuple[str, str]] = []
 
+        # TODO - Figure out if this is where we want to store this
+        self._connection_technology: Optional[str] = None
+
+    @property
+    def connection_technology(self) -> Optional[str]:
+        """Returns the default connection technology being used during
+        connection creation
+
+        Returns:
+            Optional[str]: MINT string
+        """
+        return self._connection_technology
+
+    @connection_technology.setter
+    def connection_technology(self, technology_string: str) -> None:
+        """Sets the default connection technology
+
+        Args:
+            technology_string (str): MINT technology string
+        """
+        self._connection_technology = technology_string
+
     @property
     def construction_nodes(self) -> List[ConstructionNode]:
+        """Returns the list of construction nodes in the construction graph
+
+        Returns:
+            List[ConstructionNode]:
+        """
         return [v for k, v in self._construction_nodes.items()]
 
     def get_cn(self, id: str) -> ConstructionNode:
@@ -39,8 +72,8 @@ class ConstructionGraph(nx.DiGraph):
             raise KeyError()
 
     def add_construction_node(self, node: ConstructionNode) -> None:
-        self._construction_nodes[node.id] = node
-        self.add_node(node.id)
+        self._construction_nodes[node.ID] = node
+        self.add_node(node.ID)
 
     def delete_node(self, id: str) -> None:
         self.remove_node(id)
@@ -68,7 +101,7 @@ class ConstructionGraph(nx.DiGraph):
                         continue
                     elif (
                         mapping_option.mapping_type
-                        == NetworkMappingOptionType.COMPONENT_REPLACEMENT
+                        is NetworkMappingOptionType.COMPONENT_REPLACEMENT
                     ):
                         # Create a new component here based on the primitive technology
                         # and the name generator
@@ -94,7 +127,7 @@ class ConstructionGraph(nx.DiGraph):
                             )
 
                         device.add_component(component_to_add)
-                        self._component_refs[cn.id] = [component_to_add.ID]
+                        self._component_refs[cn.ID] = [component_to_add.ID]
                         # for connecting_option in cn
                         # TODO - save the subgraph view reference
 
@@ -108,14 +141,14 @@ class ConstructionGraph(nx.DiGraph):
                         name_generator, layer
                     )
                     device.add_component(component_to_add)
-                    self._component_refs[cn.id] = [component_to_add.ID]
+                    self._component_refs[cn.ID] = [component_to_add.ID]
                     # for connecting_option in cn
                     # TODO - save the subgraph view reference
                 elif mapping_option.primitive.type is PrimitiveType.NETLIST:
                     netlist = mapping_option.primitive.get_default_netlist(
-                        cn.id, name_generator
+                        cn.ID, name_generator
                     )
-                    self._component_refs[cn.id] = [
+                    self._component_refs[cn.ID] = [
                         component.ID for component in netlist.components
                     ]
                     device.merge_netlist(netlist)
@@ -123,9 +156,9 @@ class ConstructionGraph(nx.DiGraph):
                     # TODO - Save the subgraph view reference
                 elif mapping_option.primitive.type is PrimitiveType.PROCEDURAL:
                     netlist = mapping_option.primitive.get_default_netlist(
-                        cn.id, name_generator
+                        cn.ID, name_generator
                     )
-                    self._component_refs[cn.id] = [
+                    self._component_refs[cn.ID] = [
                         component.ID for component in netlist.components
                     ]
                     device.merge_netlist(netlist)
@@ -173,7 +206,7 @@ class ConstructionGraph(nx.DiGraph):
             split_groups (List[List[str]]): A list of lists where each list should
                 contain the FIG node IDs that neet to be in differnt nodes
         """
-        name = cn_to_split.id
+        name = cn_to_split.ID
         fig_nodes = []
         for nodes in split_groups:
             fig_nodes.extend(nodes)
@@ -192,7 +225,7 @@ class ConstructionGraph(nx.DiGraph):
             self.add_construction_node(cn)
 
         # Delete the node now
-        self.delete_node(cn_to_split.id)
+        self.delete_node(cn_to_split.ID)
 
         # TODO - create connections between the cns based on the figs
         self.generate_edges(full_subgraph)
@@ -209,17 +242,17 @@ class ConstructionGraph(nx.DiGraph):
         # Delete all the edges between the input nodes and the output nodes
         for input_cn in input_cns:
             for output_cn in output_cns:
-                if self.has_edge(input_cn.id, output_cn.id):
-                    self.remove_edge(input_cn.id, output_cn.id)
+                if self.has_edge(input_cn.ID, output_cn.ID):
+                    self.remove_edge(input_cn.ID, output_cn.ID)
 
         # Add the cn
         self.add_construction_node(cn_to_insert)
         # Create the connections between the intermediate cn
         for input_cn in input_cns:
-            self.add_edge(input_cn.id, cn_to_insert.id)
+            self.add_edge(input_cn.ID, cn_to_insert.ID)
 
         for output_cn in output_cns:
-            self.add_edge(cn_to_insert.id, output_cn.id)
+            self.add_edge(cn_to_insert.ID, output_cn.ID)
 
     def get_component_cn(self, component: MINTComponent) -> ConstructionNode:
         """Get the Construction Node associated with the given component
@@ -426,7 +459,9 @@ class ConstructionGraph(nx.DiGraph):
             )
 
         # TODO - Change how we retrieve the technology type for the channel
-        tech_string = "CHANNEL"
+        if self._connection_technology is None:
+            raise ValueError()
+        tech_string = self._connection_technology
         # channel_name = name_generator.generate_name(tech_string)
 
         # TODO - Figure out how to hande a scenario where this isn't ture
@@ -492,10 +527,10 @@ class ConstructionGraph(nx.DiGraph):
 
         if end_point.component_name is None:
             # This means a single component was mapped here
-            tar_component_name = self._component_refs[cn.id][0]
+            tar_component_name = self._component_refs[cn.ID][0]
         else:
             tar_component_name = name_generator.get_cn_name(
-                cn.id, end_point.component_name
+                cn.ID, end_point.component_name
             )
 
         print(
@@ -587,11 +622,11 @@ class ConstructionGraph(nx.DiGraph):
                     if node_id in fig_nodes_cn_reverse_map.keys():
 
                         # Make sure there are no repeats here
-                        if cn.id not in fig_nodes_cn_reverse_map[node_id]:
-                            fig_nodes_cn_reverse_map[node_id].append(cn.id)
+                        if cn.ID not in fig_nodes_cn_reverse_map[node_id]:
+                            fig_nodes_cn_reverse_map[node_id].append(cn.ID)
                     else:
                         fig_nodes_cn_reverse_map[node_id] = []
-                        fig_nodes_cn_reverse_map[node_id].append(cn.id)
+                        fig_nodes_cn_reverse_map[node_id].append(cn.ID)
 
         # Step 1.5 - Handle the overcoverage scenarios, currently we assume that
         # the undercoverage scenarios are only in the case of networkmappings.
