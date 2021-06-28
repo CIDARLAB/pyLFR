@@ -16,7 +16,9 @@ from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from lfr.netlistgenerator.v2.networkmappingoption import (
-    NetworkMappingOption, NetworkMappingOptionType)
+    NetworkMappingOption,
+    NetworkMappingOptionType,
+)
 
 
 class ConstructionGraph(nx.DiGraph):
@@ -585,7 +587,7 @@ class ConstructionGraph(nx.DiGraph):
 
         for cn_list in list(fig_nodes_cn_reverse_map.values()):
             over_coverage_scenario_1 = False
-            if not (len(cn_list) > 1):
+            if not len(cn_list) > 1:
                 continue
             for i in range(len(cn_list)):
                 cn_i_id = cn_list[i]

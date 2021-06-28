@@ -1,11 +1,12 @@
-from lfr.fig.interaction import Interaction, InteractionType
-from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 import networkx as nx
 from pymint import MINTDevice
+
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.fig.interaction import Interaction, InteractionType
+from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
 
 class DropXStrategy(GenStrategy):
@@ -77,7 +78,10 @@ class DropXStrategy(GenStrategy):
             # check if explicitly mapped
             if not ConstructionNode(fignode.id).is_explictly_mapped:
                 if isinstance(fignode, Interaction):
-                    if (fignode.type is InteractionType.MIX or fignode.type is InteractionType.SIEVE):
+                    if (
+                        fignode.type is InteractionType.MIX
+                        or fignode.type is InteractionType.SIEVE
+                    ):
                         if self.__check_continuous(fignode_id):
                             # this is NOT continuous
                             raise Exception("flow before METER is not continuous")
@@ -119,12 +123,10 @@ class DropXStrategy(GenStrategy):
 
                             if numTrue == 1:
                                 # this is a pico injection
-                                cn = self._construction_graph.get_fignode_cn(
-                                    fignode
-                                )
+                                cn = self._construction_graph.get_fignode_cn(fignode)
                                 print("***Detect Pico Injector***")
                                 # check mapping options
-                                while(self.__exist_in_cn(cn, "PICOINJECTOR")):
+                                while self.__exist_in_cn(cn, "PICOINJECTOR"):
                                     for cn_part in cn.mapping_options:
                                         print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "PICOINJECTOR":
@@ -138,12 +140,10 @@ class DropXStrategy(GenStrategy):
                             # Rule 6
                             elif numTrue == 2:
                                 # this is a droplet merging
-                                cn = self._construction_graph.get_fignode_cn(
-                                    fignode
-                                )
+                                cn = self._construction_graph.get_fignode_cn(fignode)
 
                                 print("***Detect Droplet Merger***")
-                                while(self.__exist_in_cn(cn, "DROPLET MERGER")):
+                                while self.__exist_in_cn(cn, "DROPLET MERGER"):
                                     for cn_part in cn.mapping_options:
                                         print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "DROPLET MERGER":
@@ -155,10 +155,8 @@ class DropXStrategy(GenStrategy):
 
                             else:
                                 print("***Mixer***")
-                                cn = self._construction_graph.get_fignode_cn(
-                                    fignode
-                                )
-                                while(self.__exist_in_cn(cn, "MIXER")):
+                                cn = self._construction_graph.get_fignode_cn(fignode)
+                                while self.__exist_in_cn(cn, "MIXER"):
                                     for cn_part in cn.mapping_options:
                                         print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "MIXER":
@@ -169,12 +167,10 @@ class DropXStrategy(GenStrategy):
                                     print("-", cn_part.primitive.mint)
                                 pass
 
-
         # Rule 6 – if plus is sown between two nodes that has % in pred, then its droplet merging
         # Rule 7 – TBD Rule for droplet splitting
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
-
 
     def __exist_in_cn(self, cn, mint_name):
         """helper function to check if the construction node contains undesired mints.
@@ -191,7 +187,6 @@ class DropXStrategy(GenStrategy):
                 return True
 
         return False
-
 
     def __search_predecessors(self, fignode_id, search_type):
         """recursive function searches for the specified InteractionType in the predecessors of the specified fignode_id
