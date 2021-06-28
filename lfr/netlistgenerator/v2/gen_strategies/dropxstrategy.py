@@ -166,7 +166,7 @@ class DropXStrategy(GenStrategy):
 
                                     print("after------")
                                 for cn_part in cn.mapping_options:
-                                    print("-", cn_part.primitive.mint)    
+                                    print("-", cn_part.primitive.mint)
                                 pass
 
 
@@ -177,7 +177,7 @@ class DropXStrategy(GenStrategy):
 
 
     def __exist_in_cn(self, cn, mint_name):
-        """helper function to check if the construction node contains undesired mints. 
+        """helper function to check if the construction node contains undesired mints.
 
         Args:
             cn (ConstructionNode): ConstructionNode to be checked
@@ -231,7 +231,7 @@ class DropXStrategy(GenStrategy):
 
         return False
 
-    # this function checks if the predecessors before METER has METER or not. If not, continuous. 
+    # this function checks if the predecessors before METER has METER or not. If not, continuous.
     def __check_continuous(self, fignode_id):
         """recursive function to check if the flow before METER is continuous at MIX or SIEVE
 
@@ -247,7 +247,7 @@ class DropXStrategy(GenStrategy):
             for prednode_id in self._fig.predecessors(fignode_id):
                 if self.__search_predecessors(prednode_id, InteractionType.METER):
                     return True
-        
+
         else:
             for other_pred_id in self._fig.predecessors(fignode_id):
                 if self.__check_continuous(other_pred_id):
