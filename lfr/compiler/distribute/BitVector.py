@@ -1633,7 +1633,7 @@ def _readblock(blocksize, bitvector):
     global _hexdict                                                  
     bitstring = ''                                                   
     i = 0                                                            
-    while ( i < blocksize / 8 ):                                     
+    while i < blocksize / 8:                                     
         i += 1                                                       
         byte = bitvector.FILEIN.read(1)                              
         if byte == b'':                                              
@@ -1732,7 +1732,7 @@ class BitVector( object ):
                 bitlist = ''.join(map(lambda x: _hexdict[x],hexVal))
                 bitlist =  list(map( int, bitlist))                
                 i = 0                                               
-                while (i < len(bitlist)):                       
+                while i < len(bitlist):                       
                     if bitlist[i] == 1: break                       
                     i += 1                                          
                 del bitlist[0:i]                                    
@@ -2165,11 +2165,11 @@ class BitVector( object ):
             raise ValueError( "must have even num bits" )          
         i = 0                                                      
         outlist1 = []                                              
-        while ( i < self.size /2 ):                                
+        while i < self.size /2:                                
             outlist1.append( self[i] )                             
             i += 1                                                 
         outlist2 = []                                              
-        while ( i < self.size ):                                   
+        while i < self.size:                                   
             outlist2.append( self[i] )                             
             i += 1                                                 
         return [ BitVector( bitlist = outlist1 ),
@@ -2185,7 +2185,7 @@ class BitVector( object ):
             raise ValueError( "Bad permutation index" )            
         outlist = []                                               
         i = 0                                                      
-        while ( i < len( permute_list ) ):                         
+        while i < len( permute_list ):                         
             outlist.append( self[ permute_list[i] ] )              
             i += 1                                                 
         return BitVector( bitlist = outlist )                      
@@ -2503,7 +2503,7 @@ class BitVector( object ):
         '''      
         # The following section is for slice assignment:
         if isinstance(pos, slice):                                 
-            if (not isinstance( item, BitVector )):                  
+            if not isinstance( item, BitVector ):                  
                 raise TypeError("For slice assignment, the right hand side must be a BitVector")    
             if (pos.start is None and pos.stop is None):                     
                 return item.deep_copy()                              
@@ -2521,7 +2521,7 @@ class BitVector( object ):
                 return
             if pos.stop is None:                                      
                 if pos.start >= 0:
-                    if ((len(self) - pos.start) != len(item)):          
+                    if (len(self) - pos.start) != len(item):          
                         raise ValueError('incompatible lengths for slice assignment 3')   
 #                    for i in range(len(item)-1):                        
                     for i in range(len(item)):                        
@@ -2533,18 +2533,18 @@ class BitVector( object ):
                         self[len(self) + pos.start + i] = item[i]                 
                 return
             if pos.start >=0 and pos.stop < 0:
-                if ( (len(self) + pos.stop - pos.start) != len(item) ):                          
+                if (len(self) + pos.stop - pos.start) != len(item):                          
                     raise ValueError('incompatible lengths for slice assignment 5')   
                 for i in range( pos.start, len(self) + pos.stop ):              
                     self[i] = item[ i - pos.start ]                 
                 return
             if pos.start < 0 and pos.stop >= 0:
-                if ( (len(self) - pos.stop + pos.start) != len(item) ):                          
+                if (len(self) - pos.stop + pos.start) != len(item):                          
                     raise ValueError('incompatible lengths for slice assignment 6')   
                 for i in range( len(self) + pos.start, pos.stop ):              
                     self[i] = item[ i - pos.start ]                 
                 return
-            if ( (pos.stop - pos.start) != len(item) ):         
+            if (pos.stop - pos.start) != len(item):         
                 raise ValueError('incompatible lengths for slice assignment 7')   
             for i in range( pos.start, pos.stop ):              
                 self[i] = item[ i - pos.start ]                 
@@ -2577,8 +2577,8 @@ class BitVector( object ):
         if self.size != other.size:                                  
             return False                                             
         i = 0                                                        
-        while ( i < self.size ):                                     
-            if (self[i] != other[i]): return False                   
+        while i < self.size:                                     
+            if self[i] != other[i]: return False                   
             i += 1                                                   
         return True  
 
@@ -2767,7 +2767,7 @@ class BitVector( object ):
         assert self.size == other.size, 'bitvectors for comparing with Jaccard must be of equal length'  
         intersect = self & other                                     
         union = self | other                                         
-        return ( intersect.count_bits_sparse() / float( union.count_bits_sparse() ) )             
+        return intersect.count_bits_sparse() / float( union.count_bits_sparse() )             
 
     def jaccard_distance( self, other ):                             
         '''
@@ -2907,7 +2907,7 @@ class BitVector( object ):
         '''
         reverseList = []                                            
         i = 1                                                       
-        while ( i < self.size + 1 ):                                
+        while i < self.size + 1:                                
             reverseList.append( self[ -i ] )                        
             i += 1                                                  
         return BitVector( bitlist = reverseList )                   
@@ -3026,7 +3026,7 @@ class BitVector( object ):
         i = 0                                                       
         while 1:                                                    
             i = i+1                                                 
-            if (i==num.length()): break                            
+            if i==num.length(): break                            
             mod_highest_power = mod.length()-mod.next_set_bit(0)-1 
             if remainder.next_set_bit(0) == -1:                    
                 remainder_highest_power = 0                        
@@ -3475,7 +3475,7 @@ if __name__ == '__main__':
     print("\nExperiments with reading a file from the beginning to end:")
     bv = BitVector( filename = 'TestBitVector/testinput4.txt' )
     print("\nHere are all the bits read from the file:")
-    while (bv.more_to_read):
+    while bv.more_to_read:
         bv_read = bv.read_bits_from_file( 64 )
         print(bv_read)
     print("\n")

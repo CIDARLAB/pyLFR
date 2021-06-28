@@ -124,7 +124,7 @@ class DropXStrategy(GenStrategy):
                                 )
                                 print("***Detect Pico Injector***")
                                 # check mapping options
-                                while(self.__exist_in_cn(cn, "PICOINJECTOR")):
+                                while self.__exist_in_cn(cn, "PICOINJECTOR"):
                                     for cn_part in cn.mapping_options:
                                         print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "PICOINJECTOR":
@@ -143,7 +143,7 @@ class DropXStrategy(GenStrategy):
                                 )
 
                                 print("***Detect Droplet Merger***")
-                                while(self.__exist_in_cn(cn, "DROPLET MERGER")):
+                                while self.__exist_in_cn(cn, "DROPLET MERGER"):
                                     for cn_part in cn.mapping_options:
                                         print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "DROPLET MERGER":
@@ -158,7 +158,7 @@ class DropXStrategy(GenStrategy):
                                 cn = self._construction_graph.get_fignode_cn(
                                     fignode
                                 )
-                                while(self.__exist_in_cn(cn, "MIXER")):
+                                while self.__exist_in_cn(cn, "MIXER"):
                                     for cn_part in cn.mapping_options:
                                         print("-", cn_part.primitive.mint)
                                         if cn_part.primitive.mint != "MIXER":
