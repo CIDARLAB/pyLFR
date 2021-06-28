@@ -16,7 +16,9 @@ from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from lfr.netlistgenerator.v2.networkmappingoption import (
-    NetworkMappingOption, NetworkMappingOptionType)
+    NetworkMappingOption,
+    NetworkMappingOptionType,
+)
 
 
 class ConstructionGraph(nx.DiGraph):

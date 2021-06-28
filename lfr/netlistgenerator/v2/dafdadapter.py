@@ -1,7 +1,9 @@
-from lfr.postprocessor.constraints import Constraint
 from typing import List
+
 from pymint.mintcomponent import MINTComponent
 from pymint.mintdevice import MINTDevice
+
+from lfr.postprocessor.constraints import Constraint
 
 
 class DAFDAdapter:

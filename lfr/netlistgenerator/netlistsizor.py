@@ -12,11 +12,11 @@ class NetlistSizor:
 
     def size_netlist(self):
         from .dafdadapter import (
+            ConstraintList,
             DAFDSizingAdapter,
-            PerformanceConstraint,
             FunctionalConstraint,
             GeometryConstraint,
-            ConstraintList,
+            PerformanceConstraint,
         )
 
         print("Sizing the device...")

@@ -8,12 +8,14 @@ from pymint.mintlayer import MINTLayerType
 from lfr.compiler.module import Module
 from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.fig.interaction import (FluidIntegerInteraction,
-                                 FluidNumberInteraction, InteractionType)
+from lfr.fig.interaction import (
+    FluidIntegerInteraction,
+    FluidNumberInteraction,
+    InteractionType,
+)
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.primitive import (NetworkPrimitive, Primitive,
-                                            PrimitiveType)
+from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
 from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
@@ -22,7 +24,9 @@ from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from lfr.netlistgenerator.v2.networkmappingoption import (
-    NetworkMappingOption, NetworkMappingOptionType)
+    NetworkMappingOption,
+    NetworkMappingOptionType,
+)
 from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
 from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 

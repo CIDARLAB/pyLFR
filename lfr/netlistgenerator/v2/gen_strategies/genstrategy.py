@@ -1,17 +1,21 @@
 from __future__ import annotations
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from typing import Dict, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Dict
 
 from pymint.mintlayer import MINTLayerType
+
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 
 if TYPE_CHECKING:
     from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from typing import List
+
 from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
 from pymint.minttarget import MINTTarget
+
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 
 
 class GenStrategy:
