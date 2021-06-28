@@ -585,7 +585,7 @@ class ConstructionGraph(nx.DiGraph):
 
         for cn_list in list(fig_nodes_cn_reverse_map.values()):
             over_coverage_scenario_1 = False
-            if not (len(cn_list) > 1):
+            if not len(cn_list) > 1:
                 continue
             for i in range(len(cn_list)):
                 cn_i_id = cn_list[i]
