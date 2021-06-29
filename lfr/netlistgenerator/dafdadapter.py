@@ -1,7 +1,8 @@
+from typing import List, Optional
+
+from dafd import DAFD_Interface
 from pymint.mintcomponent import MINTComponent
 from pymint.mintdevice import MINTDevice
-from typing import List, Optional
-from dafd import DAFD_Interface
 
 
 class DAFDSizingAdapter:

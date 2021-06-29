@@ -1,6 +1,7 @@
+from enum import Enum
+
 from lfr.netlistgenerator.primitive import NetworkPrimitive
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
-from enum import Enum
 
 
 class NetworkMappingOptionType(Enum):

@@ -1,6 +1,7 @@
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from typing import List
+
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 
 
 class TREE(ProceduralPrimitive):
