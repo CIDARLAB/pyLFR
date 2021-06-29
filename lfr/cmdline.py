@@ -2,6 +2,7 @@ import argparse
 import glob
 import json
 import os
+import sys
 from pathlib import Path
 
 from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
@@ -67,7 +68,7 @@ def main():
 
     if preprocessor.check_syntax_errors():
         print("Stopping compiler because of syntax errors")
-        exit(0)
+        sys.exit(0)
 
     preprocessor.process()
 
@@ -122,7 +123,7 @@ def main():
     printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
 
     if args.no_gen is True:
-        exit(0)
+        sys.exit(0)
 
     # Check if the module compilation was successful
     if mapping_listener.success:
