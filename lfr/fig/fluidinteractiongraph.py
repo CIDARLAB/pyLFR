@@ -28,7 +28,7 @@ from lfr.postprocessor.mapping import NodeMappingTemplate
 class FluidInteractionGraph(nx.DiGraph):
     def __init__(self, data=None, val=None, **attr) -> None:
         super(FluidInteractionGraph, self).__init__()
-        self._fignodes: Dict[str, FIGNode] = dict()
+        self._fignodes: Dict[str, FIGNode] = {}
         # self._fluid_interactions = dict()
         self._gen_id = 0
 

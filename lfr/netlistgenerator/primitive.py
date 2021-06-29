@@ -112,7 +112,7 @@ class Primitive:
         if self.type is not PrimitiveType.COMPONENT:
             raise Exception("Cannot execute this method for this kind of a primitive")
         name = name_gen.generate_name(self.mint)
-        mc = MINTComponent(name, self.mint, dict(), [layer])
+        mc = MINTComponent(name, self.mint, {}, [layer])
         return mc
 
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:

@@ -193,7 +193,7 @@ class NameGenerator:
         """
         if cn_id not in self._cn_rename_map.keys():
             # Add entry if it isn't there
-            self._cn_rename_map[cn_id] = dict()
+            self._cn_rename_map[cn_id] = {}
 
         # Print a warning incase of rewrite
         if old_name in self._cn_rename_map[cn_id].keys():

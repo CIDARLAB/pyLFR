@@ -41,19 +41,19 @@ class LFRBaseListener(lfrXListener):
         self.currentModule: Optional[Module] = None
         self.lhs = None
         self.rhs = None
-        self.operatormap = dict()
+        self.operatormap = {}
         self.expressionoperatorstack = []
         self.expressionvariablestack = None
         self.technologyOverride = None
         self.compilingErrors: List[LFRError] = []
         self.success = False
-        self.vectors = dict()
+        self.vectors = {}
         self.expressionresults = None
         self.listermode: ListenerMode = ListenerMode.NONE
         self.lastlistenermode: ListenerMode = ListenerMode.NONE
         self.EXPLICIT_MODULE_DECLARATION = None
 
-        self.typeMap = dict()
+        self.typeMap = {}
 
         # This might be the new expression stack
         self.stack = []
@@ -78,12 +78,12 @@ class LFRBaseListener(lfrXListener):
     #     self.modules.append(self.currentModule)
 
     def exitModule(self, ctx: lfrXParser.ModuleContext):
-        self.operatormap = dict()
+        self.operatormap = {}
         self.expressionoperatorstack = []
         self.expressionvariablestack = None
         self.technologyOverride = None
         self.success = False
-        self.vectors = dict()
+        self.vectors = {}
         self.expressionresults = None
         self.listermode: ListenerMode = ListenerMode.NONE
         self.lastlistenermode: ListenerMode = ListenerMode.NONE

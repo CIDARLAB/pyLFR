@@ -65,7 +65,7 @@ class YTREE(ProceduralPrimitive):
         self, name_gen: NameGenerator, layer: MINTLayer, subgraph
     ) -> MINTComponent:
         name = name_gen.generate_name(self.mint)
-        params = dict()
+        params = {}
         # Calculate param values based on the subgraph
         params["flowChannelWidth"] = 5
         params["spacing"] = 5

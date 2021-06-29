@@ -24,9 +24,9 @@ from lfr.netlistgenerator.v2.networkmappingoption import (
 class ConstructionGraph(nx.DiGraph):
     def __init__(self, data=None, val=None, **attr) -> None:
         super(ConstructionGraph, self).__init__()
-        self._construction_nodes: Dict[str, ConstructionNode] = dict()
+        self._construction_nodes: Dict[str, ConstructionNode] = {}
         # Stores the references for each construction node and component ID's
-        self._component_refs: Dict[str, List[str]] = dict()
+        self._component_refs: Dict[str, List[str]] = {}
         self._fixed_edges: List[Tuple[str, str]] = []
 
     @property
@@ -543,7 +543,7 @@ class ConstructionGraph(nx.DiGraph):
         # (this will account for double coverage cases too)
 
         # TODO - For combinatorial design space, figure out what to do with this
-        fig_nodes_cn_reverse_map: Dict[str, List[str]] = dict()
+        fig_nodes_cn_reverse_map: Dict[str, List[str]] = {}
         for cn in self.construction_nodes:
             # TODO - Assumption here is that there is only 1 mapping option, else its a
             # combinatorial design space

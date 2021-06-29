@@ -16,7 +16,7 @@ class MappingLibrary:
         self.__storage_primitives = []
         self.__pump_primitives = []
         self.__io_primitives = []
-        self.__all_primitives: Dict[str, Primitive] = dict()
+        self.__all_primitives: Dict[str, Primitive] = {}
         self.__procedural_primitves: List[ProceduralPrimitive] = []
         self._default_IO_primitive = None
 

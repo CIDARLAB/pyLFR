@@ -19,7 +19,7 @@ class PostProcessListener(ModuleInstanceListener):
         super().__init__()
         self._prev_node_list: List[str] = []
         self._after_node_list: List[str] = []
-        self._current_mappings: Dict[str, NodeMappingTemplate] = dict()
+        self._current_mappings: Dict[str, NodeMappingTemplate] = {}
 
     def enterPerformancedirective(self, ctx: lfrXParser.PerformancedirectiveContext):
         super().enterPerformancedirective(ctx)
