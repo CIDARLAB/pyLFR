@@ -1,7 +1,9 @@
 from typing import Optional
+
+from networkx import nx
+
 from lfr.fig.interaction import InteractionType
 from lfr.netlistgenerator.mappinglibrary import Primitive
-from networkx import nx
 
 
 class MappingOption:

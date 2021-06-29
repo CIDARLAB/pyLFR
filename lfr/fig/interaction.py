@@ -1,6 +1,7 @@
-from typing import List, Optional
-from lfr.fig.fignode import FIGNode, Flow
 from enum import Enum
+from typing import List, Optional
+
+from lfr.fig.fignode import FIGNode, Flow
 
 
 class InteractionType(Enum):

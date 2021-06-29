@@ -1,5 +1,5 @@
-from lfr.fig.fignode import IOType
 from lfr.compiler.language.vectorrange import VectorRange
+from lfr.fig.fignode import IOType
 
 
 class ModuleIO:

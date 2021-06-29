@@ -1,6 +1,7 @@
-from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 from typing import Dict, List
+
 from lfr.fig.interaction import InteractionType
+from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 
 
 class MappingLibrary:
