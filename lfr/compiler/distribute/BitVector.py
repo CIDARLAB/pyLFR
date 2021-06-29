@@ -2286,12 +2286,8 @@ class BitVector(object):
         else:
             return BitVector(bitstring=bitstr)
 
-<<<<<<< HEAD
-    def read_bits_from_fileobject(self, fp):
-=======
     @staticmethod
     def read_bits_from_fileobject(fp):
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
         """
         This function is meant to read a bit string from a file like
         object.
@@ -3431,12 +3427,8 @@ class BitVector(object):
         probability_of_prime = 1 - 1.0 / (4 ** len(probes))
         return probability_of_prime
 
-<<<<<<< HEAD
-    def gen_random_bits(self, width):
-=======
     @staticmethod
     def gen_random_bits(width):
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
         """
         You can generate a bitvector with random bits with the bits
         spanning a specified width.  For example, if you wanted a random
@@ -3493,7 +3485,6 @@ class BitVectorIterator:
         for i in range(bitvec.size):
             self.items.append(bitvec._getbit(i))
         self.index = -1
-<<<<<<< HEAD
 
     def __iter__(self):
         return self
@@ -3511,26 +3502,6 @@ class BitVectorIterator:
 # -----------------------------------  End of Class Definition -------------------------------
 
 # ----------------------------------     Test Code Follows    --------------------------------
-
-=======
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        self.index += 1
-        if self.index < len(self.items):
-            return self.items[self.index]
-        else:
-            raise StopIteration
-
-    __next__ = next
-
-
-# -----------------------------------  End of Class Definition -------------------------------
-
-# ----------------------------------     Test Code Follows    --------------------------------
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
 if __name__ == "__main__":
 
     # Construct an EMPTY bit vector (a bit vector of size 0):
@@ -3633,20 +3604,9 @@ if __name__ == "__main__":
     print(myhexstring)  # 68656c6c6f
 
     print(
-<<<<<<< HEAD
-        "\nDemonstrating the raw bytes mode of constructing a bit vector (useful for"
-        " reading public and private keys):"
-    )
-    mypubkey = (
-        "ssh-rsa"
-        " AAAAB3NzaC1yc2EAAAABIwAAAQEA5amriY96HQS8Y/nKc8zu3zOylvpOn3vzMmWwrtyDy+aBvns4UC1RXoaD9rDKqNNMCBAQwWDsYwCAFsrBzbxRQONHePX8lRWgM87MseWGlu6WPzWGiJMclTAO9CTknplG9wlNzLQBj3dP1M895iLF6jvJ7GR+V3CRU6UUbMmRvgPcsfv6ec9RRPm/B8ftUuQICL0jt4tKdPG45PBJUylHs71FuE9FJNp01hrj1EMFObNTcsy9zuis0YPyzArTYSOUsGglleExAQYi7iLh17pAa+y6fZrGLsptgqryuftN9Q4NqPuTiFjlqRowCDU7sSxKDgU7bzhshyVx3+pzXO4D2Q=="
-        " kak@pixie"
-    )
-=======
         "\nDemonstrating the raw bytes mode of constructing a bit vector (useful for reading public and private keys):"
     )
     mypubkey = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5amriY96HQS8Y/nKc8zu3zOylvpOn3vzMmWwrtyDy+aBvns4UC1RXoaD9rDKqNNMCBAQwWDsYwCAFsrBzbxRQONHePX8lRWgM87MseWGlu6WPzWGiJMclTAO9CTknplG9wlNzLQBj3dP1M895iLF6jvJ7GR+V3CRU6UUbMmRvgPcsfv6ec9RRPm/B8ftUuQICL0jt4tKdPG45PBJUylHs71FuE9FJNp01hrj1EMFObNTcsy9zuis0YPyzArTYSOUsGglleExAQYi7iLh17pAa+y6fZrGLsptgqryuftN9Q4NqPuTiFjlqRowCDU7sSxKDgU7bzhshyVx3+pzXO4D2Q== kak@pixie"
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
     import base64
 
     if sys.version_info[0] == 3:
@@ -3768,12 +3728,7 @@ if __name__ == "__main__":
     print(bv2)  # 1010
 
     print(
-<<<<<<< HEAD
-        "\nExperiment with writing an internally generated bit vector out to a disk"
-        " file:"
-=======
         "\nExperiment with writing an internally generated bit vector out to a disk file:"
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
     )
     bv1 = BitVector(bitstring="00001010")
     FILEOUT = open("TestBitVector/test.txt", "wb")
@@ -3782,12 +3737,7 @@ if __name__ == "__main__":
     bv2 = BitVector(filename="TestBitVector/test.txt")
     bv3 = bv2.read_bits_from_file(32)
     print(
-<<<<<<< HEAD
-        "\nDisplay bit vectors written out to file and read back from the file and"
-        " their respective lengths:"
-=======
         "\nDisplay bit vectors written out to file and read back from the file and their respective lengths:"
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
     )
     print(str(bv1) + " " + str(bv3))
     print(str(len(bv1)) + " " + str(len(bv3)))
@@ -3801,23 +3751,13 @@ if __name__ == "__main__":
     print("\n")
 
     print(
-<<<<<<< HEAD
-        "\nExperiment with closing a file object and start extracting bit vectors from"
-        " the file from the beginning again:"
-=======
         "\nExperiment with closing a file object and start extracting bit vectors from the file from the beginning again:"
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
     )
     bv.close_file_object()
     bv = BitVector(filename="TestBitVector/testinput4.txt")
     bv1 = bv.read_bits_from_file(64)
     print(
-<<<<<<< HEAD
-        "\nHere are all the first 64 bits read from the file again after the file"
-        " object was closed and opened again:"
-=======
         "\nHere are all the first 64 bits read from the file again after the file object was closed and opened again:"
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
     )
     print(bv1)
     FILEOUT = open("TestBitVector/testinput5.txt", "wb")
@@ -3825,19 +3765,10 @@ if __name__ == "__main__":
     FILEOUT.close()
 
     print(
-<<<<<<< HEAD
-        "\nExperiment in 64-bit permutation and unpermutation of the previous 64-bit"
-        " bitvector:"
-    )
-    print(
-        "The permutation array was generated separately by the Fisher-Yates shuffle"
-        " algorithm:"
-=======
         "\nExperiment in 64-bit permutation and unpermutation of the previous 64-bit bitvector:"
     )
     print(
         "The permutation array was generated separately by the Fisher-Yates shuffle algorithm:"
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
     )
     bv2 = bv1.permute(
         [
@@ -3982,12 +3913,7 @@ if __name__ == "__main__":
     print(bv3)
 
     print(
-<<<<<<< HEAD
-        "\nTry circular shifts to the left and to the right for the following bit"
-        " vector:"
-=======
         "\nTry circular shifts to the left and to the right for the following bit vector:"
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
     )
     print(bv3)  # 0100000100100000011010000111010101101110011001110111001001111001
     print("\nCircular shift to the left by 7 positions:")
@@ -4030,12 +3956,7 @@ if __name__ == "__main__":
         print("Error Message: " + str(arg))
 
     print(
-<<<<<<< HEAD
-        "\nTest the size modifier when a bit vector is initialized with the intVal"
-        " method:"
-=======
         "\nTest the size modifier when a bit vector is initialized with the intVal method:"
->>>>>>> ed5a1212458b9e3d1f61cc1118b5eff41a5456a6
     )
     bv = BitVector(intVal=45, size=16)
     print(bv)  # 0000000000101101
