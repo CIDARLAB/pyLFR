@@ -1,5 +1,5 @@
-from copy import deepcopy
 import sys
+from copy import deepcopy
 from typing import List, Set
 
 import networkx as nx

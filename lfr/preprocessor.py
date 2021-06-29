@@ -1,6 +1,6 @@
 import re
-from pathlib import Path
 import sys
+from pathlib import Path
 from typing import List
 
 import networkx as nx

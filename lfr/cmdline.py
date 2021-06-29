@@ -2,6 +2,7 @@ import argparse
 import glob
 import json
 import os
+import sys
 from pathlib import Path
 
 from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
@@ -15,7 +16,6 @@ from lfr.netlistgenerator.v2.generator import generate, generate_dropx_library
 from lfr.postProcessListener import PostProcessListener
 from lfr.preprocessor import PreProcessor
 from lfr.utils import print_netlist, printgraph, serialize_netlist
-import sys
 
 
 def load_libraries():
