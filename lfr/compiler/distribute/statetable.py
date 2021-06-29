@@ -307,7 +307,8 @@ class StateTable:
                 annotation = fig.add_not_annotation([source_node, target_node])
                 self._not_annotations.append(annotation)
 
-    def __hamming_distance(self, vec1, vec2) -> int:
+    @staticmethod
+    def __hamming_distance(vec1, vec2) -> int:
         assert vec1.size == vec2.size
         # Start with a distance of zero, and count up
         distance = 0
@@ -321,14 +322,16 @@ class StateTable:
         # Return the final count of differences
         return distance
 
-    def __ones_count(self, vec1) -> int:
+    @staticmethod
+    def __ones_count(vec1) -> int:
         ret = 0
         for i in range(len(vec1)):
             if vec1[i] == 1 or vec1[i] is True:
                 ret += 1
         return ret
 
-    def __convert_edge_to_name(self, edge: Tuple[str, str]) -> str:
+    @staticmethod
+    def __convert_edge_to_name(edge: Tuple[str, str]) -> str:
         return "{}->{}".format(edge[0], edge[1])
 
     def __update_connectivity_matix(self, edge, row, value):

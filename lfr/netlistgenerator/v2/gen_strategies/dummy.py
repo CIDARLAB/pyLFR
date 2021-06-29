@@ -13,5 +13,6 @@ class DummyStrategy(GenStrategy):
     def reduce_mapping_options(self) -> None:
         super().reduce_mapping_options()
 
-    def get_flow_flow_mapping_option(self, subgraph_view) -> MappingOption:
+    @staticmethod
+    def get_flow_flow_mapping_option(subgraph_view) -> MappingOption:
         return None

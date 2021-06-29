@@ -273,5 +273,6 @@ class Module:
         ]
         return here_nodes
 
-    def __generate_instance_node_name(self, node: str, var_name: str) -> str:
+    @staticmethod
+    def __generate_instance_node_name(node: str, var_name: str) -> str:
         return "{0}_{1}".format(var_name, node)

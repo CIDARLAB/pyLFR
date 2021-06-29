@@ -111,14 +111,12 @@ class GenStrategy:
 
         return subgraph_outputs
 
-    def generate_carrier_connectingoptions(
-        self, subgraph_view
-    ) -> List[ConnectingOption]:
+    @staticmethod
+    def generate_carrier_connectingoptions(subgraph_view) -> List[ConnectingOption]:
         return []
 
-    def generate_loading_connectingoptions(
-        self, subgraph_view
-    ) -> List[ConnectingOption]:
+    @staticmethod
+    def generate_loading_connectingoptions(subgraph_view) -> List[ConnectingOption]:
         return []
 
     def size_netlist(self, device: MINTDevice) -> None:

@@ -544,7 +544,8 @@ class LFRBaseListener(lfrXListener):
 
         print("---Bottom of Stack---")
 
-    def __parseBinaryNumber(self, text: str) -> BitVector:
+    @staticmethod
+    def __parseBinaryNumber(text: str) -> BitVector:
         pattern = r"(\d+)'b(\d+)"
         matches = re.search(pattern, text)
         # size = int(matches.group(1))

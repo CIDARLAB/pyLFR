@@ -2286,7 +2286,8 @@ class BitVector(object):
         else:
             return BitVector(bitstring=bitstr)
 
-    def read_bits_from_fileobject(self, fp):
+    @staticmethod
+    def read_bits_from_fileobject(fp):
         """
         This function is meant to read a bit string from a file like
         object.
@@ -3426,7 +3427,8 @@ class BitVector(object):
         probability_of_prime = 1 - 1.0 / (4 ** len(probes))
         return probability_of_prime
 
-    def gen_random_bits(self, width):
+    @staticmethod
+    def gen_random_bits(width):
         """
         You can generate a bitvector with random bits with the bits
         spanning a specified width.  For example, if you wanted a random
