@@ -1,23 +1,25 @@
 from __future__ import annotations
-from lfr.fig.interaction import Interaction
+
+from typing import TYPE_CHECKING, Dict
 
 from networkx.generators.degree_seq import directed_configuration_model
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-
-from typing import Dict, TYPE_CHECKING
-
 from pymint.mintlayer import MINTLayerType
+
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.fig.interaction import Interaction
+from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
 
 if TYPE_CHECKING:
     from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from typing import List
+
 from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
 from pymint.minttarget import MINTTarget
+
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 
 
 class MarsStrategy:

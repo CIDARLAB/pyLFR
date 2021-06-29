@@ -2,11 +2,6 @@ import sys
 from copy import deepcopy
 from typing import List, Set
 
-from lfr.netlistgenerator.v2.procedural_component_algorithms.ytree import YTREE
-from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
-from lfr.netlistgenerator.v2.gen_strategies.marsstrategy import MarsStrategy
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 from pymint.mintlayer import MINTLayerType
 
 from lfr.compiler.module import Module
@@ -26,6 +21,7 @@ from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
 from lfr.netlistgenerator.v2.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.netlistgenerator.v2.gen_strategies.dummy import DummyStrategy
 from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.v2.gen_strategies.marsstrategy import MarsStrategy
 from lfr.netlistgenerator.v2.mappingoption import MappingOption
 from lfr.netlistgenerator.v2.networkmappingoption import (
     NetworkMappingOption,

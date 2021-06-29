@@ -12,13 +12,9 @@ from lfr.antlrgen.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfrXParser import lfrXParser
 from lfr.moduleinstanceListener import ModuleInstanceListener
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-import argparse
-import lfr.parameters as parameters
-import glob
-import json
 from lfr.netlistgenerator.v2.generator import (
-    generate_dropx_library,
     generate,
+    generate_dropx_library,
     generate_mars_library,
 )
 from lfr.utils import print_netlist, printgraph, serialize_netlist
