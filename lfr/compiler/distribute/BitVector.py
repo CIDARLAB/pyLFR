@@ -2482,7 +2482,7 @@ class BitVector(object):
         """
         if self.size % 8:
             raise ValueError(
-                """\nThe bitvector for get_bitvector_in_ascii()
+                """\nThe bitvector for get_bitvector_in_ascii() 
                                   must be an integral multiple of 8 bits"""
             )
         return "".join(
@@ -3500,7 +3500,6 @@ class BitVectorIterator:
 # -----------------------------------  End of Class Definition -------------------------------
 
 # ----------------------------------     Test Code Follows    --------------------------------
-
 if __name__ == "__main__":
 
     # Construct an EMPTY bit vector (a bit vector of size 0):
