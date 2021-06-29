@@ -14,8 +14,8 @@ IMPORT_FILE_PATTERN = r"(`import\s+\"(\w+.lfr)\")"
 
 class PreProcessor:
     def __init__(self, file_list: List[str]) -> None:
-        self.resolved_paths = dict()
-        self.full_text = dict()
+        self.resolved_paths = {}
+        self.full_text = {}
         self.text_dump = None
         for file_path in file_list:
 

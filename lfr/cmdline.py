@@ -18,7 +18,7 @@ from lfr.utils import print_netlist, printgraph, serialize_netlist
 
 
 def load_libraries():
-    library = dict()
+    library = {}
     os.chdir(parameters.LIB_DIR)
     print(" LIB Path : " + str(parameters.LIB_DIR))
     for filename in glob.glob("*.json"):

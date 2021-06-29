@@ -24,7 +24,7 @@ class GenStrategy:
     ) -> None:
         self._construction_graph: ConstructionGraph = construction_graph
         self._fig: FluidInteractionGraph = fig
-        self._fig_netlist_map: Dict[str, str] = dict()
+        self._fig_netlist_map: Dict[str, str] = {}
 
     def reduce_mapping_options(self) -> None:
         # Dummy strategy
@@ -62,7 +62,7 @@ class GenStrategy:
             # Create the channel between these nodes
             channel_name = "c_{}".format(i)
             i += 1
-            params = dict()
+            params = {}
             params["channelWidth"] = 400
             source = MINTTarget("node_{}".format(node))
             sinks = []

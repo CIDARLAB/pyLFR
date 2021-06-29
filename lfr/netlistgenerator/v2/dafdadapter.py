@@ -22,8 +22,8 @@ class DAFDAdapter:
 
         self.solver = DAFD_Interface()
         # TODO: Check the type of the component and pull info from DAFD Interface
-        targets_dict = dict()
-        constriants_dict = dict()
+        targets_dict = {}
+        constriants_dict = {}
 
         for constraint in constriants:
             if constraint.key == "volume":

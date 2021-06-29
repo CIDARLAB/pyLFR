@@ -17,11 +17,11 @@ class StateTable:
         # TODO - Do a combinatorial explosion for all the states available
         # TODO - Figure out from Nada's paper on how to transform the
         # state table into flow annotations using z3
-        self._connectivity_states: Dict[BitVector, nx.DiGraph] = dict()
+        self._connectivity_states: Dict[BitVector, nx.DiGraph] = {}
         # self._colored_graph: nx.DiGraph = None
         self._connectivity_matrix: np.array = None
         self._connectivity_column_headers = None
-        self._connectivity_edges = dict()
+        self._connectivity_edges = {}
         self._and_annotations: List[ANDAnnotation] = []
         self._or_annotations: List[ORAnnotation] = []
         self._not_annotations: List[NOTAnnotation] = []

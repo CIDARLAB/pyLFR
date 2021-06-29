@@ -30,7 +30,7 @@ class Module:
         self._imported_modules: List[Module] = []
         self._io: List[ModuleIO] = []
         self.FIG = FluidInteractionGraph()
-        self.fluids = dict()
+        self.fluids = {}
         self._mappings: List[NodeMappingTemplate] = []
 
     @property
@@ -203,7 +203,7 @@ class Module:
 
         # Step 4 - Relabel all the nodes with the prefix defined by
         # var_name
-        rename_map = dict()
+        rename_map = {}
         for node in list(fig_copy.nodes):
             rename_map[node] = self.__generate_instance_node_name(node, var_name)
 
