@@ -30,7 +30,7 @@ class Module:
         self._imported_modules: List[Module] = []
         self._io: List[ModuleIO] = []
         self.FIG = FluidInteractionGraph()
-        self.fluids = dict()
+        self.fluids = {}
         self._mappings: List[NodeMappingTemplate] = []
 
     @property
@@ -209,7 +209,7 @@ class Module:
 
         # Step 4 - Relabel all the nodes with the prefix defined by
         # var_name
-        rename_map = dict()
+        rename_map = {}
         for node in list(fig_copy.nodes):
             rename_map[node] = self.__generate_instance_node_name(node, var_name)
 
@@ -248,10 +248,9 @@ class Module:
             mappingtemplate_copy = copy.deepcopy(mappingtemplate)
             # TODO - Switch out each of the instances here
             for mapping_instance in mappingtemplate_copy.instances:
-                if (
-                    isinstance(mapping_instance, FluidicOperatorMapping)
-                    or isinstance(mapping_instance, StorageMapping)
-                    or isinstance(mapping_instance, PumpMapping)
+                if isinstance(
+                    mapping_instance,
+                    (FluidicOperatorMapping, StorageMapping, PumpMapping),
                 ):
                     # Swap the basic node from original to the instance
                     there_node_id = mapping_instance.node.id
@@ -280,5 +279,6 @@ class Module:
         ]
         return here_nodes
 
-    def __generate_instance_node_name(self, node: str, var_name: str) -> str:
+    @staticmethod
+    def __generate_instance_node_name(node: str, var_name: str) -> str:
         return "{0}_{1}".format(var_name, node)

@@ -1,8 +1,10 @@
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from typing import List, Optional
-from lfr.netlistgenerator.primitive import ProceduralPrimitive
+
 from pymint import MINTComponent, MINTLayer
+
 from lfr.netlistgenerator.namegenerator import NameGenerator
+from lfr.netlistgenerator.primitive import ProceduralPrimitive
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 
 
 class YTREE(ProceduralPrimitive):
@@ -63,7 +65,7 @@ class YTREE(ProceduralPrimitive):
         self, name_gen: NameGenerator, layer: MINTLayer, subgraph
     ) -> MINTComponent:
         name = name_gen.generate_name(self.mint)
-        params = dict()
+        params = {}
         # Calculate param values based on the subgraph
         params["flowChannelWidth"] = 5
         params["spacing"] = 5

@@ -1,4 +1,10 @@
+from typing import Dict, List
+
+from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.fig.fignode import FIGNode
 from lfr.fig.interaction import FluidProcessInteraction, Interaction
+from lfr.moduleinstanceListener import ModuleInstanceListener
+from lfr.postprocessor.constraints import Constraint
 from lfr.postprocessor.mapping import (
     FluidicOperatorMapping,
     NetworkMapping,
@@ -6,11 +12,6 @@ from lfr.postprocessor.mapping import (
     PumpMapping,
     StorageMapping,
 )
-from lfr.postprocessor.constraints import Constraint
-from lfr.antlrgen.lfrXParser import lfrXParser
-from lfr.fig.fignode import FIGNode
-from typing import Dict, List
-from lfr.moduleinstanceListener import ModuleInstanceListener
 
 
 class PostProcessListener(ModuleInstanceListener):
@@ -18,7 +19,7 @@ class PostProcessListener(ModuleInstanceListener):
         super().__init__()
         self._prev_node_list: List[str] = []
         self._after_node_list: List[str] = []
-        self._current_mappings: Dict[str, NodeMappingTemplate] = dict()
+        self._current_mappings: Dict[str, NodeMappingTemplate] = {}
 
     def enterPerformancedirective(self, ctx: lfrXParser.PerformancedirectiveContext):
         super().enterPerformancedirective(ctx)
@@ -163,9 +164,7 @@ class PostProcessListener(ModuleInstanceListener):
         if len(nodes_of_interest) > 0:
             for node in nodes_of_interest:
                 print(node.__class__)
-                if isinstance(node, FluidProcessInteraction) or isinstance(
-                    node, Interaction
-                ):
+                if isinstance(node, (FluidProcessInteraction, Interaction)):
                     print(node.operator)
                     # Look for mapping with the corresponding operator
                     if node.operator in self._current_mappings.keys():

@@ -1,11 +1,12 @@
-from lfr.fig.interaction import Interaction, InteractionType
-from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
-from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 import networkx as nx
 from pymint import MINTDevice
+
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.fig.interaction import Interaction, InteractionType
+from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.v2.constructionnode import ConstructionNode
+from lfr.netlistgenerator.v2.dafdadapter import DAFDAdapter
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
 
 class DropXStrategy(GenStrategy):
@@ -172,7 +173,8 @@ class DropXStrategy(GenStrategy):
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
 
-    def __exist_in_cn(self, cn, mint_name):
+    @staticmethod
+    def __exist_in_cn(cn, mint_name):
         """helper function to check if the construction node contains undesired mints.
 
         Args:
@@ -210,7 +212,8 @@ class DropXStrategy(GenStrategy):
 
         return False
 
-    def __check_if_type(self, fignode, search_type):
+    @staticmethod
+    def __check_if_type(fignode, search_type):
         """helper function for __search_predecessors and __check_continuous. Check if the specified search_type matches to the fignode.type
 
         Args:

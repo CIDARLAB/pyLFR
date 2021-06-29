@@ -1,8 +1,10 @@
 import json
+import os
+
 from networkx import nx
 from pymint.mintdevice import MINTDevice
+
 import lfr.parameters as parameters
-import os
 
 
 def printgraph(G, filename: str) -> None:

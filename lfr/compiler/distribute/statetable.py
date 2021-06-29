@@ -17,11 +17,11 @@ class StateTable:
         # TODO - Do a combinatorial explosion for all the states available
         # TODO - Figure out from Nada's paper on how to transform the
         # state table into flow annotations using z3
-        self._connectivity_states: Dict[BitVector, nx.DiGraph] = dict()
+        self._connectivity_states: Dict[BitVector, nx.DiGraph] = {}
         # self._colored_graph: nx.DiGraph = None
         self._connectivity_matrix: np.array = None
         self._connectivity_column_headers = None
-        self._connectivity_edges = dict()
+        self._connectivity_edges = {}
         self._and_annotations: List[ANDAnnotation] = []
         self._or_annotations: List[ORAnnotation] = []
         self._not_annotations: List[NOTAnnotation] = []
@@ -87,7 +87,7 @@ class StateTable:
         # First setup the dimensions for the matrix
         row_size = len(self._connectivity_states.keys())
         full_connectivity_graph = nx.DiGraph()
-        for state in self._connectivity_states.keys():
+        for state in self._connectivity_states:
             graph = self._connectivity_states[state]
             for node in list(graph.nodes):
                 if node not in connectivy_column_headers:
@@ -107,7 +107,7 @@ class StateTable:
         self._connectivity_matrix = np.zeros((row_size, column_size), dtype=int)
 
         i = 0
-        for state in self._connectivity_states.keys():
+        for state in self._connectivity_states:
             graph = self._connectivity_states[state]
             for edge in list(graph.edges):
                 self.__update_connectivity_matix(edge, i, 1)
@@ -307,7 +307,8 @@ class StateTable:
                 annotation = fig.add_not_annotation([source_node, target_node])
                 self._not_annotations.append(annotation)
 
-    def __hamming_distance(self, vec1, vec2) -> int:
+    @staticmethod
+    def __hamming_distance(vec1, vec2) -> int:
         assert vec1.size == vec2.size
         # Start with a distance of zero, and count up
         distance = 0
@@ -321,14 +322,16 @@ class StateTable:
         # Return the final count of differences
         return distance
 
-    def __ones_count(self, vec1) -> int:
+    @staticmethod
+    def __ones_count(vec1) -> int:
         ret = 0
         for i in range(len(vec1)):
             if vec1[i] == 1 or vec1[i] is True:
                 ret += 1
         return ret
 
-    def __convert_edge_to_name(self, edge: Tuple[str, str]) -> str:
+    @staticmethod
+    def __convert_edge_to_name(edge: Tuple[str, str]) -> str:
         return "{}->{}".format(edge[0], edge[1])
 
     def __update_connectivity_matix(self, edge, row, value):

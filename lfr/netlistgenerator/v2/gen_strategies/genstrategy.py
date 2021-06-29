@@ -1,17 +1,21 @@
 from __future__ import annotations
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from typing import Dict, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Dict
 
 from pymint.mintlayer import MINTLayerType
+
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 
 if TYPE_CHECKING:
     from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
 
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 from typing import List
+
 from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
 from pymint.minttarget import MINTTarget
+
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
 
 
 class GenStrategy:
@@ -20,7 +24,7 @@ class GenStrategy:
     ) -> None:
         self._construction_graph: ConstructionGraph = construction_graph
         self._fig: FluidInteractionGraph = fig
-        self._fig_netlist_map: Dict[str, str] = dict()
+        self._fig_netlist_map: Dict[str, str] = {}
 
     def reduce_mapping_options(self) -> None:
         # Dummy strategy
@@ -58,7 +62,7 @@ class GenStrategy:
             # Create the channel between these nodes
             channel_name = "c_{}".format(i)
             i += 1
-            params = dict()
+            params = {}
             params["channelWidth"] = 400
             source = MINTTarget("node_{}".format(node))
             sinks = []
@@ -107,14 +111,12 @@ class GenStrategy:
 
         return subgraph_outputs
 
-    def generate_carrier_connectingoptions(
-        self, subgraph_view
-    ) -> List[ConnectingOption]:
+    @staticmethod
+    def generate_carrier_connectingoptions(subgraph_view) -> List[ConnectingOption]:
         return []
 
-    def generate_loading_connectingoptions(
-        self, subgraph_view
-    ) -> List[ConnectingOption]:
+    @staticmethod
+    def generate_loading_connectingoptions(subgraph_view) -> List[ConnectingOption]:
         return []
 
     def size_netlist(self, device: MINTDevice) -> None:

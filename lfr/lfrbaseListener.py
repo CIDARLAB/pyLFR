@@ -1,4 +1,10 @@
-from lfr.fig.fignode import IOType, Flow, IONode, Storage, Signal, Pump
+import re
+from enum import Enum
+from typing import List, Optional
+
+from lfr.antlrgen.lfrXListener import lfrXListener
+from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.compiler.distribute.BitVector import BitVector
 from lfr.compiler.language.concatenation import Concatenation
 from lfr.compiler.language.fluidexpression import FluidExpression
 from lfr.compiler.language.utils import is_number
@@ -7,12 +13,7 @@ from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
 from lfr.compiler.moduleio import ModuleIO
-from enum import Enum
-from typing import List, Optional
-from lfr.compiler.distribute.BitVector import BitVector
-import re
-from lfr.antlrgen.lfrXListener import lfrXListener
-from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.fig.fignode import Flow, IONode, IOType, Pump, Signal, Storage
 
 
 class ListenerMode(Enum):
@@ -40,19 +41,19 @@ class LFRBaseListener(lfrXListener):
         self.currentModule: Optional[Module] = None
         self.lhs = None
         self.rhs = None
-        self.operatormap = dict()
+        self.operatormap = {}
         self.expressionoperatorstack = []
         self.expressionvariablestack = None
         self.technologyOverride = None
         self.compilingErrors: List[LFRError] = []
         self.success = False
-        self.vectors = dict()
+        self.vectors = {}
         self.expressionresults = None
         self.listermode: ListenerMode = ListenerMode.NONE
         self.lastlistenermode: ListenerMode = ListenerMode.NONE
         self.EXPLICIT_MODULE_DECLARATION = None
 
-        self.typeMap = dict()
+        self.typeMap = {}
 
         # This might be the new expression stack
         self.stack = []
@@ -77,12 +78,12 @@ class LFRBaseListener(lfrXListener):
     #     self.modules.append(self.currentModule)
 
     def exitModule(self, ctx: lfrXParser.ModuleContext):
-        self.operatormap = dict()
+        self.operatormap = {}
         self.expressionoperatorstack = []
         self.expressionvariablestack = None
         self.technologyOverride = None
         self.success = False
-        self.vectors = dict()
+        self.vectors = {}
         self.expressionresults = None
         self.listermode: ListenerMode = ListenerMode.NONE
         self.lastlistenermode: ListenerMode = ListenerMode.NONE
@@ -532,7 +533,7 @@ class LFRBaseListener(lfrXListener):
         self.listermode = self.statestack.pop()
 
     def print_variables(self):
-        for key in self.vectors.keys():
+        for key in self.vectors:
             print("{0} - {1}".format(key, self.vectors[key]))
 
     def print_stack(self):
@@ -542,7 +543,8 @@ class LFRBaseListener(lfrXListener):
 
         print("---Bottom of Stack---")
 
-    def __parseBinaryNumber(self, text: str) -> BitVector:
+    @staticmethod
+    def __parseBinaryNumber(text: str) -> BitVector:
         pattern = r"(\d+)'b(\d+)"
         matches = re.search(pattern, text)
         # size = int(matches.group(1))

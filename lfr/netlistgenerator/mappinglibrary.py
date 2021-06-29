@@ -1,6 +1,7 @@
-from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 from typing import Dict, List
+
 from lfr.fig.interaction import InteractionType
+from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 
 
 class MappingLibrary:
@@ -15,7 +16,7 @@ class MappingLibrary:
         self.__storage_primitives = []
         self.__pump_primitives = []
         self.__io_primitives = []
-        self.__all_primitives: Dict[str, Primitive] = dict()
+        self.__all_primitives: Dict[str, Primitive] = {}
         self.__procedural_primitves: List[ProceduralPrimitive] = []
         self._default_IO_primitive = None
 

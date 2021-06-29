@@ -1,15 +1,16 @@
 import copy
-from typing import List, Optional
-from pymint.mintdevice import MINTDevice
-from pymint.mintparams import MINTParams
 from enum import Enum
+from typing import List, Optional
 
+from pymint.mintcomponent import MINTComponent
+from pymint.mintdevice import MINTDevice
 from pymint.mintlayer import MINTLayer
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from pymint.mintparams import MINTParams
+
 from lfr import parameters
 from lfr.netlistgenerator.namegenerator import NameGenerator
-from pymint.mintcomponent import MINTComponent
+from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 
 
 class PrimitiveType(Enum):
@@ -26,15 +27,27 @@ class Primitive:
         match_string: str = "",
         is_storage: bool = False,
         has_storage_control: bool = False,
-        inputs: List[ConnectingOption] = [],
-        outputs: List[ConnectingOption] = [],
-        loadings: Optional[List[ConnectingOption]] = [],
-        carriers: Optional[List[ConnectingOption]] = [],
+        inputs: List[ConnectingOption] = None,
+        outputs: List[ConnectingOption] = None,
+        loadings: Optional[List[ConnectingOption]] = None,
+        carriers: Optional[List[ConnectingOption]] = None,
         default_netlist: Optional[str] = None,
-        functional_input_params: List[str] = [],
-        output_params: List[str] = [],
+        functional_input_params: List[str] = None,
+        output_params: List[str] = None,
         user_defined_params: MINTParams = MINTParams({}),
     ) -> None:
+        if inputs is None:
+            inputs = []
+        if outputs is None:
+            outputs = []
+        if loadings is None:
+            loadings = []
+        if carriers is None:
+            carriers = []
+        if functional_input_params is None:
+            functional_input_params = []
+        if output_params is None:
+            output_params = []
 
         self._component_type: PrimitiveType = component_type
         self._match_string: str = match_string
@@ -100,7 +113,7 @@ class Primitive:
         if self.type is not PrimitiveType.COMPONENT:
             raise Exception("Cannot execute this method for this kind of a primitive")
         name = name_gen.generate_name(self.mint)
-        mc = MINTComponent(name, self.mint, dict(), [layer])
+        mc = MINTComponent(name, self.mint, {}, [layer])
         return mc
 
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:

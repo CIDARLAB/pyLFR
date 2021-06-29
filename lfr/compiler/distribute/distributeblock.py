@@ -55,7 +55,8 @@ class DistributeBlock:
         # This will be called mulitple times per distributeassignstat
         self._state_table.save_connectivity(state, source, target)
 
-    def get_remaining_states(self, states: List[BitVector]) -> List[BitVector]:
+    @staticmethod
+    def get_remaining_states(states: List[BitVector]) -> List[BitVector]:
         # Return the remaining states
         ret = []
         # Get the size of the state, generate every state until that size and add
@@ -88,7 +89,8 @@ class DistributeBlock:
         )
         return ret
 
-    def __generate_state_header(self, signal_list: List[VectorRange]) -> List[str]:
+    @staticmethod
+    def __generate_state_header(signal_list: List[VectorRange]) -> List[str]:
         state_header = []
         for vector_range in signal_list:
             for i in range(len(vector_range)):

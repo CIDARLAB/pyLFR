@@ -1,6 +1,7 @@
 import copy
-from lfr.fig.fignode import FIGNode
 from typing import List, Optional
+
+from lfr.fig.fignode import FIGNode
 from lfr.postprocessor.constraints import Constraint
 
 
@@ -117,7 +118,9 @@ class NodeMappingTemplate:
     def technology_string(self, value):
         self._technology_string = value
 
-    def __deepcopy__(self, memo={}):
+    def __deepcopy__(self, memo=None):
+        if memo is None:
+            memo = {}
         # TODO - Check this again later to ensure that the deep
         # copy is acting correctly. Potentially switch this to a
         # normal copy

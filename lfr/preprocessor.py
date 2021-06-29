@@ -1,4 +1,5 @@
 import re
+import sys
 from pathlib import Path
 from typing import List
 
@@ -14,15 +15,15 @@ IMPORT_FILE_PATTERN = r"(`import\s+\"(\w+.lfr)\")"
 
 class PreProcessor:
     def __init__(self, file_list: List[str]) -> None:
-        self.resolved_paths = dict()
-        self.full_text = dict()
+        self.resolved_paths = {}
+        self.full_text = {}
         self.text_dump = None
         for file_path in file_list:
 
             extension = Path(file_path).suffix
             if extension != ".lfr":
                 print("Unrecognized file Extension")
-                exit()
+                sys.exit()
 
             p = Path(file_path).resolve()
             print("Input Path: {0}".format(p))
@@ -59,10 +60,10 @@ class PreProcessor:
 
         dep_graph = nx.DiGraph()
         # add the nodes in the dep graph
-        for file_handle in self.full_text.keys():
+        for file_handle in self.full_text:
             dep_graph.add_node(file_handle)
 
-        for file_handle in self.full_text.keys():
+        for file_handle in self.full_text:
             # Find all imports and generate the edges
             text = self.full_text[file_handle]
             find_results = re.findall(IMPORT_FILE_PATTERN, text)

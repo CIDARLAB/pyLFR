@@ -24,9 +24,9 @@ from lfr.netlistgenerator.v2.networkmappingoption import (
 class ConstructionGraph(nx.DiGraph):
     def __init__(self, data=None, val=None, **attr) -> None:
         super(ConstructionGraph, self).__init__()
-        self._construction_nodes: Dict[str, ConstructionNode] = dict()
+        self._construction_nodes: Dict[str, ConstructionNode] = {}
         # Stores the references for each construction node and component ID's
-        self._component_refs: Dict[str, List[str]] = dict()
+        self._component_refs: Dict[str, List[str]] = {}
         self._fixed_edges: List[Tuple[str, str]] = []
 
     @property
@@ -542,7 +542,7 @@ class ConstructionGraph(nx.DiGraph):
         # (this will account for double coverage cases too)
 
         # TODO - For combinatorial design space, figure out what to do with this
-        fig_nodes_cn_reverse_map: Dict[str, List[str]] = dict()
+        fig_nodes_cn_reverse_map: Dict[str, List[str]] = {}
         for cn in self.construction_nodes:
             # TODO - Assumption here is that there is only 1 mapping option, else its a
             # combinatorial design space
@@ -586,7 +586,7 @@ class ConstructionGraph(nx.DiGraph):
 
         for cn_list in list(fig_nodes_cn_reverse_map.values()):
             over_coverage_scenario_1 = False
-            if not (len(cn_list) > 1):
+            if not len(cn_list) > 1:
                 continue
             for i in range(len(cn_list)):
                 cn_i_id = cn_list[i]
@@ -658,12 +658,14 @@ class ConstructionGraph(nx.DiGraph):
                 else:
                     pass
 
-    def generate_flow_cn_edges(self, module: Module) -> None:
+    @staticmethod
+    def generate_flow_cn_edges(module: Module) -> None:
         # TODO - Figure out what we need for the generating the edges here
         print("Impement ConstructionGrpah:generate_flow_cn_edges method stub ")
         pass
 
-    def generate_control_cn_edges(self, module: Module) -> None:
+    @staticmethod
+    def generate_control_cn_edges(module: Module) -> None:
         # TODO - Figure what we need for the generating the edges here
         print("Impement ConstructionGrpah:generate_control_cn_edges method stub ")
         pass

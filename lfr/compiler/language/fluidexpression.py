@@ -1,12 +1,12 @@
 # The operator order has to be correct in the array, if any of the things are off,
 # other things will go off
-from lfr.compiler.language.vectorrange import VectorRange
 from typing import List, Union
-from lfr.fig.interaction import Interaction, InteractionType
+
 from lfr.compiler.language.utils import is_number
 from lfr.compiler.language.vector import Vector
+from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.module import Module
-
+from lfr.fig.interaction import Interaction, InteractionType
 
 OPERATOR_ORDER = [["*", "/"], ["%"], ["+", "-"]]
 NUMERIC_OPERATOR_ORDER = [["/", "*"], ["%"], ["+", "-"]]

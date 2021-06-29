@@ -1,7 +1,8 @@
-from lfr.compiler.module import Module
 from typing import Dict, Optional
-from lfr.compiler.lfrerror import ErrorType, LFRError
+
 from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.compiler.lfrerror import ErrorType, LFRError
+from lfr.compiler.module import Module
 from lfr.distBlockListener import DistBlockListener
 
 
@@ -10,7 +11,7 @@ class ModuleInstanceListener(DistBlockListener):
         super().__init__()
         self._module_to_import: Optional[Module] = None
         # There Ref -> Here Ref
-        self._io_mapping: Dict[str, str] = dict()
+        self._io_mapping: Dict[str, str] = {}
 
     def enterModuleinstantiationstat(
         self, ctx: lfrXParser.ModuleinstantiationstatContext
@@ -28,7 +29,7 @@ class ModuleInstanceListener(DistBlockListener):
                 )
             )
             return
-        self._io_mapping = dict()
+        self._io_mapping = {}
         self.currentModule.add_new_import(module_to_import)
 
         # Save the reference in the class

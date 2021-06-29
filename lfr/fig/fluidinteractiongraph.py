@@ -1,5 +1,10 @@
 from __future__ import annotations
-from typing import List, Dict
+
+import copy
+from typing import Dict, List
+
+import networkx as nx
+
 from lfr.fig.fignode import (
     ANDAnnotation,
     FIGNode,
@@ -10,21 +15,20 @@ from lfr.fig.fignode import (
     ValueNode,
 )
 from lfr.fig.interaction import (
-    Interaction,
     FluidFluidInteraction,
-    FluidProcessInteraction,
-    FluidNumberInteraction,
     FluidIntegerInteraction,
+    FluidNumberInteraction,
+    FluidProcessInteraction,
+    Interaction,
     InteractionType,
 )
-import networkx as nx
-import copy
+from lfr.postprocessor.mapping import NodeMappingTemplate
 
 
 class FluidInteractionGraph(nx.DiGraph):
     def __init__(self, data=None, val=None, **attr) -> None:
         super(FluidInteractionGraph, self).__init__()
-        self._fignodes: Dict[str, FIGNode] = dict()
+        self._fignodes: Dict[str, FIGNode] = {}
         # self._fluid_interactions = dict()
         self._gen_id = 0
 
@@ -104,14 +108,14 @@ class FluidInteractionGraph(nx.DiGraph):
     def get_interactions(self) -> List[Interaction]:
         return [
             self._fignodes[key]
-            for key in self._fignodes.keys()
+            for key in self._fignodes
             if isinstance(self._fignodes[key], Interaction)
         ]
 
     @property
     def get_io(self) -> List[IONode]:
         ret = []
-        for key in self._fignodes.keys():
+        for key in self._fignodes:
             node = self._fignodes[key]
             if isinstance(node, IONode):
                 ret.append(node)
@@ -177,14 +181,16 @@ class FluidInteractionGraph(nx.DiGraph):
     def __str__(self):
         return self.edges.__str__()
 
-    def __deepcopy__(self, memo={}):
+    def __deepcopy__(self, memo=None):
+        if memo is None:
+            memo = {}
         not_there = []
         existing = memo.get(self, not_there)
         if existing is not not_there:
             print("ALREADY COPIED TO", repr(existing))
             return existing
         fignodes_copy = copy.deepcopy(
-            [self._fignodes[key] for key in self._fignodes.keys()], memo
+            [self._fignodes[key] for key in self._fignodes], memo
         )
         fig_copy = self.copy(as_view=False)
         fig_copy.__class__ = FluidInteractionGraph

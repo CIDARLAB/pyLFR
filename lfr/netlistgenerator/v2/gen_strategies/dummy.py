@@ -1,7 +1,7 @@
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.v2.mappingoption import MappingOption
-from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.v2.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.v2.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.v2.mappingoption import MappingOption
 
 
 class DummyStrategy(GenStrategy):
@@ -13,5 +13,6 @@ class DummyStrategy(GenStrategy):
     def reduce_mapping_options(self) -> None:
         super().reduce_mapping_options()
 
-    def get_flow_flow_mapping_option(self, subgraph_view) -> MappingOption:
+    @staticmethod
+    def get_flow_flow_mapping_option(subgraph_view) -> MappingOption:
         return None

@@ -1,22 +1,25 @@
-from lfr.moduleinstanceListener import ModuleInstanceListener
-from lfr.postProcessListener import PostProcessListener
-from lfr.preprocessor import PreProcessor
-import os
-from pathlib import Path
-from antlr4 import ParseTreeWalker, CommonTokenStream, FileStream
-from lfr.antlrgen.lfrXLexer import lfrXLexer
-from lfr.antlrgen.lfrXParser import lfrXParser
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 import argparse
-import lfr.parameters as parameters
 import glob
 import json
-from lfr.netlistgenerator.v2.generator import generate_dropx_library, generate
+import os
+import sys
+from pathlib import Path
+
+from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+
+import lfr.parameters as parameters
+from lfr.antlrgen.lfrXLexer import lfrXLexer
+from lfr.antlrgen.lfrXParser import lfrXParser
+from lfr.moduleinstanceListener import ModuleInstanceListener
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
+from lfr.netlistgenerator.v2.generator import generate, generate_dropx_library
+from lfr.postProcessListener import PostProcessListener
+from lfr.preprocessor import PreProcessor
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 
 
 def load_libraries():
-    library = dict()
+    library = {}
     os.chdir(parameters.LIB_DIR)
     print(" LIB Path : " + str(parameters.LIB_DIR))
     for filename in glob.glob("*.json"):
@@ -68,7 +71,7 @@ def main():
 
     if preprocessor.check_syntax_errors():
         print("Stopping compiler because of syntax errors")
-        exit(0)
+        sys.exit(0)
 
     preprocessor.process()
 
@@ -123,7 +126,7 @@ def main():
     printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
 
     if args.no_gen is True:
-        exit(0)
+        sys.exit(0)
 
     # Check if the module compilation was successful
     if mapping_listener.success:
