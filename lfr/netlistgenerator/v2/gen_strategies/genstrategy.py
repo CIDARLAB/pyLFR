@@ -111,13 +111,15 @@ class GenStrategy:
 
         return subgraph_outputs
 
+    @staticmethod
     def generate_carrier_connectingoptions(
-        self, subgraph_view
+        subgraph_view
     ) -> List[ConnectingOption]:
         return []
 
+    @staticmethod
     def generate_loading_connectingoptions(
-        self, subgraph_view
+        subgraph_view
     ) -> List[ConnectingOption]:
         return []
 

@@ -659,12 +659,14 @@ class ConstructionGraph(nx.DiGraph):
                 else:
                     pass
 
-    def generate_flow_cn_edges(self, module: Module) -> None:
+    @staticmethod
+    def generate_flow_cn_edges(module: Module) -> None:
         # TODO - Figure out what we need for the generating the edges here
         print("Impement ConstructionGrpah:generate_flow_cn_edges method stub ")
         pass
 
-    def generate_control_cn_edges(self, module: Module) -> None:
+    @staticmethod
+    def generate_control_cn_edges(module: Module) -> None:
         # TODO - Figure what we need for the generating the edges here
         print("Impement ConstructionGrpah:generate_control_cn_edges method stub ")
         pass

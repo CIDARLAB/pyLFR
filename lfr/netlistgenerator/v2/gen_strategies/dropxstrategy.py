@@ -172,7 +172,8 @@ class DropXStrategy(GenStrategy):
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
 
-    def __exist_in_cn(self, cn, mint_name):
+    @staticmethod
+    def __exist_in_cn(cn, mint_name):
         """helper function to check if the construction node contains undesired mints.
 
         Args:
@@ -210,7 +211,8 @@ class DropXStrategy(GenStrategy):
 
         return False
 
-    def __check_if_type(self, fignode, search_type):
+    @staticmethod
+    def __check_if_type(fignode, search_type):
         """helper function for __search_predecessors and __check_continuous. Check if the specified search_type matches to the fignode.type
 
         Args:
