@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+import sys
 from typing import List
 
 import networkx as nx
@@ -22,7 +23,7 @@ class PreProcessor:
             extension = Path(file_path).suffix
             if extension != ".lfr":
                 print("Unrecognized file Extension")
-                exit()
+                sys.exit()
 
             p = Path(file_path).resolve()
             print("Input Path: {0}".format(p))

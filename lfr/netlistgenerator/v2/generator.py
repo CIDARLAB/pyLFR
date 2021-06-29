@@ -1,4 +1,5 @@
 from copy import deepcopy
+import sys
 from typing import List, Set
 
 import networkx as nx
@@ -812,7 +813,7 @@ def override_network_mappings(
                             mapping.technology_string
                         )
                     )
-                    exit(-100)
+                    sys.exit(-100)
 
             node_ids = []
             cn = None  # Get the right construction node for doing the stuff
