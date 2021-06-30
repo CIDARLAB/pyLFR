@@ -3,6 +3,7 @@ from copy import deepcopy
 from typing import List, Set
 
 from pymint.mintlayer import MINTLayerType
+from pymint import MINTDevice
 
 from lfr.compiler.module import Module
 from lfr.fig.fignode import IOType, Pump, Storage, ValueNode

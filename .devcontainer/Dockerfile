@@ -41,3 +41,4 @@ RUN pip install pygraphviz
 RUN pip install "poetry==$POETRY_VERSION"
 
 RUN poetry config virtualenvs.create false
+ENV PYTHONPATH=${PYTHONPATH}:${PWD} 

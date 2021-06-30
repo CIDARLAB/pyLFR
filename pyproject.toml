@@ -18,25 +18,25 @@ networkx = "^2.5"
 argparse = "^1.4.0"
 antlr4-python3-runtime = "^4.8"
 pygraphviz = "^1.6"
-pymint = "latest"
+parchmint = "latest"
+dafd = "latest"
 numpy = "^1.19.4"
 tabulate = "^0.8.7"
+pymint = "^0.2.11"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"
 black = "^20.8b1"
 flake8 = "^3.8.3"
 rope = "^0.18.0"
-pymint = {path = "/home/krishna/CIDAR/pymint", develop=true}
-parchmint = {path = "/home/krishna/CIDAR/pyparchmint", develop=true}
-dafd = {path = "/home/krishna/CIDAR/dafd", develop=true}
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 lfr-compile = "lfr.cmdline:main"
 
 [tool.black]
 line-length = 88
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
