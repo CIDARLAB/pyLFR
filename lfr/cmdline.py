@@ -18,6 +18,8 @@ from lfr.netlistgenerator.v2.generator import (
     generate_mars_library,
 )
 from lfr.utils import print_netlist, printgraph, serialize_netlist
+from lfr.preprocessor import PreProcessor
+from lfr.postProcessListener import PostProcessListener
 
 
 def load_libraries():
