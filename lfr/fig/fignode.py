@@ -36,7 +36,7 @@ class FIGNode:
         if isinstance(other, FIGNode):
             return self.id == other.id
         else:
-            False
+            return False
 
     def rename(self, id: str) -> None:
         self._id = id
