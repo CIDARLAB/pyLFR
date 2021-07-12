@@ -95,6 +95,9 @@ class LFRBaseListener(lfrXListener):
 
     def enterIoblock(self, ctx: lfrXParser.IoblockContext):
         # If io block has an explicit declaration set the flag
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         if ctx.explicitIOBlock() is not None:
             self.EXPLICIT_MODULE_DECLARATION = True
 
