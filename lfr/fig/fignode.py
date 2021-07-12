@@ -22,7 +22,7 @@ class FIGNode:
         self._id: str = id
 
     @property
-    def id(self):
+    def ID(self):
         return self._id
 
     @property
@@ -30,11 +30,11 @@ class FIGNode:
         return "-"
 
     def __str__(self) -> str:
-        return self.id
+        return self.ID
 
     def __eq__(self, other):
         if isinstance(other, FIGNode):
-            return self.id == other.id
+            return self.ID == other.ID
         else:
             return False
 
@@ -71,7 +71,7 @@ class Flow(FIGNode):
         return "FLOW"
 
     def __str__(self) -> str:
-        return "FLOW - {}".format(self.id)
+        return "FLOW - {}".format(self.ID)
 
 
 class IONode(Flow):
@@ -88,7 +88,7 @@ class IONode(Flow):
         self._type = iotype
 
     def __str__(self) -> str:
-        return "Name: {0.id}, Type : {0.type}".format(self)
+        return "Name: {0.ID}, Type : {0.type}".format(self)
 
     @property
     def match_string(self):

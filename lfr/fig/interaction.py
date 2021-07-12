@@ -42,13 +42,16 @@ class Interaction(Flow):
     ) -> str:
         id = None
 
+        if fluid1 is None:
+            raise ValueError("id of fluid1 is found to be None")
+
         if fluid2 is not None:
-            if fluid1.id < fluid2.id:
-                id = fluid1.id + "_" + operator_string + "_" + fluid2.id
+            if fluid1.ID < fluid2.ID:
+                id = fluid1.ID + "_" + operator_string + "_" + fluid2.ID
             else:
-                id = fluid2.id + "_" + operator_string + "_" + fluid1.id
+                id = fluid2.ID + "_" + operator_string + "_" + fluid1.ID
         else:
-            id = fluid1.id + "_" + operator_string
+            id = fluid1.ID + "_" + operator_string
 
         id = id + "_" + str(Interaction.INTERACTION_ID)
         Interaction.INTERACTION_ID += 1
@@ -97,10 +100,12 @@ class FluidFluidInteraction(Interaction):
         """Creates an interaction between two fluids
 
         Args:
-            fluid1 (FIGNode): [description]
-            fluid2 (FIGNode): [description]
-            interaction_type (InteractionType, optional): [description]. Defaults to None.
-            interaction_data (str, optional): [description]. Defaults to None.
+            fluid1 (FIGNode): Fluid1 that needs to be included in the interaction
+            fluid2 (FIGNode): Fluid2 that needs to be included in the interaction
+            interaction_type (InteractionType, optional): Type of Fluid Interaction.
+                Defaults to None.
+            interaction_data (str, optional): Interaction data (typically used for
+                fluid-number interactions). Defaults to None.
         """
         id = Interaction.get_id(
             fluid1, fluid2, Interaction.get_operator_str(interaction_type)

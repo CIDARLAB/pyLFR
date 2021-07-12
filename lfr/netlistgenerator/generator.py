@@ -867,7 +867,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # Map the interactions in the fig to individual library options
     for interaction in module.FIG.get_interactions():
         operator_candidates = library.get_operators(interaction_type=interaction.type)
-        cn = ConstructionNode(interaction.id)
+        cn = ConstructionNode(interaction.ID)
         # if isinstance(interaction, ValueNode):
         #     continue
 
@@ -878,14 +878,14 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
             ):
                 # Basically add the value node id into the subgraph view also
                 node_ids = [
-                    module.FIG.get_fignode(edge[0]).id
-                    for edge in module.FIG.in_edges(interaction.id)
+                    module.FIG.get_fignode(edge[0]).ID
+                    for edge in module.FIG.in_edges(interaction.ID)
                     if isinstance(module.FIG.get_fignode(edge[0]), ValueNode)
                 ]
-                node_ids.append(interaction.id)
+                node_ids.append(interaction.ID)
                 sub_graph = module.FIG.subgraph(node_ids)
             else:
-                sub_graph = module.FIG.subgraph(interaction.id)
+                sub_graph = module.FIG.subgraph(interaction.ID)
             mapping_option = MappingOption(operator_candidate, sub_graph)
             cn.add_mapping_option(mapping_option)
 
@@ -913,7 +913,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     for fig_node_id in list(module.FIG.nodes):
         fig_node = module.FIG.get_fignode(fig_node_id)
         if isinstance(fig_node, Pump):
-            cn = ConstructionNode(fig_node.id)
+            cn = ConstructionNode(fig_node.ID)
             sub_graph = module.FIG.subgraph(fig_node_id)
             mapping_candidates = library.get_pump_entries()
             for mapping_candidate in mapping_candidates:
@@ -921,7 +921,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
                 cn.add_mapping_option(mapping_option)
 
         elif isinstance(fig_node, Storage):
-            cn = ConstructionNode(fig_node.id)
+            cn = ConstructionNode(fig_node.ID)
             sub_graph = module.FIG.subgraph(fig_node_id)
             mapping_candidates = library.get_storage_entries()
             for mapping_candidate in mapping_candidates:
@@ -1020,8 +1020,8 @@ def override_mappings(
             if isinstance(instance, NetworkMapping):
                 print(
                     "Skipping Network Mapping: \n Input - {} \n Output - {}".format(
-                        ",".join([n.id for n in instance.input_nodes]),
-                        ",".join([n.id for n in instance.output_nodes]),
+                        ",".join([n.ID for n in instance.input_nodes]),
+                        ",".join([n.ID for n in instance.output_nodes]),
                     )
                 )
                 continue
@@ -1042,12 +1042,12 @@ def override_mappings(
                 # subgraph
                 node_ids.extend(
                     [
-                        fig.get_fignode(edge[0]).id
-                        for edge in fig.in_edges(instance.node.id)
+                        fig.get_fignode(edge[0]).ID
+                        for edge in fig.in_edges(instance.node.ID)
                         if isinstance(fig.get_fignode(edge[0]), ValueNode)
                     ]
                 )
-                node_ids.append(instance.node.id)
+                node_ids.append(instance.node.ID)
                 subgraph = fig.subgraph(node_ids)
 
                 # Get the Construction node that has the corresponding subgraph,
@@ -1110,13 +1110,13 @@ def override_network_mappings(
             if isinstance(instance, NetworkMapping):
                 print(
                     "Applying Network Mapping: \n Input - {} \n Output - {}".format(
-                        ",".join([n.id for n in instance.input_nodes]),
-                        ",".join([n.id for n in instance.output_nodes]),
+                        ",".join([n.ID for n in instance.input_nodes]),
+                        ",".join([n.ID for n in instance.output_nodes]),
                     )
                 )
 
-                node_ids.extend(n.id for n in instance.input_nodes)
-                node_ids.extend(n.id for n in instance.output_nodes)
+                node_ids.extend(n.ID for n in instance.input_nodes)
+                node_ids.extend(n.ID for n in instance.output_nodes)
                 subgraph = fig.subgraph(node_ids)
                 # try:
                 #     # TODO - Incase this is a flow-flow candidate, we need to get the
@@ -1310,10 +1310,10 @@ def get_flow_flow_candidates(
     for mapping in module.mappings:
         for instance in mapping.instances:
             if isinstance(instance, NetworkMapping):
-                remove_list.extend([n.id for n in instance.input_nodes])
-                remove_list.extend([n.id for n in instance.output_nodes])
+                remove_list.extend([n.ID for n in instance.input_nodes])
+                remove_list.extend([n.ID for n in instance.output_nodes])
             else:
-                remove_list.append(instance.node.id)
+                remove_list.append(instance.node.ID)
 
     for node_id in fig_copy.nodes:
         node = fig_original.get_fignode(node_id)

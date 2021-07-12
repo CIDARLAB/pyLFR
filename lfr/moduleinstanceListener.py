@@ -52,6 +52,8 @@ class ModuleInstanceListener(DistBlockListener):
             variables.insert(0, self.stack.pop())
 
         # now go through the different connections in the module to import
+        if self._module_to_import is None:
+            raise ValueError("No module to import here")
         module_io = self._module_to_import.io
         assert len(module_io) == num_variables
 

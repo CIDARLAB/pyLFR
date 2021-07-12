@@ -23,7 +23,7 @@ class DropXStrategy(GenStrategy):
             fignode = self._fig.get_fignode(fignode_id)
 
             # check if construction node
-            if ConstructionNode(fignode.id).is_explictly_mapped:
+            if ConstructionNode(fignode.ID).is_explictly_mapped:
                 pass
             # TODO - Implement Generalized Ali Strategy 1
             # Rule 1 - The first level of % should be mapping to a Droplet Generator
@@ -84,7 +84,7 @@ class DropXStrategy(GenStrategy):
             fignode = self._fig.get_fignode(fignode_id)
 
             # check if explicitly mapped
-            if not ConstructionNode(fignode.id).is_explictly_mapped:
+            if not ConstructionNode(fignode.ID).is_explictly_mapped:
                 if isinstance(fignode, Interaction):
                     if (
                         fignode.type is InteractionType.MIX
@@ -105,7 +105,7 @@ class DropXStrategy(GenStrategy):
             fignode = self._fig.get_fignode(fignode_id)
 
             # check if map
-            if not ConstructionNode(fignode.id).is_explictly_mapped:
+            if not ConstructionNode(fignode.ID).is_explictly_mapped:
                 if isinstance(fignode, Interaction):
                     # if +
                     if (

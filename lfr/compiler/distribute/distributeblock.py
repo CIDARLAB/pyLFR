@@ -14,7 +14,9 @@ class DistributeBlock:
         self._state_table: Optional[StateTable] = None
 
     def generate_fig(self, fig: FluidInteractionGraph) -> None:
-        # TODO - Create the fig based on the given distribute logic shown here
+        # Create the fig based on the given distribute logic shown here
+        if self._state_table is None:
+            raise ValueError("State Table has not being initialized")
         print("Implement the fig generation from this")
         self._state_table.generate_connectivity_table()
 
@@ -59,6 +61,9 @@ class DistributeBlock:
     def set_connectivity(self, state, source, target) -> None:
         # Make the connectivity here based on the state
         # This will be called mulitple times per distributeassignstat
+        if self._state_table is None:
+            raise ValueError("State Table has not being initialized")
+
         self._state_table.save_connectivity(state, source, target)
 
     @staticmethod
@@ -79,13 +84,17 @@ class DistributeBlock:
         self, signal_list: List[VectorRange], value_list: List[bool]
     ) -> BitVector:
         # self._state_table.convert_to_fullstate_vector()
+
+        if self._state_table is None:
+            raise ValueError("State Table has not being initialized")
+
         individual_signal_list = []
         individual_value_list = []
 
         i = 0
         for signal in signal_list:
             for j in range(len(signal)):
-                individual_signal_list.append(signal[j].id)
+                individual_signal_list.append(signal[j].ID)
                 value = value_list[i + j]
                 individual_value_list.append(value)
             i += 1
@@ -100,5 +109,5 @@ class DistributeBlock:
         state_header = []
         for vector_range in signal_list:
             for i in range(len(vector_range)):
-                state_header.append(vector_range[i].id)
+                state_header.append(vector_range[i].ID)
         return state_header

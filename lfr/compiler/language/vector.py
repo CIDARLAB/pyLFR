@@ -1,5 +1,4 @@
 from typing import List
-
 from lfr.compiler.language.vectorrange import VectorRange
 
 

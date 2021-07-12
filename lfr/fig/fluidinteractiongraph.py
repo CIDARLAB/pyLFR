@@ -53,9 +53,9 @@ class FluidInteractionGraph(nx.DiGraph):
         return self._annotations
 
     def add_fignode(self, node: FIGNode) -> None:
-        self._fignodes[node.id] = node
+        self._fignodes[node.ID] = node
         self._annotations_reverse_map[node] = []
-        self.add_node(node.id)
+        self.add_node(node.ID)
 
     def get_fignode(self, id: str) -> FIGNode:
         if id in self._fignodes.keys():
@@ -67,7 +67,7 @@ class FluidInteractionGraph(nx.DiGraph):
 
     def load_fignodes(self, fig_nodes: List[FIGNode]) -> None:
         for node in fig_nodes:
-            self._fignodes[node.id] = node
+            self._fignodes[node.ID] = node
 
             # Add an entry for the reverse map here to make things simpler
             self._annotations_reverse_map[node] = []
@@ -83,10 +83,10 @@ class FluidInteractionGraph(nx.DiGraph):
                     self.__add_to_reverse_map(item[1], annotation)
 
     def contains_fignode(self, fluid_object: FIGNode) -> bool:
-        return fluid_object.id in self._fignodes.keys()
+        return fluid_object.ID in self._fignodes.keys()
 
     def switch_fignode(self, old_fignode: FIGNode, new_fignode: FIGNode) -> None:
-        self._fignodes[old_fignode.id] = new_fignode
+        self._fignodes[old_fignode.ID] = new_fignode
 
     def rename_nodes(self, rename_map: Dict[str, str]) -> None:
         for node in self.nodes:
@@ -104,11 +104,11 @@ class FluidInteractionGraph(nx.DiGraph):
             annotation.rename(rename_map[annotation.id])
 
     def add_interaction(self, interaction: Interaction):
-        if interaction.id not in self._fignodes.keys():
+        if interaction.ID not in self._fignodes.keys():
             self.add_fignode(interaction)
         else:
             raise Exception(
-                "Interaction already present in the FIG: {0}".format(interaction.id)
+                "Interaction already present in the FIG: {0}".format(interaction.ID)
             )
 
         if isinstance(interaction, FluidFluidInteraction):
@@ -127,20 +127,20 @@ class FluidInteractionGraph(nx.DiGraph):
             raise Exception("Invalid Interaction Type found here")
 
     def connect_fignodes(self, source: FIGNode, target: FIGNode):
-        if source.id not in self._fignodes.keys():
+        if source.ID not in self._fignodes.keys():
             raise Exception(
                 "Unable to add interaction because of missing flow: {0}".format(
-                    source.id
+                    source.ID
                 )
             )
-        if target.id not in self._fignodes.keys():
+        if target.ID not in self._fignodes.keys():
             raise Exception(
                 "Unable to add interaction because of missing flow: {0}".format(
-                    target.id
+                    target.ID
                 )
             )
 
-        self.add_edge(source.id, target.id)
+        self.add_edge(source.ID, target.ID)
 
     def get_interactions(self) -> List[Interaction]:
         ret = []
@@ -332,54 +332,54 @@ class FluidInteractionGraph(nx.DiGraph):
 
     def __add_fluid_fluid_interaction(self, interaction: FluidFluidInteraction) -> None:
         # Check if flow exists
-        if interaction.fluids[0].id not in self._fignodes.keys():
+        if interaction.fluids[0].ID not in self._fignodes.keys():
             raise Exception(
                 "Unable to add interaction because of missing flow: {0}".format(
-                    interaction.fluids[0].id
+                    interaction.fluids[0].ID
                 )
             )
-        if interaction.fluids[1].id not in self._fignodes.keys():
+        if interaction.fluids[1].ID not in self._fignodes.keys():
             raise Exception(
                 "Unable to add interaction because of missing flow: {0}".format(
-                    interaction.fluids[1].id
+                    interaction.fluids[1].ID
                 )
             )
 
-        self.add_node(interaction.id)
-        self.add_edge(interaction.fluids[0].id, interaction.id)
+        self.add_node(interaction.ID)
+        self.add_edge(interaction.fluids[0].ID, interaction.ID)
 
         # Figure out how we want to connect FIGNodes
         if interaction.type is InteractionType.SIEVE:
             # In the case of a SIEVE interaction, we need to add the second
             # FIGNode as an output
-            self.add_edge(interaction.id, interaction.fluids[1].id)
+            self.add_edge(interaction.ID, interaction.fluids[1].ID)
         else:
-            self.add_edge(interaction.fluids[1].id, interaction.id)
+            self.add_edge(interaction.fluids[1].ID, interaction.ID)
 
         # TODO: Need to add an output node
 
     def __add_single_fluid_interaction(
         self, interaction: FluidProcessInteraction
     ) -> None:
-        if interaction.fluid.id not in self._fignodes.keys():
+        if interaction.fluid.ID not in self._fignodes.keys():
             raise Exception(
                 "Unable to add interaction because of missing flow: {0}".format(
-                    interaction.fluid.id
+                    interaction.fluid.ID
                 )
             )
 
-        self.add_node(interaction.id)
-        self.add_edge(interaction.fluid.id, interaction.id)
+        self.add_node(interaction.ID)
+        self.add_edge(interaction.fluid.ID, interaction.ID)
 
         # TODO: Need to add an output node
 
     def __add_fluid_number_interaction(
         self, interaction: FluidNumberInteraction
     ) -> None:
-        if interaction.fluid.id not in self._fignodes.keys():
+        if interaction.fluid.ID not in self._fignodes.keys():
             raise Exception(
                 "Unable to add interaction because of missing flow: {0}".format(
-                    interaction.fluid.id
+                    interaction.fluid.ID
                 )
             )
 
@@ -387,17 +387,17 @@ class FluidInteractionGraph(nx.DiGraph):
         val_node = ValueNode(self.__get_val_node_id(), interaction.value)
         self.add_fignode(val_node)
 
-        self.add_node(interaction.id)
-        self.add_edge(interaction.fluid.id, interaction.id)
-        self.add_edge(val_node.id, interaction.id)
+        self.add_node(interaction.ID)
+        self.add_edge(interaction.fluid.ID, interaction.ID)
+        self.add_edge(val_node.ID, interaction.ID)
 
     def __add_fluid_integer_interaction(
         self, interaction: FluidIntegerInteraction
     ) -> None:
-        if interaction.fluid.id not in self._fignodes.keys():
+        if interaction.fluid.ID not in self._fignodes.keys():
             raise Exception(
                 "Unable to add interaction because of missing flow: {0}".format(
-                    interaction.fluid.id
+                    interaction.fluid.ID
                 )
             )
 
@@ -405,6 +405,6 @@ class FluidInteractionGraph(nx.DiGraph):
         val_node = ValueNode(self.__get_val_node_id(), interaction.value)
         self.add_fignode(val_node)
 
-        self.add_node(interaction.id)
-        self.add_edge(interaction.fluid.id, interaction.id)
-        self.add_edge(val_node.id, interaction.id)
+        self.add_node(interaction.ID)
+        self.add_edge(interaction.fluid.ID, interaction.ID)
+        self.add_edge(val_node.ID, interaction.ID)

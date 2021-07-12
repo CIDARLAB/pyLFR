@@ -65,7 +65,7 @@ class Module:
         return self._io
 
     def add_fluid(self, fluid: Flow):
-        self.fluids[fluid.id] = fluid
+        self.fluids[fluid.ID] = fluid
         self.FIG.add_fignode(fluid)
 
     def get_fluid(self, name: str) -> Optional[FIGNode]:
@@ -205,7 +205,7 @@ class Module:
                 fignode.type is IOType.FLOW_INPUT or fignode.type is IOType.FLOW_OUTPUT
             )
             # Replace
-            new_fignode = Flow(fignode.id)
+            new_fignode = Flow(fignode.ID)
             fig_copy.switch_fignode(fignode, new_fignode)
 
         # Step 4 - Relabel all the nodes with the prefix defined by
@@ -267,7 +267,7 @@ class Module:
                     (FluidicOperatorMapping, StorageMapping, PumpMapping),
                 ):
                     # Swap the basic node from original to the instance
-                    there_node_id = mapping_instance.node.id
+                    there_node_id = mapping_instance.node.ID
                     here_node = self.FIG.get_fignode(rename_map[there_node_id])
                     mapping_instance.node = here_node
                 elif isinstance(mapping_instance, NetworkMapping):

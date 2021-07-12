@@ -122,9 +122,9 @@ def main():
 
     mapping_listener.print_variables()
 
-    interactiongraph = mapping_listener.currentModule.FIG
-
-    printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
+    if mapping_listener.currentModule is not None:
+        interactiongraph = mapping_listener.currentModule.FIG
+        printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
 
     if args.no_gen is True:
         sys.exit(0)

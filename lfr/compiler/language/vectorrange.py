@@ -1,9 +1,14 @@
 from networkx.algorithms.operators.unary import reverse
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from lfr.compiler.language.vector import Vector
+
 
 class VectorRange:
     def __init__(self, vector, startindex: int, endindex: int):
-        self.vector = vector
+        self.vector: Vector = vector
         if startindex is None:
             self.startindex = 0
         else:

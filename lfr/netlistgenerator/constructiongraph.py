@@ -176,12 +176,12 @@ class ConstructionGraph(nx.DiGraph):
     def get_fignode_cn(self, fig_node: FIGNode) -> ConstructionNode:
         for cn in self._construction_nodes.values():
             for mapping_option in cn.mapping_options:
-                if fig_node.id in mapping_option.fig_subgraph.nodes:
+                if fig_node.ID in mapping_option.fig_subgraph.nodes:
                     return cn
 
         raise Exception(
             "Could not find construction node with an active mappingoption that covers"
-            " FIG node: {}".format(fig_node.id)
+            " FIG node: {}".format(fig_node.ID)
         )
 
     def split_cn(

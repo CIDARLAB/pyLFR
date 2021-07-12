@@ -483,7 +483,7 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
     # as there would be alternatives for each type of mapping
     for interaction in module.FIG.get_interactions():
         operator_candidates = library.get_operators(interaction_type=interaction.type)
-        cn = ConstructionNode(interaction.id)
+        cn = ConstructionNode(interaction.ID)
         # if isinstance(interaction, ValueNode):
         #     continue
 
@@ -494,14 +494,14 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
             ):
                 # Basically add the value node id into the subgraph view also
                 node_ids = [
-                    module.FIG.get_fignode(edge[0]).id
-                    for edge in module.FIG.in_edges(interaction.id)
+                    module.FIG.get_fignode(edge[0]).ID
+                    for edge in module.FIG.in_edges(interaction.ID)
                     if isinstance(module.FIG.get_fignode(edge[0]), ValueNode)
                 ]
-                node_ids.append(interaction.id)
+                node_ids.append(interaction.ID)
                 sub_graph = module.FIG.subgraph(node_ids)
             else:
-                sub_graph = module.FIG.subgraph(interaction.id)
+                sub_graph = module.FIG.subgraph(interaction.ID)
             mapping_option = MappingOption(operator_candidate, sub_graph)
             cn.add_mapping_option(mapping_option)
 
@@ -650,8 +650,8 @@ def override_mappings(
                 # cn_mapping_options.extend(cn.mapping_options)
                 print(
                     "Skipping Network Mapping: \n Input - {} \n Output - {}".format(
-                        ",".join([n.id for n in instance.input_nodes]),
-                        ",".join([n.id for n in instance.output_nodes]),
+                        ",".join([n.ID for n in instance.input_nodes]),
+                        ",".join([n.ID for n in instance.output_nodes]),
                     )
                 )
                 continue
@@ -671,12 +671,12 @@ def override_mappings(
                 # In the case of an Fluid Value interaction put all valuenodes in the subgraph
                 node_ids.extend(
                     [
-                        fig.get_fignode(edge[0]).id
-                        for edge in fig.in_edges(instance.node.id)
+                        fig.get_fignode(edge[0]).ID
+                        for edge in fig.in_edges(instance.node.ID)
                         if isinstance(fig.get_fignode(edge[0]), ValueNode)
                     ]
                 )
-                node_ids.append(instance.node.id)
+                node_ids.append(instance.node.ID)
                 subgraph = fig.subgraph(node_ids)
 
                 # Get the Construction node that has the corresponding subgraph,
@@ -729,13 +729,13 @@ def override_network_mappings(
             if isinstance(instance, NetworkMapping):
                 print(
                     "Applying Network Mapping: \n Input - {} \n Output - {}".format(
-                        ",".join([n.id for n in instance.input_nodes]),
-                        ",".join([n.id for n in instance.output_nodes]),
+                        ",".join([n.ID for n in instance.input_nodes]),
+                        ",".join([n.ID for n in instance.output_nodes]),
                     )
                 )
 
-                node_ids.extend(n.id for n in instance.input_nodes)
-                node_ids.extend(n.id for n in instance.output_nodes)
+                node_ids.extend(n.ID for n in instance.input_nodes)
+                node_ids.extend(n.ID for n in instance.output_nodes)
                 subgraph = fig.subgraph(node_ids)
                 try:
                     # TODO - Incase this is a flow-flow candidate, we need to get the

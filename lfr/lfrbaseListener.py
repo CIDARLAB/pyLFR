@@ -1,3 +1,4 @@
+from os import error
 import re
 from enum import Enum
 from typing import List, Optional
@@ -432,6 +433,9 @@ class LFRBaseListener(lfrXListener):
             self.stack.append(result)
 
     def exitAssignstat(self, ctx: lfrXParser.AssignstatContext):
+        if self.currentModule is None:
+            raise ValueError("current module is set to None")
+
         rhs = self.stack.pop()
         lhs = self.stack.pop()
 
@@ -454,18 +458,18 @@ class LFRBaseListener(lfrXListener):
             # Make 1-1 connections
             for source, target in zip(rhs, lhs):
                 print(source, target)
-                sourceid = source.id
-                targetid = target.id
+                sourceid = source.ID
+                targetid = target.ID
 
                 self.currentModule.add_fluid_connection(sourceid, targetid)
 
         elif len(lhs) != len(rhs):
             print("LHS not equal to RHS")
             for source in rhs:
-                sourceid = source.id
+                sourceid = source.ID
 
                 for target in lhs:
-                    targetid = target.id
+                    targetid = target.ID
                     self.currentModule.add_fluid_connection(sourceid, targetid)
 
     def exitLiteralassignstat(self, ctx: lfrXParser.LiteralassignstatContext):
@@ -557,6 +561,8 @@ class LFRBaseListener(lfrXListener):
         pattern = r"(\d+)'b(\d+)"
         matches = re.search(pattern, text)
         # size = int(matches.group(1))
+        if matches is None:
+            raise error("No matches found")
         bit_pattern = matches.group(2)
         n = BitVector(bitstring=bit_pattern)
         return n
