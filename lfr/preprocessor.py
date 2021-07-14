@@ -66,7 +66,7 @@ class PreProcessor:
             dep_graph.add_node(file_handle)
 
         # We extract his because these are all the files defined by the user
-        user_derfined_list = str(self.full_text.keys())
+        user_derfined_list = list(self.full_text.keys())
 
         for file_handle in user_derfined_list:
             # Find all imports and generate the edges
@@ -86,7 +86,7 @@ class PreProcessor:
                         # Since its not in the preloaded library either...
                         raise Exception("Could not find file - {}".format(result[1]))
                     else:
-                        
+
                         # Pull all the text, add it to the full text store
                         file_path = self._lib_file_list[new_file_handle]
                         p = Path(file_path).resolve()
