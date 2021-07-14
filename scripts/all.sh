@@ -7,7 +7,7 @@ for f in ~/CIDAR/LFR-Testcases/dropx/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/dropx/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/dropx/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done  
 
 
@@ -17,7 +17,7 @@ for f in ~/CIDAR/LFR-Testcases/chthesis/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/chthesis/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/chthesis/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done  
 
 
@@ -28,7 +28,7 @@ for f in ~/CIDAR/LFR-Testcases/COVID/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/COVID/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/COVID/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done  
 
 
@@ -38,7 +38,7 @@ for f in ~/CIDAR/LFR-Testcases/Expressions/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/Expressions/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/Expressions/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done  
 
 echo "Synthesizing ghissues"
@@ -47,7 +47,7 @@ for f in ~/CIDAR/LFR-Testcases/ghissues/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/ghissues/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/ghissues/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done  
 
 
@@ -58,7 +58,7 @@ for f in ~/CIDAR/LFR-Testcases/GraphCoverage/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/GraphCoverage/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/GraphCoverage/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done  
 
 
@@ -68,7 +68,7 @@ for f in ~/CIDAR/LFR-Testcases/ParserTest/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/ParserTest/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/ParserTest/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done  
 
 
@@ -79,7 +79,7 @@ for f in ~/CIDAR/LFR-Testcases/Protocols/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/Protocols/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/Protocols/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done  
 
 
@@ -89,7 +89,7 @@ for f in ~/CIDAR/LFR-Testcases/Ryuichi\'s\ designs/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/Ryuichi\'s\ designs/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/Ryuichi\'s\ designs/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done 
 
 
@@ -99,6 +99,6 @@ for f in ~/CIDAR/LFR-Testcases/TechnologyMapping/*.lfr;
 
 do 
 	echo "Running File $f";
-    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/TechnologyMapping/
+    lfr-compile $f --no-gen --outpath ~/CIDAR/LFR-Dry-Run/TechnologyMapping/ --pre-load ~/CIDAR/LFR-Testcases/distribute-library
 done 
 

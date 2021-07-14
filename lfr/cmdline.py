@@ -70,10 +70,20 @@ def main():
             " #CONSTRAIN"
         ),
     )
+    parser.add_argument(
+        "--pre-load",
+        type=str,
+        action="append",
+        help=(
+            "This lets the preprocessor look for the different design libraries that"
+            " need to be added to the memory (avoid using this outside bulk testing)"
+        ),
+    )
     args = parser.parse_args()
 
+    pre_load_file_list = args.pre_load
     # Utilize the prepreocessor to generate the input file
-    preprocessor = PreProcessor(args.input)
+    preprocessor = PreProcessor(args.input, pre_load_file_list)
 
     if preprocessor.check_syntax_errors():
         print("Stopping compiler because of syntax errors")

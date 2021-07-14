@@ -189,6 +189,8 @@ class Module:
                 module_to_import = module_check
 
         # Step 2 - Create a copy of the fig
+        if module_to_import is None:
+            raise ReferenceError("module_to_import is set to none")
         fig_copy = copy.deepcopy(module_to_import.FIG)
 
         # Step 3 - Convert all the flow IO nodes where mappings exist
