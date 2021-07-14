@@ -285,7 +285,6 @@ class StateTable:
                         # Add the connection target in inot the annotion targets we want
                         # this representated for the entire converage
                         target = edge[1]
-                        args_for_annotation.append(fig.get_fignode(target))
                         # Check if the source is in any of the AND annotations
                         source = edge[0]
                         found_flag = False
@@ -300,8 +299,13 @@ class StateTable:
                                 args_for_annotation.append(annotation_to_use)
                         else:
                             source_fignode = fig.get_fignode(source)
-                            if source_fignode not in args_for_annotation:
-                                args_for_annotation.append(source_fignode)
+                            target_fignode = fig.get_fignode(target)
+                            if (
+                                source_fignode in args_for_annotation
+                                and target_fignode in args_for_annotation
+                            ) is False:
+                                item_to_add = (source_fignode, target_fignode)
+                                args_for_annotation.append(item_to_add)
 
             self._or_annotations.append(fig.add_or_annotation(args_for_annotation))
 

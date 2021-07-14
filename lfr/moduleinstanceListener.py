@@ -65,7 +65,7 @@ class ModuleInstanceListener(DistBlockListener):
             there_vector_ref = module_io[i].vector_ref
             here_vector_ref = variables[i]
             for i in range(len(there_vector_ref)):
-                self._io_mapping[there_vector_ref[i].id] = here_vector_ref[i].id
+                self._io_mapping[there_vector_ref[i].ID] = here_vector_ref[i].ID
 
     # def exitUnorderedioblock(self, ctx: lfrXParser.UnorderedioblockContext):
     #     num_variables = len(ctx.explicitinstanceiomapping())

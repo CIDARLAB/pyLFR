@@ -88,7 +88,7 @@ class IONode(Flow):
         self._type = iotype
 
     def __str__(self) -> str:
-        return "Name: {0.ID}, Type : {0.type}".format(self)
+        return "IO - Name: {0.ID}, Type : {0.type}".format(self)
 
     @property
     def match_string(self):
@@ -103,6 +103,9 @@ class Storage(Flow):
     def match_string(self):
         return "STORAGE"
 
+    def __str__(self) -> str:
+        return "STORAGE - {}".format(self.ID)
+
 
 class Pump(Flow):
     def __init__(self, id: str) -> None:
@@ -112,6 +115,9 @@ class Pump(Flow):
     def match_string(self) -> str:
         return "PUMP"
 
+    def __str__(self) -> str:
+        return "PUMP - {}".format(self.ID)
+
 
 class Signal(FIGNode):
     def __init__(self, id: str) -> None:
@@ -120,3 +126,6 @@ class Signal(FIGNode):
     @property
     def match_string(self):
         return "SIGNAL"
+
+    def __str__(self) -> str:
+        return "SIGNAL - {}".format(self.ID)
