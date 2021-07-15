@@ -21,15 +21,16 @@ class PreProcessor:
         self._lib_file_list: Dict[str, str] = {}  # Stores file path to file
 
         print("Loading all LFR Files from lib Directories:")
-        for dir_ref in lib_dir_list:
-            print("-- Loading form path {}".format(dir_ref))
-            path = Path(dir_ref).resolve()
+        if lib_dir_list is not None:
+            for dir_ref in lib_dir_list:
+                print("-- Loading form path {}".format(dir_ref))
+                path = Path(dir_ref).resolve()
 
-            for file in path.rglob("*.lfr"):
-                path_object = Path(file)
-                full_path = path_object.resolve()
-                print("Storing into library: {}".format(full_path))
-                self._lib_file_list[str(path_object.name)] = str(full_path)
+                for file in path.rglob("*.lfr"):
+                    path_object = Path(file)
+                    full_path = path_object.resolve()
+                    print("Storing into library: {}".format(full_path))
+                    self._lib_file_list[str(path_object.name)] = str(full_path)
 
         for file_path in file_list:
 

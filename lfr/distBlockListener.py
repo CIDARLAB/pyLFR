@@ -23,6 +23,9 @@ class DistBlockListener(LFRBaseListener):
         rhs = self.stack.pop()
         lhs = self.stack.pop()
 
+        if isinstance(rhs, BitVector):
+            rhs = rhs.intValue()
+
         relation_operator = ctx.binary_module_path_operator().getText()
 
         # TODO - Basically we need to know what the conditions are we need to set
@@ -32,8 +35,17 @@ class DistBlockListener(LFRBaseListener):
         # this needs to be extended to work with all kinds of conditions
         # not just 1 variable and the values of 0 or 1.
         assert len(lhs) == 1
-        assert rhs == 0 or rhs == 1
-        assert relation_operator == "=="
+        if relation_operator != "==":
+            raise NotImplementedError(
+                'Did not implement distribute condition beyond "=="'
+            )
+
+        if type(rhs) == float or type(rhs) == int:
+            if (rhs == 0 or rhs == 1) is False:
+                raise NotImplementedError(
+                    "Did not implement distribute condition to be beyond simple 1 or 0"
+                    " conditions"
+                )
 
         if self._current_dist_block is None:
             raise ValueError('"_current_dist_block" is set to None')
