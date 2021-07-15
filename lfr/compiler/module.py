@@ -52,6 +52,12 @@ class Module:
     def add_io(self, io: ModuleIO):
         self._io.append(io)
         for i in range(len(io.vector_ref)):
+            if isinstance(io.vector_ref[i], IONode) is False:
+                raise TypeError(
+                    "Cannot add IO that is not of type, found {}".format(
+                        io.vector_ref[i]
+                    )
+                )
             self.FIG.add_fignode(io.vector_ref[i])
 
     def get_io(self, name: str) -> ModuleIO:
@@ -93,7 +99,8 @@ class Module:
     ) -> Interaction:
         # Check if the item exists
         # TODO: create finteraction factory method and FluidInteraction
-        # finteraction = FluidInteraction(fluid1=item, interactiontype=interaction_type, custominteraction= operator)
+        # finteraction = FluidInteraction(fluid1=item, interactiontype=interaction_type,
+        # custominteraction= operator)
         finteraction = FluidProcessInteraction(item, operator)
         self.FIG.add_interaction(finteraction)
         return finteraction
@@ -125,7 +132,6 @@ class Module:
             fluid1, finteraction, interaction_type
         )
 
-        # self.FIG.add_fluid_finteraction_interaction(fluid1, finteraction, new_fluid_interaction)
         self.FIG.add_interaction(new_fluid_interaction)
 
         return new_fluid_interaction
@@ -212,18 +218,21 @@ class Module:
 
         # Step 4 - Relabel all the nodes with the prefix defined by
         # var_name
-        rename_map = {}
+        fig_node_rename_map = {}
+        annotation_rename_map = {}
         for node in list(fig_copy.nodes):
-            rename_map[node] = self.__generate_instance_node_name(node, var_name)
+            fig_node_rename_map[node] = self.__generate_instance_node_name(
+                node, var_name
+            )
 
         # Step 4.1 - Relabel all the annotations with the prefix defined by var_name
         for annotation in list(fig_copy.annotations):
-            rename_map[annotation.id] = self.__generate_instance_node_name(
+            annotation_rename_map[annotation.id] = self.__generate_instance_node_name(
                 annotation.id, var_name
             )
 
-        fig_copy.rename_nodes(rename_map)
-        fig_copy.rename_annotations(rename_map)
+        fig_copy.rename_nodes(fig_node_rename_map)
+        fig_copy.rename_annotations(annotation_rename_map)
 
         # Step 5 - Stitch together tall the io newly formed io nodes into
         # current fig
@@ -234,7 +243,7 @@ class Module:
             # target_fig = self.FIG.get_fignode(rename_map[value])
             # source_fig = self.FIG.get_fignode(key)
             there_check_node = module_to_import.FIG.get_fignode(there_id)
-            there_node = self.FIG.get_fignode(rename_map[there_id])
+            there_node = self.FIG.get_fignode(fig_node_rename_map[there_id])
             here_node = self.FIG.get_fignode(here_id)
             if (
                 isinstance(there_check_node, IONode)
@@ -270,19 +279,19 @@ class Module:
                 ):
                     # Swap the basic node from original to the instance
                     there_node_id = mapping_instance.node.ID
-                    here_node = self.FIG.get_fignode(rename_map[there_node_id])
+                    here_node = self.FIG.get_fignode(fig_node_rename_map[there_node_id])
                     mapping_instance.node = here_node
                 elif isinstance(mapping_instance, NetworkMapping):
                     # TODO - Swap the nodes in the inputs and the outputs
                     # Swap the inputs
                     nodes_to_switch = mapping_instance.input_nodes
                     mapping_instance.input_nodes = self.__switch_fignodes_list(
-                        rename_map, nodes_to_switch
+                        fig_node_rename_map, nodes_to_switch
                     )
 
                     nodes_to_switch = mapping_instance.output_nodes
                     mapping_instance.output_nodes = self.__switch_fignodes_list(
-                        rename_map, nodes_to_switch
+                        fig_node_rename_map, nodes_to_switch
                     )
 
             self.mappings.append(mappingtemplate_copy)

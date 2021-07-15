@@ -220,12 +220,11 @@ class FluidInteractionGraph(nx.DiGraph):
         return annotation
 
     def add_fig(self, fig_to_add: FluidInteractionGraph) -> None:
-        # Check if any of the incoming fig nodes
+        # Check if any of the incoming fig nodes are already present here
         for node_id in fig_to_add.nodes:
-            fig_node = fig_to_add.get_fignode(node_id)
-            assert fig_node is not None
-            # Check if fignode is alreay present in this
-            self.add_fignode(fig_node)
+            if node_id in self._fignodes.keys():
+                raise Exception("Node '{}' already present in the FIG".format(node_id))
+            self.add_fignode(fig_to_add.get_fignode(node_id))
 
         for edge in fig_to_add.edges:
             self.add_edge(edge[0], edge[1])
@@ -258,24 +257,24 @@ class FluidInteractionGraph(nx.DiGraph):
             print("ALREADY COPIED TO", repr(existing))
             return existing
 
-        fignodes_copy = []
+        fignodes_copy_list = []
 
         # Map old_fignode <-> new_fignode
         fignodes_copy_map: Dict[FIGNode, FIGNode] = dict()
 
         for fignode in self._fignodes.values():
             fignode_copy = copy.copy(fignode)
-            fignodes_copy.append(fignode_copy)
+            fignodes_copy_list.append(fignode_copy)
             fignodes_copy_map[fignode] = fignode_copy
 
         fig_copy = self.copy(as_view=False)
         fig_copy.__class__ = FluidInteractionGraph
         assert isinstance(fig_copy, FluidInteractionGraph)
-        fig_copy.load_fignodes(fignodes_copy)
+        fig_copy.load_fignodes(fignodes_copy_list)
 
         # Now since all the annotations are loaded up, copy the right cloned
         # references to fig nodes for the constriants
-        figannotations_copy = []
+        figannotations_copy_list = []
 
         # Map old_annotatin <-> new_annotation
         figannotations_copy_map: Dict[
@@ -284,8 +283,9 @@ class FluidInteractionGraph(nx.DiGraph):
 
         # Copy the annotations into the new fig copy
         for current_annotation in self._annotations:
-            copy_annotation = copy.copy(current_annotation)
-            figannotations_copy.append(copy_annotation)
+            copy_annotation = copy.deepcopy(current_annotation)
+            copy_annotation.clear_fignodes()
+            figannotations_copy_list.append(copy_annotation)
             figannotations_copy_map[current_annotation] = copy_annotation
 
         # TODO - Copy the annotations items
@@ -302,7 +302,7 @@ class FluidInteractionGraph(nx.DiGraph):
                     )
                     copy_annotation.add_annotated_item(item_to_add)
 
-        fig_copy.load_annotations(figannotations_copy)
+        fig_copy.load_annotations(figannotations_copy_list)
         return fig_copy
 
     # ---------- HELPER METHODS -----------
