@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import copy
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.fignode import FIGNode, Flow, IONode, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
@@ -158,7 +158,7 @@ class Module:
     def add_fluid_numeric_interaction(
         self,
         fluid1: Flow,
-        number: float,
+        number: Union[int, float],
         interaction_type: InteractionType,
     ) -> Interaction:
         # finteraction = FluidInteraction(fluid1=fluid1, interactiontype=interaction)
@@ -167,10 +167,19 @@ class Module:
         if interaction_type is InteractionType.METER:
             finteraction = FluidNumberInteraction(fluid1, number, interaction_type)
         elif interaction_type is InteractionType.DILUTE:
-            finteraction = FluidNumberInteraction(fluid1, number, interaction_type)
+            if isinstance(number, float):
+                finteraction = FluidNumberInteraction(fluid1, number, interaction_type)
+            else:
+                # If its a variable get the corresponding value for it
+                # from the variable store
+                raise NotImplementedError()
         elif interaction_type is InteractionType.DIVIDE:
-            assert isinstance(number, int)
-            finteraction = FluidIntegerInteraction(fluid1, number, interaction_type)
+            if isinstance(number, int):
+                finteraction = FluidIntegerInteraction(fluid1, number, interaction_type)
+            else:
+                # If its a variable get the corresponding value for it
+                # from the variable store
+                raise NotImplementedError()
         else:
             raise Exception("Unsupported Numeric Operator")
 
