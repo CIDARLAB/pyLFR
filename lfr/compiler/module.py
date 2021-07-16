@@ -204,14 +204,13 @@ class Module:
         for there_node_key in io_mapping.keys():
             fignode = fig_copy.get_fignode(there_node_key)
             # Skip if its a control type one
-            assert isinstance(fignode, IONode)
+            if isinstance(fignode, IONode) is False:
+                raise TypeError("Node not of type IO Node")
+
             if fignode.type is IOType.CONTROL:
                 continue
+
             # Convert this node into a flow node
-            # Sanity check to see if its flow input/output
-            assert (
-                fignode.type is IOType.FLOW_INPUT or fignode.type is IOType.FLOW_OUTPUT
-            )
             # Replace
             new_fignode = Flow(fignode.ID)
             fig_copy.switch_fignode(fignode, new_fignode)
@@ -232,7 +231,7 @@ class Module:
             )
 
         fig_copy.rename_nodes(fig_node_rename_map)
-        fig_copy.rename_annotations(annotation_rename_map)
+        fig_copy.rename_annotations(fig_node_rename_map, annotation_rename_map)
 
         # Step 5 - Stitch together tall the io newly formed io nodes into
         # current fig

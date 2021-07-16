@@ -52,6 +52,12 @@ class FluidInteractionGraph(nx.DiGraph):
     def annotations(self) -> List[DistributeAnnotation]:
         return self._annotations
 
+    def get_annotation_by_id(self, id: str) -> DistributeAnnotation:
+        for annotation in self._annotations:
+            if annotation.id == id:
+                return annotation
+        raise Exception("Cannot find the annotation with ID: {0}".format(id))
+
     def add_fignode(self, node: FIGNode) -> None:
         self._fignodes[node.ID] = node
         self._annotations_reverse_map[node] = []
@@ -74,7 +80,7 @@ class FluidInteractionGraph(nx.DiGraph):
 
     def load_annotations(self, annotations: List[DistributeAnnotation]) -> None:
         self._annotations.extend(annotations)
-        for annotation in self._annotations:
+        for annotation in annotations:
             for item in annotation.get_items():
                 if isinstance(item, DistributeAnnotation):
                     self.__add_to_reverse_map(item, annotation)
@@ -99,9 +105,53 @@ class FluidInteractionGraph(nx.DiGraph):
 
         nx.relabel_nodes(self, rename_map, False)
 
-    def rename_annotations(self, rename_map: Dict[str, str]) -> None:
+    def rename_annotations(
+        self, fig_node_rename_map: Dict[str, str], annotation_rename_map: Dict[str, str]
+    ) -> None:
         for annotation in self._annotations:
-            annotation.rename(rename_map[annotation.id])
+            annotation.rename(annotation_rename_map[annotation.id])
+
+        fig_copy = self
+        # Switch all the items of the annotations to the new fignodes
+        for annotation in list(fig_copy.annotations):
+            new_items_list: List[
+                Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]
+            ] = []
+
+            old_fignode_item_ID_list = [
+                (item[0].ID, item[1].ID)
+                for item in annotation.get_items()
+                if type(item) is tuple
+            ]
+
+            # Now switch the items to the new fignodes
+            for (
+                old_fignode_item_id_1,
+                old_fignode_item_id_2,
+            ) in old_fignode_item_ID_list:
+                new_fignode_item_id_1 = fig_node_rename_map[old_fignode_item_id_1]
+                new_fignode_item_id_2 = fig_node_rename_map[old_fignode_item_id_2]
+                item_to_add = (
+                    fig_copy.get_fignode(new_fignode_item_id_1),
+                    fig_copy.get_fignode(new_fignode_item_id_2),
+                )
+                new_items_list.append(item_to_add)
+
+            old_annotation_item_ID_list = [
+                item.id
+                for item in annotation.get_items()
+                if isinstance(item, DistributeAnnotation)
+            ]
+
+            for old_annotation_item_id in old_annotation_item_ID_list:
+                new_annotation_item_id = annotation_rename_map[old_annotation_item_id]
+                item_to_add = fig_copy.get_annotation_by_id(new_annotation_item_id)
+                new_items_list.append(item_to_add)
+
+            # now replace the annotation items with the new ones
+            annotation.clear_items()
+            for item in new_items_list:
+                annotation.add_annotated_item(item)
 
     def add_interaction(self, interaction: Interaction):
         if interaction.ID not in self._fignodes.keys():
@@ -284,7 +334,7 @@ class FluidInteractionGraph(nx.DiGraph):
         # Copy the annotations into the new fig copy
         for current_annotation in self._annotations:
             copy_annotation = copy.deepcopy(current_annotation)
-            copy_annotation.clear_fignodes()
+            copy_annotation.clear_items()
             figannotations_copy_list.append(copy_annotation)
             figannotations_copy_map[current_annotation] = copy_annotation
 
@@ -319,8 +369,11 @@ class FluidInteractionGraph(nx.DiGraph):
             self.__add_to_reverse_map(item, annotation)
         else:
             if item in self._annotations_reverse_map.keys():
-                self._annotations_reverse_map[item].append(annotation)
+                annotation_list = self._annotations_reverse_map[item]
+                if annotation not in annotation_list:
+                    annotation_list.append(annotation)
             else:
+
                 if annotation in self._annotations_reverse_map[item]:
                     raise Exception("Annotation already present in the reverse map !")
 

@@ -30,7 +30,7 @@ class DistributeAnnotation:
     def get_items(self) -> List[Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]]:
         return self._annotated_items
 
-    def clear_fignodes(self) -> None:
+    def clear_items(self) -> None:
         self._annotated_items.clear()
 
     def __hash__(self) -> int:
