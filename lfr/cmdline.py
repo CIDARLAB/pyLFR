@@ -14,13 +14,13 @@ from lfr.antlrgen.lfr.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.netlistgenerator.generator import (
-    generate_dropx_library,
     generate,
     generate_dropx_library,
     generate_mars_library,
 )
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 from lfr.preprocessor import PreProcessor
+from art import tprint
 
 
 def load_libraries():
@@ -35,6 +35,8 @@ def load_libraries():
 
 
 def main():
+    # Print LFR ASCII Banner
+    tprint("---- LFR ----")
     parser = argparse.ArgumentParser()
 
     parser.add_argument(

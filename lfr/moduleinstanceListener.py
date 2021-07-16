@@ -1,3 +1,4 @@
+from os import error
 from typing import Dict, Optional
 
 from lfr.compiler.lfrerror import ErrorType, LFRError
@@ -80,11 +81,14 @@ class ModuleInstanceListener(DistBlockListener):
     def exitExplicitinstanceiomapping(
         self, ctx: lfrXParser.ExplicitinstanceiomappingContext
     ):
+        if self._module_to_import is None:
+            raise error("No module to import found in the listener store")
+
         variable = self.stack.pop()
         label = ctx.ID().getText()
 
         # Check if label exists in module_to_import
-        if label not in self._module_to_import.get_all_io():
+        if label not in [item.id for item in self._module_to_import.get_all_io()]:
             self.compilingErrors.append(
                 LFRError(
                     ErrorType.MODULE_IO_NOT_FOUND,
@@ -96,6 +100,13 @@ class ModuleInstanceListener(DistBlockListener):
             return
 
         io = self._module_to_import.get_io(label)
-        assert len(io.vector_ref) == len(variable)
+        if len(io.vector_ref) != len(variable):
+            self.compilingErrors.append(
+                LFRError(
+                    ErrorType.MODULE_SIGNAL_BINDING_MISMATCH,
+                    "Number of module instance signals and variables don't match",
+                )
+            )
+            return
         for i in range(len(variable)):
-            self._io_mapping[io.vector_ref[i].id] = variable[i].id
+            self._io_mapping[io.vector_ref[i].ID] = variable[i].ID

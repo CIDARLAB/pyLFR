@@ -23,8 +23,6 @@ from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
 from pymint.minttarget import MINTTarget
 
-from lfr.netlistgenerator.v2.connectingoption import ConnectingOption
-
 
 class MarsStrategy:
     def __init__(
