@@ -48,6 +48,140 @@ from lfr.compiler.module import Module
 #     pass
 
 
+def generate_mlsi_library() -> MappingLibrary:
+
+    library = MappingLibrary("mlsi")
+    # PORT
+    port_inputs = []
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+    port_inputs.append(ConnectingOption(None, [None]))
+
+    port_outputs = []
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+    port_outputs.append(ConnectingOption(None, []))
+
+    port = Primitive(
+        "PORT",
+        PrimitiveType.COMPONENT,
+        r"""{
+            v1:IO
+        }""",
+        False,
+        False,
+        port_inputs,
+        port_outputs,
+        None,
+        None,
+        None,
+    )
+
+    library.add_io_entry(port)
+
+    # MIXER - CONTINOUS FLOW ONE
+
+    cf_mixer_inputs = []
+
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+    cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
+
+    cf_mixer_outputs = []
+
+    cf_mixer_outputs.append(ConnectingOption(None, ["2"]))
+
+    cf_mixer_loadings = []
+    cf_mixer_carriers = []
+
+    cf_mixer = Primitive(
+        "MIXER",
+        PrimitiveType.COMPONENT,
+        r"""{
+            v1:MIX
+        }""",
+        False,
+        False,
+        cf_mixer_inputs,
+        cf_mixer_outputs,
+        cf_mixer_loadings,
+        cf_mixer_carriers,
+        None,
+    )
+
+    library.add_operator_entry(cf_mixer, InteractionType.MIX)
+
+    # MUX2
+
+    mux2_inputs = []
+    mux2_inputs.append(ConnectingOption(None, ["1"]))
+
+    mux2_outputs = []
+    mux2_outputs.append(ConnectingOption(None, ["2"]))
+    mux2_outputs.append(ConnectingOption(None, ["3"]))
+
+    mux2 = Primitive(
+        "MUX",
+        PrimitiveType.COMPONENT,
+        r"""{
+            v1 { "DISTRIBUTE_OR", "or_1" },
+            v1 -> vo1 { "DISTRIBUTE_OR", "or_1" },
+            v1 -> vo2 { "DISTRIBUTE_OR", "or_1" }
+        }
+        """,
+        False,
+        False,
+        mux2_inputs,
+        mux2_outputs,
+        None,
+        None,
+        None,
+    )
+
+    library.add_entry(mux2)
+
+    return library
+
+
 def generate_mars_library() -> MappingLibrary:
 
     library = MappingLibrary("mars")

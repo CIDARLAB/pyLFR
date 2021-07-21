@@ -17,14 +17,22 @@ class MatchPatternGenerator(reggieListener):
 
         self._vertices_stack.append(vertex_id)
 
+        # Skip the generation if the vertex is already in the structural template
+        if vertex_id in self.structural_template.nodes:
+            return
+
+        # Get the type filters for the semantic template
         label_filters = []
         if ctx.labelfilter() is not None:
             label_filters = [label.getText() for label in ctx.labelfilter().label()]
 
-        # TODO - Get the coloring filter
+        # Get the coloring filter
         coloring_labels = []
         if ctx.coloringfilter() is not None:
-            coloring_labels = [s.getText() for s in ctx.coloringfilter().STRING()]
+            coloring_labels = [
+                MatchPatternGenerator.remove_quotes(s.getText())
+                for s in ctx.coloringfilter().STRING()
+            ]
         constraints_tuples = []
         for i in range(0, len(coloring_labels), 2):
             constraints_tuples.append((coloring_labels[i], coloring_labels[i + 1]))
@@ -38,7 +46,7 @@ class MatchPatternGenerator(reggieListener):
         else:
             self.structural_template.add_node(vertex_id)
             self.semantic_template[vertex_id] = NodeFilter(
-                node_attributes_filter=label_filters,
+                node_types_filter=label_filters,
                 node_constraints=constraints_tuples,
             )
 
@@ -55,3 +63,7 @@ class MatchPatternGenerator(reggieListener):
             end = self._vertices_stack[i]
             # Generate the graph
             self.structural_template.add_edge(start, end)
+
+    @staticmethod
+    def remove_quotes(s: str) -> str:
+        return s.replace('"', "")

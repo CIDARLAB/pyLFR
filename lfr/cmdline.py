@@ -17,6 +17,7 @@ from lfr.netlistgenerator.generator import (
     generate,
     generate_dropx_library,
     generate_mars_library,
+    generate_mlsi_library,
 )
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 from lfr.preprocessor import PreProcessor
@@ -150,8 +151,7 @@ def main():
         elif args.technology == "mars":
             library = generate_mars_library()
         elif args.technology == "mlsi":
-            print("Implement Library for MLSI")
-            pass
+            library = generate_mlsi_library()
         else:
             print("Implement Library for whatever else")
             pass

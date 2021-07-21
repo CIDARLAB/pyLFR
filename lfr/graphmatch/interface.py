@@ -18,23 +18,48 @@ def match_node_constraints(
     # Check if the 1) Constraint type matches, 2) if the same nodes in the GM.mapping
     # match the ones denoted by the subgraph LFR
 
+    # Generate new IDs for each of the nodes from the fig and the netlist matches in
+    # the mapping
+    # Loop through each of the nodes in the fig and the mapping
+    new_ids = {}
+    new_id_counter = 0
+    for key, value in mapping.items():
+        new_ids[key] = str(new_id_counter)
+        new_ids[value] = str(new_id_counter)
+        new_id_counter += 1
+
     # Extract the subgraph pairings in the to know what fig node matches what matchnode
-    pattern_graph_coloring_map = dict()
-    pattern_graph_node_filters = dict()
+    fig_distribution_set = {}
+    reggie_distribution_annotations = {}
 
-    for fig_vertex_id, parttern_vertex_id in mapping.items():
-        # Get Constraints for fig_vertex_id and the NodeFilter for the pattern_vertex_id
-        fig_node = fig.get_fignode(fig_vertex_id)
-        node_filter = semantic_information[parttern_vertex_id]
+    for fig_id, reggie_id in mapping.items():
 
-        # Load up all the constraints for this particular fignode
-        pattern_graph_coloring_map[fig_node] = node_filter.get_constriants()
-        pattern_graph_node_filters[fig_node] = node_filter
+        new_id = new_ids[reggie_id]
+        node_filter = semantic_information[reggie_id]
 
-    # TODO - Now check to see if all the constraints are a match in node filter
-    for fig_node in pattern_graph_coloring_map.keys():
-        # Get the constraints on the fig
-        fig_constraints = fig.get_fig_annotations(fig_node)
+        # Skip getting the constraints for the match nodes
+        if len(node_filter.get_constriants()) == 0:
+            continue
+
+        for constriant in node_filter.get_constriants():
+            if new_id not in reggie_distribution_annotations.keys():
+                reggie_distribution_annotations[new_id] = {constriant[1]}
+            else:
+                reggie_distribution_annotations[new_id].add(constriant[1])
+
+        new_id = new_ids[fig_id]
+
+        try:
+            annotations = fig.get_fig_annotations(fig_id)
+        except KeyError:
+            print("Missing annotation for fig node: {}".format(fig_id))
+            continue
+
+        for annotation in annotations:
+            if new_id not in fig_distribution_set.keys():
+                fig_distribution_set[new_id] = {annotation.id}
+            else:
+                fig_distribution_set[new_id].add(annotation.id)
 
     return True
 

@@ -50,6 +50,9 @@ class MappingLibrary:
             self.__technology_process_operators.append(primitive)
             self.__all_primitives[primitive.mint] = primitive
 
+    def add_entry(self, primitive: Primitive) -> None:
+        self.__all_primitives[primitive.mint] = primitive
+
     def add_procedural_entry(self, primitive: ProceduralPrimitive) -> None:
         self.__procedural_primitves.append(primitive)
         self.__all_primitives[primitive.mint] = primitive

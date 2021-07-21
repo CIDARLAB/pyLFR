@@ -74,6 +74,8 @@
             "args": [
                 "--outpath",
                 "./out/",
+                "--technology",
+                "mlsi",
                 "${file}"
             ],
             "console": "integratedTerminal"

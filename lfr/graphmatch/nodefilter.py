@@ -21,6 +21,7 @@ class NodeFilter:
 
     def is_valid_attribute_type(self, attributestring: str) -> bool:
         # TODO - Figure out what this will be in tuture
+        raise NotImplementedError("Currently do not support node attributes")
         return True
 
     def get_constriants(self) -> List[Tuple[str, str]]:

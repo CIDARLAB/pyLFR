@@ -246,6 +246,14 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "pyeda"
+version = "0.28.0"
+description = "Python Electronic Design Automation"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "pyflakes"
 version = "2.2.0"
 description = "passive checker of Python programs"
@@ -347,7 +355,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "47b9e9e748442da58a34fc85a23c06f623e925fb196fb139724244c41b0614b6"
+content-hash = "bbeb398ffdd62164f918b918c592ba24f01eaf08bedfed6515c7136494b12a86"
 
 [metadata.files]
 antlr4-python3-runtime = [
@@ -465,6 +473,10 @@ pathspec = [
 pycodestyle = [
     {file = "pycodestyle-2.6.0-py2.py3-none-any.whl", hash = "sha256:2295e7b2f6b5bd100585ebcb1f616591b652db8a741695b3d8f5d28bdc934367"},
     {file = "pycodestyle-2.6.0.tar.gz", hash = "sha256:c58a7d2815e0e8d7972bf1803331fb0152f867bd89adf8a01dfd55085434192e"},
+]
+pyeda = [
+    {file = "pyeda-0.28.0.tar.gz", hash = "sha256:07185f458d5d0b2ba5058da8b95dad6ab7684ceaf41237a25bcd3f005490f59d"},
+    {file = "pyeda-0.28.0.zip", hash = "sha256:e34c7a6332d24914d1be524b3d9fe97feb165dbfe63473b3a112c1aeda2c002e"},
 ]
 pyflakes = [
     {file = "pyflakes-2.2.0-py2.py3-none-any.whl", hash = "sha256:0d94e0e05a19e57a99444b6ddcf9a6eb2e5c68d3ca1e98e90707af8152c90a92"},
