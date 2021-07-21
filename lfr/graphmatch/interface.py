@@ -1,5 +1,5 @@
 from lfr.graphmatch.figmappingmatcher import FIGMappingMatcher
-from typing import Dict
+from typing import Any, Dict, List, Tuple
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.graphmatch.matchpattern import MatchPattern
@@ -64,7 +64,9 @@ def match_node_constraints(
     return True
 
 
-def get_fig_matches(fig: FluidInteractionGraph, library: MappingLibrary):
+def get_fig_matches(
+    fig: FluidInteractionGraph, library: MappingLibrary
+) -> List[Tuple[str, Any]]:
     patterns: Dict[
         str, MatchPattern
     ] = dict()  # Store the mint and the match pattern object here
@@ -91,15 +93,65 @@ def get_fig_matches(fig: FluidInteractionGraph, library: MappingLibrary):
             # This would be a match, figure out how to get the mapping from GM.mapping
 
             # Loop through each of the candates
-            # TODO - Compare the constraints on all the nodes for this for subgraph to
+            # Compare the constraints on all the nodes for this for subgraph to
             # confirm the match
-            if match_node_constraints(
-                fig, structural_template, semantic_information, subgraph, GM.mapping
-            ):
-                # TODO - Extract the specific mapping for the subgraph
+
+            distribution_constaints = []
+            distribution_annotations = []
+            for node_filter in semantic_information.values():
+                distribution_constaints.extend(node_filter.get_constriants())
+
+            for fig_id in subgraph.keys():
+                fig_node = fig.get_fignode(fig_id)
+                distribution_annotations.extend(fig.get_fig_annotations(fig_node))
+
+            # Constraint matching Logic - This logic allows for annotated fig_nodes to
+            # be matched against match patterns that dont have any distribtion
+            # constraints. The 4 cases shown here describe the different ways in which
+            # this logic can work.
+
+            # Case 1 - if subgraph has no distribution annotations and match template
+            # has no distribution constraints - SKIP | MATCH
+
+            # Case 2 - if subgraph has no distribution annotations and match template
+            # has distribtion constraints - SKIP | NO-MATCH
+
+            # Case 3 - if subgraph has distribution annotations and match
+            # template has no distribution constraints - SKIP | MATCH
+
+            # Case 4 - if subgraph has distribution annotations and match template
+            # has distribution constraints - NO-SKIP | CHECK-MATCH
+
+            # Case 1 + Case 3 Logic - We only need to check if the distribution
+            # constraints are zero (LOGIC REDUCTION)
+            if len(distribution_constaints) == 0:
+                # No distribution constraints, so we can skip node constraint matching
                 print("Found Match: {}".format(mint))
                 print(subgraph)
 
+                # MATCH
                 ret.append((mint, subgraph))
+                # SKIP
+                continue
+
+            # Case 2 Logic
+            if len(distribution_annotations) == 0 and len(distribution_constaints) > 0:
+                # NO-MATCH, SKIP
+                continue
+
+            # Case 4 Logic
+            if len(distribution_annotations) > 0 and len(distribution_constaints) > 0:
+                # Check if the subgraph annotations matche the distribution constraints
+                if match_node_constraints(
+                    fig, structural_template, semantic_information, subgraph, GM.mapping
+                ):
+                    # TODO - Extract the specific mapping for the subgraph
+                    print("Found Match: {}".format(mint))
+                    print(subgraph)
+
+                    ret.append((mint, subgraph))
+                else:
+                    # NO-MATCH, SKIP
+                    continue
 
     return ret
