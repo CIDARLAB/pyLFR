@@ -24,5 +24,5 @@ class NodeFilter:
         raise NotImplementedError("Currently do not support node attributes")
         return True
 
-    def get_constriants(self) -> List[Tuple[str, str]]:
+    def get_constraints(self) -> List[Tuple[str, str]]:
         return self._node_constraints

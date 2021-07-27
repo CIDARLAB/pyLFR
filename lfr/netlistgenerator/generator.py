@@ -1035,8 +1035,8 @@ def generate(module: Module, library: MappingLibrary) -> MINTDevice:
         if io_ref.type is IOType.CONTROL:
             continue
         for io in io_ref.vector_ref:
-            cn = ConstructionNode(io.id)
-            sub_graph = module.FIG.subgraph(io.id)
+            cn = ConstructionNode(io.ID)
+            sub_graph = module.FIG.subgraph(io.ID)
             mapping_candidate = library.get_default_IO()
             mapping_option = MappingOption(mapping_candidate, sub_graph)
             cn.add_mapping_option(mapping_option)

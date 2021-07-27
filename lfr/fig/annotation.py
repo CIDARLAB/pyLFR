@@ -36,6 +36,10 @@ class DistributeAnnotation:
     def __hash__(self) -> int:
         return hash(hex(id(self)))
 
+    @property
+    def match_string(self) -> str:
+        raise NotImplementedError("Not implemented to the base disribution graph")
+
 
 class ANDAnnotation(DistributeAnnotation):
     def __init__(self, id: str) -> None:
@@ -43,7 +47,7 @@ class ANDAnnotation(DistributeAnnotation):
 
     @property
     def match_string(self):
-        return "DISTRIBUTE-AND"
+        return "DISTRIBUTE_AND"
 
 
 class ORAnnotation(DistributeAnnotation):
@@ -52,7 +56,7 @@ class ORAnnotation(DistributeAnnotation):
 
     @property
     def match_string(self):
-        return "DISTRIBUTE-OR"
+        return "DISTRIBUTE_OR"
 
 
 class NOTAnnotation(DistributeAnnotation):
@@ -61,4 +65,4 @@ class NOTAnnotation(DistributeAnnotation):
 
     @property
     def match_string(self):
-        return "DISTRIBUTE-NOT"
+        return "DISTRIBUTE_NOT"
