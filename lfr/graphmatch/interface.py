@@ -187,12 +187,12 @@ def get_fig_matches(
     # TODO - Retrun the networkx subgraph views of the of the FIG
     # Step 1 - Generate the match candidates by running the subgraph isomerism for all
     # the items stored in the library
-    for (mint, match_pattern_string) in library.get_match_patterns():
+    for (minty_uid, match_pattern_string) in library.get_match_patterns():
         if match_pattern_string == "" or match_pattern_string is None:
-            print("Warning ! - Missing match string for mint- {}".format(mint))
+            print("Warning ! - Missing match string for mint- {}".format(minty_uid))
             continue
         pattern = MatchPattern(match_pattern_string)
-        patterns[mint] = pattern
+        patterns[minty_uid] = pattern
         structural_template = pattern.get_structural_template()
         semantic_information = pattern.get_semantic_template()
         GM = FIGMappingMatcher(fig, structural_template, semantic_information)
@@ -237,11 +237,11 @@ def get_fig_matches(
             # constraints are zero (LOGIC REDUCTION)
             if len(distribution_constaints) == 0:
                 # No distribution constraints, so we can skip node constraint matching
-                print("Found Match: {}".format(mint))
+                print("Found Match: {}".format(minty_uid))
                 print(subgraph)
 
                 # MATCH
-                ret.append((mint, subgraph))
+                ret.append((minty_uid, subgraph))
                 # SKIP
                 continue
 
@@ -260,10 +260,10 @@ def get_fig_matches(
                     fig, semantic_information, subgraph
                 ):
                     # TODO - Extract the specific mapping for the subgraph
-                    print("Found Match: {}".format(mint))
+                    print("Found Match: {}".format(minty_uid))
                     print(subgraph)
 
-                    ret.append((mint, subgraph))
+                    ret.append((minty_uid, subgraph))
                 else:
                     # NO-MATCH, SKIP
                     continue
