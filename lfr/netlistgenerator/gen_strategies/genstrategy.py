@@ -18,36 +18,34 @@ from pymint.minttarget import MINTTarget
 
 
 class GenStrategy:
-    def __init__(
-        self, construction_graph: ConstructionGraph, fig: FluidInteractionGraph
-    ) -> None:
-        self._construction_graph: ConstructionGraph = construction_graph
+    def __init__(self, fig: FluidInteractionGraph) -> None:
         self._fig: FluidInteractionGraph = fig
         self._fig_netlist_map: Dict[str, str] = {}
 
     def reduce_mapping_options(self) -> None:
         # Dummy strategy
-        for cn in self._construction_graph.construction_nodes:
-            # print(len(cn.mapping_options))
-            # clean this
-            # Remove the extra mappings
-            print(
-                "Reducing mapping options for Construction node: {} from {} to {}"
-                .format(cn.ID, len(cn.mapping_options), 1),
-            )
-            if len(cn.mapping_options) > 1:
-                for option in cn.mapping_options:
-                    print("     -{}".format(option.primitive.mint))
-            del cn.mapping_options[1 : len(cn.mapping_options)]
-            # print("... -> {}".format(len(cn.mapping_options)))
+        # for cn in self._construction_graph.construction_nodes:
+        #     # print(len(cn.mapping_options))
+        #     # clean this
+        #     # Remove the extra mappings
+        #     print(
+        #         "Reducing mapping options for Construction node: {} from {} to {}"
+        #         .format(cn.ID, len(cn.mapping_options), 1),
+        #     )
+        #     if len(cn.mapping_options) > 1:
+        #         for option in cn.mapping_options:
+        #             print("     -{}".format(option.primitive.mint))
+        #     del cn.mapping_options[1 : len(cn.mapping_options)]
+        #     # print("... -> {}".format(len(cn.mapping_options)))
 
-        print("Printing all final mapping options:")
-        for cn in self._construction_graph.construction_nodes:
-            print("Construction node: {}".format(cn.ID))
-            print("Options: ")
+        # print("Printing all final mapping options:")
+        # for cn in self._construction_graph.construction_nodes:
+        #     print("Construction node: {}".format(cn.ID))
+        #     print("Options: ")
 
-            for mapping_option in cn.mapping_options:
-                print(mapping_option.primitive.mint)
+        #     for mapping_option in cn.mapping_options:
+        #         print(mapping_option.primitive.mint)
+        pass
 
     def generate_flow_network(self, fig_subgraph_view) -> MINTDevice:
         # TODO - For now just assume that the networks basically are a bunch
@@ -123,3 +121,9 @@ class GenStrategy:
 
     def size_netlist(self, device: MINTDevice) -> None:
         raise NotImplementedError()
+
+    def prune_variants(self, variants: List[ConstructionGraph]) -> None:
+        for variant in variants:
+            if variant.is_fig_fully_covered() is not True:
+                print("Removing variant (Construction Graph): {}".format(variant.ID))
+                variants.remove(variant)

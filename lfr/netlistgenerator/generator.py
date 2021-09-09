@@ -1,5 +1,5 @@
-from lfr.netlistgenerator.constructiongraph.constructiongraphv2 import (
-    ConstructionGraphV2,
+from lfr.netlistgenerator.constructiongraph.constructiongraph import (
+    ConstructionGraph,
 )
 from lfr.netlistgenerator.constructiongraph.variant_generator import (
     generate_match_variants,
@@ -36,7 +36,7 @@ from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.gen_strategies.dummy import DummyStrategy
-from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 
 # from lfr.netlistgenerator.constructiongraph import ConstructionGraph
 from lfr.fig.interaction import (
@@ -995,15 +995,15 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
     # STEP 2 - Initialize the active strategy
     # TODO - I need to change this DummyStrategy later on
-    # if library.name == "dropx":
-    #     active_strategy = DropXStrategy(construction_graph, module.FIG)
-    # elif library.name == "mars":
-    #     # raise NotImplementedError()
-    #     active_strategy = MarsStrategy(construction_graph, module.FIG)
-    # elif library.name == "hmlp":
-    #     raise NotImplementedError()
-    # else:
-    #     active_strategy = DummyStrategy(construction_graph, module.FIG)
+    if library.name == "dropx":
+        active_strategy = DropXStrategy(module.FIG)
+    elif library.name == "mars":
+        # raise NotImplementedError()
+        active_strategy = MarsStrategy(module.FIG)
+    elif library.name == "hmlp":
+        raise NotImplementedError()
+    else:
+        active_strategy = DummyStrategy(module.FIG)
 
     # STEP 3 - Get all the technology mapping matches for the FIG
     # Do the reggie matching to find the mapping options
@@ -1033,7 +1033,7 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
     # connect_orphan_IO()
 
     # STEP 6 - Generate the mapping variants
-    variants = generate_match_variants(matches, module.FIG, library)
+    variants = generate_match_variants(matches, module.FIG, library, active_strategy)
 
     # Now generate the devices for each of the variants
     generated_devices = []
@@ -1168,7 +1168,7 @@ def eliminate_explicit_match_alternates(
 
 
 def generate_device(
-    construction_graph: ConstructionGraphV2,
+    construction_graph: ConstructionGraph,
     scaffhold_device: MINTDevice,
     name_generator: NameGenerator,
 ) -> None:

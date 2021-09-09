@@ -6,8 +6,8 @@ from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 
 
 class DummyStrategy(GenStrategy):
-    def __init__(self, construction_graph, fig: FluidInteractionGraph) -> None:
-        super().__init__(construction_graph, fig)
+    def __init__(self, fig: FluidInteractionGraph) -> None:
+        super().__init__(fig)
 
     def reduce_mapping_options(self) -> None:
         super().reduce_mapping_options()

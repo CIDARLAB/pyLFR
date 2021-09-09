@@ -44,7 +44,7 @@ def generate_match_variants(
 
         technology_string = match[0]
         node = ConstructionNode(
-            cn_name_generator.get_name(f"cn_{technology_string}"),
+            cn_name_generator.generate_name(f"cn_{technology_string}"),
             library.get_primitive(technology_string),
             generate_match_subgraph(match),
         )

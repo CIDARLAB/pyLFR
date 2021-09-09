@@ -2,15 +2,15 @@
 from lfr.fig.interaction import Interaction, InteractionType
 from lfr.netlistgenerator.dafdadapter import DAFDAdapter
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 import networkx as nx
 from pymint import MINTDevice
 
 
 class DropXStrategy(GenStrategy):
-    def __init__(self, construction_graph, fig: FluidInteractionGraph) -> None:
-        super().__init__(construction_graph, fig)
+    def __init__(self, fig: FluidInteractionGraph) -> None:
+        super().__init__(fig)
 
     def reduce_mapping_options(self) -> None:
         # Generate a topological order for the FIG to make sure athat we know the order of things

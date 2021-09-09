@@ -2,19 +2,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Dict
 
-from networkx.generators.degree_seq import directed_configuration_model
 from pymint.mintlayer import MINTLayerType
 
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.dafdadapter import DAFDAdapter
-from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 
 from typing import Dict, TYPE_CHECKING
 
 from pymint.mintlayer import MINTLayerType
 
 if TYPE_CHECKING:
-    from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+    from lfr.netlistgenerator.constructiongraph.constructiongraph import (
+        ConstructionGraph,
+    )
 
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List
@@ -25,25 +26,22 @@ from pymint.minttarget import MINTTarget
 
 
 class MarsStrategy:
-    def __init__(
-        self, construction_graph: ConstructionGraph, fig: FluidInteractionGraph
-    ) -> None:
-        self._construction_graph: ConstructionGraph = construction_graph
+    def __init__(self, fig: FluidInteractionGraph) -> None:
         self._fig: FluidInteractionGraph = fig
         self._fig_netlist_map: Dict[str, str] = dict()
 
     def reduce_mapping_options(self) -> None:
         # Dummy strategy
-        for fignode_id in self._fig.nodes:
-            fignode = self._fig.get_fignode(fignode_id)
+        # for fignode_id in self._fig.nodes:
+        #     fignode = self._fig.get_fignode(fignode_id)
 
-            if ConstructionNode(fignode_id).is_explictly_mapped:
-                pass
-            else:
-                if isinstance(fignode, Interaction):
-                    cn = self._construction_graph.get_fignode_cn(fignode)
+        #     if ConstructionNode(fignode_id).is_explictly_mapped:
+        #         pass
+        #     else:
+        #         if isinstance(fignode, Interaction):
+        #             cn = self._construction_graph.get_fignode_cn(fignode)
 
-                    del cn.mapping_options[1 : len(cn.mapping_options)]
+        #             del cn.mapping_options[1 : len(cn.mapping_options)]
 
         # for cn in self._construction_graph.construction_nodes:
         #     # print(len(cn.mapping_options))
@@ -67,6 +65,7 @@ class MarsStrategy:
 
         #     for mapping_option in cn.mapping_options:
         #         print(mapping_option.primitive.mint)
+        pass
 
     def generate_flow_network(self, fig_subgraph_view) -> MINTDevice:
         # TODO - For now just assume that the networks basically are a bunch
@@ -146,14 +145,15 @@ class MarsStrategy:
         """
         Sizes the device based on either lookup tables, inverse design algorithms, etc.
         """
-        dafd_adapter = DAFDAdapter(device)
-        # Default size for PORT is 2000 um
-        for component in device.components:
-            constraints = self._construction_graph.get_component_cn(
-                component
-            ).constraints
-            if component.entity == "NOZZLE DROPLET GENERATOR":
-                # dafd_adapter.size_droplet_generator(component, constraints)
-                print("Skipping calling DAFD since its crashing everything right now")
-            elif component.entity == "PORT":
-                component.params.set_param("portRadius", 2000)
+        # dafd_adapter = DAFDAdapter(device)
+        # # Default size for PORT is 2000 um
+        # for component in device.components:
+        #     constraints = self._construction_graph.get_component_cn(
+        #         component
+        #     ).constraints
+        #     if component.entity == "NOZZLE DROPLET GENERATOR":
+        #         # dafd_adapter.size_droplet_generator(component, constraints)
+        #         print("Skipping calling DAFD since its crashing everything right now")
+        #     elif component.entity == "PORT":
+        #         component.params.set_param("portRadius", 2000)
+        pass
