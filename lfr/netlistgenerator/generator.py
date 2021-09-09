@@ -1,6 +1,12 @@
+from lfr.netlistgenerator.constructiongraph.constructiongraphv2 import (
+    ConstructionGraphV2,
+)
+from lfr.netlistgenerator.constructiongraph.variant_generator import (
+    generate_match_variants,
+)
 import sys
 from copy import deepcopy
-from typing import List, Set
+from typing import Dict, FrozenSet, List, Set, Tuple
 import networkx as nx
 
 from pymint.mintdevice import MINTDevice
@@ -10,7 +16,14 @@ from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
 from lfr.netlistgenerator.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.netlistgenerator.gen_strategies.marsstrategy import MarsStrategy
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
+from lfr.postprocessor.mapping import (
+    FluidicOperatorMapping,
+    NetworkMapping,
+    NodeMappingInstance,
+    NodeMappingTemplate,
+    PumpMapping,
+    StorageMapping,
+)
 from pymint.mintlayer import MINTLayerType
 from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
 from lfr.netlistgenerator.connectingoption import ConnectingOption
@@ -24,7 +37,8 @@ from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.gen_strategies.dummy import DummyStrategy
 from lfr.netlistgenerator.constructionnode import ConstructionNode
-from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+
+# from lfr.netlistgenerator.constructiongraph import ConstructionGraph
 from lfr.fig.interaction import (
     FluidIntegerInteraction,
     FluidNumberInteraction,
@@ -32,7 +46,7 @@ from lfr.fig.interaction import (
 )
 from lfr.netlistgenerator.mappingoption import MappingOption
 from lfr.compiler.module import Module
-
+import itertools
 
 # def generate_MARS_library() -> MappingLibrary:
 #     # TODO - Programatically create each of the items necessary for the MARS
@@ -961,527 +975,214 @@ def generate_dropx_library() -> MappingLibrary:
     return library
 
 
-def generate(module: Module, library: MappingLibrary) -> MINTDevice:
+def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
-    construction_graph = ConstructionGraph()
+    # In order to create the device, we do the following
+    # STEP 1 -
+    # STEP 2 - Initialize the active strategy
+    # STEP 3 - Get all the technology mapping matches for the FIG
+    # STEP 4 - Eliminate the matches that are exactly the same as the explicit matches
+    # STEP 5 - Generate the waste outputs
+    # STEP 6 - Generate the mapping variants
+    # STEP 7 - Generate the control logic network
+    # STEP 8 - Generate the connections
+    # STEP 9 - Size the components
+    # STEP 10 - Size the connections
 
-    name_generator = NameGenerator()
+    # construction_graph = ConstructionGraph()
 
-    cur_device = MINTDevice(module.name)
+    # Step 1 -
 
-    # Add a MINT Layer so that the device has something to work with
-    cur_device.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
-
+    # STEP 2 - Initialize the active strategy
     # TODO - I need to change this DummyStrategy later on
-    if library.name == "dropx":
-        active_strategy = DropXStrategy(construction_graph, module.FIG)
-    elif library.name == "mars":
-        # raise NotImplementedError()
-        active_strategy = MarsStrategy(construction_graph, module.FIG)
-    elif library.name == "hmlp":
-        raise NotImplementedError()
-    else:
-        active_strategy = DummyStrategy(construction_graph, module.FIG)
+    # if library.name == "dropx":
+    #     active_strategy = DropXStrategy(construction_graph, module.FIG)
+    # elif library.name == "mars":
+    #     # raise NotImplementedError()
+    #     active_strategy = MarsStrategy(construction_graph, module.FIG)
+    # elif library.name == "hmlp":
+    #     raise NotImplementedError()
+    # else:
+    #     active_strategy = DummyStrategy(construction_graph, module.FIG)
 
-    # First go through all the interactions in the design
-
-    # IF interaction is mix/sieve/divide/dilute/meter look at the library
-    # to get all the options available and set them up as options for the
-    # construction graph to pick and choose from the options.
-    #
-    # FUTURE WORK
-    #
+    # STEP 3 - Get all the technology mapping matches for the FIG
     # Do the reggie matching to find the mapping options
     # This means that we might need to have a forest of construction of graphs
     # as there would be alternatives for each type of mapping
     matches = get_fig_matches(module.FIG, library)
+    print("Total Matches against library : {}".format(len(matches)))
+    for match in matches:
+        # Generate an object that is usable going forward (mapping template perhaps)
+        print(match)
+
+    # STEP 4 - Eliminate the matches that are exactly the same as the explicit matches
+    # Get the explicit mapping and find the explicit mappings here
+    explicit_mappings = module.get_explicit_mappings()
+    matches = eliminate_explicit_match_alternates(matches, explicit_mappings)
+
+    print(
+        "Total matches against library after explicit mapping eliminations: {}".format(
+            len(matches)
+        )
+    )
     for match in matches:
         print(match)
 
-    # Map the interactions in the fig to individual library options
-    for interaction in module.FIG.get_interactions():
-        operator_candidates = library.get_operators(interaction_type=interaction.type)
-        cn = ConstructionNode(interaction.ID)
-        # if isinstance(interaction, ValueNode):
-        #     continue
+    # STEP 5 - Generate the waste outputs
+    # TODO - Add fignodes to all the orphaned flow nodes for this to function
+    # connect_orphan_IO()
 
-        for operator_candidate in operator_candidates:
-            # TODO: This will change in the future when we can match subgraphs correctly
-            if isinstance(
-                interaction, (FluidNumberInteraction, FluidIntegerInteraction)
-            ):
-                # Basically add the value node id into the subgraph view also
-                node_ids = [
-                    module.FIG.get_fignode(edge[0]).ID
-                    for edge in module.FIG.in_edges(interaction.ID)
-                    if isinstance(module.FIG.get_fignode(edge[0]), ValueNode)
-                ]
-                node_ids.append(interaction.ID)
-                sub_graph = module.FIG.subgraph(node_ids)
-            else:
-                sub_graph = module.FIG.subgraph(interaction.ID)
-            mapping_option = MappingOption(operator_candidate, sub_graph)
-            cn.add_mapping_option(mapping_option)
+    # STEP 6 - Generate the mapping variants
+    variants = generate_match_variants(matches, module.FIG, library)
 
-        construction_graph.add_construction_node(cn)
+    # Now generate the devices for each of the variants
+    generated_devices = []
+    for variant in variants:
+        # Create the device for each of the variants
+        name_generator = NameGenerator()
 
-    # Generate all ports necessary for the Explicitly declared IO
-    # -------
-    # Generate the flow layer IO. These are typically declared explicitly
-    # TODO - Figure out how we should generate the construction nodes for control
-    # networks
+        cur_device = MINTDevice(module.name)
 
-    for io_ref in module.io:
-        if io_ref.type is IOType.CONTROL:
+        # Add a MINT Layer so that the device has something to work with
+        cur_device.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
+
+        generate_device(variant, cur_device, name_generator)
+        # STEP 7 - Generate the control logic network
+        # TODO - Whatever this entails (put in the implementation)
+
+        # STEP 8 - Generate the connections
+        # TODO - Generate connections between all the outputs and the inputs of the
+        # construction nodes
+        # TODO - write the algorithm for carriers and optimize the flows
+        # Generate all the unaccounted carriers and waste output lines necessary
+
+        # STEP 9 - Size the components
+        # Size the component netlist
+        # active_strategy.size_netlist(cur_device)
+
+        generated_devices.append(cur_device)
+
+    return generated_devices
+
+
+def eliminate_explicit_match_alternates(
+    matches: List[Tuple[str, Dict[str, str]]],
+    explict_mappings: List[NodeMappingTemplate],
+) -> List[Tuple[str, Dict[str, str]]]:
+
+    # extract the fignode ID set from matches
+    match_node_set_dict: Dict[FrozenSet, List[Tuple[str, Dict[str, str]]]] = {}
+    for match in matches:
+        frozen_set = frozenset(match[1].keys())
+        if frozen_set not in match_node_set_dict:
+            match_node_set_dict[frozen_set] = []
+            match_node_set_dict[frozen_set].append(match)
+        else:
+            match_node_set_dict[frozen_set].append(match)
+
+    # Go through each of the explict matches, generate a subgraph and compare against
+    # all the matches
+    for explicit_mapping in explict_mappings:
+        # Only do the explicit mapping if the the mapping object has a technology
+        # associated with it else skip it
+        if explicit_mapping.technology_string is None:
             continue
-        for io in io_ref.vector_ref:
-            cn = ConstructionNode(io.ID)
-            sub_graph = module.FIG.subgraph(io.ID)
-            mapping_candidate = library.get_default_IO()
-            mapping_option = MappingOption(mapping_candidate, sub_graph)
-            cn.add_mapping_option(mapping_option)
 
-            construction_graph.add_construction_node(cn)
+        # Generate a subgraph for each of the mapping instance fig
+        for instance in explicit_mapping.instances:
 
-    # Map the storage and pump elements to their own individual construction graph nodes
-    for fig_node_id in list(module.FIG.nodes):
-        fig_node = module.FIG.get_fignode(fig_node_id)
-        if isinstance(fig_node, Pump):
-            cn = ConstructionNode(fig_node.ID)
-            sub_graph = module.FIG.subgraph(fig_node_id)
-            mapping_candidates = library.get_pump_entries()
-            for mapping_candidate in mapping_candidates:
-                mapping_option = MappingOption(mapping_candidate, sub_graph)
-                cn.add_mapping_option(mapping_option)
+            node_set = set()
 
-        elif isinstance(fig_node, Storage):
-            cn = ConstructionNode(fig_node.ID)
-            sub_graph = module.FIG.subgraph(fig_node_id)
-            mapping_candidates = library.get_storage_entries()
-            for mapping_candidate in mapping_candidates:
-                mapping_option = MappingOption(mapping_candidate, sub_graph)
-                cn.add_mapping_option(mapping_option)
+            # Check what kind of an instance this is
+            if isinstance(instance, NodeMappingInstance):
+                # This is a single node scenario
+                node_set.add(instance.node.ID)
+            elif isinstance(instance, FluidicOperatorMapping):
+                node_set.add(instance.node.ID)
 
-    # TODO - Validate if this is a legit way to do things
-    mappings = module.get_explicit_mappings()
-    override_network_mappings(mappings, library, module.FIG, construction_graph)
+            elif isinstance(instance, StorageMapping):
+                node_set.add(instance.node.ID)
 
-    # TODO - Go through the different flow-flow edge networks to generate construction
-    # nodes specific to these networks, Conditions:
-    # if its a 1-1 flow-flow connection, then create a construction node for the two
-    # flow nodes
-    # if its a 1-n / n-1 / n-n construction nodes, then create a construction node
-    # capturing the whole network
+            elif isinstance(instance, PumpMapping):
+                node_set.add(instance.node.ID)
 
-    # TODO - Deal with coverage issues here since we need to figure out what are the
-    # flow networks, that we want to match first and then ensure that they're no
-    # included on any list
-    cn_nodes = get_flow_flow_candidates(module, active_strategy)
-    for cn in cn_nodes:
-        construction_graph.add_construction_node(cn)
+            elif isinstance(instance, NetworkMapping):
+                node_set = set()
+                node_set.union(set([node.ID for node in instance.input_nodes]))
+                node_set.union(set([node.ID for node in instance.output_nodes]))
 
-    # Apply all the explicit mappings in the module to the nodes, overwriting
-    # the options from the library to match against
-    # TODO - Modify Explicit Mapping Data structure
-
-    # Find all the explicit mappings and override them in the construction graph
-    override_mappings(mappings, library, module.FIG, construction_graph)
-
-    # Whittle Down the mapping options here to only include the requried single
-    # candidates
-    # TODO - Check what library is being used and use the required library here
-    active_strategy.reduce_mapping_options()
-
-    # TODO - Consider what needs to get done for a combinatorial design space
-    # ----------------
-    # Generate edges in the construction graph, these edges will guide the generation/
-    # reduction of path and pipelineing that needs to get done for mars devices
-    construction_graph.generate_edges(module.FIG)
-
-    # TODO - Extract all pass through networks
-    eliminate_passthrough_nodes(construction_graph)
-
-    # Now since all the mapping options are finalized Extract the netlist necessary
-    construction_graph.construct_components(name_generator, cur_device)
-
-    # TODO - Rewrite this whole thing !!!
-    construction_graph.construct_connections(name_generator, cur_device)
-
-    # Finally join all the netlist pieces attached to the construction nodes
-    # and the input/output/load/carrier flows
-    # TODO - MINIMIZE - carrier / load flows - this might require us to generate
-    # multiple netlist options and pick the best
-    construction_graph.generate_flow_cn_edges(module)
-
-    construction_graph.generate_control_cn_edges(module)
-
-    # Generate all the unaccounted carriers and waste output lines necessary
-    # for this to function
-    connect_orphan_IO()
-
-    # Size the component netlist
-    active_strategy.size_netlist(cur_device)
-
-    return cur_device
-
-
-def override_mappings(
-    mappings: List[NodeMappingTemplate],
-    mapping_library: MappingLibrary,
-    fig: FluidInteractionGraph,
-    construction_graph: ConstructionGraph,
-) -> None:
-    # Go through the entire set of mappings in the FIG and generate / append the
-    # mapping options
-    # Step 1 - Loop through each of the mappingtemplates
-    # Step 2 - Loop through each of the instances in teh mappingtemplate
-    # Step 3 - Find the cn associated with each of the fig nodes and override
-    # the explicit mapping if mappingtemplate has an associated technology string
-    for mapping in mappings:
-        for instance in mapping.instances:
-
-            primitive_to_use = None
-            if mapping.technology_string is not None:
-                # Create a mapping option from the library with the corresponding info
-                primitive_to_use = mapping_library.get_primitive(
-                    mapping.technology_string
-                )
-
-            node_ids = []
-            cn = None  # Get the right construction node for doing the stuff
-            cn_mapping_options = []
-
-            if isinstance(instance, NetworkMapping):
+            if frozenset(node_set) in match_node_set_dict:
+                # This is an explicit match
+                # Remove the explicit match from the list of matches
                 print(
-                    "Skipping Network Mapping: \n Input - {} \n Output - {}".format(
-                        ",".join([n.ID for n in instance.input_nodes]),
-                        ",".join([n.ID for n in instance.output_nodes]),
+                    "Eliminating match: {}".format(
+                        match_node_set_dict[frozenset(node_set)]
                     )
                 )
-                continue
+                match_node_set_dict[frozenset(node_set)].clear()
+
+            # Now generate a match tuple for this instance
+            match_tuple = (
+                explicit_mapping.technology_string,
+                {},
+            )
+
+            # TODO - Retouch this part if we ever go into modifying how the matches are
+            # generated if we use the match string coordinates (use the match interface
+            # for this) (function - generate_single_match)
+
+            # Check what kind of an instance this is
+            if isinstance(instance, NodeMappingInstance):
+                # This is a single node scenario
+                match_tuple[1][instance.node.ID] = "v1"
+            elif isinstance(instance, FluidicOperatorMapping):
+                match_tuple[1][instance.node.ID] = "v1"
+
+            elif isinstance(instance, StorageMapping):
+                match_tuple[1][instance.node.ID] = "v1"
+
+            elif isinstance(instance, PumpMapping):
+                match_tuple[1][instance.node.ID] = "v1"
+
+            elif isinstance(instance, NetworkMapping):
+                for i in range(len(instance.input_nodes)):
+                    node = instance.input_nodes[i]
+                    match_tuple[1][node.ID] = f"vi{i}"
+                for i in range(len(instance.output_nodes)):
+                    node = instance.output_nodes[i]
+                    match_tuple[1][node.ID] = f"vo{i}"
+
+            # Add this match tuple to the list of matches
+            if frozenset(node_set) in match_node_set_dict:
+                match_node_set_dict[frozenset(node_set)].append(match_tuple)
             else:
-                print("Applying Network Mapping: \n Nodes - {}".format(instance.node))
+                match_node_set_dict[frozenset(node_set)] = [match_tuple]
 
-                # Find the construction node assicated with the
-                # FIG node and then do the followinging:
-                # Step 1 - If the mappingtemplate has no technology string assiciated
-                # with the mapping, just apply the constraints to the associated mapping
-                # options
+    # Modify the matches list
+    eliminated_matches = []
+    for match_tuple_list in match_node_set_dict.values():
+        for match_tuple in match_tuple_list:
+            eliminated_matches.append(match_tuple)
 
-                # Step 2 - In there is a string assiciated with the mappingtemplate, we
-                # eliminate all mapping options that dont have a matching string /
-                # generate a mapping option with the corresponding
-
-                # In the case of an Fluid Value interaction put all valuenodes in the
-                # subgraph
-                node_ids.extend(
-                    [
-                        fig.get_fignode(edge[0]).ID
-                        for edge in fig.in_edges(instance.node.ID)
-                        if isinstance(fig.get_fignode(edge[0]), ValueNode)
-                    ]
-                )
-                node_ids.append(instance.node.ID)
-                subgraph = fig.subgraph(node_ids)
-
-                # Get the Construction node that has the corresponding subgraph,
-                # and then replace the mapping option
-                cn = construction_graph.get_subgraph_cn(subgraph)
-                if primitive_to_use is not None:
-                    mapping_option = MappingOption(primitive_to_use, subgraph)
-                    cn.use_explicit_mapping(mapping_option)
-                    cn_mapping_options.append(mapping_option)
-                else:
-                    # Add the constraints to all the mapping options
-                    # This is an example where since no explicit mapping
-                    # was specified, we only add the performance/material
-                    # constraints. This can be ulitized for whittling down
-                    # options later if necessary.
-                    cn_mapping_options.extend(cn.mapping_options)
-
-            # Now that we know what the mapping options are (either explicit
-            # loaded from the library, we can add the performance constraints)
-            for mapping_option in cn_mapping_options:
-                # Add all the constraints to the mapping_option
-                cn.constraints.extend(mapping.constraints)
+    return eliminated_matches
 
 
-def override_network_mappings(
-    mappings: List[NodeMappingTemplate],
-    mapping_library: MappingLibrary,
-    fig: FluidInteractionGraph,
-    construction_graph: ConstructionGraph,
+def generate_device(
+    construction_graph: ConstructionGraphV2,
+    scaffhold_device: MINTDevice,
+    name_generator: NameGenerator,
 ) -> None:
-    # Go through the entire set of mappings in the FIG and generate / append the
-    # mapping options
-    # Step 1 - Loop through each of the mappingtemplates
-    # Step 2 - Loop through each of the instances in teh mappingtemplate
-    # Step 3 - Find the cn associated with each of the fig nodes and override the
-    #  explicit mapping if mappingtemplate has an associated technology string
-    assign_node_index = 0
-    for mapping in mappings:
-        for instance in mapping.instances:
-
-            primitive_to_use = None
-            if mapping.technology_string is not None:
-                # Create a mapping option from the library with the corresponding info
-                try:
-                    primitive_to_use = mapping_library.get_primitive(
-                        mapping.technology_string
-                    )
-                except Exception:
-                    print(
-                        "Could not find primitive with technology: {}".format(
-                            mapping.technology_string
-                        )
-                    )
-                    sys.exit(-100)
-
-            node_ids = []
-            cn = None  # Get the right construction node for doing the stuff
-            cn_mapping_options = []
-
-            if isinstance(instance, NetworkMapping):
-                print(
-                    "Applying Network Mapping: \n Input - {} \n Output - {}".format(
-                        ",".join([n.ID for n in instance.input_nodes]),
-                        ",".join([n.ID for n in instance.output_nodes]),
-                    )
-                )
-
-                node_ids.extend(n.ID for n in instance.input_nodes)
-                node_ids.extend(n.ID for n in instance.output_nodes)
-                subgraph = fig.subgraph(node_ids)
-                # try:
-                #     # TODO - Incase this is a flow-flow candidate, we need to get the
-                #     # cn corresponding to this mapping.
-                #     # TODO - do we need to have a new flow node constructed
-
-                #     cn = construction_graph.get_subgraph_cn(subgraph)
-                # except Exception as e:
-                #     # Incase we cannot find a corresponding construction node,
-                #     # we need to create a new construction node
-                #     print(e)
-                #     cn = ConstructionNode("assign_{}".format(assign_node_index))
-                #     # Increment the index of the assign construction node
-                #     assign_node_index += 1
-
-                #     # Find the cn's associated with the input nodes
-                #     input_cns = []
-                #     output_cns = []
-                #     for fig_node in instance.input_nodes:
-                #         cn_temp = construction_graph.get_fignode_cn(fig_node)
-                #         if cn_temp not in input_cns:
-                #             input_cns.append(cn_temp)
-                #     for fig_node in instance.output_nodes:
-                #         cn_temp = construction_graph.get_fignode_cn(fig_node)
-                #         if cn_temp not in output_cns:
-                #             output_cns.append(cn_temp)
-
-                #     # split_groups = []
-                #     # # TODO - If we need to split the we first are gonna make a copy
-                #     # # of the subgraph and then delete any edges between the inputs
-                #     # # and the outputs
-                #     # subgraph_copy = deepcopy(subgraph)
-                #     # # Delete any edges between inputs and outputs
-                #     # for input_node in instance.input_nodes:
-                #     #     for output_node in instance.output_nodes:
-                #     #         if subgraph_copy.has_edge(input_node.id, output_node.id):
-                #     #             subgraph_copy.remove_edge(input_node.id, output_node.id)
-
-                #     # components = subgraph_copy.connected_components()
-                #     # for component in components:
-                #     #     split_groups.append(list(component.nodes))
-
-                #     # TODO - If inputcns and output cns are the same, we split them
-                #     for input_cn in input_cns:
-                #         if input_cn in output_cns:
-                #             split_groups = generate_split_groups(
-                #                 input_cn.mapping_options[0].fig_subgraph, instance
-                #             )
-                #             construction_graph.split_cn(input_cn, split_groups, fig)
-                #     # Now insert the node
-                #     construction_graph.insert_cn(cn, input_cns, output_cns)
-
-                # # Check to see if this works or not
-                # cn = construction_graph.get_subgraph_cn(subgraph)
-
-                # Find the cn's associated with the input nodes
-                input_cns = []
-                output_cns = []
-                for fig_node in instance.input_nodes:
-                    cn_temp = construction_graph.get_fignode_cn(fig_node)
-                    if cn_temp not in input_cns:
-                        input_cns.append(cn_temp)
-                for fig_node in instance.output_nodes:
-                    cn_temp = construction_graph.get_fignode_cn(fig_node)
-                    if cn_temp not in output_cns:
-                        output_cns.append(cn_temp)
-
-                cn = ConstructionNode("assign_{}".format(assign_node_index))
-                assign_node_index += 1
-                if isinstance(primitive_to_use, NetworkPrimitive) is not True:
-                    raise TypeError()
-                if primitive_to_use is None:
-                    raise ValueError()
-                mapping_option = NetworkMappingOption(
-                    network_primitive=primitive_to_use,
-                    mapping_type=NetworkMappingOptionType.COMPONENT_REPLACEMENT,
-                    subgraph_view=subgraph,
-                )
-                cn.use_explicit_mapping(mapping_option)
-                construction_graph.insert_cn(cn, input_cns, output_cns, fig)
-            else:
-                continue
-            # Now that we know what the mapping options are (either explicit
-            # loaded from the library, we can add the performance constraints)
-            for mapping_option in cn_mapping_options:
-                # Add all the constraints to the mapping_option
-                cn.constraints.extend(mapping.constraints)
-
-
-def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
-    for node_id in list(construction_graph.nodes):
-        cn = construction_graph.get_cn(node_id)
-        assert len(cn.mapping_options) == 1
-        mapping_option = cn.mapping_options[0]
-        if isinstance(mapping_option, NetworkMappingOption):
-            if mapping_option.mapping_type is NetworkMappingOptionType.PASS_THROUGH:
-
-                print("Eliminating PASS THROUGH construction node = {}".format(cn.ID))
-
-                # First get all the in and out edges
-                in_edges = list(construction_graph.in_edges(node_id))
-                out_edges = list(construction_graph.out_edges(node_id))
-
-                # In Points
-                in_points = [in_edge[0] for in_edge in in_edges]
-                out_points = [out_edge[1] for out_edge in out_edges]
-
-                # Create edges for the different cases
-                # Case 1 - 1->1
-                if len(in_points) == 1 and len(out_points) == 1:
-                    # Delete the node
-                    construction_graph.delete_node(node_id)
-                    construction_graph.add_edge(in_points[0], out_points[0])
-                # Case 2 - n->1
-                # Case 3 - 1->n
-                elif (len(in_points) > 1 and len(out_points) == 1) or (
-                    len(in_points) == 1 and len(out_points) > 1
-                ):
-                    # Delete the node
-                    construction_graph.delete_node(node_id)
-                    for in_point in in_points:
-                        for out_point in out_points:
-                            construction_graph.add_edge(in_point, out_point)
-                else:
-                    raise Exception(
-                        "Pass through network node elimination not implemented         "
-                        "                when n->n edge creation is necessary"
-                    )
-
-
-def generate_split_groups(subgraph, instance) -> List[Set[str]]:
-    split_groups = []
-    # TODO - If we need to split the we first are gonna make a copy
-    # of the subgraph and then delete any edges between the inputs
-    # and the outputs
-    subgraph_copy = deepcopy(subgraph)
-    # Delete delete all the input and output nodes here
-    for input_node in instance.input_nodes:
-        subgraph_copy.remove_node(input_node.id)
-
-    for output_node in instance.output_nodes:
-        subgraph_copy.remove_node(output_node.id)
-
-    components = nx.connected_components(nx.to_undirected(subgraph_copy))
-    for component in components:
-        split_groups.append(component)
-
-    return split_groups
+    # TODO - Generate the device
+    # Step 1 - go though each of the construction nodes and genrate the corresponding
+    # components
+    # Step 2 - generate the connections between the outputs to input on the connected
+    # construction nodes
+    # Step 3 - TODO - Generate the control network
+    pass
 
 
 def connect_orphan_IO():
     print("Implement the orphan io generation system")
-
-
-def get_flow_flow_candidates(
-    module: Module, gen_strategy: GenStrategy
-) -> List[ConstructionNode]:
-    """Get canddiates where it its a "flow" only sub graph
-
-    Args:
-        module (Module): the module we want to check
-        gen_strategy (GenStrategy): the generation strategy we want to use
-
-    Returns:
-        List[ConstructionNode]: List of all the construction nodes
-    """
-    # TODO - go through all the edges and see which ones are between flow-flow graphs
-    # If these connectsions are between flow-flow nodes then we need to figure out
-    # which ones are part of the same network/connected graphs with only flow nodes
-    # The networks with only the flow nodes will need to be covered as a part of.
-    # these construction nodes.
-
-    ret = []
-
-    # Step 1. Do a shallow copy of the graph
-    # Step 2. Remove all the fignodes that are not Flow
-    # Step 3. Now get the all the disconnected pieces of the graph
-    # Step 4. Create a Construction node for each of the disconnected pieces
-    # Return all the constructions nodes
-
-    # Step 1. Do a shallow copy of the graph
-    fig_original = module.FIG
-    fig_copy = module.FIG.copy(
-        as_view=False
-    )  # Note this does not copy anything besides the nx.DiGraph at the moment
-
-    # Step 2. Remove all the fignodes that are not Flow
-    remove_list = []
-
-    # Remove nodes from the explicit mapping construction nodes
-    for mapping in module.mappings:
-        for instance in mapping.instances:
-            if isinstance(instance, NetworkMapping):
-                remove_list.extend([n.ID for n in instance.input_nodes])
-                remove_list.extend([n.ID for n in instance.output_nodes])
-            else:
-                remove_list.append(instance.node.ID)
-
-    for node_id in fig_copy.nodes:
-        node = fig_original.get_fignode(node_id)
-        if node.match_string != "FLOW":
-            remove_list.append(node_id)
-
-    remove_list = list(set(remove_list))
-    for node_id in remove_list:
-        fig_copy.remove_node(node_id)
-
-    # Step 3. Now get the all the disconnected pieces of the graph
-    i = 0
-    for component in nx.connected_components(fig_copy.to_undirected()):
-        print("Flow candidate")
-        print(component)
-        sub = fig_original.subgraph(component)
-        # TODO - Decide what the mapping type should be. for now assume that we just a
-        # single passthrough type scenario where we don't have to do much work
-        is_passthrough = __check_if_passthrough(sub)
-        if is_passthrough:
-            mapping_type = NetworkMappingOptionType.PASS_THROUGH
-        else:
-            mapping_type = NetworkMappingOptionType.CHANNEL_NETWORK
-        nprimitive = NetworkPrimitive(sub, gen_strategy)
-        nprimitive.generate_netlist()
-        mapping_option = NetworkMappingOption(nprimitive, mapping_type, sub)
-        # Step 4. Create a Construction node for each of the disconnected pieces
-        cn = ConstructionNode("flow_network_{}".format(i))
-        cn.add_mapping_option(mapping_option)
-
-        i += 1
-        ret.append(cn)
-
-    return ret
 
 
 def __check_if_passthrough(sub) -> bool:

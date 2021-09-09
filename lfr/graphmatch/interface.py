@@ -1,6 +1,6 @@
 from lfr.fig.annotation import DistributeAnnotation
 from lfr.graphmatch.figmappingmatcher import FIGMappingMatcher
-from typing import Any, Dict, FrozenSet, List, Tuple
+from typing import Any, Dict, FrozenSet, List, Optional, Tuple
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.graphmatch.matchpattern import MatchPattern
@@ -177,7 +177,7 @@ def bijective_match_node_constraints(
 
 def get_fig_matches(
     fig: FluidInteractionGraph, library: MappingLibrary
-) -> List[Tuple[str, Any]]:
+) -> List[Tuple[str, Dict[str, str]]]:
     patterns: Dict[
         str, MatchPattern
     ] = dict()  # Store the mint and the match pattern object here
@@ -269,3 +269,15 @@ def get_fig_matches(
                     continue
 
     return ret
+
+
+def generate_single_match(
+    fig_subgraph, library_entry
+) -> Optional[Tuple[str, Dict[str, str]]]:
+
+    # TODO - using fig subgraph view test to see if the subgraph is a structural match
+    # to technology entry from the mapping library, pass back the match tuple if it is
+    # if it isn't then figure out how to do this separately. Also don't enable node
+    # filters for this step. Enabling them will cause the match to fail.
+
+    return ("test", {"test": "test"})

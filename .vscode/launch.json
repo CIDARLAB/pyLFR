@@ -75,7 +75,7 @@
                 "--outpath",
                 "./out/",
                 "--technology",
-                "mlsi",
+                "dropx",
                 "${file}"
             ],
             "console": "integratedTerminal"

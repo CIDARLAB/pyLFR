@@ -84,17 +84,33 @@ class Primitive:
         return self._match_string
 
     def export_inputs(self, subgraph) -> List[ConnectingOption]:
+        # TODO - Figure out how to map connecting options to match string nodes
+        print(
+            "Warning: Implment how the connecting option is mapped to match string node"
+        )
         return [copy.copy(c) for c in self._inputs]
 
     def export_outputs(self, subgraph) -> List[ConnectingOption]:
+        # TODO - Figure out how to map connecting options to match string nodes
+        print(
+            "Warning: Implment how the connecting option is mapped to match string node"
+        )
         return [copy.copy(c) for c in self._outputs]
 
     def export_loadings(self, subgraph) -> Optional[List[ConnectingOption]]:
+        # TODO - Figure out how to map connecting options to match string nodes
+        print(
+            "Warning: Implment how the connecting option is mapped to match string node"
+        )
         if self._loadings is None:
             return None
         return [copy.copy(c) for c in self._loadings]
 
     def export_carriers(self, subgraph) -> Optional[List[ConnectingOption]]:
+        # TODO - Figure out how to map connecting options to match string nodes
+        print(
+            "Warning: Implment how the connecting option is mapped to match string node"
+        )
         if self._carriers is None:
             return None
         return [copy.copy(c) for c in self._carriers]

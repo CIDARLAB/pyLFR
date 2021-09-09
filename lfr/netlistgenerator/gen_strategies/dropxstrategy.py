@@ -1,7 +1,7 @@
+# from lfr.netlistgenerator.constructiongraph import ConstructionGraph
 from lfr.fig.interaction import Interaction, InteractionType
 from lfr.netlistgenerator.dafdadapter import DAFDAdapter
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.constructionnode import ConstructionNode
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 import networkx as nx
@@ -9,9 +9,7 @@ from pymint import MINTDevice
 
 
 class DropXStrategy(GenStrategy):
-    def __init__(
-        self, construction_graph: ConstructionGraph, fig: FluidInteractionGraph
-    ) -> None:
+    def __init__(self, construction_graph, fig: FluidInteractionGraph) -> None:
         super().__init__(construction_graph, fig)
 
     def reduce_mapping_options(self) -> None:

@@ -1,13 +1,12 @@
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.mappingoption import MappingOption
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
-from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+
+# from lfr.netlistgenerator.constructiongraph import ConstructionGraph
 
 
 class DummyStrategy(GenStrategy):
-    def __init__(
-        self, construction_graph: ConstructionGraph, fig: FluidInteractionGraph
-    ) -> None:
+    def __init__(self, construction_graph, fig: FluidInteractionGraph) -> None:
         super().__init__(construction_graph, fig)
 
     def reduce_mapping_options(self) -> None:

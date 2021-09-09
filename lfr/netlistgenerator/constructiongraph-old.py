@@ -20,7 +20,7 @@ from lfr.netlistgenerator.networkmappingoption import (
 )
 
 
-class ConstructionGraph(nx.DiGraph):
+class OLDConstructionGraph(nx.DiGraph):
     """Construction Graph is the proxy datastructure that we use for representing the
     loose connections between the fluid interaction graph and the real hardware
     design primitives that would be pieced together.
