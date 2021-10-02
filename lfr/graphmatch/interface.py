@@ -12,7 +12,7 @@ def bijective_match_node_constraints(
     semantic_information: Dict[str, NodeFilter],
     subgraph: Dict[str, str],
 ) -> bool:
-    # TODO - Check if the constraints match for the subgraph
+    # Check if the constraints match for the subgraph
     # STEP 1 - generate new unique names for each node to simplify the matching
     # algorihtm
 
