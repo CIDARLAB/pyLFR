@@ -2,7 +2,7 @@ from lfr.netlistgenerator.primitive import Primitive
 from lfr.postprocessor.constraints import Constraint
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappingoption import MappingOption
-from typing import List, Optional
+from typing import List, Optional, Set
 from networkx import nx
 
 
@@ -89,6 +89,15 @@ class ConstructionNode:
         """
         return self._id
 
+    @property
+    def fig_cover(self) -> Set[str]:
+        """Returns the cover of the figure subgraph
+
+        Returns:
+            Set[str]: Cover of the figure subgraph
+        """
+        return set(self.fig_subgraph.nodes)
+
     def use_explicit_mapping(self, mapping: MappingOption) -> None:
         """Uses the explicit mapping option passed as the parameter
 
@@ -142,6 +151,28 @@ class ConstructionNode:
         raise NotImplementedError(
             "Implement this when we are trying to make combinatorial operations work"
         )
+
+    def has_border_overlap(self, other_node: "ConstructionNode") -> bool:
+        """Checks if the border of the current node overlaps with the border"""
+
+        # Step 1 - Get the intersection of the two covers, If the intersection is empty
+        # then we do not have a border overlap
+        # Step 2 - If any of thos are in the border of the subgraph (i.e. the incoming
+        # or outgoing edges are 0)
+        # then we have a border overlap
+
+        intersection_cover = self.fig_cover.intersection(other_node.fig_cover)
+        if len(intersection_cover) == 0:
+            return False
+        else:
+            # Check if any of the intersection cover is in the border of the subgraph
+            for node in intersection_cover:
+                if (
+                    self.fig_subgraph.in_degree(node) == 0
+                    or self.fig_subgraph.out_degree(node) == 0
+                ):
+                    return True
+            return False
 
     def __str__(self) -> str:
         return "Construction Node: {}".format(self.ID)

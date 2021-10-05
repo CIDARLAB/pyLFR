@@ -37,11 +37,15 @@ def generate_match_variants(
 
     # TODO - take all the matches and start creating construction graphs and variants
     # Loop trhough each of the matches
+    variant_index = 0
+
+    # Create the first variant here
+    seed_variant = ConstructionGraph(f"variant_{variant_index}", fig)
+    variants.append(seed_variant)
+    next_level_variants = []
     for match in matches:
         print(match)
         # For each match, create a construction node
-        variant = ConstructionGraph(fig)
-
         technology_string = match[0]
         node = ConstructionNode(
             cn_name_generator.generate_name(f"cn_{technology_string}"),
@@ -49,20 +53,31 @@ def generate_match_variants(
             generate_match_subgraph(match),
         )
 
-        # Check if the construction node satisfies the variant criteria
-        is_variant, variant_type = variant.check_variant_criteria(node)
-        # IF YES:
-        if is_variant:
-            # Create a new variant of the construction graph
-            next_variant = variant.generate_variant(node)
-            # Add the new variant to the list of variants
-            variants.append(next_variant)
-            # Add node to each of the variant graphs(or just the substitution variant)
-            variant.add_construction_node(node, variant_type)
-        # ELSE:
-        else:
-            # Add the node to the construction graph / leaves of the variant tree
-            variant.add_construction_node(node, variant_type)
+        # Check if the construction node satisfies the variant criteria for each of the variants
+        for variant in variants:
+            is_variant, variant_type = variant.check_variant_criteria(node)
+            # IF YES:
+            if is_variant:
+                print(
+                    "Generating new {} Variant for Match {} - Confict for fig node {}"
+                    .format(variant_type, match, node.fig_cover)
+                )
+                # Create a new variant of the construction graph
+                variant_index += 1
+                new_variant = variant.generate_variant(f"variant_{variant_index}")
+                # Add the new variant to the list of variants
+                next_level_variants.append(new_variant)
+                # Add node to the new the variant graphs(or just the substitution variant)
+                new_variant.add_construction_node(node, variant_type)
+                # TODO - Validate if this is the best way to do it
+            # ELSE:
+            else:
+                # Add the node to the construction graph / leaves of the variant tree
+                variant.add_construction_node(node, variant_type)
+
+        # Update the variants list with the new variants and then clear the new variants array
+        variants.extend(next_level_variants)
+        next_level_variants.clear()
 
     # Prune all the variants
     # STEP 7 - Eliminate FLOW passthrough nodes by generating explicit matches for
@@ -71,11 +86,12 @@ def generate_match_variants(
     # Delete all the variants that dont fully cover the fig
     for variant in variants:
         # TODO - First Bridge channel networks
-        variant.bridge_channel_networks()
         if variant.is_fig_fully_covered() is not True:
             variants.remove(variant)
+
     # TODO - Prune variants using the plugins (Figre out how to use the generation
     # strategy next)
     # STEP 8 - Prune variants using the plugins
-    active_strategy.prune_variants(variants)
+    # active_strategy.prune_variants(variants)
+
     return variants
