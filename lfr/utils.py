@@ -2,7 +2,7 @@ import json
 import os
 
 from typing import List
-from networkx import nx
+import networkx as nx
 from pymint.mintdevice import MINTDevice
 
 import lfr.parameters as parameters

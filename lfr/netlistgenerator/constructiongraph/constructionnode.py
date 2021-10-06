@@ -3,7 +3,7 @@ from lfr.postprocessor.constraints import Constraint
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappingoption import MappingOption
 from typing import List, Optional, Set
-from networkx import nx
+import networkx as nx
 
 
 class ConstructionNode:

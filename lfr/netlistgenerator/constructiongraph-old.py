@@ -1,7 +1,7 @@
 from copy import copy
 from typing import Dict, List, Optional, Set, Tuple
 
-from networkx import nx
+import networkx as nx
 from networkx.algorithms import isomorphism
 from networkx.classes.digraph import DiGraph
 from pymint.mintcomponent import MINTComponent
