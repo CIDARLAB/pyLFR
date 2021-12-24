@@ -92,6 +92,6 @@ def generate_match_variants(
     # TODO - Prune variants using the plugins (Figre out how to use the generation
     # strategy next)
     # STEP 8 - Prune variants using the plugins
-    # active_strategy.prune_variants(variants)
+    active_strategy.prune_variants(variants)
 
     return variants

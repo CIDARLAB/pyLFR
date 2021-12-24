@@ -1,4 +1,5 @@
 # from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+from networkx.algorithms.shortest_paths.unweighted import predecessor
 from lfr.fig.interaction import Interaction, InteractionType
 from lfr.netlistgenerator.dafdadapter import DAFDAdapter
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
@@ -6,6 +7,9 @@ from lfr.netlistgenerator.constructiongraph.constructionnode import Construction
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 import networkx as nx
 from pymint import MINTDevice
+from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
+
+from typing import List
 
 
 class DropXStrategy(GenStrategy):
@@ -182,6 +186,131 @@ class DropXStrategy(GenStrategy):
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
 
+    def prune_variants(self, variants: List[ConstructionGraph]) -> None:
+        """reducing variants according to the dropx rules.
+
+        Args:
+            variants (List[ConstructionGraph]): variants to be reduced
+
+        Returns:
+            None
+        """
+        super().prune_variants(variants)
+
+        for variant in variants:
+            figs_in_order = list(nx.topological_sort(variant._fig))
+
+            for fignode_id in variant._fig.nodes:
+                fignode = variant._fig.get_fignode(fignode_id)
+
+                if ConstructionNode(fignode.ID).is_explictly_mapped:
+                    pass
+
+                if isinstance(fignode, Interaction):
+                    if fignode.type is InteractionType.METER:
+                        is_first_metering_node = True
+                        for sorted_fignode_id in figs_in_order:
+                            if fignode_id == sorted_fignode_id:
+                                if is_first_metering_node:
+                                    cn = variant.get_fignode_cn(fignode)
+                                    print("***Detect Nozzle Droplet Gen***")
+
+                                    if cn.primitive.mint != "NOZZLE DROPLET GENERATOR":
+                                        print(
+                                            "nozzle droplet generator not found."
+                                            " removing variant"
+                                        )
+                                        variants.remove(variant)
+
+                                else:
+                                    raise Exception(
+                                        "No scheme for assign METER after initial"
+                                        " droplet generation"
+                                    )
+
+                            else:
+                                sorted_fignode = variant._fig.get_fignode(
+                                    sorted_fignode_id
+                                )
+
+                                if isinstance(sorted_fignode, Interaction):
+                                    if sorted_fignode_id in variant._fig.predecessors(
+                                        fignode_id
+                                    ):
+                                        is_first_metering_node = False
+
+                                        print("found meter in predecessors")
+
+                    if (
+                        fignode.type is InteractionType.MIX
+                        or fignode.type is InteractionType.SIEVE
+                    ):
+                        if (
+                            not self.__check_continuous(fignode_id, variant)
+                            and variant in variants
+                        ):
+                            variants.remove(variant)
+                            print(
+                                "flow before METER is not continuous. removing variant"
+                            )
+
+                        else:
+                            meter_in_pred = []
+
+                            for prednode_id in variant._fig.predecessors(fignode_id):
+
+                                meter_in_pred.append(
+                                    self.__search_predecessors(
+                                        prednode_id, InteractionType.METER
+                                    )
+                                )
+
+                            numTrue = meter_in_pred.count(True)
+
+                            if (
+                                fignode.type is InteractionType.MIX
+                                and variant in variants
+                            ):
+
+                                if numTrue == 1:
+                                    cn = variant.get_fignode_cn(fignode)
+                                    print("**Detect Pico Injector")
+                                    if self.__exist_in_cn(cn, "PICOINJECTOR"):
+                                        print("-", cn.primitive.mint)
+
+                                        if cn.primitive.mint != "PICOINJECTOR":
+                                            print(
+                                                "picoinjector not found. removing"
+                                                " variant"
+                                            )
+                                            variants.remove(variant)
+
+                                elif numTrue == 2:
+                                    cn = variant.get_fignode_cn(fignode)
+                                    print("**Detect Droplet Merger**")
+
+                                    if self.__exist_in_cn(cn, "DROPLET MERGER"):
+                                        if cn.primitive.mint != "DROPLET MERGER":
+                                            print(
+                                                "droplet merger not found. removing"
+                                                " variant"
+                                            )
+                                            variants.remove(variant)
+
+                                else:
+                                    print("**Detect Mixer**")
+                                    cn = variant.get_fignode_cn(fignode)
+                                    if self.__exist_in_cn(cn, "MIXER"):
+                                        if cn.primitive.mint != "MIXER":
+                                            print("mixer not found. removing variant")
+                                            variants.remove(variant)
+
+        # check modified variants
+        for i, variant in enumerate(variants):
+            print("\nvariant ", i)
+            for node in variant.nodes:
+                print(node)
+
     @staticmethod
     def __exist_in_cn(cn, mint_name):
         """helper function to check if the construction node contains undesired mints.
@@ -193,9 +322,8 @@ class DropXStrategy(GenStrategy):
         Returns:
             Bool: if mint names other than the specified mint_name is found, returns true. Else false.
         """
-        for cn_part in cn.mapping_options:
-            if cn_part.primitive.mint != mint_name:
-                return True
+        if cn.primitive.mint != mint_name:
+            return True
 
         return False
 
@@ -243,29 +371,29 @@ class DropXStrategy(GenStrategy):
 
     # this function checks if the predecessors before METER has METER or not. If not,
     # continuous.
-    def __check_continuous(self, fignode_id):
+    def __check_continuous(self, fignode_id, variant):
         """recursive function to check if the flow before METER is continuous at MIX or SIEVE
 
         Args:
             fignode_id (elements in self._fig.nodes): Starting node to find predecessors
 
         Returns:
-            Bool: if METER is found in the predecessors of METER, returns true
-            (not continuous), Else false
+            Bool: if METER is found in the predecessors of METER, returns false
+            (not continuous), Else true (continuous)
         """
-        fignode = self._fig.get_fignode(fignode_id)
+        fignode = variant._fig.get_fignode(fignode_id)
 
         if self.__check_if_type(fignode, InteractionType.METER):
-            for prednode_id in self._fig.predecessors(fignode_id):
+            for prednode_id in variant._fig.predecessors(fignode_id):
                 if self.__search_predecessors(prednode_id, InteractionType.METER):
-                    return True
+                    return False
 
         else:
-            for other_pred_id in self._fig.predecessors(fignode_id):
-                if self.__check_continuous(other_pred_id):
-                    return True
+            for other_pred_id in variant._fig.predecessors(fignode_id):
+                if self.__check_continuous(other_pred_id, variant):
+                    return False
 
-        return False
+        return True
 
     def size_netlist(self, device: MINTDevice) -> None:
         """
