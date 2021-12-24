@@ -2,6 +2,7 @@ from lfr.fig.fignode import Flow, Signal
 from typing import List, Tuple
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
+from lfr.fig.fignode import FIGNode
 import networkx as nx
 from enum import Enum
 
@@ -26,6 +27,11 @@ class ConstructionGraph(nx.Graph):
     @property
     def ID(self) -> str:
         return self._id
+
+    def get_fignode_cn(self, fig_node: FIGNode):
+        for cn in self._construction_nodes:
+            if fig_node.ID in cn._fig_subgraph.nodes:
+                return cn
 
     def add_construction_node(
         self, construction_node: ConstructionNode, variant_type: VariantType
