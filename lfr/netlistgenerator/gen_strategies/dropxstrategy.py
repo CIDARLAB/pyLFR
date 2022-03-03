@@ -1,8 +1,10 @@
 # from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+from typing import List
 from lfr.fig.interaction import Interaction, InteractionType
 from lfr.netlistgenerator.dafdadapter import DAFDAdapter
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
+from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 import networkx as nx
 from pymint import MINTDevice
@@ -181,6 +183,15 @@ class DropXStrategy(GenStrategy):
         # Rule 7 – TBD Rule for droplet splitting
         # Finally just reduce the total number of mapping options if greater than 1
         super().reduce_mapping_options()
+
+    def prune_variants(self, variants: List[ConstructionGraph]) -> None:
+        """
+        Prunes the variants by removing the ones that are not feasible.
+
+        :param variants: The variants to prune.
+        :return: None
+        """
+        super().prune_variants(variants)
 
     @staticmethod
     def __exist_in_cn(cn, mint_name):
