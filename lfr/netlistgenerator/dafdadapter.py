@@ -34,7 +34,9 @@ class DAFDAdapter:
             else:
                 raise Exception("Error: Geometry constraint not defined")
 
-        results = self.solver.runInterp(targets_dict, constriants_dict)
+        results = self.solver.runInterp(
+            targets_dict, constriants_dict, tolerance_test=True
+        )
         if component is None:
             raise Exception("No component attached to the constraints")
 
