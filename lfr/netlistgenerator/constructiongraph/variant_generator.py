@@ -53,7 +53,8 @@ def generate_match_variants(
             generate_match_subgraph(match),
         )
 
-        # Check if the construction node satisfies the variant criteria for each of the variants
+        # Check if the construction node satisfies the variant criteria for each of the
+        # variants
         for variant in variants:
             is_variant, variant_type = variant.check_variant_criteria(node)
             # IF YES:
@@ -67,7 +68,8 @@ def generate_match_variants(
                 new_variant = variant.generate_variant(f"variant_{variant_index}")
                 # Add the new variant to the list of variants
                 next_level_variants.append(new_variant)
-                # Add node to the new the variant graphs(or just the substitution variant)
+                # Add node to the new the variant graphs(or just the substitution
+                # variant
                 new_variant.add_construction_node(node, variant_type)
                 # TODO - Validate if this is the best way to do it
             # ELSE:
@@ -75,7 +77,8 @@ def generate_match_variants(
                 # Add the node to the construction graph / leaves of the variant tree
                 variant.add_construction_node(node, variant_type)
 
-        # Update the variants list with the new variants and then clear the new variants array
+        # Update the variants list with the new variants and then clear the new
+        # variants array
         variants.extend(next_level_variants)
         next_level_variants.clear()
 

@@ -13,19 +13,18 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.11"
 networkx = "^2.5"
 argparse = "^1.4.0"
 antlr4-python3-runtime = "^4.8"
 pygraphviz = "^1.6"
-parchmint = "latest"
 dafd = "latest"
 numpy = "^1.19.4"
 tabulate = "^0.8.7"
-pymint = "^0.2.11"
 art = "^5.2"
 jsonschema = "^3.2.0"
 pyeda = "^0.28.0"
+parchmint = "0.3.2"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"

@@ -39,7 +39,7 @@ class LFRBaseListener(lfrXListener):
 
         print("Initialized the lfrcompiler")
         self.modules = []
-        self.currentModule: Optional[Module] = None
+        self.currentModule: Module = Module("Default_Module_To_Be_Removed")
         self.lhs = None
         self.rhs = None
         self.operatormap = {}

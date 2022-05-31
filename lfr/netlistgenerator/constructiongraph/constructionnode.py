@@ -8,11 +8,14 @@ import networkx as nx
 
 class ConstructionNode:
     def __init__(
-        self, node_id: str, primitive: Primitive = None, subgraph_view=None
+        self,
+        node_id: str,
+        primitive: Optional[Primitive] = None,
+        subgraph_view: Optional[nx.DiGraph] = None,
     ) -> None:
         self._id = node_id
         self._explict_mapping_flag = False
-        self._fig_subgraph: nx.DiGraph = subgraph_view
+        self._fig_subgraph: Optional[nx.DiGraph] = subgraph_view
         self._primitive: Optional[Primitive] = primitive
 
         # Connection options that we want to load here

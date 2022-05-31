@@ -38,9 +38,30 @@ class Interaction(Flow):
 
     @staticmethod
     def get_id(
-        fluid1: FIGNode = None, fluid2: FIGNode = None, operator_string: str = ""
+        fluid1: FIGNode, fluid2: Optional[FIGNode] = None, operator_string: str = ""
     ) -> str:
+        """Generates a unique ID for the interaction
+
+        The user needs to provide atleast one fignode and the operator string to generate the ID.
+
+        Args:
+            fluid1 (FIGNode): First fignode
+            fluid2 (Optional[FIGNode]): Second FIGNode
+            operator_string (str): Operator String
+
+        Raises:
+            ValueError: If there is no fignode provided
+            ValueError: If there is no operator string provided
+
+        Returns:
+            str: unique ID for the interaction
+        """
+
         id = None
+
+        # If no operator string is given then we cannot proceed
+        if operator_string is None or operator_string == "":
+            raise ValueError("Operator string cannot be None")
 
         if fluid1 is None:
             raise ValueError("id of fluid1 is found to be None")
@@ -95,7 +116,7 @@ class FluidFluidInteraction(Interaction):
         fluid1: Flow,
         fluid2: Flow,
         interaction_type: InteractionType,
-        interaction_data: str = None,
+        interaction_data: Optional[str] = None,
     ) -> None:
         """Creates an interaction between two fluids
 

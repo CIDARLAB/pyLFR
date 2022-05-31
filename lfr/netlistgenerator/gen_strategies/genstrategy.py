@@ -14,7 +14,7 @@ from typing import List
 
 from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
-from pymint.minttarget import MINTTarget
+from parchmint import Target
 
 
 class GenStrategy:
@@ -54,8 +54,8 @@ class GenStrategy:
         mint_layer = ret.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
         for node in fig_subgraph_view.nodes:
             n = MINTNode("node_{}".format(node), mint_layer)
-            ret.add_component(n)
-            self._store_fig_netlist_name(node, n.ID)
+            ret.device.add_component(n.component)
+            self._store_fig_netlist_name(node, n.component.ID)
 
         i = 1
         for node in fig_subgraph_view.nodes:
@@ -64,18 +64,18 @@ class GenStrategy:
             i += 1
             params = {}
             params["channelWidth"] = 400
-            source = MINTTarget("node_{}".format(node))
+            source = Target("node_{}".format(node))
             sinks = []
 
             # Add all the outgoing edges
             for edge in fig_subgraph_view.out_edges(node):
                 tar = edge[1]
                 if tar not in fig_subgraph_view.nodes:
-                    # We skip because this might be a weird edge that we were not supposed
-                    # to have in this network
+                    # We skip because this might be a weird edge that we
+                    # were not supposed to have in this network
                     continue
 
-                sinks.append(MINTTarget("node_{}".format(tar)))
+                sinks.append(Target("node_{}".format(tar)))
 
             ret.create_mint_connection(
                 channel_name, "CHANNEL", params, source, sinks, "0"

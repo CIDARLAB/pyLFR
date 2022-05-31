@@ -4,7 +4,6 @@ from lfr.netlistgenerator.constructiongraph.constructiongraph import (
 from lfr.netlistgenerator.constructiongraph.variant_generator import (
     generate_match_variants,
 )
-import sys
 from copy import deepcopy
 from typing import Dict, FrozenSet, List, Set, Tuple
 import networkx as nx

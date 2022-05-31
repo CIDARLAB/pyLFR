@@ -1,3 +1,4 @@
+from typing import Optional
 from lfr.compiler.language.vectorrange import VectorRange
 
 
@@ -30,12 +31,12 @@ class Concatenation:
             size = size + len(vrange)
         return size
 
-    def get_range(self, startindex: int = None, endindex: int = None) -> VectorRange:
-        start = startindex if startindex is not None else 0
+    def get_range(
+        self, startindex: int = 0, endindex: Optional[int] = None
+    ) -> VectorRange:
+        start = startindex
         end = endindex if endindex is not None else len(self) - 1
-        # vec = []
-        # for r in self.ranges:
-        #     vec.extend(r)
+
         ret = VectorRange(self, start, end)
 
         return ret

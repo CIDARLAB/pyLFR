@@ -1,5 +1,6 @@
 from typing import Dict
-from pymint import MINTComponent, MINTConnection, MINTDevice
+from pymint import MINTDevice
+from parchmint import Component, Connection
 
 
 class NameGenerator:
@@ -42,7 +43,7 @@ class NameGenerator:
             self._counter_dictionary[technology_string] = 1
             return "{}_{}".format(technology_string, 1).lower().replace(" ", "_")
 
-    def rename_component(self, component: MINTComponent) -> str:
+    def rename_component(self, component: Component) -> str:
         """Renames the component
 
         Renames the component and stores the old name->new name reference in
@@ -51,7 +52,7 @@ class NameGenerator:
         NOTE - Renames the ID of the component too
 
         Args:
-            component (MINTComponent): Component we want to rename
+            component (Component): Component we want to rename
 
         Returns:
             str: Returns the new name for the component
@@ -60,10 +61,10 @@ class NameGenerator:
         new_name = self.generate_name(component.entity)
         self._rename_map[old_name] = new_name
         component.name = new_name
-        component.overwrite_id(new_name)
+        component.ID = new_name
         return new_name
 
-    def rename_cn_component(self, cn_id: str, component: MINTComponent) -> str:
+    def rename_cn_component(self, cn_id: str, component: Component) -> str:
         """Renames the Construction Node related component
 
         Also stores what the corresponding rename map against the construction
@@ -71,7 +72,7 @@ class NameGenerator:
 
         Args:
             cn_id (str): ConstructionNode ID
-            component (MINTComponent): Component we want to rename
+            component (Component): Component we want to rename
 
         Returns:
             str: New name of the component
@@ -81,10 +82,10 @@ class NameGenerator:
         # self._rename_map[old_name] = new_name
         self.store_cn_name(cn_id, old_name, new_name)
         component.name = new_name
-        component.overwrite_id(new_name)
+        component.ID = new_name
         return new_name
 
-    def rename_connection(self, connection: MINTConnection) -> str:
+    def rename_connection(self, connection: Connection) -> str:
         """Renames the connection
 
         Also renames the name of the components in the source/sink(s)
@@ -93,7 +94,7 @@ class NameGenerator:
         Keeps track of the rename in internal datastruction
 
         Args:
-            connection (MINTConnection): Connection we want to rename
+            connection (Connection): Connection we want to rename
 
         Returns:
             str: New name of the connection
@@ -106,8 +107,11 @@ class NameGenerator:
         new_name = self.generate_name(connection.entity)
         self._rename_map[old_name] = new_name
         connection.name = new_name
-        connection.overwrite_id(new_name)
+        connection.ID = new_name
 
+        # Check if Source is none
+        if connection.source is None:
+            raise ValueError("Source of connection {} is None".format(connection.ID))
         # Rename source
         connection.source.component = self._rename_map[connection.source.component]
 
@@ -117,7 +121,7 @@ class NameGenerator:
 
         return new_name
 
-    def rename_cn_connection(self, cn_id: str, connection: MINTConnection) -> str:
+    def rename_cn_connection(self, cn_id: str, connection: Connection) -> str:
         """Renames connection with reference to construciton node
 
         Uses the internal data struction to save the
@@ -125,7 +129,7 @@ class NameGenerator:
 
         Args:
             cn_id (str): ConstructionNode ID
-            connection (MINTConnection): Connection we need to rename
+            connection (Connection): Connection we need to rename
 
         Returns:
             str: New name of the connection
@@ -139,8 +143,11 @@ class NameGenerator:
         # self._rename_map[old_name] = new_name
         self.store_cn_name(cn_id, old_name, new_name)
         connection.name = new_name
-        connection.overwrite_id(new_name)
+        connection.ID = new_name
 
+        # Check if Source is none
+        if connection.source is None:
+            raise ValueError("Source of connection {} is None".format(connection.ID))
         # Rename source
         connection.source.component = self.get_cn_name(
             cn_id, connection.source.component
@@ -152,7 +159,7 @@ class NameGenerator:
 
         return new_name
 
-    def rename_netlist(self, cn_id: str, device: MINTDevice) -> None:
+    def rename_netlist(self, cn_id: str, mint_device: MINTDevice) -> None:
         """Renames the entire netlist corresponding to a ConstructionNode
 
         Calls upon all the different rename component, connection
@@ -162,10 +169,10 @@ class NameGenerator:
             cn_id (str): ConstructionNode Id
             device (MINTDevice): Device we want to rename
         """
-        for component in device.components:
+        for component in mint_device.device.components:
             self.rename_cn_component(cn_id, component)
 
-        for connection in device.connections:
+        for connection in mint_device.device.connections:
             self.rename_cn_connection(cn_id, connection)
 
     def store_name(self, old_name: str, new_name: str) -> None:

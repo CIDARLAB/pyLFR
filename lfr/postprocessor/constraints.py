@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pymint import MINTComponent
+from parchmint import Component
 
 """
     # TODO - Generate the constraints in the right way:
@@ -107,17 +107,17 @@ class MaterialConstraint(Constraint):
 
 
 class ConstraintList:
-    def __init__(self, component: MINTComponent):
+    def __init__(self, component: Component):
         super().__init__()
         self.__constraints: List[Constraint] = []
-        self.__component: Optional[MINTComponent] = component
+        self.__component: Optional[Component] = component
 
     def add_constraint(self, constraint: Constraint) -> None:
         constraint = FunctionalConstraint()
         self.__constraints.append(constraint)
 
     @property
-    def component(self) -> Optional[MINTComponent]:
+    def component(self) -> Optional[Component]:
         return self.__component
 
     def __len__(self):

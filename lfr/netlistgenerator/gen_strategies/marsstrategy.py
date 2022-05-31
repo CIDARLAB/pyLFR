@@ -73,9 +73,10 @@ class MarsStrategy:
         ret = MINTDevice("flow_network_temp")
         mint_layer = ret.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
         for node in fig_subgraph_view.nodes:
-            n = MINTNode("node_{}".format(node), mint_layer)
-            ret.add_component(n)
-            self._store_fig_netlist_name(node, n.ID)
+            node = MINTNode("node_{}".format(str(node)), mint_layer)
+            ret.device.add_component(node.component)
+            # TODO - Add method to store NODES
+            self._store_fig_netlist_name(str(node), node.component.ID)
 
         i = 1
         for node in fig_subgraph_view.nodes:

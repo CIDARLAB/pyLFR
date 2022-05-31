@@ -1,4 +1,5 @@
 from lfr.fig.interaction import InteractionType
+from lfr.postprocessor.constraints import ConstraintList
 
 
 class NetlistSizor:
