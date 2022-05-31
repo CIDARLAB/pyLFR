@@ -1,4 +1,4 @@
-# Generated from /Users/krishna/CIDAR/reggie/reggie.g4 by ANTLR 4.9
+# Generated from ./reggie.g4 by ANTLR 4.10.1
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -8,63 +8,58 @@ if sys.version_info[1] > 5:
 else:
 	from typing.io import TextIO
 
-
 def serializedATN():
-    with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\25")
-        buf.write("\u0098\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
-        buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
-        buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\3\2\3\2\3\2\7")
-        buf.write("\2\'\n\2\f\2\16\2*\13\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3")
-        buf.write("\3\5\3\64\n\3\3\4\3\4\3\4\5\49\n\4\3\5\3\5\3\5\5\5>\n")
-        buf.write("\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6G\n\6\f\6\16\6J\13\6")
-        buf.write("\3\6\3\6\3\7\3\7\3\7\5\7Q\n\7\3\7\5\7T\n\7\3\7\7\7W\n")
-        buf.write("\7\f\7\16\7Z\13\7\3\b\3\b\3\b\3\b\7\b`\n\b\f\b\16\bc\13")
-        buf.write("\b\3\b\3\b\3\t\3\t\3\t\5\tj\n\t\3\n\3\n\3\n\3\n\3\13\3")
-        buf.write("\13\3\f\3\f\3\r\3\r\3\16\3\16\3\16\7\16y\n\16\f\16\16")
-        buf.write("\16|\13\16\3\16\3\16\3\16\3\16\7\16\u0082\n\16\f\16\16")
-        buf.write("\16\u0085\13\16\3\16\3\16\5\16\u0089\n\16\3\17\3\17\3")
-        buf.write("\20\3\20\3\20\3\20\7\20\u0091\n\20\f\20\16\20\u0094\13")
-        buf.write("\20\3\21\3\21\3\21\2\2\22\2\4\6\b\n\f\16\20\22\24\26\30")
-        buf.write("\32\34\36 \2\4\3\2\20\21\3\2\16\17\2\u0098\2\"\3\2\2\2")
-        buf.write("\4\63\3\2\2\2\68\3\2\2\2\b=\3\2\2\2\n?\3\2\2\2\fM\3\2")
-        buf.write("\2\2\16[\3\2\2\2\20i\3\2\2\2\22k\3\2\2\2\24o\3\2\2\2\26")
-        buf.write("q\3\2\2\2\30s\3\2\2\2\32\u0088\3\2\2\2\34\u008a\3\2\2")
-        buf.write("\2\36\u008c\3\2\2\2 \u0095\3\2\2\2\"#\7\3\2\2#(\5\4\3")
-        buf.write("\2$%\7\4\2\2%\'\5\4\3\2&$\3\2\2\2\'*\3\2\2\2(&\3\2\2\2")
-        buf.write("()\3\2\2\2)+\3\2\2\2*(\3\2\2\2+,\7\5\2\2,\3\3\2\2\2-\64")
-        buf.write("\5\b\5\2./\7\6\2\2/\60\5\b\5\2\60\61\7\7\2\2\61\62\5\6")
-        buf.write("\4\2\62\64\3\2\2\2\63-\3\2\2\2\63.\3\2\2\2\64\5\3\2\2")
-        buf.write("\2\659\5\22\n\2\669\5\26\f\2\679\5\24\13\28\65\3\2\2\2")
-        buf.write("8\66\3\2\2\28\67\3\2\2\29\7\3\2\2\2:>\5\n\6\2;>\5\36\20")
-        buf.write("\2<>\5\f\7\2=:\3\2\2\2=;\3\2\2\2=<\3\2\2\2>\t\3\2\2\2")
-        buf.write("?@\7\20\2\2@A\7\b\2\2AB\3\2\2\2BC\7\3\2\2CH\5\36\20\2")
-        buf.write("DE\7\4\2\2EG\5\36\20\2FD\3\2\2\2GJ\3\2\2\2HF\3\2\2\2H")
-        buf.write("I\3\2\2\2IK\3\2\2\2JH\3\2\2\2KL\7\5\2\2L\13\3\2\2\2MP")
-        buf.write("\5\30\r\2NO\7\b\2\2OQ\5\32\16\2PN\3\2\2\2PQ\3\2\2\2QS")
-        buf.write("\3\2\2\2RT\5\16\b\2SR\3\2\2\2ST\3\2\2\2TX\3\2\2\2UW\5")
-        buf.write("\20\t\2VU\3\2\2\2WZ\3\2\2\2XV\3\2\2\2XY\3\2\2\2Y\r\3\2")
-        buf.write("\2\2ZX\3\2\2\2[\\\7\3\2\2\\a\7\25\2\2]^\7\4\2\2^`\7\25")
-        buf.write("\2\2_]\3\2\2\2`c\3\2\2\2a_\3\2\2\2ab\3\2\2\2bd\3\2\2\2")
-        buf.write("ca\3\2\2\2de\7\5\2\2e\17\3\2\2\2fj\5\22\n\2gj\5\24\13")
-        buf.write("\2hj\5\26\f\2if\3\2\2\2ig\3\2\2\2ih\3\2\2\2j\21\3\2\2")
-        buf.write("\2kl\7\t\2\2lm\7\24\2\2mn\7\n\2\2n\23\3\2\2\2op\7\13\2")
-        buf.write("\2p\25\3\2\2\2qr\7\f\2\2r\27\3\2\2\2st\t\2\2\2t\31\3\2")
-        buf.write("\2\2uz\5\34\17\2vw\7\r\2\2wy\5\34\17\2xv\3\2\2\2y|\3\2")
-        buf.write("\2\2zx\3\2\2\2z{\3\2\2\2{\u0089\3\2\2\2|z\3\2\2\2}~\7")
-        buf.write("\6\2\2~\u0083\5\34\17\2\177\u0080\7\r\2\2\u0080\u0082")
-        buf.write("\5\34\17\2\u0081\177\3\2\2\2\u0082\u0085\3\2\2\2\u0083")
-        buf.write("\u0081\3\2\2\2\u0083\u0084\3\2\2\2\u0084\u0086\3\2\2\2")
-        buf.write("\u0085\u0083\3\2\2\2\u0086\u0087\7\7\2\2\u0087\u0089\3")
-        buf.write("\2\2\2\u0088u\3\2\2\2\u0088}\3\2\2\2\u0089\33\3\2\2\2")
-        buf.write("\u008a\u008b\7\20\2\2\u008b\35\3\2\2\2\u008c\u0092\5\f")
-        buf.write("\7\2\u008d\u008e\5 \21\2\u008e\u008f\5\f\7\2\u008f\u0091")
-        buf.write("\3\2\2\2\u0090\u008d\3\2\2\2\u0091\u0094\3\2\2\2\u0092")
-        buf.write("\u0090\3\2\2\2\u0092\u0093\3\2\2\2\u0093\37\3\2\2\2\u0094")
-        buf.write("\u0092\3\2\2\2\u0095\u0096\t\3\2\2\u0096!\3\2\2\2\20(")
-        buf.write("\638=HPSXaiz\u0083\u0088\u0092")
-        return buf.getvalue()
-
+    return [
+        4,1,19,150,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
+        2,14,7,14,2,15,7,15,1,0,1,0,1,0,1,0,5,0,37,8,0,10,0,12,0,40,9,0,
+        1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,3,1,50,8,1,1,2,1,2,1,2,3,2,55,8,
+        2,1,3,1,3,1,3,3,3,60,8,3,1,4,1,4,1,4,1,4,1,4,1,4,1,4,5,4,69,8,4,
+        10,4,12,4,72,9,4,1,4,1,4,1,5,1,5,1,5,3,5,79,8,5,1,5,3,5,82,8,5,1,
+        5,5,5,85,8,5,10,5,12,5,88,9,5,1,6,1,6,1,6,1,6,5,6,94,8,6,10,6,12,
+        6,97,9,6,1,6,1,6,1,7,1,7,1,7,3,7,104,8,7,1,8,1,8,1,8,1,8,1,9,1,9,
+        1,10,1,10,1,11,1,11,1,12,1,12,1,12,5,12,119,8,12,10,12,12,12,122,
+        9,12,1,12,1,12,1,12,1,12,5,12,128,8,12,10,12,12,12,131,9,12,1,12,
+        1,12,3,12,135,8,12,1,13,1,13,1,14,1,14,1,14,1,14,5,14,143,8,14,10,
+        14,12,14,146,9,14,1,15,1,15,1,15,0,0,16,0,2,4,6,8,10,12,14,16,18,
+        20,22,24,26,28,30,0,2,1,0,14,15,1,0,12,13,150,0,32,1,0,0,0,2,49,
+        1,0,0,0,4,54,1,0,0,0,6,59,1,0,0,0,8,61,1,0,0,0,10,75,1,0,0,0,12,
+        89,1,0,0,0,14,103,1,0,0,0,16,105,1,0,0,0,18,109,1,0,0,0,20,111,1,
+        0,0,0,22,113,1,0,0,0,24,134,1,0,0,0,26,136,1,0,0,0,28,138,1,0,0,
+        0,30,147,1,0,0,0,32,33,5,1,0,0,33,38,3,2,1,0,34,35,5,2,0,0,35,37,
+        3,2,1,0,36,34,1,0,0,0,37,40,1,0,0,0,38,36,1,0,0,0,38,39,1,0,0,0,
+        39,41,1,0,0,0,40,38,1,0,0,0,41,42,5,3,0,0,42,1,1,0,0,0,43,50,3,6,
+        3,0,44,45,5,4,0,0,45,46,3,6,3,0,46,47,5,5,0,0,47,48,3,4,2,0,48,50,
+        1,0,0,0,49,43,1,0,0,0,49,44,1,0,0,0,50,3,1,0,0,0,51,55,3,16,8,0,
+        52,55,3,20,10,0,53,55,3,18,9,0,54,51,1,0,0,0,54,52,1,0,0,0,54,53,
+        1,0,0,0,55,5,1,0,0,0,56,60,3,8,4,0,57,60,3,28,14,0,58,60,3,10,5,
+        0,59,56,1,0,0,0,59,57,1,0,0,0,59,58,1,0,0,0,60,7,1,0,0,0,61,62,5,
+        14,0,0,62,63,5,6,0,0,63,64,1,0,0,0,64,65,5,1,0,0,65,70,3,28,14,0,
+        66,67,5,2,0,0,67,69,3,28,14,0,68,66,1,0,0,0,69,72,1,0,0,0,70,68,
+        1,0,0,0,70,71,1,0,0,0,71,73,1,0,0,0,72,70,1,0,0,0,73,74,5,3,0,0,
+        74,9,1,0,0,0,75,78,3,22,11,0,76,77,5,6,0,0,77,79,3,24,12,0,78,76,
+        1,0,0,0,78,79,1,0,0,0,79,81,1,0,0,0,80,82,3,12,6,0,81,80,1,0,0,0,
+        81,82,1,0,0,0,82,86,1,0,0,0,83,85,3,14,7,0,84,83,1,0,0,0,85,88,1,
+        0,0,0,86,84,1,0,0,0,86,87,1,0,0,0,87,11,1,0,0,0,88,86,1,0,0,0,89,
+        90,5,1,0,0,90,95,5,19,0,0,91,92,5,2,0,0,92,94,5,19,0,0,93,91,1,0,
+        0,0,94,97,1,0,0,0,95,93,1,0,0,0,95,96,1,0,0,0,96,98,1,0,0,0,97,95,
+        1,0,0,0,98,99,5,3,0,0,99,13,1,0,0,0,100,104,3,16,8,0,101,104,3,18,
+        9,0,102,104,3,20,10,0,103,100,1,0,0,0,103,101,1,0,0,0,103,102,1,
+        0,0,0,104,15,1,0,0,0,105,106,5,7,0,0,106,107,5,18,0,0,107,108,5,
+        8,0,0,108,17,1,0,0,0,109,110,5,9,0,0,110,19,1,0,0,0,111,112,5,10,
+        0,0,112,21,1,0,0,0,113,114,7,0,0,0,114,23,1,0,0,0,115,120,3,26,13,
+        0,116,117,5,11,0,0,117,119,3,26,13,0,118,116,1,0,0,0,119,122,1,0,
+        0,0,120,118,1,0,0,0,120,121,1,0,0,0,121,135,1,0,0,0,122,120,1,0,
+        0,0,123,124,5,4,0,0,124,129,3,26,13,0,125,126,5,11,0,0,126,128,3,
+        26,13,0,127,125,1,0,0,0,128,131,1,0,0,0,129,127,1,0,0,0,129,130,
+        1,0,0,0,130,132,1,0,0,0,131,129,1,0,0,0,132,133,5,5,0,0,133,135,
+        1,0,0,0,134,115,1,0,0,0,134,123,1,0,0,0,135,25,1,0,0,0,136,137,5,
+        14,0,0,137,27,1,0,0,0,138,144,3,10,5,0,139,140,3,30,15,0,140,141,
+        3,10,5,0,141,143,1,0,0,0,142,139,1,0,0,0,143,146,1,0,0,0,144,142,
+        1,0,0,0,144,145,1,0,0,0,145,29,1,0,0,0,146,144,1,0,0,0,147,148,7,
+        1,0,0,148,31,1,0,0,0,14,38,49,54,59,70,78,81,86,95,103,120,129,134,
+        144
+    ]
 
 class reggieParser ( Parser ):
 
@@ -131,7 +126,7 @@ class reggieParser ( Parser ):
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.9")
+        self.checkVersion("4.10.1")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -139,6 +134,7 @@ class reggieParser ( Parser ):
 
 
     class GraphContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -206,6 +202,7 @@ class reggieParser ( Parser ):
 
 
     class GraphstatementContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -276,6 +273,7 @@ class reggieParser ( Parser ):
 
 
     class StatementmodifierContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -349,6 +347,7 @@ class reggieParser ( Parser ):
 
 
     class BasestatementContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -423,6 +422,7 @@ class reggieParser ( Parser ):
 
 
     class SubgraphContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -497,6 +497,7 @@ class reggieParser ( Parser ):
 
 
     class VertexContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -588,6 +589,7 @@ class reggieParser ( Parser ):
 
 
     class ColoringfilterContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -654,6 +656,7 @@ class reggieParser ( Parser ):
 
 
     class StructuralvertexpatternContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -725,6 +728,7 @@ class reggieParser ( Parser ):
 
 
     class IntmodifierContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -775,6 +779,7 @@ class reggieParser ( Parser ):
 
 
     class StarmodifierContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -819,6 +824,7 @@ class reggieParser ( Parser ):
 
 
     class PlusmodifierContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -863,6 +869,7 @@ class reggieParser ( Parser ):
 
 
     class StructuralidContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -918,6 +925,7 @@ class reggieParser ( Parser ):
 
 
     class LabelfilterContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1010,6 +1018,7 @@ class reggieParser ( Parser ):
 
 
     class LabelContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1056,6 +1065,7 @@ class reggieParser ( Parser ):
 
 
     class Vertex2vertexContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
@@ -1126,6 +1136,7 @@ class reggieParser ( Parser ):
 
 
     class EdgeContext(ParserRuleContext):
+        __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)

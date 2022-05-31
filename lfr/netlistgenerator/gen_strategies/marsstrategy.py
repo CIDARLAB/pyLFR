@@ -22,7 +22,7 @@ from typing import List
 
 from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
-from pymint.minttarget import MINTTarget
+from parchmint import Target
 
 
 class MarsStrategy:
@@ -85,7 +85,7 @@ class MarsStrategy:
             i += 1
             params = dict()
             params["channelWidth"] = 400
-            source = MINTTarget("node_{}".format(node))
+            source = Target("node_{}".format(node))
             sinks = []
 
             # Add all the outgoing edges
@@ -96,7 +96,7 @@ class MarsStrategy:
                     # to have in this network
                     continue
 
-                sinks.append(MINTTarget("node_{}".format(tar)))
+                sinks.append(Target("node_{}".format(tar)))
 
             ret.create_mint_connection(
                 channel_name, "CHANNEL", params, source, sinks, "0"

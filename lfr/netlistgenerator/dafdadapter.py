@@ -1,6 +1,6 @@
 from lfr.postprocessor.constraints import Constraint
 from typing import List
-from pymint.mintcomponent import MINTComponent
+from parchmint import Component
 from pymint.mintdevice import MINTDevice
 
 
@@ -10,7 +10,7 @@ class DAFDAdapter:
         self._device = device
 
     def size_droplet_generator(
-        self, component: MINTComponent, constriants: List[Constraint]
+        self, component: Component, constriants: List[Constraint]
     ) -> None:
         import faulthandler
 
