@@ -25,6 +25,7 @@ art = "^5.2"
 jsonschema = "^3.2.0"
 pyeda = "^0.28.0"
 parchmint = "0.3.2"
+pymint = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"
