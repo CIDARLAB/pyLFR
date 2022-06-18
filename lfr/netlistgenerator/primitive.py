@@ -1,5 +1,6 @@
 import copy
 from enum import Enum
+import hashlib
 from typing import List, Optional
 from parchmint import Component, Layer, Params
 from pymint.mintdevice import MINTDevice
@@ -67,6 +68,15 @@ class Primitive:
         self._output_params = output_params
 
         self._user_defined_params: Params = user_defined_params
+
+        # Generate the UID for the primitive
+        self._uid = hashlib.md5(
+            "{}_{}".format(self._mint, self._match_string).encode("utf-8")
+        ).hexdigest()
+
+    @property
+    def uid(self) -> str:
+        return self._uid
 
     @property
     def type(self) -> PrimitiveType:
@@ -144,7 +154,9 @@ class Primitive:
         if self.type is not PrimitiveType.COMPONENT:
             raise Exception("Cannot execute this method for this kind of a primitive")
         name = name_gen.generate_name(self.mint)
-        mc = Component(name=name, ID=name, entity=self.mint, params=Params({}), layers=[layer])
+        mc = Component(
+            name=name, ID=name, entity=self.mint, params=Params({}), layers=[layer]
+        )
         return mc
 
     def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
@@ -179,6 +191,9 @@ class Primitive:
         name_gen.rename_netlist(cn_id, device)
         # Return the default netlist
         return device
+
+    def __hash__(self) -> int:
+        return hash("{}_{}".format(self.mint, self.match_string))
 
 
 class ProceduralPrimitive(Primitive):

@@ -1,14 +1,9 @@
+from __future__ import annotations
 from lfr.fig.fignode import Flow, Signal
-from typing import List, Tuple
+from typing import FrozenSet, List, Tuple
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 import networkx as nx
-from enum import Enum
-
-
-class VariantType(Enum):
-    SUBSTITUTION = 1
-    ADDITION = 2
 
 
 class ConstructionGraph(nx.Graph):
@@ -27,31 +22,23 @@ class ConstructionGraph(nx.Graph):
     def ID(self) -> str:
         return self._id
 
-    def add_construction_node(
-        self, construction_node: ConstructionNode, variant_type: VariantType
-    ) -> None:
+    def add_construction_node(self, construction_node: ConstructionNode) -> None:
+        """Adds a construction node to the graph
 
-        # TODO - Just add the construction node into the graph
-        if variant_type == VariantType.SUBSTITUTION:
-            # Remove the existing construction node that has an intersecting fig cover
-            # with the new construction node
-            for cn in self._construction_nodes:
-                if cn.fig_cover.intersection(construction_node.fig_cover):
-                    self.remove_construction_node(cn)
-                    break
-            else:
-                raise ValueError(
-                    "No construction node found with an intersecting fig cover"
-                )
-            self._construction_nodes.append(construction_node)
-            self.add_node(construction_node.ID)
-        elif variant_type == VariantType.ADDITION:
-            self._construction_nodes.append(construction_node)
-            self.add_node(construction_node.ID)
-        else:
-            raise ValueError("Invalid variant type")
+        Args:
+            construction_node (ConstructionNode): Node to add the the construction graph
+        """
+
+        self._construction_nodes.append(construction_node)
+        self.add_node(construction_node.ID)
 
     def remove_construction_node(self, construction_node: ConstructionNode) -> None:
+        """Remove a construction node from the graph
+
+        Args:
+            construction_node (ConstructionNode): Node to remove from the construction
+            graph
+        """
         # Remove the construction node from the graph
         self.remove_node(construction_node.ID)
         self._construction_nodes.remove(construction_node)
@@ -121,25 +108,11 @@ class ConstructionGraph(nx.Graph):
         else:
             return True
 
-    def check_variant_criteria(
-        self, node: ConstructionNode
-    ) -> Tuple[bool, VariantType]:
-        # Check if the node's fig mapping overlaps with the fig cover of the
-        # existing construction nodes according to the axioms definined. If it does
-        # return True, else return False.
-        for cn in self._construction_nodes:
-            if cn.fig_cover == node.fig_cover:
-                return True, VariantType.SUBSTITUTION
-            elif node.has_border_overlap(cn):
-                return True, VariantType.ADDITION
-        else:
-            return False, VariantType.ADDITION
-
-    def generate_variant(self, new_id: str) -> "ConstructionGraph":
+    def generate_variant(self, new_id: str) -> ConstructionGraph:
         # Generate a variant of the construction graph
         ret = ConstructionGraph(new_id, self._fig)
         for cn in self._construction_nodes:
-            ret.add_construction_node(cn, VariantType.ADDITION)
+            ret.add_construction_node(cn)
         # Get the existing edges and add them to the new graph
         for edge in self.edges:
             ret.add_edge(edge[0], edge[1])
@@ -150,7 +123,7 @@ class ConstructionGraph(nx.Graph):
         # Find all the passthrough nodes in the fig
         # Make a copy of the fig and eliminate all the fig nodes that are either not
         # FLOW or are not covered by the construction nodes
-        copy_fig = self._fig.copy()
+        copy_fig = self._fig.copy(as_view=False)
         for cn in self._construction_nodes:
             for fig_node in cn.fig_subgraph.nodes:
                 copy_fig.remove_node(fig_node.ID)
@@ -202,7 +175,8 @@ class ConstructionGraph(nx.Graph):
         # Get the fig node to cn map
         fig_node_to_cn_map = self._generate_fignode_to_cn_map()
         # Generate a pass through construciton node
-        # If it getting till here we know for a fact that the subgraph is a passthrough and has 1 input and 1 output node
+        # If it getting till here we know for a fact that the subgraph is a passthrough
+        # and has 1 input and 1 output node
         # Get the in node and the out node
         in_node = None
         out_node = None
@@ -259,3 +233,34 @@ class ConstructionGraph(nx.Graph):
                     self.add_edge(in_cn, out_cn)
 
         raise NotImplementedError()
+
+    def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, ConstructionGraph):
+            if self.ID == __o.ID:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def remove_node_for_exact_fig_cover(self, fig_node_cover: FrozenSet[str]) -> None:
+        """Removes the construction node which contains the exact fig node cover
+        provided.
+
+        This method Removes the construction node which contains the exact fig node
+        cover provided. i.e. if the fig_node_cover is {'A', 'B'} and the construction
+        should have a fig node mapping of {'A', 'B'}. This covers the cases where the
+        mapping is an exact match and you need to substitute the entire construction
+        node.
+
+        Use other methods when you need to account for partial cover matches.
+
+        Args:
+            fig_node_cover (FrozenSet[str]): A frozen set of fig node IDs which
+                represents the exact fig node cover.
+        """
+
+        for cn in self._construction_nodes:
+            if frozenset(list(cn.fig_subgraph.nodes)) == fig_node_cover:
+                self.remove_node(cn.ID)
+                break

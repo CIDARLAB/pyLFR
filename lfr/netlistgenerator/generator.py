@@ -1,3 +1,5 @@
+from typing import Optional
+from lfr.netlistgenerator import LibraryPrimitivesEntry
 from lfr.netlistgenerator.constructiongraph.constructiongraph import (
     ConstructionGraph,
 )
@@ -26,11 +28,12 @@ from lfr.postprocessor.mapping import (
 from pymint.mintlayer import MINTLayerType
 from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
 from lfr.netlistgenerator.connectingoption import ConnectingOption
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary
-from lfr.netlistgenerator.networkmappingoption import (
-    NetworkMappingOption,
-    NetworkMappingOptionType,
-)
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary, MatchPatternEntry
+
+# from lfr.netlistgenerator.networkmappingoption import (
+#     NetworkMappingOption,
+#     NetworkMappingOptionType,
+# )
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
 from lfr.netlistgenerator.namegenerator import NameGenerator
@@ -45,7 +48,7 @@ from lfr.fig.interaction import (
 )
 from lfr.netlistgenerator.mappingoption import MappingOption
 from lfr.compiler.module import Module
-import itertools
+from lfr.graphmatch.matchpattern import MatchPattern
 
 # def generate_MARS_library() -> MappingLibrary:
 #     # TODO - Programatically create each of the items necessary for the MARS
@@ -1017,7 +1020,7 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
     # STEP 4 - Eliminate the matches that are exactly the same as the explicit matches
     # Get the explicit mapping and find the explicit mappings here
     explicit_mappings = module.get_explicit_mappings()
-    matches = eliminate_explicit_match_alternates(matches, explicit_mappings)
+    matches = eliminate_explicit_match_alternates(matches, explicit_mappings, library)
 
     print(
         "Total matches against library after explicit mapping eliminations: {}".format(
@@ -1065,19 +1068,32 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
 
 def eliminate_explicit_match_alternates(
-    matches: List[Tuple[str, Dict[str, str]]],
+    matches: List[LibraryPrimitivesEntry],
     explict_mappings: List[NodeMappingTemplate],
-) -> List[Tuple[str, Dict[str, str]]]:
+    library: MappingLibrary,
+) -> List[LibraryPrimitivesEntry]:
+    """Eliminates the alternatives for explicit matches from the list of matches.
 
+    Args:
+        matches (List[LibraryPrimitivesEntry]): List of matches to eliminate from
+        explict_mappings (List[NodeMappingTemplate]): The mappings that are explicitly
+        defined by the user
+
+    Returns:
+        List[Tuple[str, Dict[str, str]]]: _description_
+    """
     # extract the fignode ID set from matches
-    match_node_set_dict: Dict[FrozenSet, List[Tuple[str, Dict[str, str]]]] = {}
+    match_node_set_dict: Dict[FrozenSet, List[LibraryPrimitivesEntry]] = {}
     for match in matches:
-        frozen_set = frozenset(match[1].keys())
+        frozen_set = frozenset(match[2].keys())
         if frozen_set not in match_node_set_dict:
             match_node_set_dict[frozen_set] = []
             match_node_set_dict[frozen_set].append(match)
         else:
             match_node_set_dict[frozen_set].append(match)
+
+    # This is the explit match store that we keep track of explicitly defined mappings
+    explicit_matches: List[LibraryPrimitivesEntry] = []
 
     # Go through each of the explict matches, generate a subgraph and compare against
     # all the matches
@@ -1121,10 +1137,9 @@ def eliminate_explicit_match_alternates(
                 match_node_set_dict[frozenset(node_set)].clear()
 
             # Now generate a match tuple for this instance
-            match_tuple = (
-                explicit_mapping.technology_string,
-                {},
-            )
+            match_primitive_uid: Optional[str] = None
+            match_technology_string = explicit_mapping.technology_string
+            match_mapping: Dict[str, str] = {}
 
             # TODO - Retouch this part if we ever go into modifying how the matches are
             # generated if we use the match string coordinates (use the match interface
@@ -1133,35 +1148,68 @@ def eliminate_explicit_match_alternates(
             # Check what kind of an instance this is
             if isinstance(instance, NodeMappingInstance):
                 # This is a single node scenario
-                match_tuple[1][instance.node.ID] = "v1"
+                match_mapping[instance.node.ID] = "v1"
             elif isinstance(instance, FluidicOperatorMapping):
-                match_tuple[1][instance.node.ID] = "v1"
+                match_mapping[instance.node.ID] = "v1"
 
             elif isinstance(instance, StorageMapping):
-                match_tuple[1][instance.node.ID] = "v1"
+                match_mapping[instance.node.ID] = "v1"
 
             elif isinstance(instance, PumpMapping):
-                match_tuple[1][instance.node.ID] = "v1"
+                match_mapping[instance.node.ID] = "v1"
 
             elif isinstance(instance, NetworkMapping):
                 for i in range(len(instance.input_nodes)):
                     node = instance.input_nodes[i]
-                    match_tuple[1][node.ID] = f"vi{i}"
+                    match_mapping[node.ID] = f"vi{i}"
                 for i in range(len(instance.output_nodes)):
                     node = instance.output_nodes[i]
-                    match_tuple[1][node.ID] = f"vo{i}"
+                    match_mapping[node.ID] = f"vo{i}"
+
+            # Rewrite the matchid for the explicit matches
+            # based on the library entry
+            if frozenset(node_set) in match_node_set_dict:
+                # Find the primitive that matches the technology string
+                for primitive in match_node_set_dict[frozenset(node_set)]:
+                    if primitive[1] == explicit_mapping.technology_string:
+                        # This is the match we want to replace
+                        # Replace the match id with the match tuple
+                        match_primitive_uid = primitive[0]
+                # This is an explicit match
+                # Remove the explicit match from the list of matches
+                print(
+                    "Eliminating match: {}".format(
+                        match_node_set_dict[frozenset(node_set)]
+                    )
+                )
+                match_node_set_dict[frozenset(node_set)].clear()
+
+            # If the match_primitive ID is None, we need to query a match from the library
+            if match_primitive_uid is None:
+                primitives_with_technology = library.get_primitives(
+                    match_technology_string
+                )
+                # TODO - We need to have a better way to pick between the primitives
+                # as a temprorary fix we just pick the first one
+                match_primitive_uid = primitives_with_technology[0].uid
 
             # Add this match tuple to the list of matches
-            if frozenset(node_set) in match_node_set_dict:
-                match_node_set_dict[frozenset(node_set)].append(match_tuple)
-            else:
-                match_node_set_dict[frozenset(node_set)] = [match_tuple]
+            match_tuple: LibraryPrimitivesEntry = (
+                match_primitive_uid,
+                match_technology_string,
+                match_mapping,
+            )
+
+            explicit_matches.append(match_tuple)
 
     # Modify the matches list
     eliminated_matches = []
     for match_tuple_list in match_node_set_dict.values():
         for match_tuple in match_tuple_list:
             eliminated_matches.append(match_tuple)
+
+    # Add the explicit matches to the list of matches
+    eliminated_matches.extend(explicit_matches)
 
     return eliminated_matches
 

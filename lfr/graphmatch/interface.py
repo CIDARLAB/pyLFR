@@ -1,6 +1,7 @@
 from lfr.fig.annotation import DistributeAnnotation
 from lfr.graphmatch.figmappingmatcher import FIGMappingMatcher
-from typing import Any, Dict, FrozenSet, List, Optional, Tuple
+from typing import Dict, FrozenSet, List, Optional, Tuple
+from lfr.netlistgenerator import LibraryPrimitivesEntry
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.graphmatch.matchpattern import MatchPattern
@@ -177,22 +178,30 @@ def bijective_match_node_constraints(
 
 def get_fig_matches(
     fig: FluidInteractionGraph, library: MappingLibrary
-) -> List[Tuple[str, Dict[str, str]]]:
-    patterns: Dict[
-        str, MatchPattern
-    ] = dict()  # Store the mint and the match pattern object here
+) -> List[LibraryPrimitivesEntry]:
+    """Get the matches for the given FluidInteractionGraph and MappingLibrary.
 
+
+    Args:
+        fig (FluidInteractionGraph): FIG to match.
+        library (MappingLibrary): Library to match against
+
+    Returns:
+        List[LibraryPrimitivesEntry]: This returns a list of tuples of the
+        matches ordered this way: (primitive_uid, primitive_mint, match_node_dict). The
+        keys in the match_node_dict is from the FIG and the values are from the match
+        pattern.
+    """
     ret = []
 
     # TODO - Retrun the networkx subgraph views of the of the FIG
     # Step 1 - Generate the match candidates by running the subgraph isomerism for all
     # the items stored in the library
-    for (minty_uid, match_pattern_string) in library.get_match_patterns():
+    for (minty_uid, mint, match_pattern_string) in library.get_match_patterns():
         if match_pattern_string == "" or match_pattern_string is None:
             print("Warning ! - Missing match string for mint- {}".format(minty_uid))
             continue
         pattern = MatchPattern(match_pattern_string)
-        patterns[minty_uid] = pattern
         structural_template = pattern.get_structural_template()
         semantic_information = pattern.get_semantic_template()
         GM = FIGMappingMatcher(fig, structural_template, semantic_information)
@@ -241,7 +250,7 @@ def get_fig_matches(
                 print(subgraph)
 
                 # MATCH
-                ret.append((minty_uid, subgraph))
+                ret.append((minty_uid, mint, subgraph))
                 # SKIP
                 continue
 
@@ -263,12 +272,31 @@ def get_fig_matches(
                     print("Found Match: {}".format(minty_uid))
                     print(subgraph)
 
-                    ret.append((minty_uid, subgraph))
+                    ret.append((minty_uid, mint, subgraph))
                 else:
                     # NO-MATCH, SKIP
                     continue
 
     return ret
+
+
+def find_structural_matches(
+    match,
+    privitives: List[LibraryPrimitivesEntry],
+) -> List[LibraryPrimitivesEntry]:
+    """Finds all the primitives with the matching structural template.
+
+    Args:
+        privitives (List[LibraryPrimitivesEntry]): List of primitives to match.
+
+    Returns:
+        List[LibraryPrimitivesEntry]: List of primitives that match
+    """
+
+    # Go through each of the primitives and find the ones that match the structure
+    # template
+    raise NotImplementedError()
+    return privitives
 
 
 def generate_single_match(
@@ -279,5 +307,5 @@ def generate_single_match(
     # to technology entry from the mapping library, pass back the match tuple if it is
     # if it isn't then figure out how to do this separately. Also don't enable node
     # filters for this step. Enabling them will cause the match to fail.
-
+    raise NotImplementedError()
     return ("test", {"test": "test"})

@@ -26,12 +26,14 @@ jsonschema = "^3.2.0"
 pyeda = "^0.28.0"
 parchmint = "0.3.2"
 pymint = "^0.3.0"
+scipy = "^1.8.1"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"
 flake8 = "^3.8.3"
 rope = "^0.18.0"
 black = "22.3.0"
+pytest = "^7.1.2"
 
 [tool.poetry.scripts]
 lfr-compile = "lfr.cmdline:main"
