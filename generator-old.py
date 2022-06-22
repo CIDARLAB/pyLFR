@@ -599,7 +599,7 @@ def override_mappings(
             primitive_to_use = None
             if mapping.technology_string is not None:
                 # Create a mapping option from the library with the corresponding info
-                primitive_to_use = mapping_library.get_primitive(
+                primitive_to_use = mapping_library.get_primitives(
                     mapping.technology_string
                 )
 
@@ -718,7 +718,7 @@ def override_network_mappings(
             primitive_to_use = None
             if mapping.technology_string is not None:
                 # Create a mapping option from the library with the corresponding info
-                primitive_to_use = mapping_library.get_primitive(
+                primitive_to_use = mapping_library.get_primitives(
                     mapping.technology_string
                 )
 
@@ -932,21 +932,3 @@ def size_netlist():
     # Size all the Meter/Dilute/Divide nodes based on the value nodes
     # TODO - Talk to Ali about this for strategy
     construction_graph.size_components()
-
-
-def __check_if_passthrough(sub) -> bool:
-    # Return true if its a single chain of flow channels
-    in_count = 0
-    out_count = 0
-    for node in list(sub.nodes):
-        inedges = list(sub.in_edges(node))
-        outedges = list(sub.out_edges(node))
-        if len(inedges) == 0:
-            in_count += 1
-        if len(outedges) == 0:
-            out_count += 1
-
-    if in_count == 1 and out_count == 1:
-        return True
-    else:
-        return False

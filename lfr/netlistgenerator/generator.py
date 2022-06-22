@@ -1,4 +1,6 @@
 from typing import Optional
+
+from lfr.fig.simplification import remove_passthrough_nodes
 from lfr.netlistgenerator import LibraryPrimitivesEntry
 from lfr.netlistgenerator.constructiongraph.constructiongraph import (
     ConstructionGraph,
@@ -12,6 +14,7 @@ import networkx as nx
 
 from pymint.mintdevice import MINTDevice
 from lfr.graphmatch.interface import get_fig_matches
+from lfr.netlistgenerator.flownetworkmatching import add_flow_flow_matching_candidates
 
 from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
 from lfr.netlistgenerator.gen_strategies.dropxstrategy import DropXStrategy
@@ -49,6 +52,7 @@ from lfr.fig.interaction import (
 from lfr.netlistgenerator.mappingoption import MappingOption
 from lfr.compiler.module import Module
 from lfr.graphmatch.matchpattern import MatchPattern
+from lfr.utils import printgraph
 
 # def generate_MARS_library() -> MappingLibrary:
 #     # TODO - Programatically create each of the items necessary for the MARS
@@ -980,12 +984,13 @@ def generate_dropx_library() -> MappingLibrary:
 def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
     # In order to create the device, we do the following
-    # STEP 1 -
+    # STEP 1 - Simplify the Fluid Interaction Graphs
     # STEP 2 - Initialize the active strategy
     # STEP 3 - Get all the technology mapping matches for the FIG
     # STEP 4 - Eliminate the matches that are exactly the same as the explicit matches
     # STEP 5 - Generate the waste outputs
     # STEP 6 - Generate the mapping variants
+    # STEP 6.5 - Generate the flow subgraph matches
     # STEP 7 - Generate the control logic network
     # STEP 8 - Generate the connections
     # STEP 9 - Size the components
@@ -993,7 +998,10 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
     # construction_graph = ConstructionGraph()
 
-    # Step 1 -
+    # Step 1 - Simplify the Fluid Interaction Graphs
+    printgraph(module.FIG, f"{module.name}_FIG")
+    remove_passthrough_nodes(module.FIG)
+    printgraph(module.FIG, f"{module.name}_FIG_simplified")
 
     # STEP 2 - Initialize the active strategy
     # TODO - I need to change this DummyStrategy later on
@@ -1038,13 +1046,11 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
     # STEP 6 - Generate the mapping variants
     variants = generate_match_variants(
-        matches, 
-        module.FIG, 
-        library, 
-        active_strategy, 
-        explict_cover_sets
+        matches, module.FIG, library, active_strategy, explict_cover_sets
     )
 
+    # STEP 6.5 -Generate the matches for the flow subgraphs
+    add_flow_flow_matching_candidates(module.FIG, variants, active_strategy)
     # Now generate the devices for each of the variants
     generated_devices = []
     for variant in variants:

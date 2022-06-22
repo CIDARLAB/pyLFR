@@ -6,9 +6,15 @@ class ExplicitMappingType(Enum):
     FLUID_INTERACTION = 0
     STORAGE = 1
     NETWORK = 2
+    PUMP = 3
 
 
 class ExplicitMapping:
+    """Explicit Mapping
+
+    This is the main class that is used to map micorfluidic technologies to a fluid interaction graph.
+    """
+
     def __init__(
         self, mapping_type: ExplicitMappingType = ExplicitMappingType.FLUID_INTERACTION
     ):
@@ -39,4 +45,4 @@ class ExplicitMapping:
         # start and end and remove the correspoinding connections.
         # TODO: In scenarios where there are inbetween nodes, we probably need to be more careful and
         # this might not be the right place to do that kind of mapping
-        pass
+        raise NotImplementedError()

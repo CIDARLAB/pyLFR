@@ -337,14 +337,14 @@ class NetworkPrimitive(Primitive):
         # Write methods that will utilize the subgraph view to generate the
         # netlist
         self._fig_subgraph_view = fig_subgraph_view
-        self._netlist: Optional[MINTDevice] = None
+        self._default_netlist: Optional[MINTDevice] = None
 
     def generate_netlist(self) -> None:
         """Generates the netlist for the given network primitive, this method generates
         the flow network, input , output, carriers and loadings into the primitve
         properties
         """
-        self._netlist = self._gen_strategy.generate_flow_network(
+        self._default_netlist = self._gen_strategy.generate_flow_network(
             self._fig_subgraph_view
         )
         self._inputs = self._gen_strategy.generate_input_connectingoptions(
@@ -375,10 +375,10 @@ class NetworkPrimitive(Primitive):
         Returns:
             MINTDevice: Default netlist of whatever the primitive is
         """
-        if self._netlist is None:
+        if self._default_netlist is None:
             raise Exception("No default netlist present for the primitive")
 
         # Utilise the subgraph view to decide how you want to generate a netlist
         # Load all the inputs and outputs based on that information
-        name_gen.rename_netlist(cn_id, self._netlist)
-        return self._netlist
+        name_gen.rename_netlist(cn_id, self._default_netlist)
+        return self._default_netlist
