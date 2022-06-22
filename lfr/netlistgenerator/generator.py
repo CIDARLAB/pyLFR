@@ -1020,7 +1020,9 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
     # STEP 4 - Eliminate the matches that are exactly the same as the explicit matches
     # Get the explicit mapping and find the explicit mappings here
     explicit_mappings = module.get_explicit_mappings()
-    matches = eliminate_explicit_match_alternates(matches, explicit_mappings, library)
+    matches, explict_cover_sets = eliminate_explicit_match_alternates(
+        matches, explicit_mappings, library
+    )
 
     print(
         "Total matches against library after explicit mapping eliminations: {}".format(
@@ -1035,7 +1037,13 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
     # connect_orphan_IO()
 
     # STEP 6 - Generate the mapping variants
-    variants = generate_match_variants(matches, module.FIG, library, active_strategy)
+    variants = generate_match_variants(
+        matches, 
+        module.FIG, 
+        library, 
+        active_strategy, 
+        explict_cover_sets
+    )
 
     # Now generate the devices for each of the variants
     generated_devices = []
@@ -1071,7 +1079,7 @@ def eliminate_explicit_match_alternates(
     matches: List[LibraryPrimitivesEntry],
     explict_mappings: List[NodeMappingTemplate],
     library: MappingLibrary,
-) -> List[LibraryPrimitivesEntry]:
+) -> Tuple[List[LibraryPrimitivesEntry], List[Set[str]]]:
     """Eliminates the alternatives for explicit matches from the list of matches.
 
     Args:
@@ -1094,6 +1102,9 @@ def eliminate_explicit_match_alternates(
 
     # This is the explit match store that we keep track of explicitly defined mappings
     explicit_matches: List[LibraryPrimitivesEntry] = []
+
+    # This is the set of cover sets that are found and returned
+    explicit_cover_sets: List[Set[str]] = []
 
     # Go through each of the explict matches, generate a subgraph and compare against
     # all the matches
@@ -1201,6 +1212,8 @@ def eliminate_explicit_match_alternates(
             )
 
             explicit_matches.append(match_tuple)
+            # This is something we need to return to the to the caller
+            explicit_cover_sets.append(node_set)
 
     # Modify the matches list
     eliminated_matches = []
@@ -1211,7 +1224,7 @@ def eliminate_explicit_match_alternates(
     # Add the explicit matches to the list of matches
     eliminated_matches.extend(explicit_matches)
 
-    return eliminated_matches
+    return (eliminated_matches, explicit_cover_sets)
 
 
 def generate_device(

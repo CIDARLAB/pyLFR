@@ -12,6 +12,8 @@ from typing import Dict, TYPE_CHECKING
 
 from pymint.mintlayer import MINTLayerType
 
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
+
 if TYPE_CHECKING:
     from lfr.netlistgenerator.constructiongraph.constructiongraph import (
         ConstructionGraph,
@@ -25,7 +27,7 @@ from pymint.mintnode import MINTNode
 from parchmint import Target
 
 
-class MarsStrategy:
+class MarsStrategy(GenStrategy):
     def __init__(self, fig: FluidInteractionGraph) -> None:
         self._fig: FluidInteractionGraph = fig
         self._fig_netlist_map: Dict[str, str] = dict()

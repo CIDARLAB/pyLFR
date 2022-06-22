@@ -11,8 +11,9 @@ from lfr.netlistgenerator.mappinglibrary import MappingLibrary, MatchPatternEntr
 from lfr.netlistgenerator.constructiongraph.constructiongraph import (
     ConstructionGraph,
 )
-from typing import Dict, FrozenSet, List, Set, Tuple
+from typing import Dict, FrozenSet, List, Optional, Set, Tuple
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.postprocessor.mapping import NodeMappingTemplate
 
 
 def generate_match_variants(
@@ -20,6 +21,7 @@ def generate_match_variants(
     fig: FluidInteractionGraph,
     library: MappingLibrary,
     active_strategy: GenStrategy,
+    explicit_mapping_covers: Optional[List[Set[str]]] = None,
 ) -> List[ConstructionGraph]:
     """
     Generate all possible match variants of a given graph.
@@ -31,10 +33,43 @@ def generate_match_variants(
        A tree view of the matches
     """
 
+    def find_index_of_match_entry(
+        fig_cover_set: Set[str],
+        matches: List[LibraryPrimitivesEntry],
+    ) -> int:
+        """Find the index of a match entry in a list of matches."""
+        for index, entry in enumerate(matches):
+            if fig_cover_set == set(list(entry[2].keys())):
+                return index
+        raise Exception("Could not find the index of the match entry")
+
+    def move_entry_to_front(
+        entries_list: List[LibraryPrimitivesEntry],
+        index: int,
+    ) -> None:
+        """Move an entry to the front of a list."""
+        entries_list.insert(0, entries_list.pop(index))
+
     def generate_match_subgraph(match: LibraryPrimitivesEntry):
         """Generate a fig subgraph view of a match."""
         nodes_list = list(match[2].keys())
         return fig.subgraph(nodes_list)
+
+    def create_variant(
+        node: ConstructionNode,
+        variant: ConstructionGraph,
+        fig_node_cover: FrozenSet[str],
+    ):
+        print(f"Generating new variant for substitution {node.ID}")
+        new_variant = variant.generate_variant(f"variant_{variant_index}")
+
+        # TODO - Substitute the node with the new node
+        new_variant.remove_node_for_exact_fig_cover(fig_node_cover)
+        new_variant.add_construction_node(node)
+        # Creates a new variant branch and add it to the variant tree
+        print(f"Adding node {node.ID} to variant {variant.ID}")
+
+        variant_tree.add_variant(variant, new_variant)
 
     variant_tree: VariantTree[ConstructionGraph] = VariantTree[ConstructionGraph]()
     cn_name_generator = NameGenerator()
@@ -68,31 +103,26 @@ def generate_match_variants(
             subsets.append(nodes_set)
         universe.union(nodes_set)
 
-    cover = generate_set_cover(universe, subsets)
-    print("Set Cover:", cover)
-
-    def create_variant(
-        node: ConstructionNode,
-        variant: ConstructionGraph,
-        fig_node_cover: FrozenSet[str],
-    ):
-        print(f"Generating new variant for substitution {node.ID}")
-        new_variant = variant.generate_variant(f"variant_{variant_index}")
-
-        # TODO - Substitute the node with the new node
-        new_variant.remove_node_for_exact_fig_cover(fig_node_cover)
-        new_variant.add_construction_node(node)
-        # Creates a new variant branch and add it to the variant tree
-        print(f"Adding node {node.ID} to variant {variant.ID}")
-
-        variant_tree.add_variant(variant, new_variant)
-
     # Group all the matches based on the node mappings
 
     # Order all the matches based on:
     # 1. Explicit Matches
     # 2. Set Cover Matches
     # 3. Smallest Cover Matches
+    cover = generate_set_cover(universe, subsets)
+    print("Moving Max Set Cover to the front:", cover)
+    for cover_set_entry in cover:
+        move_entry_to_front(
+            matches, find_index_of_match_entry(cover_set_entry, matches)
+        )
+
+    if explicit_mapping_covers is not None:
+        # Moving all the explicit matches to the front
+        print("Moving Explicit Matches to the front:", explicit_mapping_covers)
+        for explicit_mapping_cover in explicit_mapping_covers:
+            move_entry_to_front(
+                matches, find_index_of_match_entry(explicit_mapping_cover, matches)
+            )
 
     # Loop through every match
     for match in matches:
