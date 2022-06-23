@@ -1,12 +1,13 @@
 import argparse
 import glob
 import json
-from lfr.api import compile_lfr
 import os
 
-import lfr.parameters as parameters
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from art import tprint
+
+import lfr.parameters as parameters
+from lfr.api import compile_lfr
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 
 
 def load_libraries():

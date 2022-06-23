@@ -1,4 +1,5 @@
 from typing import Optional
+
 from lfr.compiler.language.vectorrange import VectorRange
 
 

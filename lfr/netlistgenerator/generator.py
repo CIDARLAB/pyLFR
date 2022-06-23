@@ -1,61 +1,51 @@
-from typing import Optional
-
-from lfr.fig.simplification import remove_passthrough_nodes
-from lfr.netlistgenerator import LibraryPrimitivesEntry
-from lfr.netlistgenerator.constructiongraph.constructiongraph import (
-    ConstructionGraph,
-)
-from lfr.netlistgenerator.constructiongraph.edge_generation import (
-    generate_construction_graph_edges,
-)
-from lfr.netlistgenerator.constructiongraph.variant_generator import (
-    generate_match_variants,
-)
 from copy import deepcopy
-from typing import Dict, FrozenSet, List, Set, Tuple
+from typing import Dict, FrozenSet, List, Optional, Set, Tuple
+
 import networkx as nx
-
 from pymint.mintdevice import MINTDevice
-from lfr.graphmatch.interface import get_fig_matches
-from lfr.netlistgenerator.flownetworkmatching import add_flow_flow_matching_candidates
-from lfr.netlistgenerator.netlist_generation import generate_device
-
-from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
-from lfr.netlistgenerator.gen_strategies.dropxstrategy import DropXStrategy
-from lfr.netlistgenerator.gen_strategies.marsstrategy import MarsStrategy
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.postprocessor.mapping import (
-    FluidicOperatorMapping,
-    NetworkMapping,
-    NodeMappingInstance,
-    NodeMappingTemplate,
-    PumpMapping,
-    StorageMapping,
-)
 from pymint.mintlayer import MINTLayerType
-from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
-from lfr.netlistgenerator.connectingoption import ConnectingOption
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary, MatchPatternEntry
 
+from lfr.compiler.module import Module
+from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+# from lfr.netlistgenerator.constructiongraph import ConstructionGraph
+from lfr.fig.interaction import (FluidIntegerInteraction,
+                                 FluidNumberInteraction, InteractionType)
+from lfr.fig.simplification import remove_passthrough_nodes
+from lfr.graphmatch.interface import get_fig_matches
+from lfr.graphmatch.matchpattern import MatchPattern
+from lfr.netlistgenerator import LibraryPrimitivesEntry
+from lfr.netlistgenerator.connectingoption import ConnectingOption
+from lfr.netlistgenerator.constructiongraph.constructiongraph import \
+    ConstructionGraph
+from lfr.netlistgenerator.constructiongraph.constructionnode import \
+    ConstructionNode
+from lfr.netlistgenerator.constructiongraph.edge_generation import \
+    generate_construction_graph_edges
+from lfr.netlistgenerator.constructiongraph.variant_generator import \
+    generate_match_variants
+from lfr.netlistgenerator.flownetworkmatching import \
+    add_flow_flow_matching_candidates
+from lfr.netlistgenerator.gen_strategies.dropxstrategy import DropXStrategy
+from lfr.netlistgenerator.gen_strategies.dummy import DummyStrategy
 # from lfr.netlistgenerator.networkmappingoption import (
 #     NetworkMappingOption,
 #     NetworkMappingOptionType,
 # )
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
-from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
-from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.gen_strategies.dummy import DummyStrategy
-from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
-
-# from lfr.netlistgenerator.constructiongraph import ConstructionGraph
-from lfr.fig.interaction import (
-    FluidIntegerInteraction,
-    FluidNumberInteraction,
-    InteractionType,
-)
+from lfr.netlistgenerator.gen_strategies.marsstrategy import MarsStrategy
+from lfr.netlistgenerator.mappinglibrary import (MappingLibrary,
+                                                 MatchPatternEntry)
 from lfr.netlistgenerator.mappingoption import MappingOption
-from lfr.compiler.module import Module
-from lfr.graphmatch.matchpattern import MatchPattern
+from lfr.netlistgenerator.namegenerator import NameGenerator
+from lfr.netlistgenerator.netlist_generation import generate_device
+from lfr.netlistgenerator.primitive import (NetworkPrimitive, Primitive,
+                                            PrimitiveType)
+from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
+from lfr.postprocessor.mapping import (FluidicOperatorMapping, NetworkMapping,
+                                       NodeMappingInstance,
+                                       NodeMappingTemplate, PumpMapping,
+                                       StorageMapping)
 from lfr.utils import printgraph
 
 # def generate_MARS_library() -> MappingLibrary:

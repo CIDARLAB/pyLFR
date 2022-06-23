@@ -1,10 +1,13 @@
-from lfr.netlistgenerator.primitive import Primitive
-from lfr.postprocessor.constraints import Constraint
+from __future__ import annotations
+
+from typing import List, Optional, Set
+
+import networkx as nx
+
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappingoption import MappingOption
-from typing import List, Optional, Set
-import networkx as nx
-from __future__ import annotations
+from lfr.netlistgenerator.primitive import Primitive
+from lfr.postprocessor.constraints import Constraint
 
 
 class ConstructionNode:

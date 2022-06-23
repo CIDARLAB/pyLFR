@@ -1,7 +1,7 @@
-from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 from typing import Dict, List, Tuple
-from lfr.fig.interaction import InteractionType
 
+from lfr.fig.interaction import InteractionType
+from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 
 """Give full description of the type here
 

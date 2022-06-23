@@ -1,4 +1,5 @@
 from typing import overload
+
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 

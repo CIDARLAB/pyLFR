@@ -1,21 +1,18 @@
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 from typing import List
 
 from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+
 from lfr import parameters
 from lfr.antlrgen.lfr.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.moduleinstanceListener import ModuleInstanceListener
-from lfr.netlistgenerator.generator import (
-    generate,
-    generate_dropx_library,
-    generate_mars_library,
-    generate_mlsi_library,
-)
+from lfr.netlistgenerator.generator import (generate, generate_dropx_library,
+                                            generate_mars_library,
+                                            generate_mlsi_library)
 from lfr.postProcessListener import PostProcessListener
-
 from lfr.preprocessor import PreProcessor
 from lfr.utils import print_netlist, printgraph, serialize_netlist
 

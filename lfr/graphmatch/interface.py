@@ -1,11 +1,12 @@
-from lfr.fig.annotation import DistributeAnnotation
-from lfr.graphmatch.figmappingmatcher import FIGMappingMatcher
 from typing import Dict, FrozenSet, List, Optional, Tuple
-from lfr.netlistgenerator import LibraryPrimitivesEntry
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary
+
+from lfr.fig.annotation import DistributeAnnotation
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.graphmatch.figmappingmatcher import FIGMappingMatcher
 from lfr.graphmatch.matchpattern import MatchPattern
 from lfr.graphmatch.nodefilter import NodeFilter
+from lfr.netlistgenerator import LibraryPrimitivesEntry
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 
 
 def bijective_match_node_constraints(

@@ -1,9 +1,10 @@
-from lfr.netlistgenerator import primitive
-from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
-from lfr.netlistgenerator.namegenerator import NameGenerator
-from pymint import MINTDevice
 import networkx as nx
+from pymint import MINTDevice
 
+from lfr.netlistgenerator import primitive
+from lfr.netlistgenerator.constructiongraph.constructiongraph import \
+    ConstructionGraph
+from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import PrimitiveType
 
 

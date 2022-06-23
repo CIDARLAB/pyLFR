@@ -9,12 +9,13 @@ from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 if TYPE_CHECKING:
     from lfr.netlistgenerator.constructiongraph import ConstructionGraph
 
-from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List
 
+from parchmint import Target
 from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
-from parchmint import Target
+
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 
 
 class GenStrategy:

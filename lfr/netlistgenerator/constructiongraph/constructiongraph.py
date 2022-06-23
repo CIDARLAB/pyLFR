@@ -1,9 +1,13 @@
 from __future__ import annotations
-from lfr.fig.fignode import Flow, Signal
+
 from typing import FrozenSet, List, Tuple
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
+
 import networkx as nx
+
+from lfr.fig.fignode import Flow, Signal
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.netlistgenerator.constructiongraph.constructionnode import \
+    ConstructionNode
 
 
 class ConstructionGraph(nx.Graph):

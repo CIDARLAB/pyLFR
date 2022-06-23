@@ -1,6 +1,6 @@
-from networkx.algorithms.operators.unary import reverse
-
 from typing import TYPE_CHECKING
+
+from networkx.algorithms.operators.unary import reverse
 
 if TYPE_CHECKING:
     from lfr.compiler.language.vector import Vector

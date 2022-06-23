@@ -1,8 +1,9 @@
 from typing import List
-from lfr.fig.fignode import Flow
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+
 import networkx as nx
 
+from lfr.fig.fignode import Flow
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 
 """FIG Simplification
 

@@ -1,7 +1,8 @@
-from lfr.graphmatch.nodefilter import NodeFilter
-from lfr.antlrgen.reggie.reggieParser import reggieParser
-from lfr.antlrgen.reggie.reggieListener import reggieListener
 import networkx as nx
+
+from lfr.antlrgen.reggie.reggieListener import reggieListener
+from lfr.antlrgen.reggie.reggieParser import reggieParser
+from lfr.graphmatch.nodefilter import NodeFilter
 
 
 class MatchPatternGenerator(reggieListener):

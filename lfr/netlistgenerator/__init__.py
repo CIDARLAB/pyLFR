@@ -5,5 +5,4 @@ TODO - Add detailed descriptions of all types
 
 from typing import Dict, Tuple
 
-
 LibraryPrimitivesEntry = Tuple[str, str, Dict[str, str]]

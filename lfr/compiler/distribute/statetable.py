@@ -1,11 +1,10 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 
-from lfr.utils import convert_list_to_str
-from lfr.fig.annotation import ANDAnnotation, NOTAnnotation, ORAnnotation
 from typing import Dict, List, Tuple
 
 import networkx as nx
@@ -13,6 +12,8 @@ import numpy as np
 from tabulate import tabulate
 
 from lfr.compiler.distribute.BitVector import BitVector
+from lfr.fig.annotation import ANDAnnotation, NOTAnnotation, ORAnnotation
+from lfr.utils import convert_list_to_str
 
 
 class StateTable:

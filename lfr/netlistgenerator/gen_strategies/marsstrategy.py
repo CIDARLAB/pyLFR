@@ -5,13 +5,9 @@ from typing import TYPE_CHECKING, Dict
 from pymint.mintlayer import MINTLayerType
 
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.netlistgenerator.constructiongraph.constructionnode import \
+    ConstructionNode
 from lfr.netlistgenerator.dafdadapter import DAFDAdapter
-from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
-
-from typing import Dict, TYPE_CHECKING
-
-from pymint.mintlayer import MINTLayerType
-
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 
 if TYPE_CHECKING:
@@ -19,12 +15,13 @@ if TYPE_CHECKING:
         ConstructionGraph,
     )
 
-from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List
 
+from parchmint import Target
 from pymint.mintdevice import MINTDevice
 from pymint.mintnode import MINTNode
-from parchmint import Target
+
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 
 
 class MarsStrategy(GenStrategy):

@@ -1,14 +1,15 @@
 from typing import List
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
-from lfr.netlistgenerator.networkmappingoption import (
-    NetworkMappingOption,
-    NetworkMappingOptionType,
-)
-from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
-from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
+
 import networkx as nx
 
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.netlistgenerator.constructiongraph.constructiongraph import \
+    ConstructionGraph
+from lfr.netlistgenerator.constructiongraph.constructionnode import \
+    ConstructionNode
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
+from lfr.netlistgenerator.networkmappingoption import (
+    NetworkMappingOption, NetworkMappingOptionType)
 from lfr.netlistgenerator.primitive import NetworkPrimitive
 
 

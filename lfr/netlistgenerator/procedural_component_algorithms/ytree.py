@@ -1,8 +1,8 @@
-from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List, Optional
 
 from parchmint import Component, Layer, Params
 
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
 

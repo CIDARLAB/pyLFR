@@ -1,9 +1,9 @@
 from os import error
 from typing import Dict, Optional
 
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
-from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.distBlockListener import DistBlockListener
 
 

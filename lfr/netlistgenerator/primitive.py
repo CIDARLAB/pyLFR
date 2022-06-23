@@ -1,13 +1,14 @@
 import copy
-from enum import Enum
 import hashlib
+from enum import Enum
 from typing import List, Optional
+
 from parchmint import Component, Layer, Params
 from pymint.mintdevice import MINTDevice
 
-from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
-from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr import parameters
+from lfr.netlistgenerator.connectingoption import ConnectingOption
+from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.namegenerator import NameGenerator
 
 

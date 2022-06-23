@@ -1,35 +1,20 @@
 from __future__ import annotations
 
 import copy
+import uuid
+from typing import Dict, List, Tuple, Union
 
 import networkx as nx
 
 from lfr.compiler.distribute.statetable import StateTable
-from typing import List, Dict, Tuple, Union
-from lfr.fig.fignode import (
-    FIGNode,
-    IONode,
-    IOType,
-    ValueNode,
-)
-
-from lfr.fig.annotation import (
-    ANDAnnotation,
-    DistributeAnnotation,
-    NOTAnnotation,
-    ORAnnotation,
-)
-
-from lfr.fig.interaction import (
-    FluidFluidInteraction,
-    FluidIntegerInteraction,
-    FluidNumberInteraction,
-    FluidProcessInteraction,
-    Interaction,
-    InteractionType,
-)
-
-import uuid
+from lfr.fig.annotation import (ANDAnnotation, DistributeAnnotation,
+                                NOTAnnotation, ORAnnotation)
+from lfr.fig.fignode import FIGNode, IONode, IOType, ValueNode
+from lfr.fig.interaction import (FluidFluidInteraction,
+                                 FluidIntegerInteraction,
+                                 FluidNumberInteraction,
+                                 FluidProcessInteraction, Interaction,
+                                 InteractionType)
 
 
 class FluidInteractionGraph(nx.DiGraph):

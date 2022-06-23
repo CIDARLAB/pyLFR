@@ -1,13 +1,16 @@
 from __future__ import annotations
+
+from typing import Dict
+
+from antlr4 import InputStream
 from antlr4.CommonTokenStream import CommonTokenStream
 from antlr4.tree.Tree import ParseTreeWalker
-from lfr.graphmatch.nodefilter import NodeFilter
 from networkx.classes.digraph import DiGraph
-from typing import Dict
-from antlr4 import InputStream
+
 from lfr.antlrgen.reggie.reggieLexer import reggieLexer
 from lfr.antlrgen.reggie.reggieParser import reggieParser
 from lfr.graphmatch.matchpatterngenerator import MatchPatternGenerator
+from lfr.graphmatch.nodefilter import NodeFilter
 
 
 class MatchPattern:

@@ -1,9 +1,10 @@
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
 from typing import List
 
-from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
-
+from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.netlistgenerator.constructiongraph.constructiongraph import \
+    ConstructionGraph
+from lfr.netlistgenerator.constructiongraph.constructionnode import \
+    ConstructionNode
 
 # def _bridge_channel_networks(construction_graph: ConstructionGraph) -> None:
 #     # TODO - Bridge the channel networks

@@ -1,8 +1,10 @@
 from typing import Dict
+
 from networkx.algorithms.isomorphism import DiGraphMatcher
 from networkx.classes import digraph
-from lfr.graphmatch.nodefilter import NodeFilter
+
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+from lfr.graphmatch.nodefilter import NodeFilter
 
 
 class FIGMappingMatcher(DiGraphMatcher):
