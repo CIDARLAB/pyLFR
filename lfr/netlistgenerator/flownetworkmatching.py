@@ -20,7 +20,7 @@ def add_flow_flow_matching_candidates(
     flow_cns = get_flow_flow_candidates(fig, gen_strategy)
     print("Found New Flow-Flow match nodes:", flow_cns)
     add_flow_flow_candadates_to_variants(variants, flow_cns)
-    print("New variant Mappings:", variants)
+    print("New variant Mappings:", [str(v) for v in variants])
 
 
 def add_flow_flow_candadates_to_variants(
@@ -65,8 +65,7 @@ def get_flow_flow_candidates(
     # Step 3. Now get the all the disconnected pieces of the graph
     i = 0
     for component in nx.connected_components(fig_copy.to_undirected()):
-        print("Flow candidate")
-        print(component)
+        print("Flow candidate", component)
         sub = fig_original.subgraph(component)
         # TODO - Decide what the mapping type should be. for now assume that we just a single
         # passthrough type scenario where we don't have to do much work

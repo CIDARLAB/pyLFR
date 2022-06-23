@@ -4,6 +4,7 @@ from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappingoption import MappingOption
 from typing import List, Optional, Set
 import networkx as nx
+from __future__ import annotations
 
 
 class ConstructionNode:
@@ -138,7 +139,7 @@ class ConstructionNode:
 
         self._carrier_options = options
 
-    def merge_construction_node(self, construction_node: "ConstructionNode") -> None:
+    def merge_construction_node(self, construction_node: ConstructionNode) -> None:
         """Merges the construction node passed as an arugment into the this
         construction node.
 
@@ -154,7 +155,7 @@ class ConstructionNode:
             "Implement this when we are trying to make combinatorial operations work"
         )
 
-    def has_border_overlap(self, other_node: "ConstructionNode") -> bool:
+    def has_border_overlap(self, other_node: ConstructionNode) -> bool:
         """Checks if the border of the current node overlaps with the border"""
 
         # Step 1 - Get the intersection of the two covers, If the intersection is empty

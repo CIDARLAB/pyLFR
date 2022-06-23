@@ -5,6 +5,9 @@ from lfr.netlistgenerator import LibraryPrimitivesEntry
 from lfr.netlistgenerator.constructiongraph.constructiongraph import (
     ConstructionGraph,
 )
+from lfr.netlistgenerator.constructiongraph.edge_generation import (
+    generate_construction_graph_edges,
+)
 from lfr.netlistgenerator.constructiongraph.variant_generator import (
     generate_match_variants,
 )
@@ -15,6 +18,7 @@ import networkx as nx
 from pymint.mintdevice import MINTDevice
 from lfr.graphmatch.interface import get_fig_matches
 from lfr.netlistgenerator.flownetworkmatching import add_flow_flow_matching_candidates
+from lfr.netlistgenerator.netlist_generation import generate_device
 
 from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
 from lfr.netlistgenerator.gen_strategies.dropxstrategy import DropXStrategy
@@ -1051,6 +1055,12 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
     # STEP 6.5 -Generate the matches for the flow subgraphs
     add_flow_flow_matching_candidates(module.FIG, variants, active_strategy)
+
+    # STEP 8 - Generate the edges in the construction graph
+    print("Generating the construction graph edges...")
+    for variant in variants:
+        generate_construction_graph_edges(module.FIG, variant)
+
     # Now generate the devices for each of the variants
     generated_devices = []
     for variant in variants:
@@ -1231,20 +1241,6 @@ def eliminate_explicit_match_alternates(
     eliminated_matches.extend(explicit_matches)
 
     return (eliminated_matches, explicit_cover_sets)
-
-
-def generate_device(
-    construction_graph: ConstructionGraph,
-    scaffhold_device: MINTDevice,
-    name_generator: NameGenerator,
-) -> None:
-    # TODO - Generate the device
-    # Step 1 - go though each of the construction nodes and genrate the corresponding
-    # components
-    # Step 2 - generate the connections between the outputs to input on the connected
-    # construction nodes
-    # Step 3 - TODO - Generate the control network
-    pass
 
 
 def connect_orphan_IO():
