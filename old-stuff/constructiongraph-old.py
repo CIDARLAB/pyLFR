@@ -11,13 +11,11 @@ from pymint.minttarget import MINTTarget
 from lfr.compiler.module import Module
 from lfr.fig.fignode import FIGNode
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
 from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.networkmappingoption import (
-    NetworkMappingOption,
-    NetworkMappingOptionType,
-)
+    NetworkMappingOption, NetworkMappingOptionType)
+from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
 
 
 class OLDConstructionGraph(nx.DiGraph):

@@ -1,16 +1,16 @@
 from __future__ import annotations
+import os
 
-from typing import FrozenSet, List, Tuple
+from typing import FrozenSet, List
 
 import networkx as nx
+from lfr import parameters
 
-from lfr.fig.fignode import Flow, Signal
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.constructiongraph.constructionnode import \
-    ConstructionNode
+from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 
 
-class ConstructionGraph(nx.Graph):
+class ConstructionGraph(nx.DiGraph):
     """
     This class is a sub-class of networkx.DiGraph.
     It acts as a proxy datastructure for generating the device netlist.
@@ -144,3 +144,13 @@ class ConstructionGraph(nx.Graph):
     def __str__(self):
         ret = "Construction Graph: " + self.ID
         return ret
+
+    def print_graph(self, filename: str) -> None:
+        """Prints the graph to a file
+
+        Args:
+            filename (str): Name of the file to print the graph to
+        """
+        tt = os.path.join(parameters.OUTPUT_DIR, filename)
+        print("File Path:", tt)
+        nx.nx_agraph.to_agraph(self).write(tt)

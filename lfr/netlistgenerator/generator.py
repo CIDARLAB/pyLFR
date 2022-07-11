@@ -8,44 +8,50 @@ from pymint.mintlayer import MINTLayerType
 from lfr.compiler.module import Module
 from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
+
 # from lfr.netlistgenerator.constructiongraph import ConstructionGraph
-from lfr.fig.interaction import (FluidIntegerInteraction,
-                                 FluidNumberInteraction, InteractionType)
+from lfr.fig.interaction import (
+    FluidIntegerInteraction,
+    FluidNumberInteraction,
+    InteractionType,
+)
 from lfr.fig.simplification import remove_passthrough_nodes
 from lfr.graphmatch.interface import get_fig_matches
 from lfr.graphmatch.matchpattern import MatchPattern
 from lfr.netlistgenerator import LibraryPrimitivesEntry
 from lfr.netlistgenerator.connectingoption import ConnectingOption
-from lfr.netlistgenerator.constructiongraph.constructiongraph import \
-    ConstructionGraph
-from lfr.netlistgenerator.constructiongraph.constructionnode import \
-    ConstructionNode
-from lfr.netlistgenerator.constructiongraph.edge_generation import \
-    generate_construction_graph_edges
-from lfr.netlistgenerator.constructiongraph.variant_generator import \
-    generate_match_variants
-from lfr.netlistgenerator.flownetworkmatching import \
-    add_flow_flow_matching_candidates
+from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
+from lfr.netlistgenerator.constructiongraph.edge_generation import (
+    generate_construction_graph_edges,
+)
+from lfr.netlistgenerator.constructiongraph.variant_generator import (
+    generate_match_variants,
+)
+from lfr.netlistgenerator.flownetworkmatching import add_flow_flow_matching_candidates
 from lfr.netlistgenerator.gen_strategies.dropxstrategy import DropXStrategy
 from lfr.netlistgenerator.gen_strategies.dummy import DummyStrategy
+
 # from lfr.netlistgenerator.networkmappingoption import (
 #     NetworkMappingOption,
 #     NetworkMappingOptionType,
 # )
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.gen_strategies.marsstrategy import MarsStrategy
-from lfr.netlistgenerator.mappinglibrary import (MappingLibrary,
-                                                 MatchPatternEntry)
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary, MatchPatternEntry
 from lfr.netlistgenerator.mappingoption import MappingOption
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.netlist_generation import generate_device
-from lfr.netlistgenerator.primitive import (NetworkPrimitive, Primitive,
-                                            PrimitiveType)
+from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
 from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
-from lfr.postprocessor.mapping import (FluidicOperatorMapping, NetworkMapping,
-                                       NodeMappingInstance,
-                                       NodeMappingTemplate, PumpMapping,
-                                       StorageMapping)
+from lfr.postprocessor.mapping import (
+    FluidicOperatorMapping,
+    NetworkMapping,
+    NodeMappingInstance,
+    NodeMappingTemplate,
+    PumpMapping,
+    StorageMapping,
+)
 from lfr.utils import printgraph
 
 # def generate_MARS_library() -> MappingLibrary:
@@ -1050,6 +1056,7 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
     print("Generating the construction graph edges...")
     for variant in variants:
         generate_construction_graph_edges(module.FIG, variant)
+        variant.print_graph(f"{variant.ID}_construction_graph.dot")
 
     # Now generate the devices for each of the variants
     generated_devices = []
@@ -1201,7 +1208,8 @@ def eliminate_explicit_match_alternates(
                 )
                 match_node_set_dict[frozenset(node_set)].clear()
 
-            # If the match_primitive ID is None, we need to query a match from the library
+            # If the match_primitive ID is None, we need to query a match from the
+            # library
             if match_primitive_uid is None:
                 primitives_with_technology = library.get_primitives(
                     match_technology_string

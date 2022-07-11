@@ -1,7 +1,8 @@
-from lfr.postprocessor.constraints import Constraint
+from typing import List
+
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.mappingoption import MappingOption
-from typing import List
+from lfr.postprocessor.constraints import Constraint
 
 
 class OLDConstructionNode:

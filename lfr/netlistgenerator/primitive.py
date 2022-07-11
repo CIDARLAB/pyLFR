@@ -2,10 +2,9 @@ import copy
 import hashlib
 from enum import Enum
 from typing import List, Optional
-
+from pymint import MINTDevice
 from parchmint import Component, Layer, Params
-from pymint.mintdevice import MINTDevice
-
+from parchmint import Device
 from lfr import parameters
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
@@ -160,7 +159,7 @@ class Primitive:
         )
         return mc
 
-    def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
+    def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> Device:
         """Returns the default netlist for the primitive
 
         Args:
@@ -181,17 +180,17 @@ class Primitive:
             )
         default_mint_file = parameters.LIB_DIR.joinpath(self._default_netlist).resolve()
 
-        device = MINTDevice.from_mint_file(str(default_mint_file))
+        mint_device = MINTDevice.from_mint_file(str(default_mint_file))
 
-        if device is None:
+        if mint_device is None:
             raise Exception(
                 "Unable to parse MINT file: {} for construction node {}".format(
                     str(default_mint_file), cn_id
                 )
             )
-        name_gen.rename_netlist(cn_id, device)
+        name_gen.rename_netlist(cn_id, mint_device)
         # Return the default netlist
-        return device
+        return mint_device.device
 
     def __hash__(self) -> int:
         return hash("{}_{}".format(self.mint, self.match_string))
@@ -361,7 +360,7 @@ class NetworkPrimitive(Primitive):
             self._fig_subgraph_view
         )
 
-    def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> MINTDevice:
+    def get_default_netlist(self, cn_id: str, name_gen: NameGenerator) -> Device:
         """Returns the default netlist for the primitive
 
         Args:
@@ -382,4 +381,4 @@ class NetworkPrimitive(Primitive):
         # Utilise the subgraph view to decide how you want to generate a netlist
         # Load all the inputs and outputs based on that information
         name_gen.rename_netlist(cn_id, self._default_netlist)
-        return self._default_netlist
+        return self._default_netlist.device

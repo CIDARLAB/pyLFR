@@ -17,6 +17,15 @@ class ConstructionNode:
         primitive: Optional[Primitive] = None,
         subgraph_view: Optional[nx.DiGraph] = None,
     ) -> None:
+        """Initializes the construction node
+
+        Args:
+            node_id (str): ID of the node
+            primitive (Optional[Primitive], optional): Primitve to map. Defaults to
+            None.
+            subgraph_view (Optional[nx.DiGraph], optional): subgraph view of the FIG.
+            Defaults to None.
+        """
         self._id = node_id
         self._explict_mapping_flag = False
         self._fig_subgraph: Optional[nx.DiGraph] = subgraph_view
@@ -32,40 +41,94 @@ class ConstructionNode:
         # These will be all the imported constraints
         self._constraints: List[Constraint] = []
 
+        # Load the connection options
+        if self.primitive is not None:
+            self._load_connection_options()
+
     @property
-    def primitive(self):
+    def primitive(self) -> Primitive:
+        """Returns the primitive that is associated with this construction node
+
+        Returns:
+            Primitive: Primitive that is associated with this construction node
+        """
+        if self._primitive is None:
+            raise Exception("Primitive not set for construction node")
         return self._primitive
 
     @primitive.setter
     def primitive(self, primitive: Primitive) -> None:
+        """Sets the primitive for the construction node
+
+        Args:
+            primitive (Primitive): Primitive that needs to be set
+        """
         self._primitive = primitive
+        self._load_connection_options()
 
     @property
-    def fig_subgraph(self):
+    def fig_subgraph(self) -> nx.DiGraph:
+        """Returns the FIG subgraph of the node
+
+        Returns:
+            nx.Digraph: FIG subgraph of the node
+        """
+        if self._fig_subgraph is None:
+            raise Exception("FIG subgraph not set for construction node")
         return self._fig_subgraph
 
     @fig_subgraph.setter
     def fig_subgraph(self, subgraph: nx.DiGraph) -> None:
+        """Sets the FIG subgraph view of the node
+
+        Args:
+            subgraph (nx.DiGraph): Subgraph view of the node
+        """
         self._fig_subgraph = subgraph
 
     @property
     def is_explictly_mapped(self) -> bool:
+        """Checks if the node is explicitly mapped or not
+
+        Returns:
+            bool: True if the node is explicitly mapped, False otherwise
+        """
         return self._explict_mapping_flag
 
     @property
     def constraints(self) -> List[Constraint]:
+        """Returns the constraints that are associated with this node
+
+        Returns:
+            List[Constraint]: List of constraints associated with this node
+        """
         return self._constraints
 
     @constraints.setter
     def constraints(self, vals: List[Constraint]) -> None:
+        """Sets the constraints for the node
+
+        Args:
+            vals (List[Constraint]): List of constraints to set
+        """
         self._constraints = vals
 
     @property
     def input_options(self) -> List[ConnectingOption]:
+        """Returns the input options of the construction node
+
+        Returns:
+            List[ConnectingOption]: List of input options
+        """
         return self._input_options
 
     @property
     def output_options(self) -> List[ConnectingOption]:
+        """Returns the output options of the construction node
+
+        Returns:
+            List[ConnectingOption]: List of output options
+        """
         return self._output_options
 
     @property
@@ -117,9 +180,9 @@ class ConstructionNode:
         self._primitive = mapping.primitive
         # Now that we have overwritten all the netlist options here
         # we basically cherry pick the one little bit that we want to attach here
-        self.load_connection_options()
+        self._load_connection_options()
 
-    def load_connection_options(self) -> None:
+    def _load_connection_options(self) -> None:
         """Loads the corresponding different connecting options into
         the construction node
         """
