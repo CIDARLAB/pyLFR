@@ -16,7 +16,7 @@ include = [
 python = ">=3.8,<3.11"
 networkx = "^2.5"
 argparse = "^1.4.0"
-antlr4-python3-runtime = "^4.8"
+antlr4-python3-runtime = "^4.10"
 pygraphviz = "^1.6"
 dafd = "latest"
 numpy = "^1.19.4"

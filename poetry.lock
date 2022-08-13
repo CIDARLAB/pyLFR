@@ -692,14 +692,14 @@ python-versions = ">=3.8"
 
 [[package]]
 name = "pymint"
-version = "0.3.0"
+version = "0.3.1"
 description = "MINT is a human readable language to describe Microfluidic Hardware Netlists. MINT is the name of the Microfluidic Netlist language used to describe microfluidic devices for Fluigi to place and route. Mint is a flavor of (MHDL) Microfluidic Hardware Description Language that can be used to represent Microfluidic Circuits."
 category = "main"
 optional = false
 python-versions = ">=3.8,<3.11"
 
 [package.dependencies]
-antlr4-python3-runtime = ">=4.8,<5.0"
+antlr4-python3-runtime = ">=4.10,<5.0"
 click = ">=8.1.3,<9.0.0"
 install = ">=1.3.3,<2.0.0"
 networkx = ">=2.8,<3.0"
@@ -1082,7 +1082,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "5a1ebfcf80db98555380e89ba072000d99a5df37eb3cf569e6e4d5d5a8bd4b7b"
+content-hash = "546acc7b7e7e246d75bf5f2a468819c726b807fc2c5efe511e7bd4a11afa3ade"
 
 [metadata.files]
 absl-py = [
@@ -1593,8 +1593,8 @@ pygraphviz = [
     {file = "pygraphviz-1.9.zip", hash = "sha256:fa18f7c6cea28341a4e466ed0cf05682b0a68288afe8dd7c9426782f7c1ae01c"},
 ]
 pymint = [
-    {file = "pymint-0.3.0-py3-none-any.whl", hash = "sha256:947b25c8a8fc076c005fd06fe1730813b4b2ae74f6c4e250af5aae82e8a6ddcc"},
-    {file = "pymint-0.3.0.tar.gz", hash = "sha256:0df5c9d9cf2e6f3cebe594df84750ab04ae8b67bc3ce077da67916374cd353c8"},
+    {file = "pymint-0.3.1-py3-none-any.whl", hash = "sha256:7a2ef2e64b2232cec158c779259de9686e164d328cd169d5d7199776a6622a26"},
+    {file = "pymint-0.3.1.tar.gz", hash = "sha256:01333619297f343d6a2f70f21f49ce3d6eeb6601c9c7ea2f7ceb3244cc545ca1"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
