@@ -1,0 +1,4 @@
+[submodule "dafd"]
+	path = dafd
+	url = https://github.com/rkrishnasanka/dafd
+	branch = master
