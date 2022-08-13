@@ -7,14 +7,21 @@ from typing import Dict, List, Tuple, Union
 import networkx as nx
 
 from lfr.compiler.distribute.statetable import StateTable
-from lfr.fig.annotation import (ANDAnnotation, DistributeAnnotation,
-                                NOTAnnotation, ORAnnotation)
+from lfr.fig.annotation import (
+    ANDAnnotation,
+    DistributeAnnotation,
+    NOTAnnotation,
+    ORAnnotation,
+)
 from lfr.fig.fignode import FIGNode, IONode, IOType, ValueNode
-from lfr.fig.interaction import (FluidFluidInteraction,
-                                 FluidIntegerInteraction,
-                                 FluidNumberInteraction,
-                                 FluidProcessInteraction, Interaction,
-                                 InteractionType)
+from lfr.fig.interaction import (
+    FluidFluidInteraction,
+    FluidIntegerInteraction,
+    FluidNumberInteraction,
+    FluidProcessInteraction,
+    Interaction,
+    InteractionType,
+)
 
 
 class FluidInteractionGraph(nx.DiGraph):

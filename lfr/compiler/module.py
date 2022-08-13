@@ -6,14 +6,21 @@ from typing import Dict, List, Optional, Union
 from lfr.compiler.moduleio import ModuleIO
 from lfr.fig.fignode import FIGNode, Flow, IONode, IOType
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.fig.interaction import (FluidFluidInteraction,
-                                 FluidIntegerInteraction,
-                                 FluidNumberInteraction,
-                                 FluidProcessInteraction, Interaction,
-                                 InteractionType)
-from lfr.postprocessor.mapping import (FluidicOperatorMapping, NetworkMapping,
-                                       NodeMappingTemplate, PumpMapping,
-                                       StorageMapping)
+from lfr.fig.interaction import (
+    FluidFluidInteraction,
+    FluidIntegerInteraction,
+    FluidNumberInteraction,
+    FluidProcessInteraction,
+    Interaction,
+    InteractionType,
+)
+from lfr.postprocessor.mapping import (
+    FluidicOperatorMapping,
+    NetworkMapping,
+    NodeMappingTemplate,
+    PumpMapping,
+    StorageMapping,
+)
 
 
 class Module:

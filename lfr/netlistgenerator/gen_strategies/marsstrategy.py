@@ -5,8 +5,7 @@ from typing import TYPE_CHECKING, Dict
 from pymint.mintlayer import MINTLayerType
 
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.constructiongraph.constructionnode import \
-    ConstructionNode
+from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 from lfr.netlistgenerator.dafdadapter import DAFDAdapter
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 

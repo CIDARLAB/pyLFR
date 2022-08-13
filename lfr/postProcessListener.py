@@ -5,9 +5,13 @@ from lfr.fig.fignode import FIGNode
 from lfr.fig.interaction import FluidProcessInteraction, Interaction
 from lfr.moduleinstanceListener import ModuleInstanceListener
 from lfr.postprocessor.constraints import Constraint
-from lfr.postprocessor.mapping import (FluidicOperatorMapping, NetworkMapping,
-                                       NodeMappingTemplate, PumpMapping,
-                                       StorageMapping)
+from lfr.postprocessor.mapping import (
+    FluidicOperatorMapping,
+    NetworkMapping,
+    NodeMappingTemplate,
+    PumpMapping,
+    StorageMapping,
+)
 
 
 class PostProcessListener(ModuleInstanceListener):

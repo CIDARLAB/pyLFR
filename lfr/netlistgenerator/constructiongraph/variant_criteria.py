@@ -1,10 +1,8 @@
 from enum import Enum
 from typing import Tuple
 
-from lfr.netlistgenerator.constructiongraph.constructiongraph import \
-    ConstructionGraph
-from lfr.netlistgenerator.constructiongraph.constructionnode import \
-    ConstructionNode
+from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 
 
 class VariantType(Enum):

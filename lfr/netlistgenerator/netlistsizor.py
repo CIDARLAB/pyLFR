@@ -12,10 +12,12 @@ class NetlistSizor:
         self.blacklist_map = netlist_generator.blacklist_map
 
     def size_netlist(self):
-        from lfr.netlistgenerator.dafdadapter import (DAFDSizingAdapter,
-                                                      FunctionalConstraint,
-                                                      GeometryConstraint,
-                                                      PerformanceConstraint)
+        from lfr.netlistgenerator.dafdadapter import (
+            DAFDSizingAdapter,
+            FunctionalConstraint,
+            GeometryConstraint,
+            PerformanceConstraint,
+        )
 
         print("Sizing the device...")
         # TODO: Make this general

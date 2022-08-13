@@ -2,16 +2,15 @@ from typing import Dict, FrozenSet, List, Optional, Set, Tuple
 
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator import LibraryPrimitivesEntry
-from lfr.netlistgenerator.constructiongraph.constructiongraph import \
-    ConstructionGraph
-from lfr.netlistgenerator.constructiongraph.constructionnode import \
-    ConstructionNode
+from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
+from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 from lfr.netlistgenerator.constructiongraph.variant_criteria import (
-    VariantType, check_variant_criteria)
+    VariantType,
+    check_variant_criteria,
+)
 from lfr.netlistgenerator.constructiongraph.varianttree import VariantTree
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
-from lfr.netlistgenerator.mappinglibrary import (MappingLibrary,
-                                                 MatchPatternEntry)
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary, MatchPatternEntry
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.postprocessor.mapping import NodeMappingTemplate
 

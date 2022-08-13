@@ -1,11 +1,11 @@
 from __future__ import annotations
-import os
 
+import os
 from typing import FrozenSet, List
 
 import networkx as nx
-from lfr import parameters
 
+from lfr import parameters
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 
