@@ -18,16 +18,16 @@ networkx = "^2.5"
 argparse = "^1.4.0"
 antlr4-python3-runtime = "^4.10"
 pygraphviz = "^1.6"
-dafd = "latest"
 numpy = "^1.19.4"
 tabulate = "^0.8.7"
 art = "^5.2"
 jsonschema = "^3.2.0"
 pyeda = "^0.28.0"
 parchmint = "0.3.2"
-pymint = "^0.3.0"
+pymint = "^0.3.1"
 scipy = "^1.8.1"
 click = "8.1.3"
+dafd = {path = "dafd"}
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"
