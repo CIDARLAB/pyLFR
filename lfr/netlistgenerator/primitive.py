@@ -2,9 +2,10 @@ import copy
 import hashlib
 from enum import Enum
 from typing import List, Optional
+
+from parchmint import Component, Device, Layer, Params
 from pymint import MINTDevice
-from parchmint import Component, Layer, Params
-from parchmint import Device
+
 from lfr import parameters
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy

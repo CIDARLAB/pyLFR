@@ -1,10 +1,12 @@
 from dafd import DAFD_Interface
 from pymint.mintdevice import MINTDevice
 
-from lfr.postprocessor.constraints import (ConstraintList,
-                                           FunctionalConstraint,
-                                           GeometryConstraint,
-                                           PerformanceConstraint)
+from lfr.postprocessor.constraints import (
+    ConstraintList,
+    FunctionalConstraint,
+    GeometryConstraint,
+    PerformanceConstraint,
+)
 
 
 class DAFDSizingAdapter:

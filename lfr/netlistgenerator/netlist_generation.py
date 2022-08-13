@@ -1,8 +1,10 @@
 from typing import Dict, List
+
 import networkx as nx
-from pymint import MINTDevice
-from lfr.netlistgenerator.connectingoption import ConnectingOption
 from parchmint import Target
+from pymint import MINTDevice
+
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.netlistgenerator.namegenerator import NameGenerator
