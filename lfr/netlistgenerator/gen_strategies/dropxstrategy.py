@@ -2,7 +2,6 @@
 from typing import List
 
 import networkx as nx
-from pymint import MINTDevice
 
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.fig.interaction import Interaction, InteractionType
@@ -10,6 +9,7 @@ from lfr.netlistgenerator.constructiongraph.constructiongraph import Constructio
 from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 from lfr.netlistgenerator.dafdadapter import DAFDAdapter
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
+from pymint import MINTDevice
 
 
 class DropXStrategy(GenStrategy):

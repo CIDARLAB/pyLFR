@@ -4,12 +4,12 @@ from enum import Enum
 from typing import List, Optional
 
 from parchmint import Component, Device, Layer, Params
-from pymint import MINTDevice
 
 from lfr import parameters
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.namegenerator import NameGenerator
+from pymint import MINTDevice
 
 
 class PrimitiveType(Enum):
