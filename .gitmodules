@@ -1,6 +1,3 @@
-[submodule "test"]
-	path = test
-	url = https://github.com/CIDARLAB/LFR-TestCases.git
 [submodule "pymint"]
 	path = pymint
 	url = https://github.com/cidarlab/pymint
