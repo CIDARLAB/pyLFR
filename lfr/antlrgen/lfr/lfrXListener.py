@@ -6,9 +6,9 @@ if __name__ is not None and "." in __name__:
 else:
     from lfrXParser import lfrXParser
 
+
 # This class defines a complete listener for a parse tree produced by lfrXParser.
 class lfrXListener(ParseTreeListener):
-
     # Enter a parse tree produced by lfrXParser#skeleton.
     def enterSkeleton(self, ctx: lfrXParser.SkeletonContext):
         pass

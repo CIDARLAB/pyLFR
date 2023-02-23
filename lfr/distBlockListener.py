@@ -193,7 +193,6 @@ class DistBlockListener(LFRBaseListener):
         )
         for state in remaining_states:
             for connectivity in self._current_connectivities:
-
                 self._current_dist_block.set_connectivity(
                     state, connectivity[0], connectivity[1]
                 )

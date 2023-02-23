@@ -365,7 +365,6 @@ class FluidInteractionGraph(nx.DiGraph):
                 if annotation not in annotation_list:
                     annotation_list.append(annotation)
             else:
-
                 if annotation in self._annotations_reverse_map[item]:
                     raise Exception("Annotation already present in the reverse map !")
 

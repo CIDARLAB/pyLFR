@@ -69,7 +69,6 @@ from lfr.utils import printgraph
 
 
 def generate_mlsi_library() -> MappingLibrary:
-
     library = MappingLibrary("mlsi")
     # PORT
     port_inputs = []
@@ -203,7 +202,6 @@ def generate_mlsi_library() -> MappingLibrary:
 
 
 def generate_mars_library() -> MappingLibrary:
-
     library = MappingLibrary("mars")
 
     # PORT
@@ -441,7 +439,6 @@ def generate_mars_library() -> MappingLibrary:
 
 
 def generate_dropx_library() -> MappingLibrary:
-
     library = MappingLibrary("dropx")
 
     # PORT
@@ -982,7 +979,6 @@ def generate_dropx_library() -> MappingLibrary:
 
 
 def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
-
     # In order to create the device, we do the following
     # STEP 1 - Simplify the Fluid Interaction Graphs
     # STEP 2 - Initialize the active strategy
@@ -1129,7 +1125,6 @@ def eliminate_explicit_match_alternates(
 
         # Generate a subgraph for each of the mapping instance fig
         for instance in explicit_mapping.instances:
-
             node_set = set()
 
             # Check what kind of an instance this is

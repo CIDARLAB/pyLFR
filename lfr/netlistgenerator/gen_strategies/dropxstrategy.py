@@ -133,7 +133,6 @@ class DropXStrategy(GenStrategy):
                         numTrue = meter_in_pred.count(True)
 
                         if fignode.type is InteractionType.MIX:
-
                             if numTrue == 1:
                                 # this is a pico injection
                                 cn = self._construction_graph.get_fignode_cn(fignode)

@@ -85,7 +85,6 @@ class StateTable:
         digraph.add_edge(source, target)
 
     def generate_connectivity_table(self) -> None:
-
         connectivy_column_headers = []
         self._connectivity_column_headers = connectivy_column_headers
         # First setup the dimensions for the matrix
@@ -204,7 +203,6 @@ class StateTable:
             self._and_annotations.append(annotation)
 
     def generate_or_annotations(self, fig: FluidInteractionGraph) -> None:
-
         self.print_connectivity_table()
         m = np.copy(self._connectivity_matrix)
         # Zerofill SKIPPED COLUMS

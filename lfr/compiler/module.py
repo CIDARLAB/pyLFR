@@ -116,7 +116,6 @@ class Module:
     def add_fluid_fluid_interaction(
         self, fluid1: Flow, fluid2: Flow, interaction_type: InteractionType
     ) -> Interaction:
-
         fluid_interaction = FluidFluidInteraction(fluid1, fluid2, interaction_type)
         self.FIG.add_interaction(fluid_interaction)
 

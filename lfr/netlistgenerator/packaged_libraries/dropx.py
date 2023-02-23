@@ -5,7 +5,6 @@ from lfr.netlistgenerator.primitive import Primitive, PrimitiveType
 
 
 def generate_dropx_library() -> MappingLibrary:
-
     library = MappingLibrary("dropX")
 
     # # PORT

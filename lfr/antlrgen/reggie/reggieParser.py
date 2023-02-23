@@ -1287,7 +1287,6 @@ def serializedATN():
 
 
 class reggieParser(Parser):
-
     grammarFileName = "reggie.g4"
 
     atn = ATNDeserializer().deserialize(serializedATN())
@@ -1436,7 +1435,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def graph(self):
-
         localctx = reggieParser.GraphContext(self, self._ctx, self.state)
         self.enterRule(localctx, 0, self.RULE_graph)
         self._la = 0  # Token type
@@ -1501,7 +1499,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def graphstatement(self):
-
         localctx = reggieParser.GraphstatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_graphstatement)
         try:
@@ -1571,7 +1568,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def statementmodifier(self):
-
         localctx = reggieParser.StatementmodifierContext(self, self._ctx, self.state)
         self.enterRule(localctx, 4, self.RULE_statementmodifier)
         try:
@@ -1640,7 +1636,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def basestatement(self):
-
         localctx = reggieParser.BasestatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 6, self.RULE_basestatement)
         try:
@@ -1709,7 +1704,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def subgraph(self):
-
         localctx = reggieParser.SubgraphContext(self, self._ctx, self.state)
         self.enterRule(localctx, 8, self.RULE_subgraph)
         self._la = 0  # Token type
@@ -1791,7 +1785,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def vertex(self):
-
         localctx = reggieParser.VertexContext(self, self._ctx, self.state)
         self.enterRule(localctx, 10, self.RULE_vertex)
         self._la = 0  # Token type
@@ -1873,7 +1866,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def coloringfilter(self):
-
         localctx = reggieParser.ColoringfilterContext(self, self._ctx, self.state)
         self.enterRule(localctx, 12, self.RULE_coloringfilter)
         self._la = 0  # Token type
@@ -1941,7 +1933,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def structuralvertexpattern(self):
-
         localctx = reggieParser.StructuralvertexpatternContext(
             self, self._ctx, self.state
         )
@@ -2004,7 +1995,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def intmodifier(self):
-
         localctx = reggieParser.IntmodifierContext(self, self._ctx, self.state)
         self.enterRule(localctx, 16, self.RULE_intmodifier)
         try:
@@ -2050,7 +2040,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def starmodifier(self):
-
         localctx = reggieParser.StarmodifierContext(self, self._ctx, self.state)
         self.enterRule(localctx, 18, self.RULE_starmodifier)
         try:
@@ -2092,7 +2081,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def plusmodifier(self):
-
         localctx = reggieParser.PlusmodifierContext(self, self._ctx, self.state)
         self.enterRule(localctx, 20, self.RULE_plusmodifier)
         try:
@@ -2140,7 +2128,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def structuralid(self):
-
         localctx = reggieParser.StructuralidContext(self, self._ctx, self.state)
         self.enterRule(localctx, 22, self.RULE_structuralid)
         self._la = 0  # Token type
@@ -2196,7 +2183,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def labelfilter(self):
-
         localctx = reggieParser.LabelfilterContext(self, self._ctx, self.state)
         self.enterRule(localctx, 24, self.RULE_labelfilter)
         self._la = 0  # Token type
@@ -2283,7 +2269,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def label(self):
-
         localctx = reggieParser.LabelContext(self, self._ctx, self.state)
         self.enterRule(localctx, 26, self.RULE_label)
         try:
@@ -2337,7 +2322,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def vertex2vertex(self):
-
         localctx = reggieParser.Vertex2vertexContext(self, self._ctx, self.state)
         self.enterRule(localctx, 28, self.RULE_vertex2vertex)
         self._la = 0  # Token type
@@ -2392,7 +2376,6 @@ class reggieParser(Parser):
                 return visitor.visitChildren(self)
 
     def edge(self):
-
         localctx = reggieParser.EdgeContext(self, self._ctx, self.state)
         self.enterRule(localctx, 30, self.RULE_edge)
         self._la = 0  # Token type

@@ -33,7 +33,6 @@ class PreProcessor:
                     self._lib_file_list[str(path_object.name)] = str(full_path)
 
         for file_path in file_list:
-
             extension = Path(file_path).suffix
             if extension != ".lfr":
                 print("Unrecognized file Extension")
@@ -60,7 +59,6 @@ class PreProcessor:
         return syntax_errors > 0
 
     def process(self) -> None:
-
         dep_graph = nx.DiGraph()
         # add the nodes in the dep graph
         for file_handle in self.full_text:
@@ -79,15 +77,12 @@ class PreProcessor:
 
                 # Check if the file handle is found in the dependency graph
                 if new_file_handle not in list(dep_graph.nodes):
-
                     # Since its not in the dependency graph we check if
                     # its in the preloaded library
                     if new_file_handle not in list(self._lib_file_list.keys()):
-
                         # Since its not in the preloaded library either...
                         raise Exception("Could not find file - {}".format(result[1]))
                     else:
-
                         # Pull all the text, add it to the full text store
                         file_path = self._lib_file_list[new_file_handle]
                         p = Path(file_path).resolve()

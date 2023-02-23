@@ -602,7 +602,6 @@ class OLDConstructionGraph(nx.DiGraph):
             # combinatorial design space
             assert len(cn.mapping_options) == 1
             for mapping_option in cn.mapping_options:
-
                 # TODO - Figure out how to not explicity check for this scenario'
                 # right now I'm using component replace as a coarse way of ensure
                 # no double takes
@@ -620,7 +619,6 @@ class OLDConstructionGraph(nx.DiGraph):
                 #     continue
                 for node_id in mapping_option.fig_subgraph.nodes:
                     if node_id in fig_nodes_cn_reverse_map.keys():
-
                         # Make sure there are no repeats here
                         if cn.ID not in fig_nodes_cn_reverse_map[node_id]:
                             fig_nodes_cn_reverse_map[node_id].append(cn.ID)
