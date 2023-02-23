@@ -310,7 +310,7 @@ def generate_mars_library() -> MappingLibrary:
 
     library.add_operator_entry(mixer, InteractionType.MIX)
 
-    # DIAMOND CHAMBER
+    # DIAMOND REACTION CHAMBER
 
     diamond_chamber_inputs = []
 
@@ -324,7 +324,7 @@ def generate_mars_library() -> MappingLibrary:
     diamond_chamber_carriers = []
 
     diamond_chamber = Primitive(
-        "DIAMOND CHAMBER",
+        "DIAMOND REACTION CHAMBER",
         PrimitiveType.COMPONENT,
         "PROCESS",
         False,
