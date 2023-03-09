@@ -6,7 +6,8 @@ from lfr.compiler.language.vectorrange import VectorRange
 
 
 class Concatenation:
-    """A concatenation is the represetnation of mutiple
+    """
+    A concatenation is the represetnation of mutiple
     vector ranges stitched togeter.
 
     TODO - A concatenation of concatenations should be a concatenation,

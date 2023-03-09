@@ -1,4 +1,4 @@
-from typing import Generic, List, Optional, TypeVar
+from typing import Generic, List, Optional, Type, TypeVar
 
 from lfr.compiler.language.vectorrange import VectorRange
 
@@ -6,28 +6,36 @@ T = TypeVar("T")
 
 
 class Vector(Generic[T]):
+    """
+    Vector of objects T
+    """
+
     def __init__(
-        self, id: str, vectortype=None, startindex: int = 0, endindex: int = 0
+        self,
+        id: str,
+        vector_type: Optional[Type[T]] = None,
+        startindex: int = 0,
+        endindex: int = -1,
     ):
         self.id = id
         self.startindex = startindex
         self.endindex = endindex
         self.vec: List[T] = []
 
-        if vectortype is not None:
-            # If its a singular item avoid the indexing
+        if vector_type is not None:
+            # If it's a singular item avoid the indexing
             if len(self) == 1:
-                self.vec.append(vectortype(self.id))
+                self.vec.append(vector_type(self.id))
             else:
                 for i in range(len(self)):
-                    self.vec.append(vectortype(self.id + "_" + str(i)))
+                    self.vec.append(vector_type(self.id + "_" + str(i)))
         else:
             print("Creating a vector of type [None]")
 
-    def __len__(self):
+    def __len__(self) -> int:
         return abs(self.startindex - self.endindex) + 1
 
-    def get_items(self) -> list:
+    def get_items(self) -> List[T]:
         return self.vec
 
     def get_range(
@@ -39,7 +47,7 @@ class Vector(Generic[T]):
 
         return ret
 
-    def __getitem__(self, key: int):
+    def __getitem__(self, key):
         if isinstance(key, slice):
             start, stop, step = key.indices(len(self.vec))
             return [self.vec[i] for i in range(start, stop, step)]
