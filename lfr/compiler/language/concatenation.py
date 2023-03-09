@@ -1,9 +1,7 @@
 from __future__ import annotations
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, Optional
 
-
-if TYPE_CHECKING:
-    from lfr.compiler.language.vectorrange import VectorRange
+from lfr.compiler.language.vectorrange import VectorRange
 
 
 class Concatenation:
