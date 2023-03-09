@@ -47,3 +47,7 @@ line-length = 88
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.mypy]
+exclude = [
+    "lfr/antlrgen/**",  # TOML basic string (double-quotes, backslash and other characters need escaping)
+]

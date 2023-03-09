@@ -3,7 +3,7 @@ from lfr.fig.fignode import IOType
 
 
 class ModuleIO:
-    def __init__(self, name: str, iotype: IOType = None):
+    def __init__(self, name: str, iotype: IOType):
         self.type = iotype
         self._id = name
         self._vector_ref = None

@@ -75,7 +75,7 @@ class Flow(FIGNode):
 
 
 class IONode(Flow):
-    def __init__(self, id: str, iotype=None):
+    def __init__(self, id: str, iotype: IOType):
         super(IONode, self).__init__(id)
         self._type = iotype
 

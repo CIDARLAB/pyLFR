@@ -1,13 +1,11 @@
 from typing import TYPE_CHECKING
 
-from networkx.algorithms.operators.unary import reverse
-
 if TYPE_CHECKING:
     from lfr.compiler.language.vector import Vector
 
 
 class VectorRange:
-    def __init__(self, vector, startindex: int, endindex: int):
+    def __init__(self, vector: Vector, startindex: int, endindex: int):
         self.vector: Vector = vector
         if startindex is None:
             self.startindex = 0

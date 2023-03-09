@@ -206,14 +206,19 @@ class Module:
         # Step 2 - Create a copy of the fig
         if module_to_import is None:
             raise ReferenceError("module_to_import is set to none")
+        fig_copy: FluidInteractionGraph = copy.deepcopy(module_to_import.FIG)
         fig_copy = copy.deepcopy(module_to_import.FIG)
+        fig_copy: FluidInteractionGraph = copy.deepcopy(module_to_import.FIG)
 
         # Step 3 - Convert all the flow IO nodes where mappings exist
         # to flow nodes
         for there_node_key in io_mapping.keys():
             fignode = fig_copy.get_fignode(there_node_key)
             # Skip if its a control type one
-            if isinstance(fignode, IONode) is False:
+            if isinstance(fignode, IONode) is True:
+                if fignode.type is IOType.CONTROL:  # type: ignore
+                    continue
+            else:
                 raise TypeError("Node not of type IO Node")
 
             if fignode.type is IOType.CONTROL:
