@@ -14,7 +14,6 @@ class InteractionType(Enum):
 
 
 class Interaction(Flow):
-
     INTERACTION_ID = 0
 
     def __init__(self, id: str, interaction_type: InteractionType) -> None:

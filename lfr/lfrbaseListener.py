@@ -36,7 +36,6 @@ class VariableTypes(Enum):
 
 class LFRBaseListener(lfrXListener):
     def __init__(self):
-
         print("Initialized the lfrcompiler")
         self.modules = []
         self.currentModule: Module = Module("Default_Module_To_Be_Removed")
@@ -426,7 +425,6 @@ class LFRBaseListener(lfrXListener):
         self.__revertMode()
         # Perform the unary operation if present
         if ctx.unary_operator() is not None:
-
             operator = ctx.unary_operator().getText()
             term = self.stack.pop()
             if self.currentModule is None:
@@ -509,7 +507,6 @@ class LFRBaseListener(lfrXListener):
         return v
 
     def __createLiteralVector(self, name: str, values: List) -> Vector:
-
         objectype = None
 
         if isinstance(values, list):

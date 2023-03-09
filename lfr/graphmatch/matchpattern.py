@@ -15,7 +15,6 @@ from lfr.graphmatch.nodefilter import NodeFilter
 
 class MatchPattern:
     def __init__(self, pattern_string: str = "") -> None:
-
         if pattern_string == "" or pattern_string is None:
             raise Exception("Empty Pattern found")
 

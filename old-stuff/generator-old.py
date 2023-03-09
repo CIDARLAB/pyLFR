@@ -43,7 +43,6 @@ from lfr.postprocessor.mapping import NetworkMapping, NodeMappingTemplate
 
 
 def generate_dropx_library() -> MappingLibrary:
-
     library = MappingLibrary("dropx")
 
     # PORT
@@ -451,7 +450,6 @@ def generate_dropx_library() -> MappingLibrary:
 
 
 def generate(module: Module, library: MappingLibrary) -> MINTDevice:
-
     construction_graph = ConstructionGraph()
 
     name_generator = NameGenerator()
@@ -596,7 +594,6 @@ def override_mappings(
     assign_node_index = 0
     for mapping in mappings:
         for instance in mapping.instances:
-
             primitive_to_use = None
             if mapping.technology_string is not None:
                 # Create a mapping option from the library with the corresponding info
@@ -715,7 +712,6 @@ def override_network_mappings(
     assign_node_index = 0
     for mapping in mappings:
         for instance in mapping.instances:
-
             primitive_to_use = None
             if mapping.technology_string is not None:
                 # Create a mapping option from the library with the corresponding info
@@ -826,7 +822,6 @@ def eliminate_passthrough_nodes(construction_graph: ConstructionGraph):
         mapping_option = cn.mapping_options[0]
         if isinstance(mapping_option, NetworkMappingOption):
             if mapping_option.mapping_type is NetworkMappingOptionType.PASS_THROUGH:
-
                 print("Eliminating PASS THROUGH construction node = {}".format(cn.ID))
 
                 # First get all the in and out edges

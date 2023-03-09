@@ -10,7 +10,6 @@ class MappingOption:
     def __init__(
         self, primitive: Optional[Primitive] = None, subgraph_view=None
     ) -> None:
-
         self._primitive: Optional[Primitive] = primitive
 
         self.fig_subgraph: Optional[nx.DiGraph] = subgraph_view

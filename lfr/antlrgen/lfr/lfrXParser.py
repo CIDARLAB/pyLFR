@@ -5076,7 +5076,6 @@ def serializedATN():
 
 
 class lfrXParser(Parser):
-
     grammarFileName = "lfrX.g4"
 
     atn = ATNDeserializer().deserialize(serializedATN())
@@ -5485,7 +5484,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def skeleton(self):
-
         localctx = lfrXParser.SkeletonContext(self, self._ctx, self.state)
         self.enterRule(localctx, 0, self.RULE_skeleton)
         self._la = 0  # Token type
@@ -5544,7 +5542,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def module(self):
-
         localctx = lfrXParser.ModuleContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_module)
         try:
@@ -5596,7 +5593,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def moduledefinition(self):
-
         localctx = lfrXParser.ModuledefinitionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 4, self.RULE_moduledefinition)
         self._la = 0  # Token type
@@ -5666,7 +5662,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def body(self):
-
         localctx = lfrXParser.BodyContext(self, self._ctx, self.state)
         self.enterRule(localctx, 6, self.RULE_body)
         self._la = 0  # Token type
@@ -5781,7 +5776,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def ioblock(self):
-
         localctx = lfrXParser.IoblockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 8, self.RULE_ioblock)
         self._la = 0  # Token type
@@ -5867,7 +5861,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def vectorvar(self):
-
         localctx = lfrXParser.VectorvarContext(self, self._ctx, self.state)
         self.enterRule(localctx, 10, self.RULE_vectorvar)
         self._la = 0  # Token type
@@ -5923,7 +5916,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def explicitIOBlock(self):
-
         localctx = lfrXParser.ExplicitIOBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 12, self.RULE_explicitIOBlock)
         try:
@@ -6034,7 +6026,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def declvar(self):
-
         localctx = lfrXParser.DeclvarContext(self, self._ctx, self.state)
         self.enterRule(localctx, 14, self.RULE_declvar)
         self._la = 0  # Token type
@@ -6090,7 +6081,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def distributionBlock(self):
-
         localctx = lfrXParser.DistributionBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 16, self.RULE_distributionBlock)
         try:
@@ -6150,7 +6140,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def distributionBody(self):
-
         localctx = lfrXParser.DistributionBodyContext(self, self._ctx, self.state)
         self.enterRule(localctx, 18, self.RULE_distributionBody)
         self._la = 0  # Token type
@@ -6226,7 +6215,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def distributeBodyStat(self):
-
         localctx = lfrXParser.DistributeBodyStatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 20, self.RULE_distributeBodyStat)
         try:
@@ -6298,7 +6286,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def ifElseBlock(self):
-
         localctx = lfrXParser.IfElseBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 22, self.RULE_ifElseBlock)
         self._la = 0  # Token type
@@ -6365,7 +6352,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def ifBlock(self):
-
         localctx = lfrXParser.IfBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 24, self.RULE_ifBlock)
         try:
@@ -6418,7 +6404,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def elseBlock(self):
-
         localctx = lfrXParser.ElseBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 26, self.RULE_elseBlock)
         try:
@@ -6468,7 +6453,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def elseIfBlock(self):
-
         localctx = lfrXParser.ElseIfBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 28, self.RULE_elseIfBlock)
         try:
@@ -6531,7 +6515,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def distributeCondition(self):
-
         localctx = lfrXParser.DistributeConditionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 30, self.RULE_distributeCondition)
         try:
@@ -6587,7 +6570,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def statementBlock(self):
-
         localctx = lfrXParser.StatementBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 32, self.RULE_statementBlock)
         self._la = 0  # Token type
@@ -6669,7 +6651,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def caseBlock(self):
-
         localctx = lfrXParser.CaseBlockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 34, self.RULE_caseBlock)
         self._la = 0  # Token type
@@ -6751,7 +6732,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def caseBlockHeader(self):
-
         localctx = lfrXParser.CaseBlockHeaderContext(self, self._ctx, self.state)
         self.enterRule(localctx, 36, self.RULE_caseBlockHeader)
         try:
@@ -6805,7 +6785,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def casestat(self):
-
         localctx = lfrXParser.CasestatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 38, self.RULE_casestat)
         try:
@@ -6854,7 +6833,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def defaultCaseStat(self):
-
         localctx = lfrXParser.DefaultCaseStatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 40, self.RULE_defaultCaseStat)
         try:
@@ -6903,7 +6881,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def distvalue(self):
-
         localctx = lfrXParser.DistvalueContext(self, self._ctx, self.state)
         self.enterRule(localctx, 42, self.RULE_distvalue)
         try:
@@ -6957,7 +6934,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def distributionassignstat(self):
-
         localctx = lfrXParser.DistributionassignstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 44, self.RULE_distributionassignstat)
         try:
@@ -7027,7 +7003,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def sensitivitylist(self):
-
         localctx = lfrXParser.SensitivitylistContext(self, self._ctx, self.state)
         self.enterRule(localctx, 46, self.RULE_sensitivitylist)
         self._la = 0  # Token type
@@ -7088,7 +7063,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def signal(self):
-
         localctx = lfrXParser.SignalContext(self, self._ctx, self.state)
         self.enterRule(localctx, 48, self.RULE_signal)
         self._la = 0  # Token type
@@ -7144,7 +7118,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def statements(self):
-
         localctx = lfrXParser.StatementsContext(self, self._ctx, self.state)
         self.enterRule(localctx, 50, self.RULE_statements)
         try:
@@ -7229,7 +7202,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def statement(self):
-
         localctx = lfrXParser.StatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 52, self.RULE_statement)
         try:
@@ -7310,7 +7282,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def moduleinstantiationstat(self):
-
         localctx = lfrXParser.ModuleinstantiationstatContext(
             self, self._ctx, self.state
         )
@@ -7368,7 +7339,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def instanceioblock(self):
-
         localctx = lfrXParser.InstanceioblockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 56, self.RULE_instanceioblock)
         try:
@@ -7429,7 +7399,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def orderedioblock(self):
-
         localctx = lfrXParser.OrderedioblockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 58, self.RULE_orderedioblock)
         self._la = 0  # Token type
@@ -7494,7 +7463,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def unorderedioblock(self):
-
         localctx = lfrXParser.UnorderedioblockContext(self, self._ctx, self.state)
         self.enterRule(localctx, 60, self.RULE_unorderedioblock)
         self._la = 0  # Token type
@@ -7555,7 +7523,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def explicitinstanceiomapping(self):
-
         localctx = lfrXParser.ExplicitinstanceiomappingContext(
             self, self._ctx, self.state
         )
@@ -7610,7 +7577,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def instancename(self):
-
         localctx = lfrXParser.InstancenameContext(self, self._ctx, self.state)
         self.enterRule(localctx, 64, self.RULE_instancename)
         try:
@@ -7655,7 +7621,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def moduletype(self):
-
         localctx = lfrXParser.ModuletypeContext(self, self._ctx, self.state)
         self.enterRule(localctx, 66, self.RULE_moduletype)
         try:
@@ -7712,7 +7677,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def tempvariablesstat(self):
-
         localctx = lfrXParser.TempvariablesstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 68, self.RULE_tempvariablesstat)
         try:
@@ -7788,7 +7752,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def signalvarstat(self):
-
         localctx = lfrXParser.SignalvarstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 70, self.RULE_signalvarstat)
         self._la = 0  # Token type
@@ -7851,7 +7814,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def fluiddeclstat(self):
-
         localctx = lfrXParser.FluiddeclstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 72, self.RULE_fluiddeclstat)
         self._la = 0  # Token type
@@ -7914,7 +7876,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def storagestat(self):
-
         localctx = lfrXParser.StoragestatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 74, self.RULE_storagestat)
         self._la = 0  # Token type
@@ -7977,7 +7938,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def pumpvarstat(self):
-
         localctx = lfrXParser.PumpvarstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 76, self.RULE_pumpvarstat)
         self._la = 0  # Token type
@@ -8040,7 +8000,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def numvarstat(self):
-
         localctx = lfrXParser.NumvarstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 78, self.RULE_numvarstat)
         self._la = 0  # Token type
@@ -8106,7 +8065,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def assignstat(self):
-
         localctx = lfrXParser.AssignstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 80, self.RULE_assignstat)
         try:
@@ -8174,7 +8132,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def literalassignstat(self):
-
         localctx = lfrXParser.LiteralassignstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 82, self.RULE_literalassignstat)
         try:
@@ -8237,7 +8194,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def bracketexpression(self):
-
         localctx = lfrXParser.BracketexpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 84, self.RULE_bracketexpression)
         self._la = 0  # Token type
@@ -8324,7 +8280,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def expression(self):
-
         localctx = lfrXParser.ExpressionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 86, self.RULE_expression)
         self._la = 0  # Token type
@@ -8439,7 +8394,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def expressionterm(self):
-
         localctx = lfrXParser.ExpressiontermContext(self, self._ctx, self.state)
         self.enterRule(localctx, 88, self.RULE_expressionterm)
         self._la = 0  # Token type
@@ -8555,7 +8509,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def logiccondition_operand(self):
-
         localctx = lfrXParser.Logiccondition_operandContext(self, self._ctx, self.state)
         self.enterRule(localctx, 90, self.RULE_logiccondition_operand)
         try:
@@ -8643,7 +8596,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def logiccondition(self):
-
         localctx = lfrXParser.LogicconditionContext(self, self._ctx, self.state)
         self.enterRule(localctx, 92, self.RULE_logiccondition)
         try:
@@ -8692,7 +8644,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def logic_value(self):
-
         localctx = lfrXParser.Logic_valueContext(self, self._ctx, self.state)
         self.enterRule(localctx, 94, self.RULE_logic_value)
         try:
@@ -8742,7 +8693,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def vector(self):
-
         localctx = lfrXParser.VectorContext(self, self._ctx, self.state)
         self.enterRule(localctx, 96, self.RULE_vector)
         self._la = 0  # Token type
@@ -8804,7 +8754,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def variables(self):
-
         localctx = lfrXParser.VariablesContext(self, self._ctx, self.state)
         self.enterRule(localctx, 98, self.RULE_variables)
         try:
@@ -8868,7 +8817,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def concatenation(self):
-
         localctx = lfrXParser.ConcatenationContext(self, self._ctx, self.state)
         self.enterRule(localctx, 100, self.RULE_concatenation)
         self._la = 0  # Token type
@@ -8937,7 +8885,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def lhs(self):
-
         localctx = lfrXParser.LhsContext(self, self._ctx, self.state)
         self.enterRule(localctx, 102, self.RULE_lhs)
         try:
@@ -8982,7 +8929,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def ioassignstat(self):
-
         localctx = lfrXParser.IoassignstatContext(self, self._ctx, self.state)
         self.enterRule(localctx, 104, self.RULE_ioassignstat)
         try:
@@ -9037,7 +8983,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def technologydirectives(self):
-
         localctx = lfrXParser.TechnologydirectivesContext(self, self._ctx, self.state)
         self.enterRule(localctx, 106, self.RULE_technologydirectives)
         try:
@@ -9107,7 +9052,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def technologymappingdirective(self):
-
         localctx = lfrXParser.TechnologymappingdirectiveContext(
             self, self._ctx, self.state
         )
@@ -9242,7 +9186,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def materialmappingdirective(self):
-
         localctx = lfrXParser.MaterialmappingdirectiveContext(
             self, self._ctx, self.state
         )
@@ -9296,7 +9239,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def mappingoperator(self):
-
         localctx = lfrXParser.MappingoperatorContext(self, self._ctx, self.state)
         self.enterRule(localctx, 112, self.RULE_mappingoperator)
         try:
@@ -9359,7 +9301,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def performancedirective(self):
-
         localctx = lfrXParser.PerformancedirectiveContext(self, self._ctx, self.state)
         self.enterRule(localctx, 114, self.RULE_performancedirective)
         self._la = 0  # Token type
@@ -9437,7 +9378,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def constraint(self):
-
         localctx = lfrXParser.ConstraintContext(self, self._ctx, self.state)
         self.enterRule(localctx, 116, self.RULE_constraint)
         try:
@@ -9567,7 +9507,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def unit(self):
-
         localctx = lfrXParser.UnitContext(self, self._ctx, self.state)
         self.enterRule(localctx, 118, self.RULE_unit)
         try:
@@ -9609,7 +9548,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def unary_operator(self):
-
         localctx = lfrXParser.Unary_operatorContext(self, self._ctx, self.state)
         self.enterRule(localctx, 120, self.RULE_unary_operator)
         self._la = 0  # Token type
@@ -9678,7 +9616,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def binary_operator(self):
-
         localctx = lfrXParser.Binary_operatorContext(self, self._ctx, self.state)
         self.enterRule(localctx, 122, self.RULE_binary_operator)
         self._la = 0  # Token type
@@ -9761,7 +9698,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def unary_module_path_operator(self):
-
         localctx = lfrXParser.Unary_module_path_operatorContext(
             self, self._ctx, self.state
         )
@@ -9830,7 +9766,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def binary_module_path_operator(self):
-
         localctx = lfrXParser.Binary_module_path_operatorContext(
             self, self._ctx, self.state
         )
@@ -9914,7 +9849,6 @@ class lfrXParser(Parser):
                 return visitor.visitChildren(self)
 
     def number(self):
-
         localctx = lfrXParser.NumberContext(self, self._ctx, self.state)
         self.enterRule(localctx, 128, self.RULE_number)
         self._la = 0  # Token type

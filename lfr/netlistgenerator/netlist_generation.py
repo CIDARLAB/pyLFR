@@ -2,13 +2,13 @@ from typing import Dict, List
 
 import networkx as nx
 from parchmint import Target
-from pymint import MINTDevice
 
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import PrimitiveType
+from pymint import MINTDevice
 
 
 def generate_device(
@@ -63,7 +63,7 @@ def generate_device(
 
     # Go through the edges and connect the components using the inputs and outputs of
     # the primitives
-    for (source_cn_id, target_cn_id) in construction_graph.edges:
+    for source_cn_id, target_cn_id in construction_graph.edges:
         source_cn = construction_graph.get_construction_node(source_cn_id)
         target_cn = construction_graph.get_construction_node(target_cn_id)
 
@@ -118,7 +118,6 @@ def get_targets(
     name_generator: NameGenerator,
     cn_name_map,
 ) -> List[Target]:
-
     ret: List[Target] = []
 
     component_name: str = ""

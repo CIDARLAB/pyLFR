@@ -6,9 +6,9 @@ if __name__ is not None and "." in __name__:
 else:
     from reggieParser import reggieParser
 
+
 # This class defines a complete listener for a parse tree produced by reggieParser.
 class reggieListener(ParseTreeListener):
-
     # Enter a parse tree produced by reggieParser#graph.
     def enterGraph(self, ctx: reggieParser.GraphContext):
         pass

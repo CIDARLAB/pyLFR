@@ -1,3 +1,11 @@
+[submodule "pymint"]
+	path = pymint
+	url = https://github.com/cidarlab/pymint
+	branch = master
+[submodule "pyparchmint"]
+	path = pyparchmint
+	url = https://github.com/cidarlab/pyparchmint
+	branch = master
 [submodule "dafd"]
 	path = dafd
 	url = https://github.com/rkrishnasanka/dafd

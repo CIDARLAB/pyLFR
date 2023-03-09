@@ -236,7 +236,6 @@ def check_adjecent_criteria_1(
 def generate_construction_graph_edges(
     fig: FluidInteractionGraph, construction_graph: ConstructionGraph
 ) -> None:
-
     # The construction nodes that have overlaps (border nodes) with each other or are
     # neighbors and make the connection between them.
 

@@ -198,7 +198,7 @@ def get_fig_matches(
     # TODO - Retrun the networkx subgraph views of the of the FIG
     # Step 1 - Generate the match candidates by running the subgraph isomerism for all
     # the items stored in the library
-    for (minty_uid, mint, match_pattern_string) in library.get_match_patterns():
+    for minty_uid, mint, match_pattern_string in library.get_match_patterns():
         if match_pattern_string == "" or match_pattern_string is None:
             print("Warning ! - Missing match string for mint- {}".format(minty_uid))
             continue
@@ -303,7 +303,6 @@ def find_structural_matches(
 def generate_single_match(
     fig_subgraph, library_entry
 ) -> Optional[Tuple[str, Dict[str, str]]]:
-
     # TODO - using fig subgraph view test to see if the subgraph is a structural match
     # to technology entry from the mapping library, pass back the match tuple if it is
     # if it isn't then figure out how to do this separately. Also don't enable node

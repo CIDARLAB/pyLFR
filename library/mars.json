@@ -81,7 +81,7 @@
                 "default-netlist": null
             },
             {
-                "mint": "DIAMOND CHAMBER",
+                "mint": "DIAMOND REACTION CHAMBER",
                 "component-type": "primitive",
                 "is-storage": "false",
                 "inputs": [

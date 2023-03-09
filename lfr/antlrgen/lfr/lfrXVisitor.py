@@ -10,7 +10,6 @@ else:
 
 
 class lfrXVisitor(ParseTreeVisitor):
-
     # Visit a parse tree produced by lfrXParser#skeleton.
     def visitSkeleton(self, ctx: lfrXParser.SkeletonContext):
         return self.visitChildren(ctx)

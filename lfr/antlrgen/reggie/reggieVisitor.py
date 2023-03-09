@@ -10,7 +10,6 @@ else:
 
 
 class reggieVisitor(ParseTreeVisitor):
-
     # Visit a parse tree produced by reggieParser#graph.
     def visitGraph(self, ctx: reggieParser.GraphContext):
         return self.visitChildren(ctx)

@@ -21,7 +21,6 @@ class FluidExpression:
     def process_expression(
         self, termlist: List[Union[VectorRange, float]], operatorlist: List[str]
     ):
-
         # In step1, we go over and complete all the numeric operations in the
         # precedence of numeric operation order. It is possible that there are no
         # numeric operations going on in the expression. In that case we have the
@@ -231,7 +230,6 @@ class FluidExpression:
     def __evaluate_fluid_numeric_operator(
         self, operand_fluidic: VectorRange, operand_numeric: float, operator: str
     ) -> VectorRange:
-
         fluid = operand_fluidic[0]
         interactions = []
         for fluid in operand_fluidic:
