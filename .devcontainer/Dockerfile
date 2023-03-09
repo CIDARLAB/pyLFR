@@ -1,44 +1,29 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.166.1/containers/ubuntu/.devcontainer/base.Dockerfile
+# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.194.3/containers/ubuntu/.devcontainer/base.Dockerfile
 
-# [Choice] Ubuntu version: bionic, focal
+# [Choice] Ubuntu version: hirsute, bionic, focal
 ARG VARIANT="focal"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
-# FROM ubuntu:20.04
 
 ENV   PYTHONFAULTHANDLER=1 \
   PYTHONUNBUFFERED=1 \
   PYTHONHASHSEED=random \
   PIP_NO_CACHE_DIR=off \
-  # PIP_DISABLE_PIP_VERSION_CHECK=on \
+  PIP_DISABLE_PIP_VERSION_CHECK=on \
   PIP_DEFAULT_TIMEOUT=100 \
-  POETRY_VERSION=1.0.0
+  POETRY_VERSION=1.2.0
 
 
 # [Optional] Uncomment this section to install additional OS packages.
-RUN export DEBIAN_FRONTEND=noninteractive \
-  && sudo apt-get update \  
-  && apt-get -y install --no-install-recommends build-essential curl software-properties-common \
-  python3-pip  git make build-essential python-dev libssl-dev zlib1g-dev \ 
-  libbz2-dev libreadline-dev libsqlite3-dev curl libffi-dev \
-  graphviz libgraphviz-dev \
-  libcairo2-dev pkg-config python3-dev
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends curl build-essential \
+      software-properties-common python3-pip make build-essential \
+      python-dev libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
+      libsqlite3-dev curl libffi-dev redis-server openjdk-8-jre-headless \
+      graphviz libgraphviz-dev libcairo2-dev pkg-config python3-dev python3.8-venv \
+      python3-setuptools liblzma-dev \
+      python3-pygraphviz apt-utils
 
-# Things that didn't install -  make python3-dev
+# RUN poetry config virtualenvs.create false
+RUN pip install --upgrade pip
+RUN pip install setuptools pygraphviz
 
-# Install and setup pyenv 
-RUN git clone git://github.com/yyuu/pyenv.git .pyenv
-RUN git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
-
-ENV HOME  /
-ENV PYENV_ROOT $HOME/.pyenv
-ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
-
-RUN pyenv install 3.8.0
-RUN pyenv global 3.8.0
-
-RUN pip install pygraphviz
-
-RUN pip install "poetry==$POETRY_VERSION"
-
-RUN poetry config virtualenvs.create false
-ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
