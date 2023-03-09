@@ -1,10 +1,10 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING, Union
 
-
 if TYPE_CHECKING:
-    from lfr.compiler.language.vector import Vector
     from lfr.compiler.language.concatenation import Concatenation
+    from lfr.compiler.language.vector import Vector
 
 
 class VectorRange:
