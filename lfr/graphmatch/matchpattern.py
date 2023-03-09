@@ -22,7 +22,7 @@ class MatchPattern:
         self._structural_template = None
 
         # Dictionary that stores the nodefilter object and the node id
-        self._semantic_template = dict()
+        self._semantic_template: Dict[str, NodeFilter] = {}
 
         self.__parse_pattern(pattern_string)
 

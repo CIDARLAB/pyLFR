@@ -1,12 +1,16 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
+
+from lfr.compiler.language.concatenation import Concatenation
 
 if TYPE_CHECKING:
     from lfr.compiler.language.vector import Vector
 
 
 class VectorRange:
-    def __init__(self, vector: Vector, startindex: int, endindex: int):
-        self.vector: Vector = vector
+    def __init__(
+        self, vector: Union[Vector, Concatenation], startindex: int, endindex: int
+    ):
+        self.vector: Union[Vector, Concatenation] = vector
         if startindex is None:
             self.startindex = 0
         else:

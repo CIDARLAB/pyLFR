@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from parchmint import Component
 from pymint.mintdevice import MINTDevice
@@ -23,13 +23,18 @@ class DAFDAdapter:
         self.solver = DAFD_Interface()
         # TODO: Check the type of the component and pull info from DAFD Interface
         targets_dict = {}
-        constriants_dict = {}
+        constriants_dict: Dict[str, Constraint] = {}
 
         for constraint in constriants:
             if constraint.key == "volume":
                 # r≈0.62035V1/3
                 volume = constraint.get_target_value()
-                targets_dict["droplet_size"] = float(volume) ** 0.33 * 0.62035 * 2
+                if volume is None:
+                    raise ValueError(
+                        "Could not retrieve target value from constraint : volume for"
+                        f" component:{component.ID}"
+                    )
+                targets_dict["droplet_size"] = volume**0.33 * 0.62035 * 2
             elif constraint.key == "generation_rate":
                 generate_rate = constraint.get_target_value()
                 targets_dict["generation_rate"] = generate_rate

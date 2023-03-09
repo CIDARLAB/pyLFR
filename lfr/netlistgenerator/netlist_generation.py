@@ -2,7 +2,7 @@ from typing import Dict, List
 
 import networkx as nx
 from parchmint import Target
-from pymint import MINTDevice
+from pymint.mintdevice import MINTDevice
 
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph

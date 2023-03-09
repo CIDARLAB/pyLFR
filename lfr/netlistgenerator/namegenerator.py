@@ -1,7 +1,7 @@
 from typing import Dict
 
 from parchmint import Component, Connection
-from pymint import MINTDevice
+from pymint.mintdevice import MINTDevice
 
 
 class NameGenerator:
@@ -16,7 +16,7 @@ class NameGenerator:
     """
 
     def __init__(self) -> None:
-        self._counter_dictionary = {}
+        self._counter_dictionary: Dict[str, int] = {}
         # Key - Old NAme, Value - new name
         self._cn_rename_map: Dict[str, Dict[str, str]] = {}
         self._rename_map: Dict[str, str] = {}

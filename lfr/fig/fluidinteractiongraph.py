@@ -48,7 +48,7 @@ class FluidInteractionGraph(nx.DiGraph):
         for annotation in self._annotations:
             if annotation.id == id:
                 return annotation
-        raise Exception("Cannot find the annotation with ID: {0}".format(id))
+        raise KeyError("Cannot find the annotation with ID: {0}".format(id))
 
     def add_fignode(self, node: FIGNode) -> None:
         self._fignodes[node.ID] = node
@@ -123,11 +123,11 @@ class FluidInteractionGraph(nx.DiGraph):
             ) in old_fignode_item_ID_list:
                 new_fignode_item_id_1 = fig_node_rename_map[old_fignode_item_id_1]
                 new_fignode_item_id_2 = fig_node_rename_map[old_fignode_item_id_2]
-                item_to_add = (
+                tuple_to_add: Tuple[FIGNode, FIGNode] = (
                     fig_copy.get_fignode(new_fignode_item_id_1),
                     fig_copy.get_fignode(new_fignode_item_id_2),
                 )
-                new_items_list.append(item_to_add)
+                new_items_list.append(tuple_to_add)
 
             old_annotation_item_ID_list = [
                 item.id
@@ -137,8 +137,10 @@ class FluidInteractionGraph(nx.DiGraph):
 
             for old_annotation_item_id in old_annotation_item_ID_list:
                 new_annotation_item_id = annotation_rename_map[old_annotation_item_id]
-                item_to_add = fig_copy.get_annotation_by_id(new_annotation_item_id)
-                new_items_list.append(item_to_add)
+                annotation_to_add: DistributeAnnotation = fig_copy.get_annotation_by_id(
+                    new_annotation_item_id
+                )
+                new_items_list.append(annotation_to_add)
 
             # now replace the annotation items with the new ones
             annotation.clear_items()
@@ -302,7 +304,7 @@ class FluidInteractionGraph(nx.DiGraph):
         fignodes_copy_list = []
 
         # Map old_fignode <-> new_fignode
-        fignodes_copy_map: Dict[FIGNode, FIGNode] = dict()
+        fignodes_copy_map: Dict[FIGNode, FIGNode] = {}
 
         for fignode in self._fignodes.values():
             fignode_copy = copy.copy(fignode)
@@ -319,9 +321,7 @@ class FluidInteractionGraph(nx.DiGraph):
         figannotations_copy_list = []
 
         # Map old_annotatin <-> new_annotation
-        figannotations_copy_map: Dict[
-            DistributeAnnotation, DistributeAnnotation
-        ] = dict()
+        figannotations_copy_map: Dict[DistributeAnnotation, DistributeAnnotation] = {}
 
         # Copy the annotations into the new fig copy
         for current_annotation in self._annotations:
@@ -335,14 +335,14 @@ class FluidInteractionGraph(nx.DiGraph):
             copy_annotation = figannotations_copy_map[current_annotation]
             for annotation_item in current_annotation.get_items():
                 if isinstance(annotation_item, DistributeAnnotation):
-                    item_to_add = figannotations_copy_map[annotation_item]
-                    copy_annotation.add_annotated_item(item_to_add)
+                    annotation_to_add = figannotations_copy_map[annotation_item]
+                    copy_annotation.add_annotated_item(annotation_to_add)
                 else:
-                    item_to_add = (
+                    tuple_to_add = (
                         fignodes_copy_map[annotation_item[0]],
                         fignodes_copy_map[annotation_item[1]],
                     )
-                    copy_annotation.add_annotated_item(item_to_add)
+                    copy_annotation.add_annotated_item(tuple_to_add)
 
         fig_copy.load_annotations(figannotations_copy_list)
         return fig_copy

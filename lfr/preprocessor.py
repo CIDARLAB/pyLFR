@@ -15,8 +15,8 @@ IMPORT_FILE_PATTERN = r"(`import\s+\"(\w+.lfr)\")"
 
 class PreProcessor:
     def __init__(self, file_list: List[str], lib_dir_list: List[str] = []) -> None:
-        self.resolved_paths = {}
-        self.full_text = {}
+        self.resolved_paths: Dict[str, Path] = {}
+        self.full_text: Dict[str, str] = {}
         self.text_dump = None
         self._lib_file_list: Dict[str, str] = {}  # Stores file path to file
 
@@ -123,10 +123,10 @@ class PreProcessor:
         file = open(file_path, mode="r")
 
         # read all lines at once
-        all_of_it = file.read()
+        all_of_the_file_text = file.read()
 
         # close the file
         file.close()
 
         self.resolved_paths[file_path.name] = file_path
-        self.full_text[file_path.name] = all_of_it
+        self.full_text[file_path.name] = all_of_the_file_text

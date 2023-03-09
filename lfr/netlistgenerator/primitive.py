@@ -4,7 +4,7 @@ from enum import Enum
 from typing import List, Optional
 
 from parchmint import Component, Device, Layer, Params
-from pymint import MINTDevice
+from pymint.mintdevice import MINTDevice
 
 from lfr import parameters
 from lfr.netlistgenerator.connectingoption import ConnectingOption

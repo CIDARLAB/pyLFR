@@ -38,7 +38,7 @@ class LFRBaseListener(lfrXListener):
     def __init__(self):
         print("Initialized the lfrcompiler")
         self.modules = []
-        self.currentModule: Module = Module("Default_Module_To_Be_Removed")
+        self.currentModule: Optional[Module] = None
         self.lhs = None
         self.rhs = None
         self.operatormap = {}
@@ -58,7 +58,7 @@ class LFRBaseListener(lfrXListener):
         # This might be the new expression stack
         self.stack = []
         self.statestack = []
-        self.binaryoperatorsstack = [[]]
+        self.binaryoperatorsstack: List[List[str]] = [[]]
 
         # TODO - Figure out how to make this more elegant
         self._lhs_store = None
@@ -85,14 +85,17 @@ class LFRBaseListener(lfrXListener):
         self.success = False
         self.vectors = {}
         self.expressionresults = None
-        self.listermode: ListenerMode = ListenerMode.NONE
-        self.lastlistenermode: ListenerMode = ListenerMode.NONE
+        self.listermode = ListenerMode.NONE
+        self.lastlistenermode = ListenerMode.NONE
 
         self.stack = []
         self.statestack = []
         self.binaryoperatorsstack = [[]]
 
     def enterIoblock(self, ctx: lfrXParser.IoblockContext):
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         # If io block has an explicit declaration set the flag
         if self.currentModule is None:
             raise ValueError("currentModule set to None")
@@ -114,11 +117,14 @@ class LFRBaseListener(lfrXListener):
             self.vectors[name] = v
             self.typeMap[name] = VariableTypes.FLUID
 
-            m = ModuleIO(name)
+            m = ModuleIO(name, IOType.FLOW_INPUT)
             m.vector_ref = v.get_range()
             self.currentModule.add_io(m)
 
     def exitExplicitIOBlock(self, ctx: lfrXParser.ExplicitIOBlockContext):
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         #  First check the type of the explicit io block
         decltype = ctx.start.text
         mode = None
@@ -169,6 +175,9 @@ class LFRBaseListener(lfrXListener):
                     for io in vec.get_items():
                         io.type = mode
 
+                    # If IOType is None
+                    if mode is None:
+                        raise ValueError("IOType is None")
                     # Create and add a ModuleIO reference
                     m = ModuleIO(name, mode)
                     m.vector_ref = vec.get_range()
@@ -183,6 +192,9 @@ class LFRBaseListener(lfrXListener):
                     )
 
     def enterFluiddeclstat(self, ctx: lfrXParser.FluiddeclstatContext):
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
         for declvar in ctx.declvar():
             name = declvar.ID().getText()
@@ -196,6 +208,8 @@ class LFRBaseListener(lfrXListener):
             v = self.__createVector(name, Flow, startindex, endindex)
 
             for item in v.get_items():
+                if self.currentModule is None:
+                    raise ValueError("currentModule set to None")
                 self.currentModule.add_fluid(item)
 
             # Now that the declaration is done, we are going to save it
@@ -206,6 +220,9 @@ class LFRBaseListener(lfrXListener):
         self.__revertMode()
 
     def enterStoragestat(self, ctx: lfrXParser.StoragestatContext):
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
         for declvar in ctx.declvar():
             name = declvar.ID().getText()
@@ -229,6 +246,9 @@ class LFRBaseListener(lfrXListener):
         self.__revertMode()
 
     def enterPumpvarstat(self, ctx: lfrXParser.PumpvarstatContext):
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
         for declvar in ctx.declvar():
             name = declvar.ID().getText()
@@ -252,6 +272,9 @@ class LFRBaseListener(lfrXListener):
         self.__revertMode()
 
     def enterSignalvarstat(self, ctx: lfrXParser.SignalvarstatContext):
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         self.__updateMode(ListenerMode.VARIABLE_DECLARATION_MODE)
         for declvar in ctx.declvar():
             name = declvar.ID().getText()
