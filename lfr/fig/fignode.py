@@ -80,7 +80,8 @@ class IONode(Flow):
         super(IONode, self).__init__(id)
         if iotype is None:
             self._type = IOType.FLOW_INPUT
-        self._type = iotype
+        else:
+            self._type = iotype
 
     @property
     def type(self) -> IOType:
