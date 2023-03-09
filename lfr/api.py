@@ -47,7 +47,7 @@ def compile_lfr(
     rel_input_path = "pre_processor_dump.lfr"
     input_path = Path(rel_input_path).resolve()
 
-    abspath = os.path.abspath(outpath)
+    abspath = Path(outpath).absolute()
     parameters.OUTPUT_DIR = abspath
 
     if os.path.isdir(abspath) is not True:
