@@ -1,6 +1,6 @@
+from dafd import DAFD_Interface
 from pymint.mintdevice import MINTDevice
 
-from dafd import DAFD_Interface
 from lfr.postprocessor.constraints import (
     ConstraintList,
     FunctionalConstraint,

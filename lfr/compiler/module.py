@@ -161,14 +161,30 @@ class Module:
         number: Union[int, float],
         interaction_type: InteractionType,
     ) -> Interaction:
-        # finteraction = FluidInteraction(fluid1=fluid1, interactiontype=interaction)
-        finteraction = None
+        """Add a fluid numeric interaction to the module
+
+        Args:
+            fluid1 (Flow): Fluid to interact with
+            number (Union[int, float]): Number to interact with
+            interaction_type (InteractionType): Type of interaction
+
+        Raises:
+            NotImplementedError: Currently not supporting variables and their lookups
+            ValueError: If the interaction type is not supported
+
+        Returns:
+            Interaction: The interaction that was added
+        """
+
+        finteraction: Union[FluidIntegerInteraction, FluidNumberInteraction]
 
         if interaction_type is InteractionType.METER:
             finteraction = FluidNumberInteraction(fluid1, number, interaction_type)
         elif interaction_type is InteractionType.DILUTE:
             if isinstance(number, float):
                 finteraction = FluidNumberInteraction(fluid1, number, interaction_type)
+            elif isinstance(number, int):
+                raise ValueError("Dilute interaction only supports float values")
             else:
                 # If its a variable get the corresponding value for it
                 # from the variable store
@@ -176,12 +192,14 @@ class Module:
         elif interaction_type is InteractionType.DIVIDE:
             if isinstance(number, int):
                 finteraction = FluidIntegerInteraction(fluid1, number, interaction_type)
+            elif isinstance(number, float):
+                raise ValueError("Divide interaction only supports integer values")
             else:
                 # If its a variable get the corresponding value for it
                 # from the variable store
                 raise NotImplementedError()
         else:
-            raise Exception("Unsupported Numeric Operator")
+            raise ValueError(f"Unsupported Numeric Operator: {interaction_type}")
 
         self.FIG.add_interaction(finteraction)
 
@@ -206,18 +224,19 @@ class Module:
         # Step 2 - Create a copy of the fig
         if module_to_import is None:
             raise ReferenceError("module_to_import is set to none")
-        fig_copy = copy.deepcopy(module_to_import.FIG)
+
+        fig_copy: FluidInteractionGraph = copy.deepcopy(module_to_import.FIG)
 
         # Step 3 - Convert all the flow IO nodes where mappings exist
         # to flow nodes
         for there_node_key in io_mapping.keys():
             fignode = fig_copy.get_fignode(there_node_key)
             # Skip if its a control type one
-            if isinstance(fignode, IONode) is False:
+            if isinstance(fignode, IONode) is True:
+                if fignode.type is IOType.CONTROL:  # type: ignore
+                    continue
+            else:
                 raise TypeError("Node not of type IO Node")
-
-            if fignode.type is IOType.CONTROL:
-                continue
 
             # Convert this node into a flow node
             # Replace

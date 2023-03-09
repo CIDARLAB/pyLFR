@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Union
+
+from lfr.fig.fignode import FIGNode
 
 if TYPE_CHECKING:
     from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
@@ -12,7 +14,12 @@ import numpy as np
 from tabulate import tabulate
 
 from lfr.compiler.distribute.BitVector import BitVector
-from lfr.fig.annotation import ANDAnnotation, NOTAnnotation, ORAnnotation
+from lfr.fig.annotation import (
+    ANDAnnotation,
+    DistributeAnnotation,
+    NOTAnnotation,
+    ORAnnotation,
+)
 from lfr.utils import convert_list_to_str
 
 
@@ -27,7 +34,7 @@ class StateTable:
         self._connectivity_matrix = np.zeros((1, 1))
         self._control_matrix = np.zeros((1, 1))
         self._connectivity_column_headers: List[str] = []
-        self._connectivity_edges = {}
+        self._connectivity_edges: Dict[str, Tuple[str, str]] = {}
         self._and_annotations: List[ANDAnnotation] = []
         self._or_annotations: List[ORAnnotation] = []
         self._not_annotations: List[NOTAnnotation] = []
@@ -85,7 +92,7 @@ class StateTable:
         digraph.add_edge(source, target)
 
     def generate_connectivity_table(self) -> None:
-        connectivy_column_headers = []
+        connectivy_column_headers: List[str] = []
         self._connectivity_column_headers = connectivy_column_headers
         # First setup the dimensions for the matrix
         row_size = len(self._connectivity_states.keys())
@@ -262,7 +269,9 @@ class StateTable:
         # else (is not present in AND annotation) pick up the positive's corresponding
         # flow node as one of the targets for the or annotation
         for candidate in all_candidates:
-            args_for_annotation = []
+            args_for_annotation: List[
+                Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]
+            ] = []
             for row_index in candidate:
                 row = m[row_index, :]
                 for i in range(len(row)):
@@ -290,10 +299,9 @@ class StateTable:
                         annotation_to_use = None
                         for annotation in self._and_annotations:
                             if source in annotation.get_items():
-                                found_flag = True
                                 annotation_to_use = annotation
                                 break
-                        if found_flag is True:
+                        if annotation_to_use is not None:
                             if annotation_to_use not in args_for_annotation:
                                 args_for_annotation.append(annotation_to_use)
                         else:

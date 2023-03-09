@@ -37,6 +37,10 @@ class ConstructionGraph(nx.DiGraph):
         """
         return self._id
 
+    @property
+    def construction_nodes(self) -> List[ConstructionNode]:
+        return self._construction_nodes
+
     def add_construction_node(self, construction_node: ConstructionNode) -> None:
         """Adds a construction node to the graph
 

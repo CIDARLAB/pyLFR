@@ -1,27 +1,16 @@
-from copy import deepcopy
 from typing import Dict, FrozenSet, List, Optional, Set, Tuple
 
-import networkx as nx
 from pymint.mintdevice import MINTDevice
 from pymint.mintlayer import MINTLayerType
 
 from lfr.compiler.module import Module
-from lfr.fig.fignode import IOType, Pump, Storage, ValueNode
-from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 
 # from lfr.netlistgenerator.constructiongraph import ConstructionGraph
-from lfr.fig.interaction import (
-    FluidIntegerInteraction,
-    FluidNumberInteraction,
-    InteractionType,
-)
+from lfr.fig.interaction import InteractionType
 from lfr.fig.simplification import remove_passthrough_nodes
 from lfr.graphmatch.interface import get_fig_matches
-from lfr.graphmatch.matchpattern import MatchPattern
 from lfr.netlistgenerator import LibraryPrimitivesEntry
 from lfr.netlistgenerator.connectingoption import ConnectingOption
-from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
-from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 from lfr.netlistgenerator.constructiongraph.edge_generation import (
     generate_construction_graph_edges,
 )
@@ -36,13 +25,11 @@ from lfr.netlistgenerator.gen_strategies.dummy import DummyStrategy
 #     NetworkMappingOption,
 #     NetworkMappingOptionType,
 # )
-from lfr.netlistgenerator.gen_strategies.genstrategy import GenStrategy
 from lfr.netlistgenerator.gen_strategies.marsstrategy import MarsStrategy
-from lfr.netlistgenerator.mappinglibrary import MappingLibrary, MatchPatternEntry
-from lfr.netlistgenerator.mappingoption import MappingOption
+from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.netlist_generation import generate_device
-from lfr.netlistgenerator.primitive import NetworkPrimitive, Primitive, PrimitiveType
+from lfr.netlistgenerator.primitive import Primitive, PrimitiveType
 from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
 from lfr.postprocessor.mapping import (
     FluidicOperatorMapping,
@@ -71,7 +58,7 @@ from lfr.utils import printgraph
 def generate_mlsi_library() -> MappingLibrary:
     library = MappingLibrary("mlsi")
     # PORT
-    port_inputs = []
+    port_inputs: List[ConnectingOption] = []
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
@@ -92,7 +79,7 @@ def generate_mlsi_library() -> MappingLibrary:
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
 
-    port_outputs = []
+    port_outputs: List[ConnectingOption] = []
     port_outputs.append(ConnectingOption(None, []))
     port_outputs.append(ConnectingOption(None, []))
     port_outputs.append(ConnectingOption(None, []))
@@ -132,7 +119,7 @@ def generate_mlsi_library() -> MappingLibrary:
 
     # MIXER - CONTINOUS FLOW ONE
 
-    cf_mixer_inputs = []
+    cf_mixer_inputs: List[ConnectingOption] = []
 
     cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
     cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
@@ -145,12 +132,12 @@ def generate_mlsi_library() -> MappingLibrary:
     cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
     cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
 
-    cf_mixer_outputs = []
+    cf_mixer_outputs: List[ConnectingOption] = []
 
     cf_mixer_outputs.append(ConnectingOption(None, ["2"]))
 
-    cf_mixer_loadings = []
-    cf_mixer_carriers = []
+    cf_mixer_loadings: List[ConnectingOption] = []
+    cf_mixer_carriers: List[ConnectingOption] = []
 
     cf_mixer = Primitive(
         "MIXER",
@@ -171,10 +158,10 @@ def generate_mlsi_library() -> MappingLibrary:
 
     # MUX2
 
-    mux2_inputs = []
+    mux2_inputs: List[ConnectingOption] = []
     mux2_inputs.append(ConnectingOption(None, ["1"]))
 
-    mux2_outputs = []
+    mux2_outputs: List[ConnectingOption] = []
     mux2_outputs.append(ConnectingOption(None, ["2"]))
     mux2_outputs.append(ConnectingOption(None, ["3"]))
 
@@ -205,7 +192,7 @@ def generate_mars_library() -> MappingLibrary:
     library = MappingLibrary("mars")
 
     # PORT
-    port_inputs = []
+    port_inputs: List[ConnectingOption] = []
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
@@ -226,7 +213,7 @@ def generate_mars_library() -> MappingLibrary:
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
 
-    port_outputs = []
+    port_outputs: List[ConnectingOption] = []
     port_outputs.append(ConnectingOption(None, []))
     port_outputs.append(ConnectingOption(None, []))
     port_outputs.append(ConnectingOption(None, []))
@@ -264,7 +251,7 @@ def generate_mars_library() -> MappingLibrary:
 
     # NORMAL MIXER
 
-    mixer_inputs = []
+    mixer_inputs: List[ConnectingOption] = []
 
     mixer_inputs.append(ConnectingOption(None, ["1"]))
     mixer_inputs.append(ConnectingOption(None, ["1"]))
@@ -277,7 +264,7 @@ def generate_mars_library() -> MappingLibrary:
     mixer_inputs.append(ConnectingOption(None, ["1"]))
     mixer_inputs.append(ConnectingOption(None, ["1"]))
 
-    mixer_outputs = []
+    mixer_outputs: List[ConnectingOption] = []
 
     mixer_outputs.append(ConnectingOption(None, ["2"]))
     mixer_outputs.append(ConnectingOption(None, ["2"]))
@@ -290,8 +277,8 @@ def generate_mars_library() -> MappingLibrary:
     mixer_outputs.append(ConnectingOption(None, ["2"]))
     mixer_outputs.append(ConnectingOption(None, ["2"]))
 
-    mixer_loadings = []
-    mixer_carriers = []
+    mixer_loadings: List[ConnectingOption] = []
+    mixer_carriers: List[ConnectingOption] = []
 
     mixer = Primitive(
         "MIXER",
@@ -310,16 +297,16 @@ def generate_mars_library() -> MappingLibrary:
 
     # DIAMOND REACTION CHAMBER
 
-    diamond_chamber_inputs = []
+    diamond_chamber_inputs: List[ConnectingOption] = []
 
     diamond_chamber_inputs.append(ConnectingOption("default_component", ["1"]))
 
-    diamond_chamber_outputs = []
+    diamond_chamber_outputs: List[ConnectingOption] = []
 
     diamond_chamber_outputs.append(ConnectingOption("default_component", ["2"]))
 
-    diamond_chamber_loadings = []
-    diamond_chamber_carriers = []
+    diamond_chamber_loadings: List[ConnectingOption] = []
+    diamond_chamber_carriers: List[ConnectingOption] = []
 
     diamond_chamber = Primitive(
         "DIAMOND REACTION CHAMBER",
@@ -338,17 +325,17 @@ def generate_mars_library() -> MappingLibrary:
 
     # METER
 
-    meter_inputs = []
+    meter_inputs: List[ConnectingOption] = []
 
-    meter_outputs = []
+    meter_outputs: List[ConnectingOption] = []
 
     meter_outputs.append(ConnectingOption("default_component", ["1"]))
 
-    meter_loadings = []
+    meter_loadings: List[ConnectingOption] = []
 
     meter_loadings.append(ConnectingOption("default_component", ["2"]))
 
-    meter_carriers = []
+    meter_carriers: List[ConnectingOption] = []
 
     meter_carriers.append(ConnectingOption("default_component", ["3"]))
 
@@ -380,16 +367,16 @@ def generate_mars_library() -> MappingLibrary:
 
     # Incubator
 
-    incubator_inputs = []
+    incubator_inputs: List[ConnectingOption] = []
 
     incubator_inputs.append(ConnectingOption("default_component", ["1"]))
 
-    incubator_outputs = []
+    incubator_outputs: List[ConnectingOption] = []
 
     incubator_outputs.append(ConnectingOption("default_component", ["1"]))
 
-    incubator_loadings = []
-    incubator_carriers = []
+    incubator_loadings: List[ConnectingOption] = []
+    incubator_carriers: List[ConnectingOption] = []
 
     incubator = Primitive(
         "INCUBATOR",
@@ -407,17 +394,17 @@ def generate_mars_library() -> MappingLibrary:
 
     # SORTER
 
-    sorter_inputs = []
+    sorter_inputs: List[ConnectingOption] = []
 
     sorter_inputs.append(ConnectingOption(None, ["1"]))
 
-    sorter_outputs = []
+    sorter_outputs: List[ConnectingOption] = []
 
     sorter_outputs.append(ConnectingOption(None, ["2"]))
     sorter_outputs.append(ConnectingOption(None, ["3"]))
 
-    sorter_loadings = []
-    sorter_carriers = []
+    sorter_loadings: List[ConnectingOption] = []
+    sorter_carriers: List[ConnectingOption] = []
 
     # TODO - Modify this later on
     sorter = Primitive(
@@ -442,7 +429,7 @@ def generate_dropx_library() -> MappingLibrary:
     library = MappingLibrary("dropx")
 
     # PORT
-    port_inputs = []
+    port_inputs: List[ConnectingOption] = []
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
@@ -463,7 +450,7 @@ def generate_dropx_library() -> MappingLibrary:
     port_inputs.append(ConnectingOption(None, [None]))
     port_inputs.append(ConnectingOption(None, [None]))
 
-    port_outputs = []
+    port_outputs: List[ConnectingOption] = []
     port_outputs.append(ConnectingOption(None, []))
     port_outputs.append(ConnectingOption(None, []))
     port_outputs.append(ConnectingOption(None, []))
@@ -503,17 +490,17 @@ def generate_dropx_library() -> MappingLibrary:
 
     # PICO INJECTOR
 
-    pico_injector_inputs = []
+    pico_injector_inputs: List[ConnectingOption] = []
 
     pico_injector_inputs.append(ConnectingOption(None, ["1"]))
     pico_injector_inputs.append(ConnectingOption(None, ["2"]))
 
-    pico_injector_outputs = []
+    pico_injector_outputs: List[ConnectingOption] = []
 
     pico_injector_outputs.append(ConnectingOption(None, ["3"]))
 
-    pico_injector_loadings = []
-    pico_injector_carriers = []
+    pico_injector_loadings: List[ConnectingOption] = []
+    pico_injector_carriers: List[ConnectingOption] = []
 
     pico_injector = Primitive(
         "PICOINJECTOR",
@@ -534,17 +521,17 @@ def generate_dropx_library() -> MappingLibrary:
 
     # DROPLET ELECTROPHORESIS MERGER
 
-    electrophoresis_merger_inputs = []
+    electrophoresis_merger_inputs: List[ConnectingOption] = []
 
     electrophoresis_merger_inputs.append(ConnectingOption(None, ["1"]))
     electrophoresis_merger_inputs.append(ConnectingOption(None, ["2"]))
 
-    electrophoresis_merger_outputs = []
+    electrophoresis_merger_outputs: List[ConnectingOption] = []
 
     electrophoresis_merger_outputs.append(ConnectingOption(None, ["3"]))
 
-    electrophoresis_merger_loadings = []
-    electrophoresis_merger_carriers = []
+    electrophoresis_merger_loadings: List[ConnectingOption] = []
+    electrophoresis_merger_carriers: List[ConnectingOption] = []
 
     # TODO - Modify this later on
     electrophoresis_merger = Primitive(
@@ -566,17 +553,17 @@ def generate_dropx_library() -> MappingLibrary:
 
     # DROPLET SORTER
 
-    droplet_sorter_inputs = []
+    droplet_sorter_inputs: List[ConnectingOption] = []
 
     droplet_sorter_inputs.append(ConnectingOption(None, ["1"]))
 
-    droplet_sorter_outputs = []
+    droplet_sorter_outputs: List[ConnectingOption] = []
 
     droplet_sorter_outputs.append(ConnectingOption(None, ["2"]))
     droplet_sorter_outputs.append(ConnectingOption(None, ["3"]))
 
-    droplet_sorter_loadings = []
-    droplet_sorter_carriers = []
+    droplet_sorter_loadings: List[ConnectingOption] = []
+    droplet_sorter_carriers: List[ConnectingOption] = []
 
     # TODO - Modify this later on
     droplet_sorter = Primitive(
@@ -598,16 +585,16 @@ def generate_dropx_library() -> MappingLibrary:
 
     # DROPLET GENERATOR
 
-    droplet_generator_inputs = []
+    droplet_generator_inputs: List[ConnectingOption] = []
 
     droplet_generator_inputs.append(ConnectingOption("default_component", ["1"]))
 
-    droplet_generator_outputs = []
+    droplet_generator_outputs: List[ConnectingOption] = []
 
     droplet_generator_outputs.append(ConnectingOption("default_component", ["3"]))
 
-    droplet_generator_loadings = []
-    droplet_generator_carriers = []
+    droplet_generator_loadings: List[ConnectingOption] = []
+    droplet_generator_carriers: List[ConnectingOption] = []
 
     droplet_generator = Primitive(
         "NOZZLE DROPLET GENERATOR",
@@ -637,17 +624,17 @@ def generate_dropx_library() -> MappingLibrary:
 
     library.add_operator_entry(droplet_generator, InteractionType.METER)
 
-    droplet_merger_junction_inputs = []
+    droplet_merger_junction_inputs: List[ConnectingOption] = []
 
     droplet_merger_junction_inputs.append(ConnectingOption(None, ["1"]))
     droplet_merger_junction_inputs.append(ConnectingOption(None, ["2"]))
 
-    droplet_merger_junction_outputs = []
+    droplet_merger_junction_outputs: List[ConnectingOption] = []
 
     droplet_merger_junction_outputs.append(ConnectingOption(None, ["3"]))
 
-    droplet_merger_junction_loadings = []
-    droplet_merger_junction_carriers = []
+    droplet_merger_junction_loadings: List[ConnectingOption] = []
+    droplet_merger_junction_carriers: List[ConnectingOption] = []
 
     droplet_merger_junction = Primitive(
         "DROPLET MERGER JUNCTION",
@@ -668,16 +655,16 @@ def generate_dropx_library() -> MappingLibrary:
 
     # DROPLET MERGER CHANNEL
 
-    droplet_merger_channel_inputs = []
+    droplet_merger_channel_inputs: List[ConnectingOption] = []
 
     droplet_merger_channel_inputs.append(ConnectingOption(None, ["1"]))
 
-    droplet_merger_channel_outputs = []
+    droplet_merger_channel_outputs: List[ConnectingOption] = []
 
     droplet_merger_channel_outputs.append(ConnectingOption(None, ["2"]))
 
-    droplet_merger_channel_loadings = []
-    droplet_merger_channel_carriers = []
+    droplet_merger_channel_loadings: List[ConnectingOption] = []
+    droplet_merger_channel_carriers: List[ConnectingOption] = []
 
     droplet_merger_channel = Primitive(
         "DROPLET MERGER CHANNEL",
@@ -698,7 +685,7 @@ def generate_dropx_library() -> MappingLibrary:
 
     # MIXER - CONTINOUS FLOW ONE
 
-    cf_mixer_inputs = []
+    cf_mixer_inputs: List[ConnectingOption] = []
 
     cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
     cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
@@ -711,12 +698,12 @@ def generate_dropx_library() -> MappingLibrary:
     cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
     cf_mixer_inputs.append(ConnectingOption(None, ["1"]))
 
-    cf_mixer_outputs = []
+    cf_mixer_outputs: List[ConnectingOption] = []
 
     cf_mixer_outputs.append(ConnectingOption(None, ["2"]))
 
-    cf_mixer_loadings = []
-    cf_mixer_carriers = []
+    cf_mixer_loadings: List[ConnectingOption] = []
+    cf_mixer_carriers: List[ConnectingOption] = []
 
     cf_mixer = Primitive(
         "MIXER",
@@ -737,17 +724,17 @@ def generate_dropx_library() -> MappingLibrary:
 
     # DROPLET SPLITTER
 
-    droplet_splitter_inputs = []
+    droplet_splitter_inputs: List[ConnectingOption] = []
 
     droplet_splitter_inputs.append(ConnectingOption(None, ["1"]))
 
-    droplet_splitter_outputs = []
+    droplet_splitter_outputs: List[ConnectingOption] = []
 
     droplet_splitter_outputs.append(ConnectingOption(None, ["2"]))
     droplet_splitter_outputs.append(ConnectingOption(None, ["3"]))
 
-    droplet_splitter_loadings = []
-    droplet_splitter_carriers = []
+    droplet_splitter_loadings: List[ConnectingOption] = []
+    droplet_splitter_carriers: List[ConnectingOption] = []
 
     droplet_splitter = Primitive(
         "DROPLET SPLITTER",
@@ -768,7 +755,7 @@ def generate_dropx_library() -> MappingLibrary:
 
     # NORMAL MIXER
 
-    mixer_inputs = []
+    mixer_inputs: List[ConnectingOption] = []
 
     mixer_inputs.append(ConnectingOption(None, ["1"]))
     mixer_inputs.append(ConnectingOption(None, ["1"]))
@@ -781,7 +768,7 @@ def generate_dropx_library() -> MappingLibrary:
     mixer_inputs.append(ConnectingOption(None, ["1"]))
     mixer_inputs.append(ConnectingOption(None, ["1"]))
 
-    mixer_outputs = []
+    mixer_outputs: List[ConnectingOption] = []
 
     mixer_outputs.append(ConnectingOption(None, ["2"]))
     mixer_outputs.append(ConnectingOption(None, ["2"]))
@@ -794,8 +781,8 @@ def generate_dropx_library() -> MappingLibrary:
     mixer_outputs.append(ConnectingOption(None, ["2"]))
     mixer_outputs.append(ConnectingOption(None, ["2"]))
 
-    mixer_loadings = []
-    mixer_carriers = []
+    mixer_loadings: List[ConnectingOption] = []
+    mixer_carriers: List[ConnectingOption] = []
 
     mixer = Primitive(
         "MIXER",
@@ -816,16 +803,16 @@ def generate_dropx_library() -> MappingLibrary:
 
     # DROPLET CAPACITANCE SENSOR
 
-    droplet_capacitance_sensor_inputs = []
+    droplet_capacitance_sensor_inputs: List[ConnectingOption] = []
 
     droplet_capacitance_sensor_inputs.append(ConnectingOption(None, ["1"]))
 
-    droplet_capacitance_sensor_outputs = []
+    droplet_capacitance_sensor_outputs: List[ConnectingOption] = []
 
     droplet_capacitance_sensor_outputs.append(ConnectingOption(None, ["2"]))
 
-    droplet_capacitance_sensor_loadings = []
-    droplet_capacitance_sensor_carriers = []
+    droplet_capacitance_sensor_loadings: List[ConnectingOption] = []
+    droplet_capacitance_sensor_carriers: List[ConnectingOption] = []
 
     droplet_capacitance_sensor = Primitive(
         "DROPLET CAPACITANCE SENSOR",
@@ -848,16 +835,16 @@ def generate_dropx_library() -> MappingLibrary:
 
     # FILTER
 
-    filter_inputs = []
+    filter_inputs: List[ConnectingOption] = []
 
     filter_inputs.append(ConnectingOption(None, ["1"]))
 
-    filter_outputs = []
+    filter_outputs: List[ConnectingOption] = []
 
     filter_outputs.append(ConnectingOption(None, ["2"]))
 
-    filter_loadings = []
-    filter_carriers = []
+    filter_loadings: List[ConnectingOption] = []
+    filter_carriers: List[ConnectingOption] = []
 
     filter = Primitive(
         "FILTER",
@@ -878,16 +865,16 @@ def generate_dropx_library() -> MappingLibrary:
 
     # DROPLET FLUORESCENCE SENSOR
 
-    droplet_fluorescence_sensor_inputs = []
+    droplet_fluorescence_sensor_inputs: List[ConnectingOption] = []
 
     droplet_fluorescence_sensor_inputs.append(ConnectingOption(None, ["1"]))
 
-    droplet_fluorescence_sensor_outputs = []
+    droplet_fluorescence_sensor_outputs: List[ConnectingOption] = []
 
     droplet_fluorescence_sensor_outputs.append(ConnectingOption(None, ["2"]))
 
-    droplet_fluorescence_sensor_loadings = []
-    droplet_fluorescence_sensor_carriers = []
+    droplet_fluorescence_sensor_loadings: List[ConnectingOption] = []
+    droplet_fluorescence_sensor_carriers: List[ConnectingOption] = []
 
     droplet_fluorescence_sensor = Primitive(
         "DROPLET FLUORESCENCE SENSOR",
@@ -909,16 +896,16 @@ def generate_dropx_library() -> MappingLibrary:
     )
 
     # DROPLET LUMINESCENCE SENSOR
-    droplet_luminescence_sensor_inputs = []
+    droplet_luminescence_sensor_inputs: List[ConnectingOption] = []
 
     droplet_luminescence_sensor_inputs.append(ConnectingOption(None, ["1"]))
 
-    droplet_luminescence_sensor_outputs = []
+    droplet_luminescence_sensor_outputs: List[ConnectingOption] = []
 
     droplet_luminescence_sensor_outputs.append(ConnectingOption(None, ["2"]))
 
-    droplet_luminescence_sensor_loadings = []
-    droplet_luminescence_sensor_carriers = []
+    droplet_luminescence_sensor_loadings: List[ConnectingOption] = []
+    droplet_luminescence_sensor_carriers: List[ConnectingOption] = []
 
     droplet_luminescence_sensor = Primitive(
         "DROPLET LUMINESCENCE SENSOR",
@@ -941,16 +928,16 @@ def generate_dropx_library() -> MappingLibrary:
 
     # DROPLET SPACER
 
-    droplet_spacer_inputs = []
+    droplet_spacer_inputs: List[ConnectingOption] = []
 
     droplet_spacer_inputs.append(ConnectingOption("default_component", ["1"]))
 
-    droplet_spacer_outputs = []
+    droplet_spacer_outputs: List[ConnectingOption] = []
 
     droplet_spacer_outputs.append(ConnectingOption("default_component", ["2"]))
 
-    droplet_spacer_loadings = []
-    droplet_spacer_carriers = []
+    droplet_spacer_loadings: List[ConnectingOption] = []
+    droplet_spacer_carriers: List[ConnectingOption] = []
 
     droplet_spacer = Primitive(
         "DROPLET SPACER",
@@ -1065,7 +1052,12 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
         # Add a MINT Layer so that the device has something to work with
         cur_device.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
 
-        generate_device(variant, cur_device, name_generator)
+        generate_device(
+            construction_graph=variant,
+            scaffhold_device=cur_device,
+            name_generator=name_generator,
+            mapping_library=library,
+        )
         # STEP 7 - Generate the control logic network
         # TODO - Whatever this entails (put in the implementation)
 

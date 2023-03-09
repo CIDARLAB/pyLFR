@@ -180,14 +180,14 @@ from lfr.netlistgenerator.constructiongraph.constructionnode import Construction
 #                     self.add_edge(cn.ID, cn_neighbor.ID)
 
 
-def _generate_fignode_to_cn_map(construction_graph: ConstructionGraph):
-    fig_node_to_cn_map = {}
-    for cn in self._construction_nodes:
-        for fig_node in cn.fig_subgraph.nodes:
-            if fig_node.ID not in fig_node_to_cn_map:
-                fig_node_to_cn_map[fig_node.ID] = []
-            fig_node_to_cn_map[fig_node.ID].append(cn)
-    return fig_node_to_cn_map
+# def _generate_fignode_to_cn_map(construction_graph: ConstructionGraph):
+#     fig_node_to_cn_map = {}
+#     for cn in construction_graph.construction_nodes:
+#         for fig_node in cn.fig_subgraph.nodes:
+#             if fig_node.ID not in fig_node_to_cn_map:
+#                 fig_node_to_cn_map[fig_node.ID] = []
+#             fig_node_to_cn_map[fig_node.ID].append(cn)
+#     return fig_node_to_cn_map
 
 
 def check_overlap_criteria_1(

@@ -1,12 +1,14 @@
+from typing import Optional
+
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.fig.fignode import IOType
 
 
 class ModuleIO:
-    def __init__(self, name: str, iotype: IOType = None):
+    def __init__(self, name: str, iotype: IOType):
         self.type = iotype
         self._id = name
-        self._vector_ref = None
+        self._vector_ref: Optional[VectorRange] = None
 
     @property
     def id(self) -> str:
@@ -14,7 +16,11 @@ class ModuleIO:
 
     @property
     def vector_ref(self) -> VectorRange:
-        assert self._vector_ref is not None
+        if self._vector_ref is None:
+            raise ValueError(
+                f"Vector Reference is not set for ModuleIO: {self.id}, type:"
+                f" {self.type}"
+            )
         return self._vector_ref
 
     @vector_ref.setter

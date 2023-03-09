@@ -155,8 +155,10 @@ def bijective_match_node_constraints(
             return False
         # Step 4.1.2 - Check if each of the values in the fig_node_dict is in the
         # match_node_dict
-        fig_rels_list = fig_node_dict[ids_set].sort()
-        match_rels_list = match_node_dict[ids_set].sort()
+        fig_rels_list = fig_node_dict[ids_set]
+        fig_rels_list.sort()
+        match_rels_list = match_node_dict[ids_set]
+        match_rels_list.sort()
         if fig_rels_list != match_rels_list:
             return False
     # Step 4.2 - Check if the relationships between the fig and the match networks are
@@ -168,8 +170,10 @@ def bijective_match_node_constraints(
             return False
         # Step 4.2.2 - Check if each of the values in the match_node_dict is in the
         # fig_node_dict
-        fig_rels_list = fig_node_dict[ids_set].sort()
-        match_rels_list = match_node_dict[ids_set].sort()
+        fig_rels_list = fig_node_dict[ids_set]
+        fig_rels_list.sort()
+        match_rels_list = match_node_dict[ids_set]
+        match_rels_list.sort()
         if fig_rels_list != match_rels_list:
             return False
 

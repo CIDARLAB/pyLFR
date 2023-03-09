@@ -1,11 +1,20 @@
-from typing import Optional
+from __future__ import annotations
+
+from typing import List, Optional
 
 from lfr.compiler.language.vectorrange import VectorRange
 
 
 class Concatenation:
-    def __init__(self, ranges=None):
-        self.ranges = []
+    """A concatenation is the represetnation of mutiple
+    vector ranges stitched togeter.
+
+    TODO - A concatenation of concatenations should be a concatenation,
+    while this needs to be tested more thoroughly, this is future work.
+    """
+
+    def __init__(self, ranges: List[VectorRange]):
+        self.ranges: List[VectorRange] = []
         if ranges is not None:
             self.ranges = ranges
             name = "CONCAT"
