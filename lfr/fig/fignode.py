@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 MATCH_STRING_ORDERING = [
     "IO",
@@ -75,12 +76,16 @@ class Flow(FIGNode):
 
 
 class IONode(Flow):
-    def __init__(self, id: str, iotype: IOType):
+    def __init__(self, id: str, iotype: Optional[IOType] = None) -> None:
         super(IONode, self).__init__(id)
+        if iotype is None:
+            self._type = IOType.FLOW_INPUT
         self._type = iotype
 
     @property
     def type(self) -> IOType:
+        if self._type is None:
+            raise ValueError("Type not set for IO: {}".format(self.ID))
         return self._type
 
     @type.setter
