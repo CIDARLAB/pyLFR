@@ -1,4 +1,5 @@
 from typing import Dict, List
+
 import networkx as nx
 
 from lfr.antlrgen.reggie.reggieListener import reggieListener

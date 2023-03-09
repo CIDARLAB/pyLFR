@@ -1,7 +1,8 @@
-from typing import List, Optional, TypeVar, Generic
+from typing import Generic, List, Optional, TypeVar
 
 from lfr.compiler.language.vectorrange import VectorRange
-T = TypeVar('T')
+
+T = TypeVar("T")
 
 
 class Vector(Generic[T]):
@@ -29,7 +30,9 @@ class Vector(Generic[T]):
     def get_items(self) -> list:
         return self.vec
 
-    def get_range(self, startindex: Optional[int] = None, endindex: Optional[int] = None) -> VectorRange:
+    def get_range(
+        self, startindex: Optional[int] = None, endindex: Optional[int] = None
+    ) -> VectorRange:
         start = startindex if startindex is not None else self.startindex
         end = endindex if endindex is not None else self.endindex
         ret = VectorRange(self, start, end)

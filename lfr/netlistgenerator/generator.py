@@ -6,9 +6,7 @@ from pymint.mintlayer import MINTLayerType
 from lfr.compiler.module import Module
 
 # from lfr.netlistgenerator.constructiongraph import ConstructionGraph
-from lfr.fig.interaction import (
-    InteractionType,
-)
+from lfr.fig.interaction import InteractionType
 from lfr.fig.simplification import remove_passthrough_nodes
 from lfr.graphmatch.interface import get_fig_matches
 from lfr.netlistgenerator import LibraryPrimitivesEntry
