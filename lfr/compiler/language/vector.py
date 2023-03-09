@@ -38,15 +38,6 @@ class Vector(Generic[T]):
     def get_items(self) -> List[T]:
         return self.vec
 
-    def get_range(
-        self, startindex: Optional[int] = None, endindex: Optional[int] = None
-    ) -> VectorRange:
-        start = startindex if startindex is not None else self.startindex
-        end = endindex if endindex is not None else self.endindex
-        ret = VectorRange(self, start, end)
-
-        return ret
-
     def __getitem__(self, key):
         if isinstance(key, slice):
             start, stop, step = key.indices(len(self.vec))

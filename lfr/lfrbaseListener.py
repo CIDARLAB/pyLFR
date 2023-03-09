@@ -118,7 +118,7 @@ class LFRBaseListener(lfrXListener):
             self.typeMap[name] = VariableTypes.FLUID
 
             m = ModuleIO(name, IOType.FLOW_INPUT)
-            m.vector_ref = v.get_range()
+            m.vector_ref = VectorRange.get_range_from_vector(v)
             self.currentModule.add_io(m)
 
     def exitExplicitIOBlock(self, ctx: lfrXParser.ExplicitIOBlockContext):
@@ -180,7 +180,7 @@ class LFRBaseListener(lfrXListener):
                         raise ValueError("IOType is None")
                     # Create and add a ModuleIO reference
                     m = ModuleIO(name, mode)
-                    m.vector_ref = vec.get_range()
+                    m.vector_ref = VectorRange.get_range_from_vector(vec)
                     self.currentModule.add_io(m)
 
                 else:

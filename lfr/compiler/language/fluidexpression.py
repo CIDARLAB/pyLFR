@@ -142,7 +142,7 @@ class FluidExpression:
             result.append(interaction)
 
         v = Vector.create_from_list_things(operator, result)
-        ret = v.get_range()
+        ret = VectorRange.get_range_from_vector(v)
         return ret
 
     def __evalute_fluid_fluid_operator(
@@ -225,7 +225,7 @@ class FluidExpression:
             result.append(result_element)
 
         v = Vector.create_from_list_things(vecname, result)
-        return v.get_range()
+        return VectorRange.get_range_from_vector(v)
 
     def __evaluate_fluid_numeric_operator(
         self, operand_fluidic: VectorRange, operand_numeric: float, operator: str
@@ -273,7 +273,7 @@ class FluidExpression:
         v = Vector.create_from_list_things(
             "interaction_" + operand_fluidic.id, interactions
         )
-        result = v.get_range()
+        result = VectorRange.get_range_from_vector(v)
         return result
 
     @staticmethod
