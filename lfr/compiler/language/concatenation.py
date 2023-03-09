@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import List, Optional
+from lfr.compiler.language.vector import Vector
 
 from lfr.compiler.language.vectorrange import VectorRange
 
@@ -47,7 +48,13 @@ class Concatenation:
     ) -> VectorRange:
         start = startindex
         end = endindex if endindex is not None else len(self) - 1
-
-        ret = VectorRange(self, start, end)
+        concatenated_data = []
+        for data in self.ranges:
+            concatenated_data.extend(data)
+        concatenated_vector = Vector(
+            self.id,
+        )
+        concatenated_vector.vec = concatenated_data
+        ret = VectorRange(concatenated_vector, start, end)
 
         return ret
