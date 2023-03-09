@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from typing import List, Optional
-from lfr.compiler.language.vector import Vector
 
+from lfr.compiler.language.vector import Vector
 from lfr.compiler.language.vectorrange import VectorRange
 
 
