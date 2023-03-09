@@ -1,6 +1,6 @@
 version = 1
 
-exclude_patterns = ["**/antlrgen/*","**/BitVector.py"]
+exclude_patterns = ["lfr/antlrgen/**.*","**/BitVector.py"]
 
 [[analyzers]]
 name = "python"
