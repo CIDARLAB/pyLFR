@@ -63,6 +63,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.mypy]
 python_version = 3.8
 ignore_missing_imports = "True"
+check_untyped_defs = "True"
 exclude = """
 (?x)(
     ^lfr/antlrgen/.*.py$    # files named "one.py"
