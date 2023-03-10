@@ -12,9 +12,4 @@
     "--line-length=88",
     "--experimental-string-processing"
   ],
-  "python.testing.pytestArgs": [
-    "tests"
-  ],
-  "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true
 }

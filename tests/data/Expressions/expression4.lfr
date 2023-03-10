@@ -1,0 +1,9 @@
+module expression4(finput in1, in2, in3, in4, foutput out);
+
+    flow temp_out;
+
+    assign temp_out = in1 + (in2 + (in3 + in4)) ;
+
+    assign out = temp_out;
+
+endmodule
