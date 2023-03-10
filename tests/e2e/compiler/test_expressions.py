@@ -1,6 +1,6 @@
-from lfr import api
 from tests.conftest import LIBRARY_PATH, TEST_DATA_FOLDER, TEST_OUTPATH
 
+from lfr import api
 
 TEST_CASES_FOLDER = TEST_DATA_FOLDER.joinpath("Expressions")
 
