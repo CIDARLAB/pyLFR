@@ -4,18 +4,19 @@ from typing import List
 
 import networkx as nx
 from pymint.mintdevice import MINTDevice
+from pathlib import Path
 
-import lfr.parameters as parameters
+from lfr.parameters import OUTPUT_DIR
 
 
-def printgraph(G: nx.Graph, filename: str) -> None:
+def printgraph(G: nx.Graph, filename: str, output_dir: Path=OUTPUT_DIR) -> None:
     """Prints the graph in a .dot file and a .pdf file"""
 
     # Generate labels and whatnot for the graph
     H = G.copy(as_view=False)
     # Print out the dot file and then run the conversion
-    tt = os.path.join(parameters.OUTPUT_DIR, filename)
-    print("output:", parameters.OUTPUT_DIR)
+    tt = os.path.join(output_dir, filename)
+    print("output:", output_dir)
     print("output:", tt)
     nx.nx_agraph.to_agraph(H).write(tt)
 
@@ -24,7 +25,7 @@ def printgraph(G: nx.Graph, filename: str) -> None:
 
 def get_ouput_path(filename: str) -> str:
     """Returns the path to the output file"""
-    return os.path.join(parameters.OUTPUT_DIR, filename)
+    return os.path.join(OUTPUT_DIR, filename)
 
 
 def serialize_netlist(mint_device: MINTDevice) -> None:

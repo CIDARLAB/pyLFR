@@ -1,8 +1,12 @@
-from tests.conftest import LIBRARY_PATH, TEST_DATA_FOLDER, TEST_OUTPATH
-
+from tests.conftest import LIBRARY_PATH, TEST_DATA_FOLDER, TEST_OUTPATH, to_agraph
+import networkx
 from lfr import api
+from lfr.utils import printgraph
+from pathlib import Path
+from networkx import is_isomorphic
 
 TEST_CASES_FOLDER = TEST_DATA_FOLDER.joinpath("DropX")
+REF_DATA_FIG_FOLDER = TEST_CASES_FOLDER.joinpath("figs")
 
 
 def test_dx1():
@@ -16,6 +20,18 @@ def test_dx1():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    fig = module_listener.currentModule.FIG
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx1.dot")
+    ref_graph = networkx.drawing.nx_pydot.read_dot(ref_fig_data)
+    printgraph(fig, "test.dot", Path("./out").resolve())
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx2():
