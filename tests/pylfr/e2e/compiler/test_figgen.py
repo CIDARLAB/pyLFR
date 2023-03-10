@@ -1,9 +1,11 @@
-from tests.conftest import LIBRARY_PATH, TEST_DATA_FOLDER, TEST_OUTPATH
+from pathlib import Path
+
 import networkx
+from networkx import is_isomorphic
+from tests.conftest import LIBRARY_PATH, TEST_DATA_FOLDER, TEST_OUTPATH
+
 from lfr import api
 from lfr.utils import printgraph
-from pathlib import Path
-from networkx import is_isomorphic
 
 TEST_CASES_FOLDER = TEST_DATA_FOLDER.joinpath("DropX")
 REF_DATA_FIG_FOLDER = TEST_CASES_FOLDER.joinpath("figs")

@@ -83,7 +83,7 @@ class FluidInteractionGraph(nx.DiGraph):
         for annotation in self._annotations:
             if annotation.id == id:
                 return annotation
-        raise KeyError("Cannot find the annotation with ID: {0}".format(id))
+        raise KeyError(f"Cannot find the annotation with ID: {id}")
 
     def add_fignode(self, node: FIGNode) -> None:
         """Adds a FIGNode to the FluidInteractionGraph
@@ -110,9 +110,7 @@ class FluidInteractionGraph(nx.DiGraph):
         if id in self._fignodes:
             return self._fignodes[id]
         else:
-            raise Exception(
-                "Cannot find the node '{}' in the FluidInteractionGraph".format(id)
-            )
+            raise Exception(f"Cannot find the node '{id}' in the FluidInteractionGraph")
 
     def load_fignodes(self, fig_nodes: List[FIGNode]) -> None:
         """Loads the FIGNodes into the FluidInteractionGraph
@@ -196,17 +194,17 @@ class FluidInteractionGraph(nx.DiGraph):
                 Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]
             ] = []
 
-            old_fignode_item_ID_list = [
+            old_fignode_item_id_list = [
                 (item[0].ID, item[1].ID)
                 for item in annotation.get_items()
-                if type(item) is tuple
+                if isinstance(item, tuple())
             ]
 
             # Now switch the items to the new fignodes
             for (
                 old_fignode_item_id_1,
                 old_fignode_item_id_2,
-            ) in old_fignode_item_ID_list:
+            ) in old_fignode_item_id_list:
                 new_fignode_item_id_1 = fig_node_rename_map[old_fignode_item_id_1]
                 new_fignode_item_id_2 = fig_node_rename_map[old_fignode_item_id_2]
                 tuple_to_add: Tuple[FIGNode, FIGNode] = (
@@ -215,13 +213,13 @@ class FluidInteractionGraph(nx.DiGraph):
                 )
                 new_items_list.append(tuple_to_add)
 
-            old_annotation_item_ID_list = [
+            old_annotation_item_id_list = [
                 item.id
                 for item in annotation.get_items()
                 if isinstance(item, DistributeAnnotation)
             ]
 
-            for old_annotation_item_id in old_annotation_item_ID_list:
+            for old_annotation_item_id in old_annotation_item_id_list:
                 new_annotation_item_id = annotation_rename_map[old_annotation_item_id]
                 annotation_to_add: DistributeAnnotation = fig_copy.get_annotation_by_id(
                     new_annotation_item_id
@@ -327,9 +325,9 @@ class FluidInteractionGraph(nx.DiGraph):
         self, fignode_tuples: List[Tuple[FIGNode, FIGNode]]
     ) -> ANDAnnotation:
         annotation_name = "DIST_AND_" + str(uuid.uuid4())
-        print("Adding DIST-AND annotation '{}' for fig nodes:".format(annotation_name))
+        print(f"Adding DIST-AND annotation '{annotation_name}' for fig nodes:")
         for item in fignode_tuples:
-            print("{}->{}".format(item[0], item[1]))
+            print(f"{item[0]}->{item[1]}")
         annotation = ANDAnnotation(annotation_name)
         self._annotations.append(annotation)
         self._annotations_reverse_map[annotation] = []
@@ -346,7 +344,8 @@ class FluidInteractionGraph(nx.DiGraph):
         """Add a new OR annotation to the FIG
 
         Args:
-            constrained_items (List[Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]]): a list of tuples of FIGNodes or DistributeAnnotations
+            constrained_items (List[Union[Tuple[FIGNode, FIGNode], DistributeAnnotation]]): a list
+            of tuples of FIGNodes or DistributeAnnotations
 
         Returns:
             ORAnnotation: the new ORAnnotation
@@ -355,9 +354,9 @@ class FluidInteractionGraph(nx.DiGraph):
         print(f"Adding DIST-OR annotation '{annotation_name}' for fig nodes:")
         for item in constrained_items:
             if isinstance(item, DistributeAnnotation):
-                print("{} (Annotation)".format(item.id))
+                print(f"{item.id} (Annotation)")
             else:
-                print("{}->{}".format(item[0], item[1]))
+                print(f"{item[0]}->{item[1]}")
 
         annotation = ORAnnotation(annotation_name)
         self._annotations.append(annotation)
@@ -531,7 +530,7 @@ class FluidInteractionGraph(nx.DiGraph):
             str: a unique ID for a value node
         """
         self._gen_id += 1
-        return "val_{0}".format(self._gen_id)
+        return f"val_{self._gen_id}"
 
     def __add_fluid_fluid_interaction(self, interaction: FluidFluidInteraction) -> None:
         """Adds a fluid-fluid interaction to the FIG
@@ -581,9 +580,8 @@ class FluidInteractionGraph(nx.DiGraph):
         """
         if interaction.fluid.ID not in self._fignodes:
             raise Exception(
-                "Unable to add interaction because of missing flow: {0}".format(
-                    interaction.fluid.ID
-                )
+                "Unable to add interaction because of missing flow:"
+                " {interaction.fluid.ID}"
             )
 
         self.add_node(interaction.ID)
@@ -604,9 +602,8 @@ class FluidInteractionGraph(nx.DiGraph):
         """
         if interaction.fluid.ID not in self._fignodes:
             raise Exception(
-                "Unable to add interaction because of missing flow: {0}".format(
-                    interaction.fluid.ID
-                )
+                "Unable to add interaction because of missing flow:"
+                f" {interaction.fluid.ID}"
             )
 
         # Create new Value node
@@ -628,11 +625,10 @@ class FluidInteractionGraph(nx.DiGraph):
         Raises:
             Exception: if the interaction is not a fluid-integer interaction
         """
-        if interaction.fluid.ID not in self._fignodes.:
+        if interaction.fluid.ID not in self._fignodes:
             raise Exception(
-                "Unable to add interaction because of missing flow: {0}".format(
-                    interaction.fluid.ID
-                )
+                "Unable to add interaction because of missing flow:"
+                f" {interaction.fluid.ID}"
             )
 
         # Create new Value node
