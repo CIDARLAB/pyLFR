@@ -1,4 +1,4 @@
-from tests.conftest import LIBRARY_PATH, TEST_DATA_FOLDER, TEST_OUTPATH, to_agraph
+from tests.conftest import LIBRARY_PATH, TEST_DATA_FOLDER, TEST_OUTPATH
 import networkx
 from lfr import api
 from lfr.utils import printgraph
