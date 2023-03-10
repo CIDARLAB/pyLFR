@@ -76,3 +76,9 @@ exclude = """
 profile = "black"
 src_paths = ["lfr"]
 skip = ["dafd", "lfr/antlrgen/", "lfr/compiler/distribute/BitVector.py"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+    "./tests/"
+]

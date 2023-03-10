@@ -29,7 +29,30 @@ def compile_lfr(
     no_gen_flag: bool = False,
     no_annotations_flag: bool = False,
     pre_load: List[str] = [],
-):
+) -> int:
+    """Standard API to compile a lfr file
+
+    This is the hook that we use for running lfr files from the command line or in
+    programs. Assumes that all the paths for the input files exist. It can create
+    the output directories if they aren't present.
+
+    Args:
+        input_files (List[str]): The paths for the input lfr files
+        outpath (str, optional): The path where all the outputs are saved. Defaults to "out/".
+        technology (str, optional): String for library that we need to use. Defaults to "dropx".
+        library_path (str, optional): path where all the library files are placed. Defaults to "./library".
+        no_mapping_flag (bool, optional): Enables/Disables mapping. Defaults to False.
+        no_gen_flag (bool, optional): Enables/Disables device generation. Defaults to False.
+        no_annotations_flag (bool, optional): Skip Annotation parsing. Defaults to False.
+        pre_load (List[str], optional): Preload Directory. Defaults to [].
+
+    Raises:
+        ValueError: _description_
+        ValueError: _description_
+
+    Returns:
+        int: 0 if the compilation was successful, >0 if theres an error
+    """
     pre_load_file_list = pre_load
     print(pre_load_file_list)
     # Utilize the prepreocessor to generate the input file
@@ -37,7 +60,7 @@ def compile_lfr(
 
     if preprocessor.check_syntax_errors():
         print("Stopping compiler because of syntax errors")
-        sys.exit(0)
+        return 0
 
     preprocessor.process()
 
@@ -87,7 +110,7 @@ def compile_lfr(
         printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
 
     if no_gen_flag is True:
-        sys.exit(0)
+        return 0
 
     # Check if the module compilation was successful
     if mapping_listener.success:
