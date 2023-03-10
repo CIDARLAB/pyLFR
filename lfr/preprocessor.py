@@ -9,12 +9,19 @@ from antlr4.FileStream import FileStream
 
 from lfr.antlrgen.lfr.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfr.lfrXParser import lfrXParser
+from lfr.parameters import PREPROCESSOR_DUMP_FILE_NAME
 
 IMPORT_FILE_PATTERN = r"(`import\s+\"(\w+.lfr)\")"
 
 
 class PreProcessor:
     def __init__(self, file_list: List[str], lib_dir_list: List[str] = []) -> None:
+        """Instantiates a new instance of the preprocessor
+
+        Args:
+            file_list (List[str]): List of files to be preprocessed
+            lib_dir_list (List[str], optional): Directory path for the library. Defaults to [].
+        """
         self.resolved_paths: Dict[str, Path] = {}
         self.full_text: Dict[str, str] = {}
         self.text_dump = None
@@ -42,6 +49,11 @@ class PreProcessor:
             self.__store_full_text(p)
 
     def check_syntax_errors(self) -> bool:
+        """Checks if there are any syntax errors in the input files
+
+        Returns:
+            bool: True if there are syntax errors, False otherwise
+        """
         syntax_errors = 0
         for file_path in list(self.resolved_paths.values()):
             print("File: {}".format(file_path))
@@ -58,7 +70,15 @@ class PreProcessor:
 
         return syntax_errors > 0
 
-    def process(self) -> None:
+    def process(self, preprocesser_dump_path: Path = Path(f"./{PREPROCESSOR_DUMP_FILE_NAME}")) -> None:
+        """Processes the preprocessor and generates the preprocessor dump file
+
+        Args:
+            preprocesser_dump_path (Path, optional): Path for the preprocessor dump file. Defaults to Path(f"./{PREPROCESSOR_DUMP_FILE_NAME}").
+
+        Raises:
+            Exception: TBA
+        """        
         dep_graph = nx.DiGraph()
         # add the nodes in the dep graph
         for file_handle in self.full_text:
@@ -108,7 +128,7 @@ class PreProcessor:
             final_dump += "\n\n\n\n\n"
 
         # Generating the Dump
-        file = open("pre_processor_dump.lfr", "w")
+        file = open(preprocesser_dump_path, "w")
         file.write(final_dump)
         file.close()
 

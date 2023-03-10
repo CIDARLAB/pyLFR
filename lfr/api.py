@@ -1,7 +1,6 @@
 import os
-import sys
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
 
@@ -18,6 +17,83 @@ from lfr.netlistgenerator.generator import (
 from lfr.postProcessListener import PostProcessListener
 from lfr.preprocessor import PreProcessor
 from lfr.utils import print_netlist, printgraph, serialize_netlist
+from lfr.parameters import PREPROCESSOR_DUMP_FILE_NAME
+
+
+def run_preprocessor(
+    input_files: List[str],
+    pre_load: List[str] = [],
+    preprocessor_dump_input_path: Path = Path(PREPROCESSOR_DUMP_FILE_NAME).resolve(),
+) -> bool:
+    """Runs the preprocessor on the input files
+
+    Args:
+        input_files (List[str]): input files to be preprocessed
+        pre_load (List[str], optional): Preload Directory. Defaults to [].
+
+    Returns:
+        bool: True if the preprocessor ran successfully, False otherwise
+    """    
+    pre_load_file_list = pre_load
+    print(pre_load_file_list)
+
+    # Utilize the prepreocessor to generate the input file
+    preprocessor = PreProcessor(input_files, pre_load_file_list)
+
+    if preprocessor.check_syntax_errors():
+        print("Stopping compiler because of syntax errors")
+        return False
+
+    preprocessor.process(preprocessor_dump_input_path)
+    return True
+
+
+def synthesize_module(
+    preprocessor_dump_input_path: Path = Path(PREPROCESSOR_DUMP_FILE_NAME).resolve(),
+    no_annotations_flag: bool = False,
+    print_fig: bool = True,
+) -> Union[ModuleInstanceListener, PostProcessListener]:
+    """Generates the module from the preprocessor dump
+
+    This is the method you want to use if you want to get module/fluid interaction graph
+
+    Args:
+        preprocessor_dump_input_path (Path, optional): Location of the preprocessor dump. Defaults to Path(PREPROCESSOR_DUMP_FILE_NAME).resolve().
+        no_annotations_flag (bool, optional): Skips parsing annotations. Defaults to False.
+
+    Returns:
+        Union[ModuleInstanceListener, PostProcessListener]: Returns the object model for the overall device module
+    """    
+    # Modifiy this to translate relative path to absolute path in the future
+    finput = FileStream(str(preprocessor_dump_input_path))
+
+    lexer = lfrXLexer(finput)
+
+    stream = CommonTokenStream(lexer)
+
+    parser = lfrXParser(stream)
+
+    tree = parser.skeleton()
+
+    walker = ParseTreeWalker()
+
+    if no_annotations_flag is True:
+        mapping_listener = ModuleInstanceListener()
+    else:
+        mapping_listener = PostProcessListener()
+
+    walker.walk(mapping_listener, tree)
+
+    mapping_listener.print_stack()
+
+    mapping_listener.print_variables()
+
+    if mapping_listener.currentModule is not None:
+        interactiongraph = mapping_listener.currentModule.FIG
+        if print_fig is True:
+            printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
+
+    return mapping_listener
 
 
 def compile_lfr(
@@ -53,22 +129,20 @@ def compile_lfr(
     Returns:
         int: 0 if the compilation was successful, >0 if theres an error
     """
-    pre_load_file_list = pre_load
-    print(pre_load_file_list)
-    # Utilize the prepreocessor to generate the input file
-    preprocessor = PreProcessor(input_files, pre_load_file_list)
+    preprocessor_dump_rel_input_path = PREPROCESSOR_DUMP_FILE_NAME
+    preprocessor_dump_input_path = Path(preprocessor_dump_rel_input_path).resolve()
 
-    if preprocessor.check_syntax_errors():
-        print("Stopping compiler because of syntax errors")
-        return 0
+    preprocessor_success = run_preprocessor(
+        input_files,
+        pre_load,
+        preprocessor_dump_input_path
+    )
 
-    preprocessor.process()
+    if preprocessor_success is False:
+        return 1
 
     print("output dir:", outpath)
     print(input_files)
-
-    rel_input_path = "pre_processor_dump.lfr"
-    input_path = Path(rel_input_path).resolve()
 
     abspath = Path(outpath).absolute()
     parameters.OUTPUT_DIR = abspath
@@ -81,33 +155,11 @@ def compile_lfr(
     library = None
     # library = libraries[library_name]
 
-    # Modifiy this to translate relative path to absolute path in the future
-    finput = FileStream(str(input_path))
-
-    lexer = lfrXLexer(finput)
-
-    stream = CommonTokenStream(lexer)
-
-    parser = lfrXParser(stream)
-
-    tree = parser.skeleton()
-
-    walker = ParseTreeWalker()
-
-    if no_annotations_flag is True:
-        mapping_listener = ModuleInstanceListener()
-    else:
-        mapping_listener = PostProcessListener()
-
-    walker.walk(mapping_listener, tree)
-
-    mapping_listener.print_stack()
-
-    mapping_listener.print_variables()
-
-    if mapping_listener.currentModule is not None:
-        interactiongraph = mapping_listener.currentModule.FIG
-        printgraph(interactiongraph, mapping_listener.currentModule.name + ".dot")
+    # Setup and run the compiler's mapping listener
+    mapping_listener = synthesize_module(
+        preprocessor_dump_input_path,
+        no_annotations_flag
+    )
 
     if no_gen_flag is True:
         return 0
@@ -135,3 +187,5 @@ def compile_lfr(
         for unsized_device in unsized_devices:
             print_netlist(unsized_device)
             serialize_netlist(unsized_device)
+
+    return 0
