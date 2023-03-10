@@ -1,0 +1,8 @@
+strict digraph "" {
+	in1 -> "in1_METER_(%)_144";
+	"in1_METER_(%)_144" -> "in1_METER_(%)_144_PROCESS_(~)_145";
+	val_1 -> "in1_METER_(%)_144";
+	"in1_METER_(%)_144_PROCESS_(~)_145" -> "in1_METER_(%)_144_PROCESS_(~)_145_SIEVE_(-)_waste_146";
+	"in1_METER_(%)_144_PROCESS_(~)_145_SIEVE_(-)_waste_146" -> collection;
+	"in1_METER_(%)_144_PROCESS_(~)_145_SIEVE_(-)_waste_146" -> waste;
+}

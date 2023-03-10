@@ -1,0 +1,17 @@
+strict digraph "" {
+	in1 -> "in1_METER_(%)_69";
+	in2 -> "in2_MIX_(+)_split1_71";
+	in3 -> "in3_MIX_(+)_split2_72";
+	droplets -> "droplets_DIVIDE_(/)_70";
+	split1 -> "in2_MIX_(+)_split1_71";
+	split2 -> "in3_MIX_(+)_split2_72";
+	"in1_METER_(%)_69" -> droplets;
+	val_1 -> "in1_METER_(%)_69";
+	"droplets_DIVIDE_(/)_70" -> split1;
+	"droplets_DIVIDE_(/)_70" -> split2;
+	val_2 -> "droplets_DIVIDE_(/)_70";
+	injected_droplets1 -> out1;
+	injected_droplets2 -> out2;
+	"in2_MIX_(+)_split1_71" -> injected_droplets1;
+	"in3_MIX_(+)_split2_72" -> injected_droplets2;
+}
