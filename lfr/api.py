@@ -49,7 +49,7 @@ def run_preprocessor(
 
 
 def synthesize_module(
-    preprocessor_dump_input_path: Path = Path(PREPROCESSOR_DUMP_FILE_NAME).resolve(),
+    input_path: Path = Path(PREPROCESSOR_DUMP_FILE_NAME).resolve(),
     no_annotations_flag: bool = False,
     print_fig: bool = True,
 ) -> Union[ModuleInstanceListener, PostProcessListener]:
@@ -65,7 +65,7 @@ def synthesize_module(
         Union[ModuleInstanceListener, PostProcessListener]: Returns the object model for the overall device module
     """    
     # Modifiy this to translate relative path to absolute path in the future
-    finput = FileStream(str(preprocessor_dump_input_path))
+    finput = FileStream(str(input_path))
 
     lexer = lfrXLexer(finput)
 
