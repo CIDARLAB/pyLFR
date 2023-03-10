@@ -1,15 +1,15 @@
 import json
 import os
+from pathlib import Path
 from typing import List
 
 import networkx as nx
 from pymint.mintdevice import MINTDevice
-from pathlib import Path
 
 from lfr.parameters import OUTPUT_DIR
 
 
-def printgraph(G: nx.Graph, filename: str, output_dir: Path=OUTPUT_DIR) -> None:
+def printgraph(G: nx.Graph, filename: str, output_dir: Path = OUTPUT_DIR) -> None:
     """Prints the graph in a .dot file and a .pdf file"""
 
     # Generate labels and whatnot for the graph

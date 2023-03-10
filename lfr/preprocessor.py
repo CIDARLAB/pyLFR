@@ -70,7 +70,9 @@ class PreProcessor:
 
         return syntax_errors > 0
 
-    def process(self, preprocesser_dump_path: Path = Path(f"./{PREPROCESSOR_DUMP_FILE_NAME}")) -> None:
+    def process(
+        self, preprocesser_dump_path: Path = Path(f"./{PREPROCESSOR_DUMP_FILE_NAME}")
+    ) -> None:
         """Processes the preprocessor and generates the preprocessor dump file
 
         Args:
@@ -78,7 +80,7 @@ class PreProcessor:
 
         Raises:
             Exception: TBA
-        """        
+        """
         dep_graph = nx.DiGraph()
         # add the nodes in the dep graph
         for file_handle in self.full_text:
