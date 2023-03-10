@@ -1,0 +1,11 @@
+// Based on the design by Samuel Oliveria
+
+module dx10(
+    finput in1, in2,
+    foutput out1, out2
+);
+    flow temp;
+    assign temp = in1 % 100 + in2;
+    assign out1 = temp - out2;
+ 
+endmodule

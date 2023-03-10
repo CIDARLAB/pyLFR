@@ -1,0 +1,22 @@
+module dx4(
+    finput in1, pico_in1, pico_in2, pico_in3, pico_in4,
+    foutput sort_keep1, sort_keep2, sort_waste1, sort_waste2
+);
+
+    flow pico_mix;
+    assign pico_mix = pico_in1 + pico_in2 + pico_in3 + pico_in3 + pico_in4;
+
+    flow droplets;
+    assign droplets = in1%100;
+
+    flow injected_droplets;
+    assign injected_droplets = droplets + pico_mix;
+
+    flow sort_keep_temp, sort_waste_temp;
+
+    assign sort_keep_temp = injected_droplets - sort_waste_temp;
+
+    assign sort_keep1 = sort_keep_temp - sort_waste1;
+    assign sort_keep2 = sort_waste_temp - sort_waste2;
+
+endmodule

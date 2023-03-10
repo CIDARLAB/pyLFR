@@ -1,0 +1,21 @@
+module dx1(
+    finput in1, in2,
+    foutput out1, out2
+);
+
+    flow base_droplets, injected_droplets, incubated_droplets, sorted_droplets, discarded_droplets;
+
+    assign base_droplets = in1%100;
+
+    assign injected_droplets = base_droplets + in2;
+
+    #MAP "MIXER" "~"
+    assign incubated_droplets = ~injected_droplets;
+
+    assign sorted_droplets = incubated_droplets - discarded_droplets;
+
+    assign out1 = sorted_droplets;
+    assign out2 = discarded_droplets;
+
+
+endmodule

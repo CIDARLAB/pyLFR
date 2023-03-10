@@ -1,0 +1,23 @@
+// Based on the Design by Rita Chen
+
+module dx12(
+    finput plasmids, dig1, dig2,
+    foutput dig_plasmids, waste
+);
+
+    flow enc_plasmids, injected_dig, incubated_plasmids, digest_plasmids, discarded_droplets;
+
+    assign enc_plasmids = plasmids%100;
+
+    assign injected_dig = enc_plasmids + dig1 + dig2;
+
+    #MAP "MIXER" "~"
+    assign incubated_plasmids = ~injected_dig;
+
+    assign digest_plasmids = incubated_plasmids - discarded_droplets;
+
+    assign dig_plasmids = digest_plasmids;
+    assign waste = discarded_droplets;
+
+
+endmodule

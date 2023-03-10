@@ -1,0 +1,25 @@
+// Based on the design by Eric South
+
+module dx11(
+    finput in1, in2, in3,
+    foutput waste1, waste2, final_winners
+);
+    flow injected_droplets;
+    
+    assign injected_droplets = in1 % 100  + in2;
+
+    flow sort_candidates1, sort_candidates2, temp_winners;
+    
+    #MAP "MIXER" "~"
+    assign sort_candidates1 = ~(injected_droplets);
+
+    assign temp_winners = sort_candidates1 - waste1;
+    
+    
+    #MAP "MIXER" "~"
+    assign sort_candidates2 = ~(in3 + temp_winners);
+
+    assign final_winners = sort_candidates2 - waste2;
+
+
+endmodule
