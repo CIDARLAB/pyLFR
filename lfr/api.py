@@ -14,10 +14,10 @@ from lfr.netlistgenerator.generator import (
     generate_mars_library,
     generate_mlsi_library,
 )
+from lfr.parameters import PREPROCESSOR_DUMP_FILE_NAME
 from lfr.postProcessListener import PostProcessListener
 from lfr.preprocessor import PreProcessor
 from lfr.utils import print_netlist, printgraph, serialize_netlist
-from lfr.parameters import PREPROCESSOR_DUMP_FILE_NAME
 
 
 def run_preprocessor(
@@ -33,7 +33,7 @@ def run_preprocessor(
 
     Returns:
         bool: True if the preprocessor ran successfully, False otherwise
-    """    
+    """
     pre_load_file_list = pre_load
     print(pre_load_file_list)
 
@@ -63,7 +63,7 @@ def synthesize_module(
 
     Returns:
         Union[ModuleInstanceListener, PostProcessListener]: Returns the object model for the overall device module
-    """    
+    """
     # Modifiy this to translate relative path to absolute path in the future
     finput = FileStream(str(input_path))
 
@@ -133,9 +133,7 @@ def compile_lfr(
     preprocessor_dump_input_path = Path(preprocessor_dump_rel_input_path).resolve()
 
     preprocessor_success = run_preprocessor(
-        input_files,
-        pre_load,
-        preprocessor_dump_input_path
+        input_files, pre_load, preprocessor_dump_input_path
     )
 
     if preprocessor_success is False:
@@ -157,8 +155,7 @@ def compile_lfr(
 
     # Setup and run the compiler's mapping listener
     mapping_listener = synthesize_module(
-        preprocessor_dump_input_path,
-        no_annotations_flag
+        preprocessor_dump_input_path, no_annotations_flag
     )
 
     if no_gen_flag is True:
