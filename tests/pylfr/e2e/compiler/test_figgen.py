@@ -22,11 +22,11 @@ def test_dx1():
     assert module_listener.success is True
     assert module_listener.currentModule is not None
 
+    # Get FIG from the module
     fig = module_listener.currentModule.FIG
     # Load the reference data
     ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx1.dot")
-    ref_graph = networkx.drawing.nx_pydot.read_dot(ref_fig_data)
-    printgraph(fig, "test.dot", Path("./out").resolve())
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
     # Compare the reference data with the generated data and assert equality
     # Ref data load the dot file using networkx
     # Generated data load the dot file using pydot
@@ -45,6 +45,19 @@ def test_dx2():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx2.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx3():
@@ -58,6 +71,19 @@ def test_dx3():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx3.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx4():
@@ -71,6 +97,19 @@ def test_dx4():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx4.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx5():
@@ -84,6 +123,19 @@ def test_dx5():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx5.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx6():
@@ -97,6 +149,19 @@ def test_dx6():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx6.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx7():
@@ -110,6 +175,19 @@ def test_dx7():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx7.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx8():
@@ -123,6 +201,19 @@ def test_dx8():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx8.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx9():
@@ -136,6 +227,19 @@ def test_dx9():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx9.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx10():
@@ -149,6 +253,19 @@ def test_dx10():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx10.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx11():
@@ -162,6 +279,19 @@ def test_dx11():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx11.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx12():
@@ -175,6 +305,19 @@ def test_dx12():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx12.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx13():
@@ -188,6 +331,19 @@ def test_dx13():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx13.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx14():
@@ -201,6 +357,19 @@ def test_dx14():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx14.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
 
 
 def test_dx15():
@@ -214,3 +383,16 @@ def test_dx15():
     )
 
     assert module_listener.success is True
+    assert module_listener.currentModule is not None
+
+    # Get FIG from the module
+    fig = module_listener.currentModule.FIG
+
+    # Load the reference data
+    ref_fig_data = REF_DATA_FIG_FOLDER.joinpath("dx15.dot")
+    ref_graph = networkx.nx_agraph.read_dot(ref_fig_data)
+    # Compare the reference data with the generated data and assert equality
+    # Ref data load the dot file using networkx
+    # Generated data load the dot file using pydot
+    success = is_isomorphic(ref_graph, fig)
+    assert success is True
