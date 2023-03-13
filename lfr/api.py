@@ -98,7 +98,7 @@ def synthesize_module(
 
 def compile_lfr(
     input_files: List[str],
-    outpath: str = "out/",
+    outpath: str = "./out/",
     technology: str = "dropx",
     library_path: str = "./library",
     no_mapping_flag: bool = False,
@@ -173,7 +173,9 @@ def compile_lfr(
             library = generate_mlsi_library()
         else:
             print("Implement Library for whatever else")
-            pass
+            raise NotImplementedError(
+                f"No implementation found library for technology: {technology}"
+            )
 
         if mapping_listener.currentModule is None:
             raise ValueError()

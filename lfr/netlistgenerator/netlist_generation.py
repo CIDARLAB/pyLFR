@@ -109,7 +109,7 @@ def create_device_connection(
     mapping_library: MappingLibrary,
 ) -> None:
     # TODO - Create the connection based on parameters from the connecting option
-    raise NotImplementedError("Not implemented")
+    raise NotImplementedError("Not implemented create device connection")
 
 
 def get_targets(
