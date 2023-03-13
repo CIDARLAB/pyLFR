@@ -40,7 +40,7 @@ def generate_match_variants(
         for index, entry in enumerate(matches):
             if fig_cover_set == set(list(entry[2].keys())):
                 return index
-        raise Exception("Could not find the index of the match entry")
+        raise KeyError("Could not find the index of the match entry")
 
     def move_entry_to_front(
         entries_list: List[LibraryPrimitivesEntry],

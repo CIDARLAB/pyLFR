@@ -53,7 +53,7 @@ class ConstructionNode:
             Primitive: Primitive that is associated with this construction node
         """
         if self._primitive is None:
-            raise Exception("Primitive not set for construction node")
+            raise ValueError(f"Primitive not set for construction node {self.ID}")
         return self._primitive
 
     @primitive.setter
@@ -74,7 +74,7 @@ class ConstructionNode:
             nx.Digraph: FIG subgraph of the node
         """
         if self._fig_subgraph is None:
-            raise Exception("FIG subgraph not set for construction node")
+            raise Exception(f"FIG subgraph not set for construction node {sel}")
         return self._fig_subgraph
 
     @fig_subgraph.setter
@@ -188,7 +188,7 @@ class ConstructionNode:
         """
         # Load the input options
         if self.primitive is None:
-            raise Exception("Primitive not set for construction node")
+            raise ValueError(f"Primitive not set for construction node {self.ID}")
 
         self._input_options = self.primitive.export_inputs(self.fig_subgraph)
         self._output_options = self.primitive.export_outputs(self.fig_subgraph)
@@ -244,4 +244,4 @@ class ConstructionNode:
             return False
 
     def __str__(self) -> str:
-        return "Construction Node: {}".format(self.ID)
+        return f"Construction Node: {self.ID}"
