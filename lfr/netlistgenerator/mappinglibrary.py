@@ -4,7 +4,6 @@ from lfr.fig.interaction import InteractionType
 from lfr.netlistgenerator.connection_primitive import ConnectionPrimitive
 from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 
-
 MatchPatternEntry = Tuple[str, str, str]
 
 
