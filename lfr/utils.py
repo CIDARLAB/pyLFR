@@ -15,12 +15,13 @@ def printgraph(G: nx.Graph, filename: str, output_dir: Path = OUTPUT_DIR) -> Non
     # Generate labels and whatnot for the graph
     H = G.copy(as_view=False)
     # Print out the dot file and then run the conversion
-    tt = os.path.join(output_dir, filename)
+    dot_path = Path.joinpath(output_dir, f"{filename}.dot")
+    pdf_path = Path.joinpath(output_dir, f"{filename}.pdf")
     print("output:", output_dir)
-    print("output:", tt)
-    nx.nx_agraph.to_agraph(H).write(tt)
+    print("output:", dot_path)
+    nx.nx_agraph.to_agraph(H).write(dot_path)
 
-    os.system("dot -Tpdf {} -o {}.pdf".format(tt, tt))
+    os.system(f"dot -Tpdf {str(dot_path.absolute())} -o {str(pdf_path.absolute())}")
 
 
 def get_ouput_path(filename: str) -> str:
