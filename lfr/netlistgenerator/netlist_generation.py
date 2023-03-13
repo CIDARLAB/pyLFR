@@ -9,6 +9,7 @@ from lfr.netlistgenerator.constructiongraph.constructiongraph import Constructio
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import PrimitiveType
+from parchmint.connection import Connection
 
 
 def generate_device(
@@ -35,7 +36,7 @@ def generate_device(
 
         # raise and error if the construction node has no primitive
         if cn.primitive is None:
-            raise Exception("Construction Node has no primitive")
+            raise ValueError(f"Construction Node: {node_id} has no primitive")
 
         # Generate the netlist based on the primitive type
         if cn.primitive.type is PrimitiveType.COMPONENT:
@@ -68,8 +69,8 @@ def generate_device(
         target_cn = construction_graph.get_construction_node(target_cn_id)
 
         # Get the output ConnectingOptions of the source cn
-        output_options = source_cn.output_options
-        input_options = target_cn.input_options
+        output_options = source_cn.output_options.copy()
+        input_options = target_cn.input_options.copy()
 
         # Pop and make a connection between the output and the input
         source_option = output_options.pop()
@@ -109,7 +110,24 @@ def create_device_connection(
     mapping_library: MappingLibrary,
 ) -> None:
     # TODO - Create the connection based on parameters from the connecting option
-    raise NotImplementedError("Not implemented create device connection")
+    # Step 1 - Get the connection from the mapping library
+    # TODO: Create new method stubs to get the right connection primitives from the
+    # mapping library (this would need extra criteria that that will need evaulation
+    # in the future (RAMA Extension))
+    primitive = mapping_library.get_default_connection_entry()
+    # Step 2 - Create the connection in the device
+    connection_name = name_generator.generate_name(primitive.mint)
+    connection = Connection(
+        name=connection_name,
+        ID=connection_name,
+        entity=primitive.mint,
+        source=source_target,
+        sinks=[target_target],
+        layer=scaffhold_device.device.layers[
+            0
+        ],  # TODO - This will be replaced in the future when we introduce layer sharding
+    )
+    scaffhold_device.device.add_connection(connection)
 
 
 def get_targets(
@@ -120,22 +138,24 @@ def get_targets(
 ) -> List[Target]:
     ret: List[Target] = []
 
-    component_name: str = ""
     if option.component_name is None:
-        # This is the case where the mapping option is for component primitive
-        component_name = cn_name_map[connection_node_id]
+        # TODO: Clarify the logic for doing this later on and put it in the docstring
+        component_names = cn_name_map[connection_node_id]
     else:
-        # This is the case where the mapping option is for netlist primitive
+        # TODO: Clarify the logic for doing this later on and put it in the docstring
         old_name = option.component_name
-        component_name = name_generator.get_name(old_name)
+        component_name = name_generator.get_cn_name(connection_node_id, old_name)
+        component_names = [component_name]
 
-    for port_name in option.component_port:
-        # Check and make sure that the component name is valid
-        if component_name is None:
-            raise Exception(
-                "Could not generate connection target since Port name is None"
-            )
-        target = Target(component_name, port_name)
-        ret.append(target)
+    for component_name in component_names:
+        for port_name in option.component_port:
+            # Check and make sure that the component name is valid
+            if component_name is None:
+                raise ValueError(
+                    "Could not generate connection target for construction node"
+                    f" {connection_node_id} since Port name is None"
+                )
+            target = Target(component_name, port_name)
+            ret.append(target)
 
     return ret

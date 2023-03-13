@@ -11,6 +11,7 @@ from lfr.fig.simplification import remove_passthrough_nodes
 from lfr.graphmatch.interface import get_fig_matches
 from lfr.netlistgenerator import LibraryPrimitivesEntry
 from lfr.netlistgenerator.connectingoption import ConnectingOption
+from lfr.netlistgenerator.connection_primitive import ConnectionPrimitive
 from lfr.netlistgenerator.constructiongraph.edge_generation import (
     generate_construction_graph_edges,
 )
@@ -962,6 +963,10 @@ def generate_dropx_library() -> MappingLibrary:
 
     library.add_procedural_entry(ytree)
 
+    # Connections / Channels
+    connection_primitive = ConnectionPrimitive("CHANNEL")
+    library.add_connection_entry(connection_primitive)
+
     return library
 
 
@@ -1003,7 +1008,7 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
     # This means that we might need to have a forest of construction of graphs
     # as there would be alternatives for each type of mapping
     matches = get_fig_matches(module.FIG, library)
-    print("Total Matches against library : {}".format(len(matches)))
+    print(f"Total Matches against library : {len(matches)}")
     for match in matches:
         # Generate an object that is usable going forward (mapping template perhaps)
         print(match)
@@ -1016,9 +1021,8 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
     )
 
     print(
-        "Total matches against library after explicit mapping eliminations: {}".format(
-            len(matches)
-        )
+        "Total matches against library after explicit mapping eliminations:"
+        f" {len(matches)}"
     )
     for match in matches:
         print(match)

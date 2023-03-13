@@ -27,6 +27,12 @@ def add_flow_flow_matching_candidates(
 def add_flow_flow_candadates_to_variants(
     variants: List[ConstructionGraph], flow_cns: List[ConstructionNode]
 ) -> None:
+    # TODO: Map the flow flow candidates to the variants
+    # raise NotImplementedError("Need to implement this")
+    print(
+        "Warning: FLow Flow Mapping to variants not implemented yet since it might"
+        " generate network primitives"
+    )
     pass
 
 

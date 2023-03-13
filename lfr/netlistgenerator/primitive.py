@@ -16,6 +16,7 @@ class PrimitiveType(Enum):
     COMPONENT = 0
     NETLIST = 1
     PROCEDURAL = 2
+    CONNECTION = 3
 
 
 class Primitive:
@@ -72,7 +73,7 @@ class Primitive:
 
         # Generate the UID for the primitive
         self._uid = hashlib.md5(
-            "{}_{}".format(self._mint, self._match_string).encode("utf-8")
+            f"{self._mint}_{self._match_string}".encode("utf-8")
         ).hexdigest()
 
     @property

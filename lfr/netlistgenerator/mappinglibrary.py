@@ -1,13 +1,10 @@
 from typing import Dict, List, Tuple
 
 from lfr.fig.interaction import InteractionType
+from lfr.netlistgenerator.connection_primitive import ConnectionPrimitive
 from lfr.netlistgenerator.primitive import Primitive, ProceduralPrimitive
 
-"""Give full description of the type here
 
-_extended_summary_
-
-"""
 MatchPatternEntry = Tuple[str, str, str]
 
 
@@ -32,6 +29,7 @@ class MappingLibrary:
         self.__io_primitives: List[Primitive] = []
         self.__all_primitives: Dict[str, Primitive] = {}
         self.__procedural_primitves: List[ProceduralPrimitive] = []
+        self.__connection_primitives: List[ConnectionPrimitive] = []
         self._default_IO_primitive = None
 
     @property
@@ -226,3 +224,20 @@ class MappingLibrary:
             ret.append((primitive.uid, primitive.mint, primitive.match_string))
 
         return ret
+
+    def add_connection_entry(self, primitive: ConnectionPrimitive) -> None:
+        """Adds a primitive to the list of connection primitives.
+
+        Args:
+            primitive (Primitive): Primitive to add to the list of connection primitives
+        """
+        self.__connection_primitives.append(primitive)
+        self.__all_primitives[primitive.uid] = primitive
+
+    def get_default_connection_entry(self) -> ConnectionPrimitive:
+        """Returns the default connection primitive.
+
+        Returns:
+            ConnectionPrimitive: Default connection primitive
+        """
+        return self.__connection_primitives[0]
