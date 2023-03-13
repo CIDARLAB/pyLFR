@@ -14,7 +14,7 @@ from lfr.netlistgenerator.generator import (
     generate_mars_library,
     generate_mlsi_library,
 )
-from lfr.parameters import PREPROCESSOR_DUMP_FILE_NAME
+from lfr.parameters import OUTPUT_DIR, PREPROCESSOR_DUMP_FILE_NAME
 from lfr.postProcessListener import PostProcessListener
 from lfr.preprocessor import PreProcessor
 from lfr.utils import print_netlist, printgraph, serialize_netlist
@@ -183,8 +183,10 @@ def compile_lfr(
             raise ValueError()
         unsized_devices = generate(mapping_listener.currentModule, library)
 
-        for unsized_device in unsized_devices:
-            print_netlist(unsized_device)
-            serialize_netlist(unsized_device)
+        for index, unsized_device in enumerate(unsized_devices):
+            output_path = Path(OUTPUT_DIR).joinpath(f"variant_{index}")
+            output_path.mkdir(parents=True, exist_ok=True)
+            print_netlist(output_path, unsized_device)
+            serialize_netlist(output_path, unsized_device)
 
     return 0

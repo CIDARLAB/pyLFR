@@ -34,23 +34,25 @@ def get_ouput_path(filename: str) -> str:
     return os.path.join(OUTPUT_DIR, filename)
 
 
-def serialize_netlist(mint_device: MINTDevice) -> None:
+def serialize_netlist(output_path: Path, mint_device: MINTDevice) -> None:
     """Serializes the netlist to a json file"""
 
     # Generate the MINT file from the pyparchmint device
     json_data = mint_device.to_parchmint()
     json_string = json.dumps(json_data)
-    json_file = open(get_ouput_path(mint_device.device.name + ".json"), "wt")
+    file_path = output_path.joinpath(f"{mint_device.device.name}.json")
+    json_file = open(file_path, "wt")
     json_file.write(json_string)
     json_file.close()
 
 
-def print_netlist(mint_device: MINTDevice) -> None:
+def print_netlist(output_path: Path, mint_device: MINTDevice) -> None:
     """Prints the netlist to the console"""
 
     # Generate the MINT file from the pyparchmint device
     minttext = mint_device.to_MINT()
-    mint_file = open(get_ouput_path(mint_device.device.name + ".mint"), "wt")
+    file_path = Path.joinpath(output_path, f"{mint_device.device.name}.mint")
+    mint_file = open(file_path, "wt")
     mint_file.write(minttext)
     mint_file.close()
 
