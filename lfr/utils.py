@@ -9,17 +9,22 @@ from pymint.mintdevice import MINTDevice
 from lfr.parameters import OUTPUT_DIR
 
 
-def printgraph(G: nx.Graph, filename: str, output_dir: Path = OUTPUT_DIR) -> None:
-    """Prints the graph in a .dot file and a .pdf file"""
+def printgraph(graph: nx.Graph, filename: str, output_dir: Path = OUTPUT_DIR) -> None:
+    """Prints the graph in a .dot file and a .pdf file
 
+    Args:
+        graph (nx.Graph): graph we need to print
+        filename (str): name of the file
+        output_dir (Path, optional): Output folder path. Defaults to OUTPUT_DIR.
+    """
     # Generate labels and whatnot for the graph
-    H = G.copy(as_view=False)
+    graph_copy = graph.copy(as_view=False)
     # Print out the dot file and then run the conversion
     dot_path = Path.joinpath(output_dir, f"{filename}.dot")
     pdf_path = Path.joinpath(output_dir, f"{filename}.pdf")
     print("output:", output_dir)
     print("output:", dot_path)
-    nx.nx_agraph.to_agraph(H).write(dot_path)
+    nx.nx_agraph.to_agraph(graph_copy).write(dot_path)
 
     os.system(f"dot -Tpdf {str(dot_path.absolute())} -o {str(pdf_path.absolute())}")
 
@@ -59,5 +64,5 @@ def convert_list_to_str(lst: List) -> str:
     Returns:
         str: list formatted as a string
     """
-    ret = "[{}]".format(", ".join([str(i) for i in lst]))
+    ret = "[{0}]".format(", ".join([str(i) for i in lst]))
     return ret
