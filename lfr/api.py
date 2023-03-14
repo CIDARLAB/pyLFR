@@ -8,8 +8,8 @@ from lfr import parameters
 from lfr.antlrgen.lfr.lfrXLexer import lfrXLexer
 from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.moduleinstanceListener import ModuleInstanceListener
-from lfr.netlistgenerator.generator import (
-    generate,
+from lfr.netlistgenerator.generator import generate
+from lfr.netlistgenerator.mappinglibrary_generator import (
     generate_dropx_library,
     generate_mars_library,
     generate_mlsi_library,

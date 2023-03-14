@@ -19,106 +19,94 @@ from lfr.netlistgenerator.connectingoption import ConnectingOption
 
 
 class GenStrategy:
-    def __init__(self, fig: FluidInteractionGraph) -> None:
+    def __init__(self, name: str, fig: FluidInteractionGraph) -> None:
+        self._name: str = name
         self._fig: FluidInteractionGraph = fig
-        self._fig_netlist_map: Dict[str, str] = {}
+
+    def validate_construction_graph_flow(
+        self, construction_graph: ConstructionGraph
+    ) -> bool:
+        """
+        Validate the construction graph against a set of rules
+
+        TODO - Future version of this should use a rule based grammar
+        like Eugene but for topologically sorted FIGs where we
+        figure out where the outputs of a certain flow network
+        can be connected to the inputs of another flow network
+        (Needs to be put in theorem form).
+
+        Args:
+            construction_graph (ConstructionGraph): Construction graph to validate
+
+        Returns:
+            bool: True if the construction graph is valid
+        """
+        raise NotImplementedError()
 
     def reduce_mapping_options(self) -> None:
-        # Dummy strategy
-        # for cn in self._construction_graph.construction_nodes:
-        #     # print(len(cn.mapping_options))
-        #     # clean this
-        #     # Remove the extra mappings
-        #     print(
-        #         "Reducing mapping options for Construction node: {} from {} to {}"
-        #         .format(cn.ID, len(cn.mapping_options), 1),
-        #     )
-        #     if len(cn.mapping_options) > 1:
-        #         for option in cn.mapping_options:
-        #             print("     -{}".format(option.primitive.mint))
-        #     del cn.mapping_options[1 : len(cn.mapping_options)]
-        #     # print("... -> {}".format(len(cn.mapping_options)))
+        """
+        Reduce the mapping options for the construction graph
 
-        # print("Printing all final mapping options:")
-        # for cn in self._construction_graph.construction_nodes:
-        #     print("Construction node: {}".format(cn.ID))
-        #     print("Options: ")
+        TODO - In the future go through the options by looking at Rama
+        like apps that can be used for pruning technologies based on
+        the physics parameters.
 
-        #     for mapping_option in cn.mapping_options:
-        #         print(mapping_option.primitive.mint)
-        pass
+        Raises:
+            NotImplementedError: If the method is not implemented
+        """
+        raise NotImplementedError()
 
-    def generate_flow_network(self, fig_subgraph_view) -> MINTDevice:
-        # TODO - For now just assume that the networks basically are a bunch
-        # of nodes with nets/channels connecting them
-        ret = MINTDevice("flow_network_temp")
-        mint_layer = ret.create_mint_layer("0", "0", 0, MINTLayerType.FLOW)
-        for node in fig_subgraph_view.nodes:
-            n = MINTNode("node_{}".format(node), mint_layer)
-            ret.device.add_component(n.component)
-            self._store_fig_netlist_name(node, n.component.ID)
+    def generate_flow_network(self) -> None:
+        """Generate the flow flow network mappings
 
-        i = 1
-        for node in fig_subgraph_view.nodes:
-            # Create the channel between these nodes
-            channel_name = "c_{}".format(i)
-            i += 1
-            params = {}
-            params["channelWidth"] = 400
-            source = Target("node_{}".format(node))
-            sinks = []
+        TODO - Use this to sort through the correct kinds of network primitives
+        to use for the flow-flow networks
+        """
+        raise NotImplementedError()
 
-            # Add all the outgoing edges
-            for edge in fig_subgraph_view.out_edges(node):
-                tar = edge[1]
-                if tar not in fig_subgraph_view.nodes:
-                    # We skip because this might be a weird edge that we
-                    # were not supposed to have in this network
-                    continue
+    def generate_input_connectingoptions(self):
+        """Unsure if this is necessary in the future with the new architecture
 
-                sinks.append(Target("node_{}".format(tar)))
+        Raises:
+            NotImplementedError: Raises if the method is not implemented
+        """
+        raise NotImplementedError()
 
-            ret.create_mint_connection(
-                channel_name, "CHANNEL", params, source, sinks, "0"
-            )
+    def generate_output_connectingoptions(self):
+        """Unsure if this is necessary in the future with the new architecture
 
-        return ret
-
-    def _store_fig_netlist_name(self, fig_id: str, netlist_id: str) -> None:
-        self._fig_netlist_map[fig_id] = netlist_id
-
-    def _get_fig_netlist_name(self, fig_id: str) -> str:
-        return self._fig_netlist_map[fig_id]
-
-    def generate_input_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:
-        subgraph_inputs = []
-        for node in list(subgraph_view.nodes):
-            if len(subgraph_view.in_edges(node)) == 0:
-                subgraph_inputs.append(
-                    ConnectingOption(self._get_fig_netlist_name(node))
-                )
-
-        return subgraph_inputs
-
-    def generate_output_connectingoptions(
-        self, subgraph_view
-    ) -> List[ConnectingOption]:
-        subgraph_outputs = []
-        for node in list(subgraph_view.nodes):
-            if len(subgraph_view.out_edges(node)) == 0:
-                subgraph_outputs.append(
-                    ConnectingOption(self._get_fig_netlist_name(node))
-                )
-
-        return subgraph_outputs
+        Raises:
+            NotImplementedError: Raises if the method is not implemented
+        """
+        raise NotImplementedError()
 
     @staticmethod
-    def generate_carrier_connectingoptions(subgraph_view) -> List[ConnectingOption]:
+    def generate_carrier_connectingoptions():
+        """
+        Generate the connecting options for the carrier networks.
+
+        TODO - In the future version, go through the connectivity of the flow network,
+        compute what options would need to be pipelined and then optimize the carrier
+        network to have the least number of carrier inputs and wastes.
+        """
         return []
 
     @staticmethod
-    def generate_loading_connectingoptions(subgraph_view) -> List[ConnectingOption]:
-        return []
+    def generate_loading_connectingoptions():
+        """
+        Generate the connecting options for the loading networks.
+
+        TODO - In the future version, go through the connectivity of the flow network,
+        compute what options would need to be pipelined and then optimize the loading
+        network to have the least number of carrier inputs and wastes.
+
+        Args:
+            subgraph_view (_type_): _description_
+
+        Returns:
+            List[ConnectingOption]: _description_
+        """
+        raise NotImplementedError()
 
     def size_netlist(self, device: MINTDevice) -> None:
         raise NotImplementedError()
@@ -126,5 +114,5 @@ class GenStrategy:
     def prune_variants(self, variants: List[ConstructionGraph]) -> None:
         for variant in variants:
             if variant.is_fig_fully_covered() is not True:
-                print("Removing variant (Construction Graph): {}".format(variant.ID))
+                print(f"Removing variant (Construction Graph): {variant.ID}")
                 variants.remove(variant)

@@ -130,6 +130,7 @@ dmypy.json
 
 # Output
 out/
+output/
 
 .idea/
 .antlr/

@@ -46,6 +46,7 @@ pip = "^23.0.1"
 lfr-compile = "lfr.cmdline:main"
 test = "scripts:test"
 format = "scripts:format"
+static-analysis = "scripts:static_analysis"
 
 [tool.black]
 include = "lfr/.*\\.py$"
