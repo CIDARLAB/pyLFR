@@ -16,9 +16,14 @@ def test_dx1():
     test_file = TEST_CASES_FOLDER.joinpath("dx1.lfr")
 
     # Run through the full compiler
-    api.compile_lfr(
+    return_code = api.compile_lfr(
         input_files=[str(test_file)],
         outpath=str(TEST_OUTPATH),
         technology="dropx",
         pre_load=[str(LIBRARY_PATH.absolute())],
     )
+
+    assert return_code == 0
+
+    # Load the data from the output path
+    # Parse this and compare it with the reference data
