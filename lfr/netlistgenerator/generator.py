@@ -4,7 +4,6 @@ from pymint.mintdevice import MINTDevice
 from pymint.mintlayer import MINTLayerType
 
 from lfr.compiler.module import Module
-
 from lfr.fig.simplification import remove_passthrough_nodes
 from lfr.graphmatch.interface import get_fig_matches
 from lfr.netlistgenerator import LibraryPrimitivesEntry

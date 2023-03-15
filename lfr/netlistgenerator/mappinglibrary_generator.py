@@ -1,7 +1,6 @@
 from typing import Dict, List
+
 from lfr.fig.interaction import InteractionType
-
-
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.connection_primitive import ConnectionPrimitive
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary

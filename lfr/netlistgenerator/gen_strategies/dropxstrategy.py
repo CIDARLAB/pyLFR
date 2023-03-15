@@ -3,8 +3,8 @@ from typing import List
 
 import networkx as nx
 from pymint import MINTDevice
-from lfr.fig.fignode import FIGNode
 
+from lfr.fig.fignode import FIGNode
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.fig.interaction import Interaction, InteractionType
 from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph

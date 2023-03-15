@@ -12,7 +12,6 @@ REF_DATA_FIG_FOLDER = TEST_CASES_FOLDER.joinpath("netlists")
 
 
 def test_dx1():
-
     # Create output directories
     TEST_OUTPATH.mkdir(parents=True, exist_ok=True)
 
