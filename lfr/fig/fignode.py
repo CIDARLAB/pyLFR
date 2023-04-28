@@ -13,6 +13,10 @@ MATCH_STRING_ORDERING = [
 
 
 class IOType(Enum):
+    """
+    IO Types for the fignode
+    """
+
     FLOW_INPUT = 1
     FLOW_OUTPUT = 2
     CONTROL = 3
