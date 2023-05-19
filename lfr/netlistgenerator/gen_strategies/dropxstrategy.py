@@ -3,7 +3,7 @@ from typing import List
 
 import networkx as nx
 from pymint import MINTDevice
-from lfr.fig.fignode import FIGNode
+from lfr.fig.fignode import FIGNode, IOType
 
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.fig.interaction import Interaction, InteractionType
@@ -42,6 +42,15 @@ class DropXStrategy(GenStrategy):
         # its an invalid design. Skip rulecheck if explicitly mapped
         #
         sorted_fignodes = list(nx.topological_sort(self._fig))
+
+        all_paths = []
+        input_fignodes = [node.ID for node in self._fig.get_input_fignodes()]
+        output_fignodes = [node.ID for node in self._fig.get_output_fignodes()]
+
+        # Get all the paths for the input / output cominations
+        nx.all_simple_paths(
+            self._fig,
+        )
         for fignode in sorted_fignodes:
             # TODO - Skip check if explicitly mapped. Rationale is that user knows best
             rule_1_success = self.__check_rule_1_validity(fignode, construction_graph)

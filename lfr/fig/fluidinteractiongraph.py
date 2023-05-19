@@ -272,11 +272,11 @@ class FluidInteractionGraph(nx.DiGraph):
             Exception: if the source fignode is not present in the FIG
         """
         if source.ID not in self._fignodes:
-            raise Exception(
+            raise ValueError(
                 f"Unable to add interaction because of missing flow: {source.ID}"
             )
         if target.ID not in self._fignodes:
-            raise Exception(
+            raise ValueError(
                 f"Unable to add interaction because of missing flow: {target.ID}"
             )
 
@@ -427,6 +427,19 @@ class FluidInteractionGraph(nx.DiGraph):
                 if fignode.type is IOType.FLOW_INPUT:
                     ret.append(fignode)
 
+        return ret
+
+    def get_output_fignodes(self) -> List[IONode]:
+        """Get all the output IONodes in the FIG
+
+        Returns:
+            List[IONode]:  a list of all the output IONodes in the FIG
+        """
+        ret = []
+        for fignode in self._fignodes.values():
+            if isinstance(fignode, IONode):
+                if fignode.type is IOType.FLOW_OUTPUT:
+                    ret.append(fignode)
         return ret
 
     def __str__(self):
