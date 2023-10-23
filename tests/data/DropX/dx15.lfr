@@ -1,0 +1,9 @@
+// Based on the design by Helen Huang
+
+module dx15(
+    finput in1, 
+    foutput collection, waste
+);
+    assign collection = ~(in1%100) - waste;
+
+endmodule

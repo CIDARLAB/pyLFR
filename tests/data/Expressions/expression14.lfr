@@ -1,0 +1,6 @@
+//This design tests if N fluid number operations work
+module expression14(finput [0:7] in, foutput [0:7] out);
+
+    assign out = in%50;
+
+endmodule

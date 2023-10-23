@@ -1,0 +1,25 @@
+// Based on the design by Leslie Huang
+
+module dx8(
+    finput in1, in2, in3, in4, in5, in6,
+    foutput out1, out2, out3
+);
+
+    flow in_mix;
+    assign in_mix = in1 + in2 + in3;
+    
+    flow droplets;
+    assign droplets = in_mix % 100;
+
+    flow injected_droplets;
+    assign injected_droplets = (in6 + (in5 + (in4 + droplets)));
+
+    flow mixed_droplets;
+
+    #MAP "MIXER" "~"
+    assign mixed_droplets = ~injected_droplets;
+    flow temp;
+    assign temp = mixed_droplets - out2;
+    assign out3 = temp - out1;
+
+endmodule

@@ -1,0 +1,18 @@
+module dx5 (
+    finput in1, in2,
+    foutput sort_keep1, sort_keep2, sort_waste1, sort_waste2
+);
+
+    flow injected_droplets;
+    assign injected_droplets = in2 + in1%100;
+
+    flow split1, split2;
+    assign {split1, split2} = injected_droplets/2;
+
+    #MAP "MIXER" "~" 
+    assign sort_keep1 = ~split1 - sort_waste1;
+
+    #MAP "MIXER" "~" 
+    assign sort_keep2 = ~split2 - sort_waste2;
+
+endmodule

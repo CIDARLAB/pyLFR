@@ -1,9 +1,9 @@
 from os import error
 from typing import Dict, Optional
 
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.compiler.lfrerror import ErrorType, LFRError
 from lfr.compiler.module import Module
-from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.distBlockListener import DistBlockListener
 
 
@@ -17,6 +17,9 @@ class ModuleInstanceListener(DistBlockListener):
     def enterModuleinstantiationstat(
         self, ctx: lfrXParser.ModuleinstantiationstatContext
     ):
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         # Check if the type exists in current compiler memory
         type_id = ctx.moduletype().getText()
         module_to_import = None
@@ -39,6 +42,9 @@ class ModuleInstanceListener(DistBlockListener):
     def exitModuleinstantiationstat(
         self, ctx: lfrXParser.ModuleinstantiationstatContext
     ):
+        if self.currentModule is None:
+            raise ValueError("currentModule set to None")
+
         # Create new instance of the import the type
         type_id = ctx.moduletype().getText()
         io_mapping = self._io_mapping

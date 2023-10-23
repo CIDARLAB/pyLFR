@@ -1,12 +1,20 @@
 {
-  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Enabled": false,
   "python.linting.enabled": true,
-  "python.linting.flake8Args": ["--max-line-length=88", "--ignore=E203"],
+  "python.linting.flake8Args": [
+    "--max-line-length=88",
+    "--ignore=E203"
+  ],
   "python.formatting.provider": "black",
   "editor.formatOnSave": true,
-  "python.linting.pylintEnabled": false,
+  "python.linting.pylintEnabled": true,
   "python.formatting.blackArgs": [
     "--line-length=88",
     "--experimental-string-processing"
-  ]
+  ],
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
 }

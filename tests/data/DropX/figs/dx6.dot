@@ -1,0 +1,14 @@
+strict digraph "" {
+	in1 -> "in1_MIX_(+)_in2_89";
+	in2 -> "in1_MIX_(+)_in2_89";
+	mix -> "mix_METER_(%)_90";
+	"in1_MIX_(+)_in2_89" -> mix;
+	droplets -> "droplets_DIVIDE_(/)_91";
+	"mix_METER_(%)_90" -> droplets;
+	val_1 -> "mix_METER_(%)_90";
+	split1 -> out1;
+	split2 -> out2;
+	"droplets_DIVIDE_(/)_91" -> split1;
+	"droplets_DIVIDE_(/)_91" -> split2;
+	val_2 -> "droplets_DIVIDE_(/)_91";
+}

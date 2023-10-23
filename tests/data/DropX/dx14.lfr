@@ -1,0 +1,21 @@
+// Based on the design by Ali Lashkaripour
+
+module dx14(
+    finput in1, in2, in3,
+    foutput waste, keep
+);
+
+    flow input_mix;
+    assign input_mix = in1 + in2 + in3;
+
+    flow [0:1] droplet_inputs;
+    assign droplet_inputs = ~input_mix;
+    
+    flow join;
+    
+    #MAP "MIXER" "~"
+    assign join = ~(droplet_inputs%100);
+
+    assign keep = join - waste;
+
+endmodule

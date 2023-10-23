@@ -1,0 +1,11 @@
+//This design tests the DIVIDE interaction
+module expression13(finput in1, foutput out1, out2);
+
+    flow temp_1, temp_2;
+
+    assign {temp_1, temp_2} = in1/2;
+
+    assign out1 = temp_1;
+    assign out2 = temp_2;
+
+endmodule

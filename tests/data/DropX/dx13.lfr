@@ -1,0 +1,36 @@
+// Based on the design by Diana Arguijo
+
+module dx13(
+    finput in1, in2, in3,
+    foutput out1, out2, out3, out4
+);
+
+    flow droplets_1, mix_1, pico_1, mix_2, sorted_trash_1, sorted_1, pico_2, mix_3, sorted_trash_2, sorted_2, splitter_1, splitter_2;
+
+    assign droplets_1 = in1%100;
+
+    #MAP "MIXER" "~"
+    assign mix_1 = ~droplets_1;
+
+    assign pico_1 = mix_1 + in2;
+
+    #MAP "MIXER" "~"
+    assign mix_2 = ~pico_1;
+
+    assign sorted_1 = mix_2 - sorted_trash_1;
+
+    assign pico_2 = sorted_1 + in3;
+    
+    #MAP "MIXER" "~"
+    assign mix_3 = ~pico_2;
+
+    assign sorted_2 = mix_3 - sorted_trash_2;
+
+    assign {splitter_1, splitter_2} = sorted_2/2;
+
+    assign out1 = sorted_trash_1;
+    assign out2 = sorted_trash_2;
+    assign out3 = splitter_1;
+    assign out4 = splitter_2;
+
+endmodule

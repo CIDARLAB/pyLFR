@@ -1,18 +1,20 @@
 from __future__ import annotations
+
+from typing import Dict
+
+from antlr4 import InputStream
 from antlr4.CommonTokenStream import CommonTokenStream
 from antlr4.tree.Tree import ParseTreeWalker
-from lfr.graphmatch.nodefilter import NodeFilter
 from networkx.classes.digraph import DiGraph
-from typing import Dict
-from antlr4 import InputStream
+
 from lfr.antlrgen.reggie.reggieLexer import reggieLexer
 from lfr.antlrgen.reggie.reggieParser import reggieParser
 from lfr.graphmatch.matchpatterngenerator import MatchPatternGenerator
+from lfr.graphmatch.nodefilter import NodeFilter
 
 
 class MatchPattern:
     def __init__(self, pattern_string: str = "") -> None:
-
         if pattern_string == "" or pattern_string is None:
             raise Exception("Empty Pattern found")
 
@@ -20,7 +22,7 @@ class MatchPattern:
         self._structural_template = None
 
         # Dictionary that stores the nodefilter object and the node id
-        self._semantic_template = dict()
+        self._semantic_template: Dict[str, NodeFilter] = {}
 
         self.__parse_pattern(pattern_string)
 

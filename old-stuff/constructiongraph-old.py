@@ -1,7 +1,7 @@
 from copy import copy
 from typing import Dict, List, Optional, Set, Tuple
 
-from networkx import nx
+import networkx as nx
 from networkx.algorithms import isomorphism
 from networkx.classes.digraph import DiGraph
 from pymint.mintcomponent import MINTComponent
@@ -11,16 +11,16 @@ from pymint.minttarget import MINTTarget
 from lfr.compiler.module import Module
 from lfr.fig.fignode import FIGNode
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
-from lfr.netlistgenerator.namegenerator import NameGenerator
-from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
 from lfr.netlistgenerator.constructionnode import ConstructionNode
+from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.networkmappingoption import (
     NetworkMappingOption,
     NetworkMappingOptionType,
 )
+from lfr.netlistgenerator.primitive import PrimitiveType, ProceduralPrimitive
 
 
-class ConstructionGraph(nx.DiGraph):
+class OLDConstructionGraph(nx.DiGraph):
     """Construction Graph is the proxy datastructure that we use for representing the
     loose connections between the fluid interaction graph and the real hardware
     design primitives that would be pieced together.
@@ -602,7 +602,6 @@ class ConstructionGraph(nx.DiGraph):
             # combinatorial design space
             assert len(cn.mapping_options) == 1
             for mapping_option in cn.mapping_options:
-
                 # TODO - Figure out how to not explicity check for this scenario'
                 # right now I'm using component replace as a coarse way of ensure
                 # no double takes
@@ -620,7 +619,6 @@ class ConstructionGraph(nx.DiGraph):
                 #     continue
                 for node_id in mapping_option.fig_subgraph.nodes:
                     if node_id in fig_nodes_cn_reverse_map.keys():
-
                         # Make sure there are no repeats here
                         if cn.ID not in fig_nodes_cn_reverse_map[node_id]:
                             fig_nodes_cn_reverse_map[node_id].append(cn.ID)

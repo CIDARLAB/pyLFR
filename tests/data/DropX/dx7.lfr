@@ -1,0 +1,13 @@
+module dx7(
+    finput in1, in2, pico_in1, pico_in2,
+    foutput out1, out2
+);
+
+    flow merged_droplets, injected_droplets;
+    assign merged_droplets = in1%100 + in2%100;
+
+    assign injected_droplets = (pico_in1 + pico_in2) + merged_droplets;
+
+    assign {out1, out2} = injected_droplets/2;
+
+endmodule

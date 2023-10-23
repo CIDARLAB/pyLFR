@@ -1,40 +1,45 @@
-from typing import List
-from lfr.compiler.language.vectorrange import VectorRange
+from typing import Generic, List, Optional, Type, TypeVar
+
+T = TypeVar("T")
 
 
-class Vector:
+class Vector(Generic[T]):
+    """
+    Vector of objects T
+    """
+
     def __init__(
-        self, id: str, vectortype=None, startindex: int = 0, endindex: int = 0
+        self,
+        id: str,
+        vector_type: Optional[Type[T]] = None,
+        startindex: int = 0,
+        endindex: int = -1,
     ):
         self.id = id
         self.startindex = startindex
         self.endindex = endindex
-        self.vec = []
+        self.vec: List[T] = []
 
-        if vectortype is not None:
-            # If its a singular item avoid the indexing
+        if vector_type is not None:
+            # If it's a singular item avoid the indexing
             if len(self) == 1:
-                self.vec.append(vectortype(self.id))
+                self.vec.append(vector_type(self.id))
             else:
                 for i in range(len(self)):
-                    self.vec.append(vectortype(self.id + "_" + str(i)))
+                    self.vec.append(vector_type(self.id + "_" + str(i)))
+
+            self.endindex = len(self.vec) - 1
+
         else:
             print("Creating a vector of type [None]")
 
-    def __len__(self):
+    def __len__(self) -> int:
         return abs(self.startindex - self.endindex) + 1
 
-    def get_items(self) -> list:
+    def get_items(self) -> List[T]:
         return self.vec
 
-    def get_range(self, startindex: int = None, endindex: int = None) -> VectorRange:
-        start = startindex if startindex is not None else self.startindex
-        end = endindex if endindex is not None else self.endindex
-        ret = VectorRange(self, start, end)
-
-        return ret
-
-    def __getitem__(self, key: int):
+    def __getitem__(self, key):
         if isinstance(key, slice):
             start, stop, step = key.indices(len(self.vec))
             return [self.vec[i] for i in range(start, stop, step)]

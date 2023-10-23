@@ -1,0 +1,9 @@
+module expression15(
+    finput f1, f2, f3, f4, f5, f6,
+    foutput fout
+);
+
+    assign fout = f1*0.2 + f2*0.4 + f3*0.1 + f4*0.1 + f5*0.1 + f6*0.1;
+
+
+endmodule

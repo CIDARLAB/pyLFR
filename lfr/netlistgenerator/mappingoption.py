@@ -1,17 +1,18 @@
 from typing import Optional
 
-from networkx import nx
+import networkx as nx
 
 from lfr.fig.interaction import InteractionType
 from lfr.netlistgenerator.mappinglibrary import Primitive
 
 
 class MappingOption:
-    def __init__(self, primitive: Primitive = None, subgraph_view=None) -> None:
-
+    def __init__(
+        self, primitive: Optional[Primitive] = None, subgraph_view=None
+    ) -> None:
         self._primitive: Optional[Primitive] = primitive
 
-        self.fig_subgraph: nx.DiGraph = subgraph_view
+        self.fig_subgraph: Optional[nx.DiGraph] = subgraph_view
 
         # Figure out what computation needs to get done with this
         self._interaction_type: Optional[InteractionType] = None

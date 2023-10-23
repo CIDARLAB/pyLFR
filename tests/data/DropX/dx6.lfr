@@ -1,0 +1,18 @@
+module dx6(
+    finput in1, in2,
+    foutput out1, out2
+);
+
+    flow mix;
+    assign mix = in1 + in2;
+
+    flow droplets;
+    assign droplets = mix%50;
+
+    flow split1, split2;
+    assign {split1, split2} = droplets/2;
+
+    assign out1 = split1;
+    assign out2 = split2;
+
+endmodule

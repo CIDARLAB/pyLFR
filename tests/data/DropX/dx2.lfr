@@ -1,0 +1,18 @@
+module dx2(
+    foutput in1, in2,
+    foutput out1, out2
+);
+
+    flow droplets1, droplets2, merged_droplets, incubated_droplets;
+
+    assign droplets1 = in1%100;
+    assign droplets2 = in2%200;
+
+    assign merged_droplets = droplets1 + droplets2;
+
+    #MAP "MIXER" "~"
+    assign incubated_droplets = ~merged_droplets;
+
+    assign out1 = incubated_droplets - out2;
+
+endmodule

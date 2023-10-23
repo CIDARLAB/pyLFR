@@ -1,7 +1,10 @@
-from lfr.graphmatch.nodefilter import NodeFilter
-from lfr.antlrgen.reggie.reggieParser import reggieParser
-from lfr.antlrgen.reggie.reggieListener import reggieListener
+from typing import Dict, List
+
 import networkx as nx
+
+from lfr.antlrgen.reggie.reggieListener import reggieListener
+from lfr.antlrgen.reggie.reggieParser import reggieParser
+from lfr.graphmatch.nodefilter import NodeFilter
 
 
 class MatchPatternGenerator(reggieListener):
@@ -9,8 +12,8 @@ class MatchPatternGenerator(reggieListener):
         super(MatchPatternGenerator, self).__init__()
 
         self.structural_template = nx.DiGraph()
-        self.semantic_template = dict()
-        self._vertices_stack = []
+        self.semantic_template: Dict[str, NodeFilter] = {}
+        self._vertices_stack: List[str] = []
 
     def enterVertex(self, ctx: reggieParser.VertexContext):
         vertex_id = ctx.structuralid().getText()

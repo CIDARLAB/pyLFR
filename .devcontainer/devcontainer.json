@@ -5,23 +5,35 @@
   "build": {
     "dockerfile": "Dockerfile",
     // Update 'VARIANT' to pick an Ubuntu version: focal, bionic
-    "args": { "VARIANT": "focal" }
+    "args": {
+      "VARIANT": "focal"
+    }
   },
-
   // Set *default* container specific settings.json values on container create.
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
-  },
-
   // Add the IDs of extensions you want installed when the container is created.
-  "extensions": ["ms-python.vscode-pylance", "ms-python.python","njpwerner.autodocstring","bungcip.better-toml", "rkrishnasanka.lfr", "rkrishnasanka.uf"]
-
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.vscode-pylance",
+        "ms-python.python",
+        "njpwerner.autodocstring",
+        "bungcip.better-toml",
+        "rkrishnasanka.lfr",
+        "rkrishnasanka.uf",
+        "LittleFoxTeam.vscode-python-test-adapter"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/black:2": {},
+    "ghcr.io/devcontainers-contrib/features/isort:2": {},
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+    "ghcr.io/devcontainers-contrib/features/pylint:2": {}
+  },
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
-
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "uname -a",
-
   // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-  // "remoteUser": "vscode"
+  "remoteUser": "root"
 }

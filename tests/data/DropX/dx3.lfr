@@ -1,0 +1,21 @@
+module dx3(
+    finput in1, in2, in3,
+    foutput out1, out2
+);
+
+    flow droplets, split1, split2;
+
+    assign droplets = in1%100;
+
+    assign {split1, split2} = droplets/2;
+
+    flow injected_droplets1, injected_droplets2;
+
+    assign injected_droplets1 = split1 + in2;
+
+    assign injected_droplets2 = split2 + in3;
+
+    assign out1 = injected_droplets1;
+    assign out2 = injected_droplets2;
+
+endmodule

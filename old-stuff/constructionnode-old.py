@@ -1,10 +1,11 @@
-from lfr.postprocessor.constraints import Constraint
-from lfr.netlistgenerator.connectingoption import ConnectingOption
-from lfr.netlistgenerator.mappingoption import MappingOption
 from typing import List
 
+from lfr.netlistgenerator.connectingoption import ConnectingOption
+from lfr.netlistgenerator.mappingoption import MappingOption
+from lfr.postprocessor.constraints import Constraint
 
-class ConstructionNode:
+
+class OLDConstructionNode:
     def __init__(self, node_id: str) -> None:
         self._id = node_id
         self._mapping_options: List[MappingOption] = []

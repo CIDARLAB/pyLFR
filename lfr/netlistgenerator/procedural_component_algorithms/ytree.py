@@ -1,8 +1,8 @@
-from lfr.netlistgenerator.connectingoption import ConnectingOption
 from typing import List, Optional
 
-from pymint import MINTComponent, MINTLayer
+from parchmint import Component, Layer, Params
 
+from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
 
@@ -62,8 +62,8 @@ class YTREE(ProceduralPrimitive):
         return None
 
     def get_procedural_component(
-        self, name_gen: NameGenerator, layer: MINTLayer, subgraph
-    ) -> MINTComponent:
+        self, name_gen: NameGenerator, layer: Layer, subgraph
+    ) -> Component:
         name = name_gen.generate_name(self.mint)
         params = {}
         # Calculate param values based on the subgraph
@@ -77,7 +77,9 @@ class YTREE(ProceduralPrimitive):
         params["width"] = 5
         params["height"] = 5
         params["stageLength"] = 5
-        mc = MINTComponent(name, self.mint, params, [layer])
+        mc = Component(
+            ID=name, name=name, entity=self.mint, params=Params(params), layers=[layer]
+        )
         return mc
 
     def generate_input_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:

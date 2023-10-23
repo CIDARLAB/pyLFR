@@ -1,0 +1,10 @@
+strict digraph "" {
+	in1 -> "in1_METER_(%)_112";
+	in2 -> "in1_METER_(%)_112_MIX_(+)_in2_113";
+	temp -> "out2_SIEVE_(-)_temp_114";
+	"in1_METER_(%)_112" -> "in1_METER_(%)_112_MIX_(+)_in2_113";
+	val_1 -> "in1_METER_(%)_112";
+	"in1_METER_(%)_112_MIX_(+)_in2_113" -> temp;
+	"out2_SIEVE_(-)_temp_114" -> out1;
+	"out2_SIEVE_(-)_temp_114" -> out2;
+}

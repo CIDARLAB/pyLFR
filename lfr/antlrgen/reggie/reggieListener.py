@@ -1,14 +1,14 @@
-# Generated from /Users/krishna/CIDAR/reggie/reggie.g4 by ANTLR 4.9
+# Generated from ./reggie.g4 by ANTLR 4.10.1
 from antlr4 import *
 
 if __name__ is not None and "." in __name__:
     from .reggieParser import reggieParser
 else:
-    from lfr.graphmatchParser import reggieParser
+    from reggieParser import reggieParser
+
 
 # This class defines a complete listener for a parse tree produced by reggieParser.
 class reggieListener(ParseTreeListener):
-
     # Enter a parse tree produced by reggieParser#graph.
     def enterGraph(self, ctx: reggieParser.GraphContext):
         pass

@@ -1,8 +1,7 @@
-from typing import List
+from typing import List, Optional
 
 from lfr.compiler.distribute.BitVector import BitVector
 from lfr.compiler.distribute.statetable import StateTable
-from typing import List, Optional
 from lfr.compiler.language.vectorrange import VectorRange
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 

@@ -1,5 +1,6 @@
 from typing import Dict, List
 
+from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.fig.fignode import FIGNode
 from lfr.fig.interaction import FluidProcessInteraction, Interaction
 from lfr.moduleinstanceListener import ModuleInstanceListener
@@ -11,7 +12,6 @@ from lfr.postprocessor.mapping import (
     PumpMapping,
     StorageMapping,
 )
-from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 
 
 class PostProcessListener(ModuleInstanceListener):
@@ -24,7 +24,8 @@ class PostProcessListener(ModuleInstanceListener):
     def enterPerformancedirective(self, ctx: lfrXParser.PerformancedirectiveContext):
         super().enterPerformancedirective(ctx)
         # TODO - Make a list of all the nodes previous
-        fig = self.currentModule.FIG
+        # TODO - Check is this needs to be utilized in the future
+        # fig = self.currentModule.FIG
 
         # Update the previous list of nodes
         self.__make_prev_fig_nodes_list()
@@ -40,7 +41,7 @@ class PostProcessListener(ModuleInstanceListener):
             # mapping.operator = operator
             self._current_mappings[operator] = mapping
 
-        for constraint in ctx.constraint():
+        for constraint in ctx.constraint():  # type: ignore
             param_name = constraint.ID().getText()
             conditional_operator = constraint.operator.text
             value = float(constraint.number().getText())
@@ -145,20 +146,20 @@ class PostProcessListener(ModuleInstanceListener):
         # to the fig (get the inputs and output nodes from the LHS and RHS)
         if "assign" in self._current_mappings.keys():
             # Get the LHS and RHS nodes here
-            lhs = self._lhs_store
-            rhs = self._rhs_store
+            lhs: List[FIGNode] = self._lhs_store
+            rhs: List[FIGNode] = self._rhs_store
 
             # Check if there is an `assign` mapping
             if "assign" in self._current_mappings.keys():
                 mapping = self._current_mappings["assign"]
                 # Now add the LHS and RHS nodes into the mapping
-                mapping_instance = NetworkMapping()
+                network_mapping_instance = NetworkMapping()
                 for node in rhs:
-                    mapping_instance.input_nodes.append(node)
+                    network_mapping_instance.input_nodes.append(node)
                 for node in lhs:
-                    mapping_instance.output_nodes.append(node)
+                    network_mapping_instance.output_nodes.append(node)
 
-                mapping.instances.append(mapping_instance)
+                mapping.instances.append(network_mapping_instance)
 
         # TODO - Go through the `nodes_of_interest` and then check to see
         # if any of the nodes have the corresponding mappings in the cache
@@ -178,6 +179,8 @@ class PostProcessListener(ModuleInstanceListener):
         self.__clear_mappings()
 
     def __make_prev_fig_nodes_list(self):
+        if self.currentModule is None:
+            raise ValueError("No module found")
         fig = self.currentModule.FIG
         self._prev_node_list = []
         self._after_node_list = []
@@ -185,6 +188,8 @@ class PostProcessListener(ModuleInstanceListener):
             self._prev_node_list.append(node)
 
     def __find_new_fig_nodes(self) -> List[FIGNode]:
+        if self.currentModule is None:
+            raise ValueError("No module found")
         fig = self.currentModule.FIG
         for node in fig.nodes:
             self._after_node_list.append(node)
@@ -196,5 +201,7 @@ class PostProcessListener(ModuleInstanceListener):
         return [fig.get_fignode(n) for n in nodes_of_interest]
 
     def __clear_mappings(self) -> None:
+        if self.currentModule is None:
+            raise ValueError("No module found")
         self.currentModule.mappings.extend(self._current_mappings.values())
         self._current_mappings.clear()

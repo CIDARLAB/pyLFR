@@ -1,10 +1,11 @@
-from typing import List, Tuple, Optional
-from lfr.compiler.lfrerror import ErrorType, LFRError
-from lfr.compiler.distribute.distributeblock import DistributeBlock
+from typing import List, Optional, Tuple
+
 from lfr.antlrgen.lfr.lfrXParser import lfrXParser
-from lfr.lfrbaseListener import LFRBaseListener, ListenerMode
-from lfr.compiler.language.vectorrange import VectorRange
 from lfr.compiler.distribute.BitVector import BitVector
+from lfr.compiler.distribute.distributeblock import DistributeBlock
+from lfr.compiler.language.vectorrange import VectorRange
+from lfr.compiler.lfrerror import ErrorType, LFRError
+from lfr.lfrbaseListener import LFRBaseListener, ListenerMode
 
 
 class DistBlockListener(LFRBaseListener):
@@ -192,7 +193,6 @@ class DistBlockListener(LFRBaseListener):
         )
         for state in remaining_states:
             for connectivity in self._current_connectivities:
-
                 self._current_dist_block.set_connectivity(
                     state, connectivity[0], connectivity[1]
                 )
