@@ -1,3 +1,4 @@
+import re
 from typing import List, Optional
 
 from parchmint import Component, Layer, Params
@@ -5,6 +6,44 @@ from parchmint import Component, Layer, Params
 from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.namegenerator import NameGenerator
 from lfr.netlistgenerator.primitive import ProceduralPrimitive
+
+
+def _fig_id(node) -> str:
+    return str(getattr(node, "ID", node))
+
+
+def _natural_key(node):
+    parts = re.split(r"(\d+)", _fig_id(node))
+    return tuple(int(p) if p.isdigit() else p for p in parts)
+
+
+def _boundary_nodes(subgraph, *, sinks: bool) -> list:
+    if subgraph is None:
+        return []
+    nodes = []
+    for node in subgraph.nodes:
+        deg = (
+            len(list(subgraph.out_edges(node)))
+            if sinks
+            else len(list(subgraph.in_edges(node)))
+        )
+        if deg == 0:
+            nodes.append(node)
+    nodes.sort(key=_natural_key)
+    return nodes
+
+
+def _tree_options(nodes) -> List[ConnectingOption]:
+    """3DuF YTREE: port 1 is the trunk; leaves are 2 .. n+1."""
+    if not nodes:
+        return []
+    if len(nodes) == 1:
+        n = nodes[0]
+        return [ConnectingOption(None, ["1"], fig_nodes=[_fig_id(n)])]
+    return [
+        ConnectingOption(None, [str(i + 2)], fig_nodes=[_fig_id(n)])
+        for i, n in enumerate(nodes)
+    ]
 
 
 class YTREE(ProceduralPrimitive):
@@ -21,39 +60,10 @@ class YTREE(ProceduralPrimitive):
         )
 
     def export_inputs(self, subgraph) -> List[ConnectingOption]:
-        input_nodes = []
-        for node in subgraph.nodes:
-            in_dim = len(list(subgraph.in_edges(node)))
-            if in_dim == 0:
-                input_nodes.append(node)
-
-        # TODO create the connecting options based on in dim and out dim
-        if len(input_nodes) == 1:
-            # This is the normal numbering of the connecting options
-            return [ConnectingOption(None, ["1"])]
-        else:
-            # This is the reverse numbering of the connecting options
-            return [
-                ConnectingOption(None, [str(i)]) for i in range(2, len(input_nodes) + 2)
-            ]
+        return _tree_options(_boundary_nodes(subgraph, sinks=False))
 
     def export_outputs(self, subgraph) -> List[ConnectingOption]:
-        output_nodes = []
-        for node in subgraph.nodes:
-            out_dim = len(list(subgraph.out_edges(node)))
-            if out_dim == 0:
-                output_nodes.append(node)
-
-        # TODO create the connecting options based on in dim and out dim
-        if len(output_nodes) == 1:
-            # This is the reverse numbering of the connecting options
-            return [ConnectingOption(None, ["1"])]
-        else:
-            # This is the normal numbering of the connecting options
-            return [
-                ConnectingOption(None, [str(i)])
-                for i in range(2, len(output_nodes) + 2)
-            ]
+        return _tree_options(_boundary_nodes(subgraph, sinks=True))
 
     def export_loadings(self, subgraph) -> Optional[List[ConnectingOption]]:
         return None
@@ -70,10 +80,19 @@ class YTREE(ProceduralPrimitive):
         params["flowChannelWidth"] = 5
         params["spacing"] = 5
 
-        # Get number of inputs or outputs
-        # for node in subgraph.nodes:
-
-        params["leafs"] = 5
+        n_in = 0
+        n_out = 0
+        for node in subgraph.nodes:
+            if len(list(subgraph.in_edges(node))) == 0:
+                n_in += 1
+            if len(list(subgraph.out_edges(node))) == 0:
+                n_out += 1
+        n_in = max(n_in, 1)
+        n_out = max(n_out, 1)
+        # 3DuF YTREE: port 1 is the trunk, 2..leafs+1 are leaves.
+        params["in"] = float(n_in)
+        params["out"] = float(n_out)
+        params["leafs"] = float(max(n_in, n_out))
         params["width"] = 5
         params["height"] = 5
         params["stageLength"] = 5

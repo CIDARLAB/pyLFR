@@ -104,9 +104,7 @@ def generate_device(
         source_cn = construction_graph.get_construction_node(source_cn_id)
         target_cn = construction_graph.get_construction_node(target_cn_id)
 
-        # Get the output ConnectingOptions of the source cn
-        output_options = source_cn.output_options.copy()
-        input_options = target_cn.input_options.copy()
+        fig = getattr(construction_graph, "_fig", None)
 
         # DIYcomponent: pick side terminals from DiyTerminalConstraint when present
         source_option = _diy_connecting_option(
@@ -120,9 +118,18 @@ def generate_device(
         if target_option is None:
             target_option = _chamber_connecting_option(target_cn, as_input=True)
         if source_option is None:
-            source_option = output_options.pop()
+            source_option = _pick_connecting_option(
+                source_cn, target_cn, as_input=False, fig=fig
+            )
         if target_option is None:
-            target_option = input_options.pop()
+            target_option = _pick_connecting_option(
+                target_cn, source_cn, as_input=True, fig=fig
+            )
+        if source_option is None or target_option is None:
+            print(
+                f"Warning: no connecting option for {source_cn_id} -> {target_cn_id}"
+            )
+            continue
 
         #Source option exists here
         #print(source_option.component_port)
@@ -156,6 +163,40 @@ def generate_device(
             raise NotImplementedError("Multiple sources not implemented")
 
     return cn_component_mapping
+
+
+def _cn_fig_ids(cn) -> Set[str]:
+    try:
+        return {_fig_id_from_node(n) for n in cn.fig_subgraph.nodes}
+    except Exception:
+        return set()
+
+
+def _option_fig_ids(option: ConnectingOption) -> List[str]:
+    return [str(n) for n in (getattr(option, "fig_nodes", None) or [])]
+
+
+def _pick_connecting_option(cn, neighbor_cn, as_input: bool, fig=None):
+    """Pick a connecting option for an edge, matching tagged YTREE/TREE leaves.
+
+    Construction-graph generation used to ``copy().pop()`` the last option on
+    every edge, so a 16-leaf YTREE always emitted ``ytree_1 17``. A tagged
+    option is consumed only when its FIG node is actually covered by the
+    neighbor (the PORT for that leaf). Adjacent mixers must not steal leaves;
+    they fall through to trunk port 1.
+    """
+    options = cn.input_options if as_input else cn.output_options
+    mint = str(getattr(getattr(cn, "primitive", None), "mint", "") or "").upper()
+    is_tree = mint in {"YTREE", "TREE"}
+    if not options:
+        return ConnectingOption(None, ["1"]) if is_tree else None
+    neighbor_ids = _cn_fig_ids(neighbor_cn)
+    for i, opt in enumerate(options):
+        if any(nid in neighbor_ids for nid in _option_fig_ids(opt)):
+            return options.pop(i)
+    if is_tree and any(_option_fig_ids(o) for o in options):
+        return ConnectingOption(None, ["1"])
+    return options[-1]
 
 
 def _chamber_connecting_option(cn, as_input: bool):
