@@ -673,6 +673,8 @@ TODO - Figure out how to control sequences work from an LFR file. Also figure ou
 
 ### YTREE
 
+Port **1** is the trunk; leaves are **2 .. n+1**, one FIG sink per leaf.
+
 ### Output
 
 ### 1->2

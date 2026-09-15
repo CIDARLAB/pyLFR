@@ -223,8 +223,10 @@ directory via --component-library <dir>.
 
 This keeps "unknown component" (your design references something nobody
 knows about) distinct from "network hiccup" (the primitives server is
-unreachable) — the latter degrades to a per-component warning so a dead
-server doesn't poison your compile.
+unreachable) — the latter degrades to **local fallbacks** for known 3DuF
+entities (`PORT`, `MIXER`, `MUX`, `YTREE`, `VIA`, … in `fluigi/primitives.py`)
+so a dead server does not emit `x-span=-1`. Truly unknown entities still warn
+(or raise in strict mode).
 
 If you rely **only** on the default `user_components/` scan and did **not**
 pass `--component-library`, strict mode is **off** by default so existing
@@ -300,6 +302,16 @@ Run it with:
 cd Microfluidics-Benchmarks/Quick_Examples/user_components_demo
 fluigi compile_mint TopDesign.mint --component-library lib/ -o out/
 ```
+
+## YTREE / TREE mapping
+
+`#MAP "YTREE" "assign"` (and TREE) is a **procedural** primitive. LFR counts
+subgraph sources/sinks, writes `in`/`out`/`leafs`, and tags each connecting
+option with the FIG node it belongs to. Netlist generation consumes a leaf
+only when the neighbor construction node covers that FIG node, so a 16-way
+fan-out uses ports **2–17** once each. Unmatched edges (mixers on the trunk)
+use port **1** and do not steal leaves. Fluigi may still grow `out`/`in` from
+the highest connected MINT port if an older mint says `out=8` but wires port 17.
 
 ## Running Benchmark Test Scripts
 

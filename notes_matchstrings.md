@@ -244,6 +244,10 @@ TODO - Figure out how to control sequences work from an LFR file. Also figure ou
 
 ### YTREE
 
+3DuF numbering: port **1** is the trunk; leaves are **2 .. n+1**. LFR tags each
+leaf connecting-option with its FIG node so fan-out does not collapse onto the
+last port.
+
 ```
 {
     v1:FLOW -> ?:FLOW,
