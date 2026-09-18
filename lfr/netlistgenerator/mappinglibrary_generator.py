@@ -6,6 +6,7 @@ from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.netlistgenerator.connection_primitive import ConnectionPrimitive
 from lfr.netlistgenerator.mappinglibrary import MappingLibrary
 from lfr.netlistgenerator.primitive import Primitive, PrimitiveType
+from lfr.netlistgenerator.procedural_component_algorithms.mux import MUX
 from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
 
 
@@ -1103,11 +1104,9 @@ def generate_dropx_library() -> MappingLibrary:
 
     library.add_operator_entry(droplet_spacer, InteractionType.TECHNOLOGY_PROCESS)
 
-    # YTREE - This is a procedural primitives
-
-    ytree = YTREE()
-
-    library.add_procedural_entry(ytree)
+    # YTREE / MUX — procedural primitives for ``#MAP "YTREE"|"MUX" "assign"``
+    library.add_procedural_entry(YTREE())
+    library.add_procedural_entry(MUX())
 
     _add_default_connection_primitives(library)
 

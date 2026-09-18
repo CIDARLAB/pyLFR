@@ -24,6 +24,7 @@ from lfr.netlistgenerator.netlist_generation import (
     generate_control_network,
     generate_device,
 )
+from lfr.netlistgenerator.primitive import ProceduralPrimitive
 from lfr.postprocessor.mapping import (
     FluidicOperatorMapping,
     NetworkMapping,
@@ -322,10 +323,15 @@ def eliminate_explicit_match_alternates(
                 primitives_with_technology = library.get_primitives(
                     match_technology_string
                 )
-                # TODO - We need to have a better way to pick between the primitives
-                # as a temprorary fix we just pick the first one
                 if (len(primitives_with_technology) > 0):
-                    match_primitive_uid = primitives_with_technology[0].uid
+                    procedural = [
+                        p
+                        for p in primitives_with_technology
+                        if isinstance(p, ProceduralPrimitive)
+                    ]
+                    match_primitive_uid = (
+                        procedural or primitives_with_technology
+                    )[0].uid
                 else:
                     primitives_with_technology = library.get_primitives(
                         "REACTION CHAMBER"

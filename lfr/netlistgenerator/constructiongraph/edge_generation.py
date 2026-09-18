@@ -4,6 +4,42 @@ from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 
+_TREE_HUB_MINTS = {"MUX", "YTREE", "TREE"}
+
+
+def _cn_mint(cn: ConstructionNode) -> str:
+    primitive = getattr(cn, "_primitive", None)
+    if primitive is None:
+        try:
+            primitive = cn.primitive
+        except Exception:
+            return ""
+    return str(getattr(primitive, "mint", "") or "").upper()
+
+
+def _share_tree_hub(
+    source_cn: ConstructionNode,
+    target_cn: ConstructionNode,
+    construction_graph: ConstructionGraph,
+) -> bool:
+    """True when both CNs already overlap the same MUX/YTREE/TREE hub.
+
+    FIG assign edges (in → each out) also make the leaf PORT construction
+    nodes neighbors of each other. Emitting those neighbor edges would add
+    extra port-to-port channels on top of the hub terminals.
+    """
+    for node_id in construction_graph.nodes:
+        if node_id in (source_cn.ID, target_cn.ID):
+            continue
+        hub = construction_graph.get_construction_node(node_id)
+        if _cn_mint(hub) not in _TREE_HUB_MINTS:
+            continue
+        if check_overlap_criteria_1(source_cn, hub) and check_overlap_criteria_1(
+            target_cn, hub
+        ):
+            return True
+    return False
+
 # def _bridge_channel_networks(construction_graph: ConstructionGraph) -> None:
 #     # TODO - Bridge the channel networks
 #     # Find all the passthrough nodes in the fig
@@ -275,6 +311,8 @@ def generate_construction_graph_edges(
             is_neighbor = check_adjecent_criteria_1(source_cn_node, target_cn_node, fig)
 
             if is_neighbor:
+                if _share_tree_hub(source_cn_node, target_cn_node, construction_graph):
+                    continue
                 if construction_graph.has_edge(
                     source_node_id, target_node_id
                 ) or construction_graph.has_edge(target_node_id, source_node_id):

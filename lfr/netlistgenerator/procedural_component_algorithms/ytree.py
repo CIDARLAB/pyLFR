@@ -78,7 +78,7 @@ class YTREE(ProceduralPrimitive):
         params = {}
         # Calculate param values based on the subgraph
         params["flowChannelWidth"] = 5
-        params["spacing"] = 5
+        params["leafSpace"] = 5
 
         n_in = 0
         n_out = 0
@@ -95,7 +95,7 @@ class YTREE(ProceduralPrimitive):
         params["leafs"] = float(max(n_in, n_out))
         params["width"] = 5
         params["height"] = 5
-        params["stageLength"] = 5
+        params["stageSpace"] = 5
         mc = Component(
             ID=name, name=name, entity=self.mint, params=Params(params), layers=[layer]
         )

@@ -1,3 +1,4 @@
+import math
 from typing import Dict, List, Optional, Set, Tuple
 
 import networkx as nx
@@ -177,7 +178,7 @@ def _option_fig_ids(option: ConnectingOption) -> List[str]:
 
 
 def _pick_connecting_option(cn, neighbor_cn, as_input: bool, fig=None):
-    """Pick a connecting option for an edge, matching tagged YTREE/TREE leaves.
+    """Pick a connecting option for an edge, matching tagged YTREE/TREE/MUX leaves.
 
     Construction-graph generation used to ``copy().pop()`` the last option on
     every edge, so a 16-leaf YTREE always emitted ``ytree_1 17``. A tagged
@@ -187,7 +188,7 @@ def _pick_connecting_option(cn, neighbor_cn, as_input: bool, fig=None):
     """
     options = cn.input_options if as_input else cn.output_options
     mint = str(getattr(getattr(cn, "primitive", None), "mint", "") or "").upper()
-    is_tree = mint in {"YTREE", "TREE"}
+    is_tree = mint in {"YTREE", "TREE", "MUX"}
     if not options:
         return ConnectingOption(None, ["1"]) if is_tree else None
     neighbor_ids = _cn_fig_ids(neighbor_cn)
@@ -247,6 +248,7 @@ _CANONICAL_PARAM_KEYS = {
     "bendspacing": "bendSpacing",
     "bendlength": "bendLength",
     "numberofbends": "numberOfBends",
+    "minchannellength": "minChannelLength",
 }
 
 
@@ -306,13 +308,153 @@ def generate_control_network(
     """Add CONTROL layer, valves on flow connections, and Cport components from FIG state_tables.
 
     Control-layer ports are named Cport_0, Cport_1, ... to distinguish from flow layer.
+    ``#MAP "MUX" "assign"`` has no state table; Super_MUX-style CONTROL PORTs
+    are attached afterwards via ``attach_mux_control_ports``.
     """
     from parchmint.device import ValveType
     from pymint.mintlayer import MINTLayerType
 
     fig = module.FIG
-    if not fig.state_tables:
+    if fig.state_tables:
+        _generate_state_table_control(
+            module,
+            variant,
+            cn_component_mapping,
+            scaffhold_device,
+            ValveType,
+            MINTLayerType,
+        )
+    attach_mux_control_ports(scaffhold_device)
+
+
+def _mux_control_already_wired(device, mux_id: str, first: int, n_ctrl: int) -> bool:
+    wanted = {str(first + i) for i in range(n_ctrl)}
+    for connection in device.connections:
+        layer = getattr(connection, "layer", None)
+        layer_type = str(getattr(layer, "layer_type", "") or "").upper()
+        layer_id = str(getattr(layer, "ID", "") or "")
+        if "CONTROL" not in layer_type and layer_id != "1":
+            continue
+        ends = []
+        if connection.source:
+            ends.append(connection.source)
+        ends.extend(connection.sinks or [])
+        for end in ends:
+            if str(end.component) == mux_id and str(end.port) in wanted:
+                return True
+    return False
+
+
+def _unique_device_id(existing: Set[str], name: str) -> str:
+    if name not in existing:
+        return name
+    idx = 2
+    while f"{name}_{idx}" in existing:
+        idx += 1
+    return f"{name}_{idx}"
+
+
+def attach_mux_control_ports(scaffhold_device: MINTDevice) -> None:
+    """Wire CONTROL PORTs onto MUX body terminals like handwritten Super_MUX.
+
+    A 1-to-N MUX has ``2 * ceil(log2(N))`` control terminals starting at
+    label ``2 + N``. Super_MUX connects them as:
+      odd  (1-based) control: PORT side 4 -> mux port
+      even (1-based) control: PORT side 2 -> mux port
+    """
+    from pymint.mintlayer import MINTLayerType
+
+    muxes = [
+        component
+        for component in scaffhold_device.device.components
+        if str(component.entity).upper() == "MUX"
+    ]
+    if not muxes:
         return
+
+    control_layer_id = "1"
+    try:
+        scaffhold_device.device.get_layer(control_layer_id)
+    except KeyError:
+        scaffhold_device.create_mint_layer(
+            control_layer_id, "control", 0, MINTLayerType.CONTROL
+        )
+
+    existing = {component.ID for component in scaffhold_device.device.components}
+    existing_conns = {
+        connection.ID for connection in scaffhold_device.device.connections
+    }
+    prefix_ids = len(muxes) > 1
+
+    for mux in muxes:
+        params = mux.params.data
+        n_in = int(round(float(params.get("in") or 1)))
+        n_out = int(round(float(params.get("out") or 1)))
+        leafs = max(n_in, n_out, 1)
+        if leafs < 2:
+            continue
+        n_ctrl = 2 * int(math.ceil(math.log2(leafs)))
+        first = 2 + leafs
+        if _mux_control_already_wired(scaffhold_device.device, mux.ID, first, n_ctrl):
+            continue
+        channel_width = float(
+            params.get("controlChannelWidth")
+            or lfr_parameters.DEFAULT_CONTROL_CHANNEL_WIDTH_UM
+        )
+        for i in range(n_ctrl):
+            base_port = f"cp{i + 1}"
+            cport_name = f"{mux.ID}_{base_port}" if prefix_ids else base_port
+            cport_name = _unique_device_id(existing, cport_name)
+            scaffhold_device.create_mint_component(
+                name=cport_name,
+                technology="PORT",
+                params={
+                    "portRadius": 1000,
+                    "componentSpacing": lfr_parameters.DEFAULT_COMPONENT_SPACING_UM,
+                },
+                layer_ids=[control_layer_id],
+            )
+            existing.add(cport_name)
+            mux_port = str(first + i)
+            port_side = "4" if (i % 2 == 0) else "2"
+            base_channel = f"cc{i + 1}"
+            channel_name = f"{mux.ID}_{base_channel}" if prefix_ids else base_channel
+            channel_name = _unique_device_id(existing_conns, channel_name)
+            src_target = Target(component_id=cport_name, port=port_side)
+            sink_target = Target(component_id=mux.ID, port=mux_port)
+            scaffhold_device.create_mint_connection(
+                name=channel_name,
+                technology="CHANNEL",
+                params={"channelWidth": channel_width},
+                source=src_target,
+                sinks=[sink_target],
+                layer_id=control_layer_id,
+            )
+            existing_conns.add(channel_name)
+
+    n_cports = sum(
+        1
+        for component in scaffhold_device.device.components
+        if component.entity == "PORT"
+        and (
+            str(component.ID).startswith("Cport_")
+            or str(component.ID).startswith("cp")
+            or "_cp" in str(component.ID)
+        )
+    )
+    if n_cports > 0:
+        scaffhold_device.device.params.set_param("controlPortCount", n_cports)
+
+
+def _generate_state_table_control(
+    module,
+    variant: ConstructionGraph,
+    cn_component_mapping: Dict[str, List[str]],
+    scaffhold_device: MINTDevice,
+    ValveType,
+    MINTLayerType,
+) -> None:
+    fig = module.FIG
 
     # Build fig_node_id -> set(device component IDs)
     fig_to_components: Dict[str, set] = {}
@@ -405,7 +547,7 @@ def generate_control_network(
                 params={
                     "position": [-1, -1],
                     "controlPort": cport_name,
-                    "componentSpacing": 1000,
+                    "componentSpacing": lfr_parameters.DEFAULT_COMPONENT_SPACING_UM,
                     "valveRadius": lfr_parameters.DEFAULT_VALVE3D_RADIUS_UM,
                     "gap": lfr_parameters.DEFAULT_VALVE3D_GAP_UM,
                     "width": lfr_parameters.DEFAULT_VALVE3D_WIDTH_UM,
@@ -431,6 +573,8 @@ def generate_control_network(
                     "position": [-1, -1],
                     "crossSection": lfr_parameters.DEFAULT_CONNECTION_CROSS_SECTION,
                     "channelWidth": lfr_parameters.DEFAULT_CONTROL_CHANNEL_WIDTH_UM,
+                    "length": lfr_parameters.MIN_CONNECTED_COMPONENT_DISTANCE_UM,
+                    "minChannelLength": lfr_parameters.MIN_CONNECTED_COMPONENT_DISTANCE_UM,
                 },
                 source=src_target,
                 sinks=[sink_target],
@@ -478,7 +622,11 @@ def create_device_connection(
         source=source_target,
         sinks=[target_target],
         params=Params(
-            {"crossSection": lfr_parameters.DEFAULT_CONNECTION_CROSS_SECTION}
+            {
+                "crossSection": lfr_parameters.DEFAULT_CONNECTION_CROSS_SECTION,
+                "length": lfr_parameters.MIN_CONNECTED_COMPONENT_DISTANCE_UM,
+                "minChannelLength": lfr_parameters.MIN_CONNECTED_COMPONENT_DISTANCE_UM,
+            }
         ),
         layer=scaffhold_device.device.layers[
             0

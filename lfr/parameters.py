@@ -23,8 +23,9 @@ def parse_default_connection_profile(raw: str) -> Tuple[str, int]:
     """Return (JSON/MINT entity, 3DuF crossSection) for synthesized channels.
 
     ``CHANNEL`` keeps square ends. Any rounded alias uses entity
-    ``ROUNDED CHANNEL`` and ``crossSection=1``. MINT still serializes the
-    ``CHANNEL`` keyword because ``ROUNDED CHANNEL`` is not a valid channelStat.
+    ``ROUNDED CHANNEL`` and JSON ``crossSection=1``. MINT still serializes the
+    ``CHANNEL`` keyword plus ``RoundedChannel=True/False`` because
+    ``ROUNDED CHANNEL name from ...`` is not a valid channelStat.
     """
     text = (raw or "").strip().upper().replace("-", " ").replace("_", " ")
     if text in ("CHANNEL", "SQUARE", "0", "RECT", "RECTANGULAR"):
@@ -44,3 +45,12 @@ DEFAULT_VALVE3D_WIDTH_UM = 2400
 DEFAULT_VALVE3D_LENGTH_UM = 2400
 DEFAULT_CHANNEL_WIDTH_UM = DEFAULT_VALVE3D_GAP_UM
 DEFAULT_CONTROL_CHANNEL_WIDTH_UM = DEFAULT_CHANNEL_WIDTH_UM
+# Minimum CHANNEL length (µm) between components joined by a channel.
+# LFR compile writes this as CHANNEL ``length=`` / ``minChannelLength=``.
+# Handwritten MINT may set either param per connection; values shorter
+# than this floor are raised. Keep in sync with
+# fluigi.parameters.MIN_CONNECTED_COMPONENT_DISTANCE_UM.
+MIN_CONNECTED_COMPONENT_DISTANCE_UM = 1000.0
+# Keepout halo written onto LFR-generated components as ``componentSpacing``.
+# Keep in sync with fluigi.parameters.COMPONENT_SPACING.
+DEFAULT_COMPONENT_SPACING_UM = 2000.0

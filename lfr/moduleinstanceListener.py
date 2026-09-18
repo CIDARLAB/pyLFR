@@ -62,7 +62,7 @@ class ModuleInstanceListener(DistBlockListener):
         io_mapping = self._io_mapping
         var_name = ctx.instancename().getText()
 
-        # Parse optional #(length=10000, width=8000, height=2000, componentSpacing=1000)
+        # Parse optional #(length=10000, width=8000, height=2000, componentSpacing=2000)
         instance_params: Dict[str, float] = {}
         param_list = ctx.moduleparamlist()
         if param_list is not None:
