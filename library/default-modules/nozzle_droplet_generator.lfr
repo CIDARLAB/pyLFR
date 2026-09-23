@@ -1,7 +1,7 @@
 // Minimal LFR case corresponding to a NOZZLE DROPLET GENERATOR.
 // 3-port junction: oil on the facing pair (1 / 3), water on 4.
-// 1-port horn: droplets on 2. Rotation 90 is the vertical pose
-// (oil left/right, water in the middle, horn up).
+// 1-port horn: droplets on 2. Rotation 90 is 3DuF's vertical pose
+// (oil 3 left / oil 1 right, aqueous up, horn down).
 module nozzle_droplet_generator(
     finput oil_left, oil_right, aqueous,
     foutput droplets

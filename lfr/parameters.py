@@ -24,7 +24,7 @@ def parse_default_connection_profile(raw: str) -> Tuple[str, int]:
 
     ``CHANNEL`` keeps square ends. Any rounded alias uses entity
     ``ROUNDED CHANNEL`` and JSON ``crossSection=1``. MINT still serializes the
-    ``CHANNEL`` keyword plus ``RoundedChannel=True/False`` because
+    ``CHANNEL`` keyword plus ``RoundedChannel=1/0`` because
     ``ROUNDED CHANNEL name from ...`` is not a valid channelStat.
     """
     text = (raw or "").strip().upper().replace("-", " ").replace("_", " ")
@@ -53,4 +53,4 @@ DEFAULT_CONTROL_CHANNEL_WIDTH_UM = DEFAULT_CHANNEL_WIDTH_UM
 MIN_CONNECTED_COMPONENT_DISTANCE_UM = 1000.0
 # Keepout halo written onto LFR-generated components as ``componentSpacing``.
 # Keep in sync with fluigi.parameters.COMPONENT_SPACING.
-DEFAULT_COMPONENT_SPACING_UM = 2000.0
+DEFAULT_COMPONENT_SPACING_UM = 1000.0

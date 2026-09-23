@@ -29,6 +29,7 @@ class ConstructionNode:
         self._id = node_id
         self._explict_mapping_flag = False
         self._fig_subgraph: Optional[nx.DiGraph] = subgraph_view
+        self._declared_fig_ids: Set[str] = set()
         self._primitive: Optional[Primitive] = primitive
 
         # Connection options that we want to load here
@@ -165,7 +166,9 @@ class ConstructionNode:
         Returns:
             Set[str]: Cover of the figure subgraph
         """
-        return set(self.fig_subgraph.nodes)
+        if self._declared_fig_ids:
+            return set(self._declared_fig_ids)
+        return {str(getattr(node, "ID", node)) for node in self.fig_subgraph.nodes}
 
     def use_explicit_mapping(self, mapping: MappingOption) -> None:
         """Uses the explicit mapping option passed as the parameter

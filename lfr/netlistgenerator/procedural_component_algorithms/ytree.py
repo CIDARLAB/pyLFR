@@ -75,11 +75,6 @@ class YTREE(ProceduralPrimitive):
         self, name_gen: NameGenerator, layer: Layer, subgraph
     ) -> Component:
         name = name_gen.generate_name(self.mint)
-        params = {}
-        # Calculate param values based on the subgraph
-        params["flowChannelWidth"] = 5
-        params["leafSpace"] = 5
-
         n_in = 0
         n_out = 0
         for node in subgraph.nodes:
@@ -90,16 +85,21 @@ class YTREE(ProceduralPrimitive):
         n_in = max(n_in, 1)
         n_out = max(n_out, 1)
         # 3DuF YTREE: port 1 is the trunk, 2..leafs+1 are leaves.
-        params["in"] = float(n_in)
-        params["out"] = float(n_out)
-        params["leafs"] = float(max(n_in, n_out))
-        params["width"] = 5
-        params["height"] = 5
-        params["stageSpace"] = 5
-        mc = Component(
+        # Do not emit the old stub 5 µm pitches — fluigi would keep them
+        # (setdefault) and the tree body would vanish next to the IO pads.
+        params = {
+            "in": float(n_in),
+            "out": float(n_out),
+            "leafs": float(max(n_in, n_out)),
+            "flowChannelWidth": 600.0,
+            "leafSpace": 4000.0,
+            "stageSpace": 4000.0,
+            "height": 250.0,
+            "componentSpacing": 1000.0,
+        }
+        return Component(
             ID=name, name=name, entity=self.mint, params=Params(params), layers=[layer]
         )
-        return mc
 
     def generate_input_connectingoptions(self, subgraph_view) -> List[ConnectingOption]:
         """Generates a list of connection options that represent where the inputs can

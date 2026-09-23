@@ -74,6 +74,11 @@ class Constraint:
 
         self._unit_string: Optional[str] = None
 
+        # "component" (default) or "connection" for #CONSTRAIN "CHANNEL" /
+        # "CTRLCHANNEL". layer is "flow" or "control" when scope is connection.
+        self.scope = "component"
+        self.layer = "flow"
+
     @property
     def unit(self) -> Optional[str]:
         return self._unit_string

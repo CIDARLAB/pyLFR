@@ -10,7 +10,7 @@
 //   );
 //
 // Optional keepout halo around the box (same meaning as MINT componentSpacing).
-// Default is 2000 µm. Override per instance, for example:
+// Default is 1000 µm. Override per instance, for example:
 //   DIYcomponent #(length=10000, width=8000, height=2000, componentSpacing=3000) box(...);
 //
 // Sides map to physical terminals: up=1, right=2, down=3, left=4.
@@ -19,14 +19,15 @@
 //
 // Import the module with a backtick-import of library/DIYcomponent.lfr first.
 module DIYcomponent(
-    finput up, right, down, left,
-    foutput _seed_out
+    finput up, right,
+    foutput down, left
 );
     #MAP "DIYCOMPONENT" "~"
     #CONSTRAIN "~" length = 5000
     #CONSTRAIN "~" width = 5000
     #CONSTRAIN "~" height = 250
-    #CONSTRAIN "~" componentSpacing = 2000
+    #CONSTRAIN "~" componentSpacing = 1000
     // Seed assign so #MAP attaches; parent instances use instantiate_diy_component.
-    assign _seed_out = ~up;
+    // Standalone compile wires all four sides (up=1, right=2, down=3, left=4).
+    assign down = ~up;
 endmodule

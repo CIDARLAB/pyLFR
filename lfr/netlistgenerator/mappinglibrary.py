@@ -186,9 +186,10 @@ class MappingLibrary:
             List[Primitive]: List of primitives with the given technology string.
             Returns an empty list if no primitives are found.
         """
+        wanted = str(technology_string or "").strip().upper()
         ret = []
         for primitive in self.__all_primitives.values():
-            if primitive.mint == technology_string:
+            if str(primitive.mint or "").strip().upper() == wanted:
                 ret.append(primitive)
         return ret
 
@@ -204,9 +205,10 @@ class MappingLibrary:
         """
         # Go through each of the entries in the all_primitives dictionary and see if the
         # technology string is in there.
+        wanted = str(technology_string or "").strip().upper()
         ret = False
         for primitive in self.__all_primitives.values():
-            if primitive.mint == technology_string:
+            if str(primitive.mint or "").strip().upper() == wanted:
                 ret = True
                 break
 

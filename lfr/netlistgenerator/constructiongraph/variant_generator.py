@@ -19,6 +19,27 @@ from lfr.netlistgenerator.connectingoption import ConnectingOption
 from lfr.postprocessor.constraints import Constraint, DiyTerminalConstraint
 
 
+def _constraints_for_match(
+    explicit_constraints_by_cover: Optional[Dict[FrozenSet[str], List[Constraint]]],
+    fig_nodes_set: FrozenSet[str],
+) -> List[Constraint]:
+    """Attach LFR #CONSTRAIN values to the matching construction node.
+
+    Operator constraints are keyed by the interaction node. Library matches
+    may cover a larger FIG subgraph, so a cover that is a subset of the match
+    still applies — any file, not a named special case.
+    """
+    if not explicit_constraints_by_cover:
+        return []
+    if fig_nodes_set in explicit_constraints_by_cover:
+        return [copy.deepcopy(c) for c in explicit_constraints_by_cover[fig_nodes_set]]
+    merged: List[Constraint] = []
+    for cover, constraints in explicit_constraints_by_cover.items():
+        if cover and cover.issubset(fig_nodes_set):
+            merged.extend(copy.deepcopy(c) for c in constraints)
+    return merged
+
+
 def generate_match_variants(
     matches: List[LibraryPrimitivesEntry],
     fig: FluidInteractionGraph,
@@ -158,13 +179,10 @@ def generate_match_variants(
         )
 
         fig_nodes_set = frozenset(list(match[2].keys()))
-        if (
-            explicit_constraints_by_cover is not None
-            and fig_nodes_set in explicit_constraints_by_cover
-        ):
-            node.constraints = [
-                copy.deepcopy(c) for c in explicit_constraints_by_cover[fig_nodes_set]
-            ]
+        node._declared_fig_ids = set(fig_nodes_set)
+        attached = _constraints_for_match(explicit_constraints_by_cover, fig_nodes_set)
+        if attached:
+            node.constraints = attached
             # DIYcomponent: size ConnectingOption lists to the used side terminals
             for constraint in node.constraints:
                 if isinstance(constraint, DiyTerminalConstraint):

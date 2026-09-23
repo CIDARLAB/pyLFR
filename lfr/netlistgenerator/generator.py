@@ -58,7 +58,9 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
     # Standalone 4-port nozzle modules: bind oil IO before FIG simplification
     # so default-netlist oil PORTs are not merged in.
+    module.ensure_standalone_diy_component_terminals()
     module.ensure_standalone_droplet_generator_terminals()
+    module.ensure_metering_nozzle_terminals()
 
     # Step 1 - Simplify the Fluid Interaction Graphs
     if getattr(parameters, "PRINT_DEBUG_GRAPHS", False):

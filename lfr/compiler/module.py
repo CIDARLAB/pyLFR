@@ -41,12 +41,13 @@ DIY_SIDES = ("up", "right", "down", "left")
 #
 #   1 and 3 face each other → oil. 4 is the water channel of the 3-port
 #   part. 2 is the droplet outlet.
-#   JSON rotation 90 (locked) is the vertical flow-focusing pose used when
-#   mixers sit below the nozzle and the chamber sits above. This is a 180°
-#   flip of the 270 pose so 3DuF's side oil holes face left/right:
-#              droplets (2, horn up)
+#   JSON rotation 90 is 3DuF's vertical flow-focusing pose (clockwise):
+#              aqueous (4, water into the junction)
 #   oil_left (3) --[ nozzle ]-- oil_right (1)
-#              aqueous (4)
+#              droplets (2, horn down)
+#   TREE-PLACE then stacks mixers above the nozzle and the chamber below.
+#   A 180° JSON flip (90→270) puts the 3DuF oil holes on the opposite end
+#   from the routed channels.
 DROPLET_GENERATOR_PORT_TO_TERMINAL = {
     "aqueous": "4",
     "oil_left": "3",
@@ -482,6 +483,64 @@ class Module:
             mt._constraints = constraints
             self.mappings.append(mt)
 
+    def ensure_standalone_diy_component_terminals(self) -> None:
+        """Wire all four DIYcomponent sides when the library seed is synthesized alone.
+
+        The seed assign is ``down = ~up``. That leaves ``right`` / ``left``
+        orphaned, so netlist generation used to emit floating PORTs. Parent
+        instances already go through ``instantiate_diy_component``.
+        """
+        io_ids = {io.id for io in self.io}
+        if not set(DIY_SIDES).issubset(io_ids):
+            return
+
+        diy_maps = [
+            m
+            for m in self.mappings
+            if m.technology_string
+            and "DIYCOMPONENT" in str(m.technology_string).upper().replace(" ", "")
+        ]
+        if not diy_maps:
+            return
+
+        proc = None
+        target_map = None
+        for mapping in diy_maps:
+            for constraint in mapping.constraints or []:
+                if isinstance(constraint, DiyTerminalConstraint):
+                    return
+            for inst in mapping.instances:
+                if isinstance(inst, FluidicOperatorMapping) and inst.node is not None:
+                    proc = inst.node
+                    target_map = mapping
+                    break
+            if proc is not None:
+                break
+        if proc is None or target_map is None:
+            return
+
+        input_sides = ("up", "right")
+        output_sides = ("down", "left")
+        input_map: Dict[str, str] = {}
+        output_map: Dict[str, str] = {}
+        for side in input_sides:
+            node = self.FIG.get_fignode(side)
+            if node is None:
+                return
+            if self.FIG.out_degree(side) == 0:
+                self.FIG.connect_fignodes(node, proc)
+            input_map[node.ID] = DIY_SIDE_TO_TERMINAL[side]
+        for side in output_sides:
+            node = self.FIG.get_fignode(side)
+            if node is None:
+                return
+            if self.FIG.in_degree(side) == 0:
+                self.FIG.connect_fignodes(proc, node)
+            output_map[node.ID] = DIY_SIDE_TO_TERMINAL[side]
+
+        target_map._constraints = list(target_map.constraints or [])
+        target_map._constraints.append(DiyTerminalConstraint(input_map, output_map))
+
     def ensure_standalone_droplet_generator_terminals(self) -> None:
         """Wire oil_left/oil_right onto a #MAP NOZZLE seed assign.
 
@@ -536,6 +595,55 @@ class Module:
                 return
             output_map[node.ID] = DROPLET_GENERATOR_PORT_TO_TERMINAL[port]
 
+        target_map._constraints = list(target_map.constraints or [])
+        target_map._constraints.append(DiyTerminalConstraint(input_map, output_map))
+
+    def ensure_metering_nozzle_terminals(self) -> None:
+        """Bind aqueous→4 / droplets→2 for a 2-port #MAP NOZZLE metering case.
+
+        ``map_droplet.lfr`` uses ``assign droplets = aqueous % 100`` with only
+        aqueous/droplets IO. Without a DiyTerminalConstraint the METER library
+        options fall back to ports 1/3, which are the oil faces under rot 90.
+        """
+        io_ids = {io.id for io in self.io}
+        if "aqueous" not in io_ids or "droplets" not in io_ids:
+            return
+        # Full 4-port bodies are handled by ensure_standalone_droplet_generator.
+        if set(DROPLET_GENERATOR_PORTS).issubset(io_ids):
+            return
+
+        nozzle_maps = [
+            m
+            for m in self.mappings
+            if m.technology_string
+            and "NOZZLE DROPLET GENERATOR"
+            in str(m.technology_string).upper().replace("_", " ")
+        ]
+        if not nozzle_maps:
+            return
+
+        proc = None
+        target_map = None
+        for mapping in nozzle_maps:
+            for constraint in mapping.constraints or []:
+                if isinstance(constraint, DiyTerminalConstraint):
+                    return
+            for inst in mapping.instances:
+                if isinstance(inst, FluidicOperatorMapping) and inst.node is not None:
+                    proc = inst.node
+                    target_map = mapping
+                    break
+            if proc is not None:
+                break
+        if proc is None or target_map is None:
+            return
+
+        aqueous = self.FIG.get_fignode("aqueous")
+        droplets = self.FIG.get_fignode("droplets")
+        if aqueous is None or droplets is None:
+            return
+        input_map = {aqueous.ID: DROPLET_GENERATOR_PORT_TO_TERMINAL["aqueous"]}
+        output_map = {droplets.ID: DROPLET_GENERATOR_PORT_TO_TERMINAL["droplets"]}
         target_map._constraints = list(target_map.constraints or [])
         target_map._constraints.append(DiyTerminalConstraint(input_map, output_map))
 

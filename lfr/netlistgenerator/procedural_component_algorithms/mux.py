@@ -68,7 +68,7 @@ class MUX(ProceduralPrimitive):
             "length": 1000.0,
             "stageSpace": 6000.0,
             "height": 250.0,
-            "componentSpacing": 2000.0,
+            "componentSpacing": 1000.0,
         }
         return Component(
             ID=name, name=name, entity=self.mint, params=Params(params), layers=[layer]

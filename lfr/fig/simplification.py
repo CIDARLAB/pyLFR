@@ -55,6 +55,14 @@ def remove_passthrough_nodes(fig: FluidInteractionGraph) -> None:
             # Find the input and output nodes
             input_fignode = find_input_node(sub)
             output_fignode = find_output_node(sub)
+            if input_fignode == output_fignode:
+                # A lone FLOW net is a hub (MUX trunk, VIA tap, extra sinks).
+                # Do not delete it — that drops every interaction edge on mid.
+                print(
+                    "Since its a single flow node, we are skipping the component:",
+                    component,
+                )
+                continue
 
             # Find which nodes are connected to the input and output nodes
             # Find the incoming neighbors of the input node

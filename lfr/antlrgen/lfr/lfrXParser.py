@@ -5005,6 +5005,7 @@ class lfrXParser ( Parser ):
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
+            self.targetText = None
 
         def mappingoperator(self):
             return self.getTypedRuleContext(lfrXParser.MappingoperatorContext,0)
@@ -5049,7 +5050,18 @@ class lfrXParser ( Parser ):
             self.state = 638
             self.match(lfrXParser.T__43)
             self.state = 639
-            self.mappingoperator()
+            _la = self._input.LA(1)
+            # Quoted target: ID (CHANNEL, CTRLCHANNEL), assign/storage/pump
+            # mode keywords, or a mapping operator (+, ~, …).
+            if _la == lfrXParser.ID:
+                localctx.targetText = self._input.LT(1).text
+                self.match(lfrXParser.ID)
+            elif _la in (lfrXParser.T__37, lfrXParser.T__35, lfrXParser.T__36):
+                localctx.targetText = self._input.LT(1).text
+                self.match(_la)
+            else:
+                mop = self.mappingoperator()
+                localctx.targetText = mop.getText() if mop is not None else ""
             self.state = 640
             self.match(lfrXParser.T__43)
             self.state = 641

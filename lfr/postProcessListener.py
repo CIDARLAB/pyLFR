@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.fig.fignode import FIGNode
@@ -31,8 +31,16 @@ class PostProcessListener(ModuleInstanceListener):
         # Update the previous list of nodes
         self.__make_prev_fig_nodes_list()
 
-        # TODO - Generate all the constraints into a list
-        operator = ctx.mappingoperator().getText()
+        # Quoted target: mapping operator ("+", "~", …), CHANNEL, or CTRLCHANNEL.
+        operator = getattr(ctx, "targetText", None)
+        if not operator:
+            mop = ctx.mappingoperator()
+            operator = mop.getText() if mop is not None else ""
+        op_upper = str(operator).upper().replace("_", "")
+        if op_upper == "CHANNEL":
+            operator = "CHANNEL"
+        elif op_upper in {"CTRLCHANNEL", "CONTROLCHANNEL"}:
+            operator = "CTRLCHANNEL"
 
         # Create an entry for the operator if it isn't present already,
         # we will use this map to store all the performance directives
@@ -52,6 +60,12 @@ class PostProcessListener(ModuleInstanceListener):
                 unit = None
 
             perf_constraint = PerformanceConstraint()
+            if operator == "CHANNEL":
+                perf_constraint.scope = "connection"
+                perf_constraint.layer = "flow"
+            elif operator == "CTRLCHANNEL":
+                perf_constraint.scope = "connection"
+                perf_constraint.layer = "control"
             if unit is not None:
                 perf_constraint.unit = unit
 
@@ -116,24 +130,41 @@ class PostProcessListener(ModuleInstanceListener):
 
         if ctx.assignmode is not None:
             if ctx.assignmode.text == "assign":
-                # Create explicit mapping for network node
-                mapping = NodeMappingTemplate()
-                mapping.technology_string = mint_string
-                self._current_mappings["assign"] = mapping
+                self._current_mappings["assign"] = self._mapping_with_technology(
+                    mint_string, self._current_mappings.get("assign")
+                )
             elif ctx.assignmode.text == "storage":
-                # Create explicit mapping for storage node
-                mapping = NodeMappingTemplate()
-                mapping.technology_string = mint_string
-                self._current_mappings["storage"] = mapping
+                self._current_mappings["storage"] = self._mapping_with_technology(
+                    mint_string, self._current_mappings.get("storage")
+                )
             else:
-                raise Exception("Unknown mapping mode found")
+                raise Exception(
+                    "Unknown #MAP mode {0!r}. Mode keywords are "
+                    "'assign' and 'storage'. Unary process steps "
+                    "(mixer, pump-like, incubator) use an operator "
+                    "such as #MAP \"MIXER\" \"~\".".format(
+                        ctx.assignmode.text
+                    )
+                )
         else:
-            # Create explicit mapping for the operator
+            # Create explicit mapping for the operator. Keep any #CONSTRAIN
+            # values already attached to this operator so MAP/CONSTRAIN order
+            # does not drop mixer geometry (numberOfBends, channelWidth, …).
             operator = ctx.mappingoperator().getText()
-            mapping = NodeMappingTemplate()
-            mapping.technology_string = mint_string
-            # mapping.operator = operator
-            self._current_mappings[operator] = mapping
+            self._current_mappings[operator] = self._mapping_with_technology(
+                mint_string, self._current_mappings.get(operator)
+            )
+
+    @staticmethod
+    def _mapping_with_technology(
+        mint_string: str, existing: Optional[NodeMappingTemplate] = None
+    ) -> NodeMappingTemplate:
+        mapping = NodeMappingTemplate()
+        mapping.technology_string = mint_string
+        if existing is not None:
+            mapping._constraints.extend(existing.constraints)
+            mapping.instances.extend(existing.instances)
+        return mapping
 
     def enterStoragestat(self, ctx: lfrXParser.StoragestatContext):
         # Keep a track of all the fig nodes
@@ -217,6 +248,32 @@ class PostProcessListener(ModuleInstanceListener):
                         mapping_instance.operator = node.operator
                         mapping_instance.node = node
                         mapping.instances.append(mapping_instance)
+
+        # Scheme B: #CONSTRAIN "CHANNEL" / "CTRLCHANNEL" stamp connections of
+        # this assign, not the mapped mixer/pump body (same param names stay split).
+        for channel_key in ("CHANNEL", "CTRLCHANNEL"):
+            channel_mapping = self._current_mappings.get(channel_key)
+            if channel_mapping is None or not channel_mapping.constraints:
+                continue
+            attached = False
+            for node in nodes_of_interest:
+                if isinstance(node, (FluidProcessInteraction, Interaction)):
+                    mapping_instance = FluidicOperatorMapping()
+                    mapping_instance.operator = node.operator
+                    mapping_instance.node = node
+                    channel_mapping.instances.append(mapping_instance)
+                    attached = True
+            if not attached:
+                network_mapping_instance = NetworkMapping()
+                for node in self._rhs_store or []:
+                    network_mapping_instance.input_nodes.append(node)
+                for node in self._lhs_store or []:
+                    network_mapping_instance.output_nodes.append(node)
+                if (
+                    network_mapping_instance.input_nodes
+                    or network_mapping_instance.output_nodes
+                ):
+                    channel_mapping.instances.append(network_mapping_instance)
 
         self.__clear_mappings()
 

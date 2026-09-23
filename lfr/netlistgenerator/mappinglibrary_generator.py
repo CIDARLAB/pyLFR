@@ -10,6 +10,30 @@ from lfr.netlistgenerator.procedural_component_algorithms.mux import MUX
 from lfr.netlistgenerator.procedural_component_algorithms.ytree import YTREE
 
 
+def _pump_primitive() -> Primitive:
+    """3DuF PUMP: FLOW 1→2 plus CONTROL 3/4/5 on the body.
+
+    Unary ``#MAP "PUMP" "~"`` then ``assign y = ~x`` looks this up by mint
+    string. Match text is ``v1:PUMP`` so unmapped ``~`` (PROCESS) is not stolen.
+    """
+    pump_inputs: List[ConnectingOption] = [ConnectingOption(None, ["1"])]
+    pump_outputs: List[ConnectingOption] = [ConnectingOption(None, ["2"])]
+    return Primitive(
+        "PUMP",
+        PrimitiveType.COMPONENT,
+        r"""{
+            v1:PUMP
+        }""",
+        False,
+        False,
+        pump_inputs,
+        pump_outputs,
+        None,
+        None,
+        None,
+    )
+
+
 def _add_default_connection_primitives(library: MappingLibrary) -> None:
     """Register the LFR default channel type, plus square CHANNEL as a fallback.
 
@@ -138,6 +162,7 @@ def generate_mlsi_library() -> MappingLibrary:
         None,
     )
     library.add_operator_entry(dilute_cf_mixer, InteractionType.DILUTE)
+    library.add_operator_entry(_pump_primitive(), InteractionType.TECHNOLOGY_PROCESS)
 
     # MUX2
 
@@ -533,6 +558,28 @@ def generate_dropx_library() -> MappingLibrary:
     library.add_io_entry(via)
     library.add_storage_entry(via)
 
+    # NODE — star hub for a FLOW net that joins 2+ tree trunks plus extra taps.
+    node_inputs: List[ConnectingOption] = []
+    node_outputs: List[ConnectingOption] = []
+    for _ in range(12):
+        node_inputs.append(ConnectingOption(None, ["1"]))
+        node_outputs.append(ConnectingOption(None, ["1"]))
+    node = Primitive(
+        "NODE",
+        PrimitiveType.COMPONENT,
+        r"""{
+            v1: NODE
+        }""",
+        False,
+        False,
+        node_inputs,
+        node_outputs,
+        None,
+        None,
+        None,
+    )
+    library.add_io_entry(node)
+
     # PORT
     port_inputs: List[ConnectingOption] = []
     port_inputs.append(ConnectingOption(None, ["1"]))
@@ -619,6 +666,7 @@ def generate_dropx_library() -> MappingLibrary:
         None,
     )
     library.add_operator_entry(dilute_dropx_mixer, InteractionType.DILUTE)
+    library.add_operator_entry(_pump_primitive(), InteractionType.TECHNOLOGY_PROCESS)
 
     # PICO INJECTOR
 

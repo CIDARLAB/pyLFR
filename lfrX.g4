@@ -180,8 +180,13 @@ materialmappingdirective: '#MATERIAL' ID materialtype = ID;
 
 mappingoperator: binary_operator | unary_operator;
 
+// Quoted target is an expression operator ("+", "~", …), CHANNEL, CTRLCHANNEL,
+// or a #MAP mode keyword (assign / storage / pump). CHANNEL stamps FLOW
+// connections of the next assign; CTRLCHANNEL stamps CONTROL.
+constrainttarget: mappingoperator | ID | 'assign' | 'storage' | 'pump';
+
 performancedirective:
-	'#CONSTRAIN' '"' mappingoperator '"' constraint (
+	'#CONSTRAIN' '"' constrainttarget '"' constraint (
 		('AND' | 'OR') constraint
 	)*;
 

@@ -1,10 +1,12 @@
-from typing import List
+from collections import deque
+from typing import List, Set
 
 from lfr.fig.fluidinteractiongraph import FluidInteractionGraph
 from lfr.netlistgenerator.constructiongraph.constructiongraph import ConstructionGraph
 from lfr.netlistgenerator.constructiongraph.constructionnode import ConstructionNode
 
 _TREE_HUB_MINTS = {"MUX", "YTREE", "TREE"}
+_TRUNK_TAP_MINTS = {"VIA"}
 
 
 def _cn_mint(cn: ConstructionNode) -> str:
@@ -235,8 +237,8 @@ def check_overlap_criteria_1(
     1.  if the the two nodes have any common fig nodes
     2.  if the overlapping fig nodes are border nodes
     """
-    cover_a = set(construction_node_a.fig_subgraph.nodes)
-    cover_b = set(construction_node_b.fig_subgraph.nodes)
+    cover_a = _cn_fig_nodes(construction_node_a)
+    cover_b = _cn_fig_nodes(construction_node_b)
     overlap_nodes_set = cover_a.intersection(cover_b)
 
     # TODO - Figure if we need to check if the overlapping nodes are border nodes
@@ -266,6 +268,126 @@ def check_adjecent_criteria_1(
             if fig_node_b in fig.neighbors(fig_node_a):
                 return True
 
+    return False
+
+
+def _fig_node_id(node) -> str:
+    return str(getattr(node, "ID", node))
+
+
+def _cn_walk_nodes(cn: ConstructionNode) -> Set:
+    """FIG ids that construction-graph walks can start from or land on.
+
+    ``_declared_fig_ids`` / match labels are not always real FIG node IDs.
+    Edge generation must also see ``fig_subgraph`` so a VIA process that
+    hangs on an uncovered FLOW net (``mid``) can reach the MUX/YTREE/TREE
+    that already owns that net.
+    """
+    nodes = set(_cn_fig_nodes(cn))
+    try:
+        nodes.update(_fig_node_id(node) for node in cn.fig_subgraph.nodes)
+    except Exception:
+        pass
+    return nodes
+
+
+def _cn_fig_nodes(cn: ConstructionNode) -> Set:
+    declared = getattr(cn, "_declared_fig_ids", None) or getattr(cn, "fig_cover", None)
+    if declared:
+        try:
+            return {_fig_node_id(node) for node in declared}
+        except Exception:
+            pass
+    try:
+        return {_fig_node_id(node) for node in cn.fig_subgraph.nodes}
+    except Exception:
+        return set()
+
+
+def _fig_neighbors(fig, node_id):
+    try:
+        preds = list(fig.predecessors(node_id))
+    except Exception:
+        preds = []
+    try:
+        succs = list(fig.successors(node_id))
+    except Exception:
+        succs = []
+    return preds + succs
+
+
+def _covered_fig_nodes(construction_graph: ConstructionGraph) -> Set:
+    covered = set()
+    for node_id in construction_graph.nodes:
+        covered.update(_cn_fig_nodes(construction_graph.get_construction_node(node_id)))
+    return covered
+
+
+def _via_already_on_tree(
+    tap_cn: ConstructionNode,
+    tree_cn: ConstructionNode,
+    construction_graph: ConstructionGraph,
+) -> bool:
+    """A VIA tap hangs off one trunk end, not both MUX/YTREE/TREE hubs."""
+    if _cn_mint(tap_cn) not in _TRUNK_TAP_MINTS:
+        return False
+    if _cn_mint(tree_cn) not in _TREE_HUB_MINTS:
+        return False
+    for node_id in construction_graph.nodes:
+        if node_id in (tap_cn.ID, tree_cn.ID):
+            continue
+        other = construction_graph.get_construction_node(node_id)
+        if _cn_mint(other) not in _TREE_HUB_MINTS:
+            continue
+        if construction_graph.has_edge(tap_cn.ID, other.ID) or construction_graph.has_edge(
+            other.ID, tap_cn.ID
+        ):
+            return True
+    return False
+
+
+def _cns_join_through_uncovered_flow(
+    source_cn: ConstructionNode,
+    target_cn: ConstructionNode,
+    fig: FluidInteractionGraph,
+    construction_graph: ConstructionGraph,
+) -> bool:
+    """True when two primitives share only an uncovered FLOW net.
+
+    ``assign mid = in[0:3]; assign out[0:3] = mid; assign tap = ~mid``
+    keeps ``mid`` as a Flow node that is not inside either construction-node
+    cover. Tree hubs need a CHANNEL on that trunk; a VIA on the same net
+    must also get a CHANNEL onto a trunk port. Without this walk those
+    extra sinks compile as VIA↔PORT only.
+    """
+    source_mint = _cn_mint(source_cn)
+    target_mint = _cn_mint(target_cn)
+    # Leaf PORTs / sibling VIAs share a FLOW hub but must not grow
+    # port-to-port or via-to-via CHANNEL; the hub already joins them.
+    if source_mint == target_mint and source_mint in {"PORT", "VIA"}:
+        return False
+    start = _cn_walk_nodes(source_cn)
+    goal = _cn_walk_nodes(target_cn)
+    if not start or not goal:
+        return False
+    covered = _covered_fig_nodes(construction_graph)
+    seen = set(start)
+    queue = deque()
+    for node_id in start:
+        for neighbor in _fig_neighbors(fig, node_id):
+            if neighbor not in seen:
+                seen.add(neighbor)
+                queue.append(neighbor)
+    while queue:
+        node_id = queue.popleft()
+        if node_id in goal:
+            return True
+        if node_id in covered:
+            continue
+        for neighbor in _fig_neighbors(fig, node_id):
+            if neighbor not in seen:
+                seen.add(neighbor)
+                queue.append(neighbor)
     return False
 
 
@@ -307,11 +429,22 @@ def generate_construction_graph_edges(
                 print(target_cn_node._id)
                 continue
 
-            # Check if they are neighbors
+            # Check if they are neighbors, or two tree hubs joined only by
+            # an uncovered FLOW net (``flow mid`` between two #MAP MUX assigns).
             is_neighbor = check_adjecent_criteria_1(source_cn_node, target_cn_node, fig)
+            if not is_neighbor:
+                is_neighbor = _cns_join_through_uncovered_flow(
+                    source_cn_node, target_cn_node, fig, construction_graph
+                )
 
             if is_neighbor:
                 if _share_tree_hub(source_cn_node, target_cn_node, construction_graph):
+                    continue
+                if _via_already_on_tree(
+                    source_cn_node, target_cn_node, construction_graph
+                ) or _via_already_on_tree(
+                    target_cn_node, source_cn_node, construction_graph
+                ):
                     continue
                 if construction_graph.has_edge(
                     source_node_id, target_node_id
