@@ -420,21 +420,37 @@ def _connection_constraints_from_cns(*cns) -> List:
     return out
 
 
+def _cn_mint(cn) -> str:
+    try:
+        return str(getattr(cn.primitive, "mint", "") or "").upper()
+    except Exception:
+        return ""
+
+
+def _cn_is_port(cn) -> bool:
+    return _cn_mint(cn) == "PORT"
+
+
 def _flow_connection_constraints_for_edge(from_cn, to_cn) -> List:
     """CHANNEL #CONSTRAIN applies only to the assign that owns this edge.
 
-    Do not union both endpoints: a prior assign's ``RoundedChannel=0`` on the
-    upstream mixer must not leak onto the next assign's FLOW pipes (which may
-    only set ``channelWidth`` and should otherwise keep defaults).
+    Do not union both endpoints: a prior assign's ``RoundedChannel=0`` /
+    ``channelWidth`` on the upstream mixer must not leak onto the next
+    assign's FLOW pipes (which may omit CHANNEL entirely and should keep
+    defaults).
 
     Ownership:
     - inlet / cascade (→ mixer): the sink CN is the assign that created the edge
     - outlet (mixer → PORT): the source CN owns the edge; PORT has no CHANNEL map
+    - mixer → mixer with no CHANNEL on the sink: defaults (do **not** inherit
+      from the upstream mixer)
     """
     to_constraints = _connection_constraints_from_cns(to_cn)
     if to_constraints:
         return to_constraints
-    return _connection_constraints_from_cns(from_cn)
+    if _cn_is_port(to_cn):
+        return _connection_constraints_from_cns(from_cn)
+    return []
 
 
 def _control_connection_constraints_from_cns(*cns) -> List:
