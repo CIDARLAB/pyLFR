@@ -163,6 +163,23 @@ class DiyTerminalConstraint(Constraint):
         self.output_map: Dict[str, str] = dict(output_map or {})
 
 
+class TerminalNetConstraint(Constraint):
+    """Unresolved ``#TERMINAL`` role/number → fluid-net bindings.
+
+    Stored on the operator ``NodeMappingTemplate`` until
+    ``Module.apply_terminal_net_constraints`` resolves nets, connects the FIG,
+    and emits a ``DiyTerminalConstraint``.
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+        # (role_or_terminal_label, net_id) — label is "oil_left" / "3" / "up" …
+        self.bindings: List[tuple] = []
+
+    def add_binding(self, role_or_terminal: str, net_id: str) -> None:
+        self.bindings.append((str(role_or_terminal), str(net_id)))
+
+
 class ConstraintList:
     """Stores the constraints for a specific component
 

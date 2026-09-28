@@ -14,7 +14,11 @@ from lfr.fig.interaction import (
     Interaction,
     InteractionType,
 )
-from lfr.postprocessor.constraints import DiyTerminalConstraint, PerformanceConstraint
+from lfr.postprocessor.constraints import (
+    DiyTerminalConstraint,
+    PerformanceConstraint,
+    TerminalNetConstraint,
+)
 from lfr.postprocessor.mapping import (
     FluidicOperatorMapping,
     NetworkMapping,
@@ -57,6 +61,15 @@ DROPLET_GENERATOR_PORT_TO_TERMINAL = {
 DROPLET_GENERATOR_INPUT_PORTS = ("oil_left", "oil_right", "aqueous")
 DROPLET_GENERATOR_OUTPUT_PORTS = ("droplets",)
 DROPLET_GENERATOR_PORTS = DROPLET_GENERATOR_INPUT_PORTS + DROPLET_GENERATOR_OUTPUT_PORTS
+
+# Roles accepted by #TERMINAL (name → local terminal number string).
+TERMINAL_ROLE_TO_NUMBER = {
+    **DROPLET_GENERATOR_PORT_TO_TERMINAL,
+    **DIY_SIDE_TO_TERMINAL,
+}
+# Default in/out classification when #TERMINAL uses a bare number on a nozzle.
+NOZZLE_INPUT_TERMINALS = {"1", "3", "4"}
+NOZZLE_OUTPUT_TERMINALS = {"2"}
 
 
 class Module:
@@ -540,6 +553,98 @@ class Module:
 
         target_map._constraints = list(target_map.constraints or [])
         target_map._constraints.append(DiyTerminalConstraint(input_map, output_map))
+
+    @staticmethod
+    def resolve_terminal_label(role_or_terminal: str) -> str:
+        """Map a #TERMINAL left-hand label to a local terminal number string."""
+        raw = str(role_or_terminal).strip()
+        key = raw.lower()
+        if key in TERMINAL_ROLE_TO_NUMBER:
+            return TERMINAL_ROLE_TO_NUMBER[key]
+        # Bare terminal numbers: "3", "03"
+        if raw.isdigit():
+            return str(int(raw))
+        raise ValueError(
+            "#TERMINAL unknown role/terminal {!r}; expected one of {} or a "
+            "numeric terminal label".format(
+                role_or_terminal, ", ".join(sorted(TERMINAL_ROLE_TO_NUMBER))
+            )
+        )
+
+    @staticmethod
+    def _terminal_is_output(role_or_terminal: str, term: str) -> bool:
+        key = str(role_or_terminal).strip().lower()
+        if key in DROPLET_GENERATOR_OUTPUT_PORTS:
+            return True
+        if key in DROPLET_GENERATOR_INPUT_PORTS:
+            return False
+        # DIY sides: treat down/left as outputs to match library DIYcomponent IO.
+        if key in ("down", "left"):
+            return True
+        if key in ("up", "right"):
+            return False
+        if term in NOZZLE_OUTPUT_TERMINALS:
+            return True
+        if term in NOZZLE_INPUT_TERMINALS:
+            return False
+        # Unknown numeric: assume input (caller can still wire via assign).
+        return False
+
+    def apply_terminal_net_constraints(self) -> None:
+        """Resolve ``#TERMINAL`` bindings into FIG edges + DiyTerminalConstraint.
+
+        Enables MAP-only nozzle/DIY usage without instantiate_* and without
+        requiring IO ports to be named oil_left / up / ….
+        """
+        for mapping in self.mappings:
+            term_constraints = [
+                c
+                for c in (mapping.constraints or [])
+                if isinstance(c, TerminalNetConstraint)
+            ]
+            if not term_constraints:
+                continue
+            # Already resolved (e.g. instantiate path also stamped DiyTerminal).
+            if any(
+                isinstance(c, DiyTerminalConstraint)
+                for c in (mapping.constraints or [])
+            ):
+                continue
+
+            proc = None
+            for inst in mapping.instances:
+                if isinstance(inst, FluidicOperatorMapping) and inst.node is not None:
+                    proc = inst.node
+                    break
+            if proc is None:
+                raise ValueError(
+                    "#TERMINAL requires a mapped operator on the following assign "
+                    "(put #MAP / #TERMINAL immediately above assign … = ~…)"
+                )
+
+            input_map: Dict[str, str] = {}
+            output_map: Dict[str, str] = {}
+            for tc in term_constraints:
+                for role_or_term, net_id in tc.bindings:
+                    term = self.resolve_terminal_label(role_or_term)
+                    node = self.FIG.get_fignode(net_id)
+                    if node is None:
+                        raise ValueError(
+                            "#TERMINAL {!r} = {!r}: fluid net not found".format(
+                                role_or_term, net_id
+                            )
+                        )
+                    if self._terminal_is_output(role_or_term, term):
+                        if not self.FIG.has_edge(proc.ID, node.ID):
+                            self.FIG.connect_fignodes(proc, node)
+                        output_map[node.ID] = term
+                    else:
+                        if not self.FIG.has_edge(node.ID, proc.ID):
+                            self.FIG.connect_fignodes(node, proc)
+                        input_map[node.ID] = term
+
+            mapping._constraints = list(mapping.constraints or [])
+            mapping._constraints.append(DiyTerminalConstraint(input_map, output_map))
 
     def ensure_standalone_droplet_generator_terminals(self) -> None:
         """Wire oil_left/oil_right onto a #MAP NOZZLE seed assign.

@@ -4,7 +4,11 @@ from lfr.antlrgen.lfr.lfrXParser import lfrXParser
 from lfr.fig.fignode import FIGNode
 from lfr.fig.interaction import FluidProcessInteraction, Interaction
 from lfr.moduleinstanceListener import ModuleInstanceListener
-from lfr.postprocessor.constraints import MaterialConstraint, PerformanceConstraint
+from lfr.postprocessor.constraints import (
+    MaterialConstraint,
+    PerformanceConstraint,
+    TerminalNetConstraint,
+)
 from lfr.postprocessor.mapping import (
     FluidicOperatorMapping,
     NetworkMapping,
@@ -32,10 +36,8 @@ class PostProcessListener(ModuleInstanceListener):
         self.__make_prev_fig_nodes_list()
 
         # Quoted target: mapping operator ("+", "~", …), CHANNEL, or CTRLCHANNEL.
-        operator = getattr(ctx, "targetText", None)
-        if not operator:
-            mop = ctx.mappingoperator()
-            operator = mop.getText() if mop is not None else ""
+        target = ctx.constrainttarget()
+        operator = target.getText() if target is not None else ""
         op_upper = str(operator).upper().replace("_", "")
         if op_upper == "CHANNEL":
             operator = "CHANNEL"
@@ -87,6 +89,33 @@ class PostProcessListener(ModuleInstanceListener):
                 )
 
             self._current_mappings[operator].constraints.append(perf_constraint)
+
+    def exitTerminaldirective(self, ctx: lfrXParser.TerminaldirectiveContext):
+        super().exitTerminaldirective(ctx)
+        target = ctx.constrainttarget()
+        operator = target.getText() if target is not None else ""
+        op_upper = str(operator).upper().replace("_", "")
+        if op_upper == "CHANNEL":
+            operator = "CHANNEL"
+        elif op_upper in {"CTRLCHANNEL", "CONTROLCHANNEL"}:
+            operator = "CTRLCHANNEL"
+
+        if operator not in self._current_mappings:
+            self._current_mappings[operator] = NodeMappingTemplate()
+
+        term_constraint = TerminalNetConstraint()
+        for binding in ctx.terminalbinding():
+            net_tok = binding.net
+            net = net_tok.text if net_tok is not None else ""
+            if binding.role is not None:
+                label = binding.role.text
+            elif binding.term is not None:
+                label = binding.term.getText()
+            else:
+                raise ValueError("#TERMINAL binding missing role/terminal label")
+            term_constraint.add_binding(label, net)
+
+        self._current_mappings[operator].constraints.append(term_constraint)
 
     def exitMaterialmappingdirective(
         self, ctx: lfrXParser.MaterialmappingdirectiveContext

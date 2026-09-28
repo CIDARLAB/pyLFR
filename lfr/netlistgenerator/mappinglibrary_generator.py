@@ -395,7 +395,9 @@ def generate_mars_library() -> MappingLibrary:
 
     incubator_outputs: List[ConnectingOption] = []
 
-    incubator_outputs.append(ConnectingOption("default_component", ["1"]))
+    # Through-chamber: top (1) in, bottom (3) out — same as REACTION CHAMBER.
+    # Both ends on "1" collapsed inlet and outlet onto one hinge.
+    incubator_outputs.append(ConnectingOption("default_component", ["3"]))
 
     incubator_loadings: List[ConnectingOption] = []
     incubator_carriers: List[ConnectingOption] = []
@@ -558,7 +560,9 @@ def generate_dropx_library() -> MappingLibrary:
     library.add_io_entry(via)
     library.add_storage_entry(via)
 
-    # NODE — star hub for a FLOW net that joins 2+ tree trunks plus extra taps.
+    # NODE — tiny same-layer star hub (temporary channel meet). Prefer this
+    # over a DIYCOMPONENT box when the join has no physical footprint.
+    # All connections share terminal 1 (centre hole).
     node_inputs: List[ConnectingOption] = []
     node_outputs: List[ConnectingOption] = []
     for _ in range(12):
@@ -579,6 +583,7 @@ def generate_dropx_library() -> MappingLibrary:
         None,
     )
     library.add_io_entry(node)
+    library.add_storage_entry(node)
 
     # PORT
     port_inputs: List[ConnectingOption] = []

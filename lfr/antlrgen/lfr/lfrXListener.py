@@ -602,12 +602,39 @@ class lfrXListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by lfrXParser#constrainttarget.
+    def enterConstrainttarget(self, ctx:lfrXParser.ConstrainttargetContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#constrainttarget.
+    def exitConstrainttarget(self, ctx:lfrXParser.ConstrainttargetContext):
+        pass
+
+
     # Enter a parse tree produced by lfrXParser#performancedirective.
     def enterPerformancedirective(self, ctx:lfrXParser.PerformancedirectiveContext):
         pass
 
     # Exit a parse tree produced by lfrXParser#performancedirective.
     def exitPerformancedirective(self, ctx:lfrXParser.PerformancedirectiveContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#terminaldirective.
+    def enterTerminaldirective(self, ctx:lfrXParser.TerminaldirectiveContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#terminaldirective.
+    def exitTerminaldirective(self, ctx:lfrXParser.TerminaldirectiveContext):
+        pass
+
+
+    # Enter a parse tree produced by lfrXParser#terminalbinding.
+    def enterTerminalbinding(self, ctx:lfrXParser.TerminalbindingContext):
+        pass
+
+    # Exit a parse tree produced by lfrXParser#terminalbinding.
+    def exitTerminalbinding(self, ctx:lfrXParser.TerminalbindingContext):
         pass
 
 

@@ -97,30 +97,55 @@ def generate_device(
 
         fig = getattr(construction_graph, "_fig", None)
 
-        # DIYcomponent: pick side terminals from DiyTerminalConstraint when present
+        # DIYcomponent / nozzle: pick side terminals from DiyTerminalConstraint.
+        # When a constraint is present but this edge does not match a mapped
+        # side (e.g. two sensors sharing mid-net `node`), skip — do not fall
+        # through to default connecting options (that collapses terminals).
+        source_diy = _diy_constraint(source_cn) is not None
+        target_diy = _diy_constraint(target_cn) is not None
         source_option = _diy_connecting_option(
-            source_cn, target_cn, as_input=False
+            source_cn, target_cn, as_input=False, fig=fig
         )
         target_option = _diy_connecting_option(
-            target_cn, source_cn, as_input=True
+            target_cn, source_cn, as_input=True, fig=fig
         )
-        if source_option is None:
+        if source_option is None and not source_diy:
             source_option = _chamber_connecting_option(source_cn, as_input=False)
-        if target_option is None:
+        if target_option is None and not target_diy:
             target_option = _chamber_connecting_option(target_cn, as_input=True)
-        if source_option is None:
+        if source_option is None and not source_diy:
             source_option = _pick_connecting_option(
                 source_cn, target_cn, as_input=False, fig=fig
             )
-        if target_option is None:
+        if target_option is None and not target_diy:
             target_option = _pick_connecting_option(
                 target_cn, source_cn, as_input=True, fig=fig
             )
         if source_option is None or target_option is None:
-            print(
-                f"Warning: no connecting option for {source_cn_id} -> {target_cn_id}"
-            )
-            continue
+            # Literature Device_4: skip DIY↔DIY mid-net edges that do not match
+            # a mapped side (default options collapse terminals). Do NOT drop
+            # MIXER/PORT↔DIY nets — diy_with_mixer_demo's mixed_flow→up was
+            # silently discarded when fluid-bridge matching missed.
+            if source_diy and target_diy:
+                continue
+            if source_option is None:
+                source_option = _chamber_connecting_option(source_cn, as_input=False)
+            if target_option is None:
+                target_option = _chamber_connecting_option(target_cn, as_input=True)
+            if source_option is None:
+                source_option = _pick_connecting_option(
+                    source_cn, target_cn, as_input=False, fig=fig
+                )
+            if target_option is None:
+                target_option = _pick_connecting_option(
+                    target_cn, source_cn, as_input=True, fig=fig
+                )
+            if source_option is None or target_option is None:
+                print(
+                    f"Warning: no connecting option for {source_cn_id} -> {target_cn_id}"
+                    + (" (DIY side unresolved)" if (source_diy or target_diy) else "")
+                )
+                continue
 
         # Construction-graph edges follow node-list order, which can oppose FIG
         # flow (e.g. later unary MIXER listed before an earlier one). FIG role
@@ -134,6 +159,16 @@ def generate_device(
             from_option, from_cn_id = source_option, source_cn_id
             to_option, to_cn_id = target_option, target_cn_id
             from_cn, to_cn = source_cn, target_cn
+
+        # REACTION CHAMBER terminals must follow the *final* FIG direction.
+        # Construction often lists the chamber as source for both PORT nets;
+        # picking before the swap pinned inlet and outlet onto port "3".
+        chamber_from = _chamber_connecting_option(from_cn, as_input=False)
+        if chamber_from is not None:
+            from_option = chamber_from
+        chamber_to = _chamber_connecting_option(to_cn, as_input=True)
+        if chamber_to is not None:
+            to_option = chamber_to
 
         source_targets = get_targets(
             from_option, from_cn_id, name_generator, cn_component_mapping
@@ -323,12 +358,69 @@ def _diy_constraint(cn) -> Optional[DiyTerminalConstraint]:
     return None
 
 
-def _diy_connecting_option(diy_cn, neighbor_cn, as_input: bool):
+def _fluid_bridges_diy_side(
+    fig,
+    fluid_id: str,
+    diy_ids: Set[str],
+    neighbor_ids: Set[str],
+    as_input: bool,
+) -> bool:
+    """True when ``fluid_id`` is the DIY side-net between diy and neighbor.
+
+    DiyTerminalConstraint keys are the bound fluid nets (often uncovered
+    passthroughs like ``mixed_reagent`` between a MIXER and the DIY process).
+    Direct membership of those nets in the neighbor cover fails; walk FIG.
+    """
+    if fig is None or not fluid_id:
+        return False
+    fluid = str(fluid_id)
+    # Undirected adjacency: construction-graph / FIG orientation can disagree
+    # with the DIY side role, so accept either direction on the fluid edge.
+    touches_neighbor = fluid in neighbor_ids or any(
+        _fig_has_edge(fig, fluid, n) or _fig_has_edge(fig, n, fluid)
+        for n in neighbor_ids
+    )
+    touches_diy = fluid in diy_ids or any(
+        _fig_has_edge(fig, fluid, d) or _fig_has_edge(fig, d, fluid)
+        for d in diy_ids
+    )
+    if touches_neighbor and touches_diy:
+        return True
+    if as_input:
+        # neighbor → … → fluid → diy
+        feeds_diy = fluid in diy_ids or any(
+            _fig_has_edge(fig, fluid, d) for d in diy_ids
+        )
+        if not feeds_diy:
+            return False
+        if fluid in neighbor_ids:
+            return True
+        return _fig_reaches_through_uncovered(
+            fig, neighbor_ids, {fluid}, set(diy_ids)
+        )
+    # diy → fluid → … → neighbor
+    fed_by_diy = fluid in diy_ids or any(
+        _fig_has_edge(fig, d, fluid) for d in diy_ids
+    )
+    if not fed_by_diy:
+        return False
+    if fluid in neighbor_ids:
+        return True
+    return _fig_reaches_through_uncovered(
+        fig, {fluid}, neighbor_ids, set(diy_ids)
+    )
+
+
+def _diy_connecting_option(diy_cn, neighbor_cn, as_input: bool, fig=None):
     """Resolve DIY / nozzle terminal for an edge via neighbor FIG node IDs.
 
     Construction-graph edge direction is not FIG in/out: a 4-to-1 inlet
     PORT and a droplet oil PORT may sit on the source side of the edge.
     Search the requested map first, then the other map.
+
+    Mapped nets are often uncovered intermediates (MIXER → mixed_reagent →
+    DIY). Match those by FIG adjacency / reachability, not cover membership
+    alone.
     """
     diy = _diy_constraint(diy_cn)
     if diy is None:
@@ -338,15 +430,22 @@ def _diy_connecting_option(diy_cn, neighbor_cn, as_input: bool):
         neighbor_ids |= {_fig_id_from_node(n) for n in neighbor_cn.fig_subgraph.nodes}
     except Exception:
         pass
-    maps = (
-        (diy.input_map, diy.output_map)
-        if as_input
-        else (diy.output_map, diy.input_map)
-    )
-    for mapping in maps:
+    diy_ids = _cn_fig_ids(diy_cn)
+    # (mapping, treat-as-input) — fallback map flips the semantic
+    primary = diy.input_map if as_input else diy.output_map
+    secondary = diy.output_map if as_input else diy.input_map
+    for mapping, mapping_is_input in (
+        (primary, as_input),
+        (secondary, not as_input),
+    ):
         for fig_id, terminal in mapping.items():
-            if fig_id in neighbor_ids:
-                return ConnectingOption(None, [terminal])
+            fid = str(fig_id)
+            if fid in neighbor_ids:
+                return ConnectingOption(None, [str(terminal)])
+            if _fluid_bridges_diy_side(
+                fig, fid, diy_ids, neighbor_ids, mapping_is_input
+            ):
+                return ConnectingOption(None, [str(terminal)])
     return None
 
 
@@ -654,7 +753,7 @@ def attach_mux_control_ports(
                 technology="PORT",
                 params={
                     "portRadius": 1000,
-                    "componentSpacing": lfr_parameters.DEFAULT_COMPONENT_SPACING_UM,
+                    "componentSpacing": lfr_parameters.DEFAULT_PORT_COMPONENT_SPACING_UM,
                 },
                 layer_ids=[control_layer_id],
             )
@@ -766,7 +865,7 @@ def attach_pump_control_ports(
                 technology="PORT",
                 params={
                     "portRadius": 1000,
-                    "componentSpacing": lfr_parameters.DEFAULT_COMPONENT_SPACING_UM,
+                    "componentSpacing": lfr_parameters.DEFAULT_PORT_COMPONENT_SPACING_UM,
                 },
                 layer_ids=[control_layer_id],
             )

@@ -168,7 +168,8 @@ ioassignstat: explicitIOBlock;
 technologydirectives:
 	performancedirective
 	| technologymappingdirective
-	| materialmappingdirective;
+	| materialmappingdirective
+	| terminaldirective;
 
 technologymappingdirective:
 	'#MAP' '"' ID+ '"' '"' (
@@ -189,6 +190,26 @@ performancedirective:
 	'#CONSTRAIN' '"' constrainttarget '"' constraint (
 		('AND' | 'OR') constraint
 	)*;
+
+// Bind fluid nets to primitive terminals on the next mapped operator.
+// Separate from #CONSTRAIN (geometry/performance). Same flush scope as #MAP:
+// attaches to the following assign's operator node, then clears.
+//
+// Role form (NOZZLE DROPLET GENERATOR): oil_left / oil_right / aqueous / droplets
+// Role form (DIYCOMPONENT): up / right / down / left
+// Numeric form: #TERMINAL "~" 3 = oil_1
+//
+// Example (MAP-only droplet generator, no module instantiate):
+//   #MAP "NOZZLE DROPLET GENERATOR" "~"
+//   #TERMINAL "~" oil_left = oil_1 AND oil_right = oil_r
+//   #TERMINAL "~" aqueous = aq AND droplets = drops
+//   assign drops = ~aq;
+terminaldirective:
+	'#TERMINAL' '"' constrainttarget '"' terminalbinding (
+		('AND' | 'OR') terminalbinding
+	)*;
+
+terminalbinding: role = ID '=' net = ID | term = number '=' net = ID;
 
 constraint:
 	ID operator = '=' number unit?

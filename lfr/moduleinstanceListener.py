@@ -42,7 +42,8 @@ class ModuleInstanceListener(DistBlockListener):
         self._io_mapping = {}
         self._instance_params = {}
         self._diy_sides_seen = set()
-        if module_to_import.name == "DIYcomponent":
+        # Same four-side DIY path as DIYcomponent (mip_biosensor is a named stand-in).
+        if module_to_import.name in ("DIYcomponent", "mip_biosensor"):
             self._diy_side_bindings = {side: None for side in DIY_SIDES}
         else:
             self._diy_side_bindings = None
@@ -71,8 +72,10 @@ class ModuleInstanceListener(DistBlockListener):
                 value = float(param_ctx.number().getText())
                 instance_params[key] = value
 
+        # DIYcomponent and named DIY stand-ins (e.g. mip_biosensor) share the
+        # four-side up/right/down/left + None interface and #(length/width) params.
         if (
-            type_id == "DIYcomponent"
+            type_id in ("DIYcomponent", "mip_biosensor")
             and self._diy_side_bindings is not None
             and self._module_to_import is not None
         ):
@@ -81,9 +84,9 @@ class ModuleInstanceListener(DistBlockListener):
                 self.compilingErrors.append(
                     LFRError(
                         ErrorType.MODULE_IO_NOT_FOUND,
-                        "DIYcomponent `{}` must list all sides up/right/down/left "
+                        "{} `{}` must list all sides up/right/down/left "
                         "(use None for unused); missing: {}".format(
-                            var_name, ", ".join(missing)
+                            type_id, var_name, ", ".join(missing)
                         ),
                     )
                 )

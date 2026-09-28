@@ -56,6 +56,10 @@ def generate(module: Module, library: MappingLibrary) -> List[MINTDevice]:
 
     # construction_graph = ConstructionGraph()
 
+    # #TERMINAL role/net bindings → DiyTerminalConstraint + FIG edges (MAP-only
+    # nozzle/DIY without instantiate_*). Must run before name-based standalone
+    # ensure_* so an explicit #TERMINAL wins and skips the oil_left-name fallback.
+    module.apply_terminal_net_constraints()
     # Standalone 4-port nozzle modules: bind oil IO before FIG simplification
     # so default-netlist oil PORTs are not merged in.
     module.ensure_standalone_diy_component_terminals()

@@ -339,8 +339,23 @@ class lfrXVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by lfrXParser#constrainttarget.
+    def visitConstrainttarget(self, ctx:lfrXParser.ConstrainttargetContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by lfrXParser#performancedirective.
     def visitPerformancedirective(self, ctx:lfrXParser.PerformancedirectiveContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#terminaldirective.
+    def visitTerminaldirective(self, ctx:lfrXParser.TerminaldirectiveContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by lfrXParser#terminalbinding.
+    def visitTerminalbinding(self, ctx:lfrXParser.TerminalbindingContext):
         return self.visitChildren(ctx)
 
 
