@@ -226,13 +226,10 @@ def compile_lfr(
         module_name = mapping_listener.currentModule.name
         parameters.CURRENT_MODULE_NAME = module_name
         lfr_stem = Path(input_files[0]).stem if input_files else module_name
-        # Canonical topology PDF for every compile (not gated on --debug-graphs).
-        printgraph(
-            mapping_listener.currentModule.FIG,
-            f"{lfr_stem}_fromLFR_topology",
-            output_dir=Path(parameters.OUTPUT_DIR),
-            write_dot=False,
-        )
+        # FIG is still available under --debug-graphs (see generate()). The
+        # canonical topology PDF must come from the device component graph
+        # after generate() so readers see DIYCOMPONENT / YTREE / NOZZLE ports
+        # rather than orphaned PROCESS nodes and unwired side nets.
         unsized_devices = generate(mapping_listener.currentModule, library)
 
         if not unsized_devices:
@@ -262,10 +259,19 @@ def compile_lfr(
                 indices_to_output = [0]
 
         module_out_dir = Path(parameters.OUTPUT_DIR).joinpath(module_name)
+        topology_written = False
         for index in indices_to_output:
             unsized_device = unsized_devices[index]
             if device_callback is not None:
                 device_callback(unsized_device.device)
+            if not topology_written:
+                printgraph(
+                    unsized_device.device.graph,
+                    f"{lfr_stem}_fromLFR_topology",
+                    output_dir=Path(parameters.OUTPUT_DIR),
+                    write_dot=False,
+                )
+                topology_written = True
             output_path = module_out_dir.joinpath(f"variant_{index}")
             if output_path.exists() and output_path.is_file():
                 output_path.unlink()

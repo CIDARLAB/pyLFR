@@ -12,7 +12,8 @@ PREPROCESSOR_DUMP_FILE_NAME = "pre_processor_dump.lfr"
 # Set during compile to module name (e.g. flow_only_demo) so each LFR gets its own output subfolder
 CURRENT_MODULE_NAME = None
 # When False, skip extra FIG/construction .dot and .pdf. The canonical
-# ``*_fromLFR_topology.pdf`` is always written by compile_lfr.
+# ``*_fromLFR_topology.pdf`` is always written by compile_lfr from the
+# post-generate device component graph (not the pre-wiring FIG).
 PRINT_DEBUG_GRAPHS = False
 
 # Default connection profile when LFR does not name a channel type.
