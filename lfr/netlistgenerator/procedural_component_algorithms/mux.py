@@ -67,7 +67,7 @@ class MUX(ProceduralPrimitive):
             "valveWidthY": 1000.0,
             "length": 1000.0,
             "stageSpace": 6000.0,
-            "height": 250.0,
+            "depth": 250.0,
             "componentSpacing": 1000.0,
         }
         return Component(

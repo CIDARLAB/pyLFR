@@ -68,4 +68,4 @@ class DAFDAdapter:
         )
         component.params.set_param("outputWidth", round(orifice_size * expansion_ratio))
         component.params.set_param("outputLength", 5000)
-        component.params.set_param("height", round(orifice_size / aspect_ratio))
+        component.params.set_param("depth", round(orifice_size / aspect_ratio))

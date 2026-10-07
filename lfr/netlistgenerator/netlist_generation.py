@@ -1141,7 +1141,7 @@ def _generate_state_table_control(
                     "gap": lfr_parameters.DEFAULT_VALVE3D_GAP_UM,
                     "width": lfr_parameters.DEFAULT_VALVE3D_WIDTH_UM,
                     "length": lfr_parameters.DEFAULT_VALVE3D_LENGTH_UM,
-                    "height": 250,
+                    "depth": 250,
                 },
                 layer_ids=[control_layer_id],
                 connection=conn,

@@ -94,7 +94,7 @@ class YTREE(ProceduralPrimitive):
             "flowChannelWidth": 600.0,
             "leafSpace": 4000.0,
             "stageSpace": 4000.0,
-            "height": 250.0,
+            "depth": 250.0,
             "componentSpacing": 1000.0,
         }
         return Component(
